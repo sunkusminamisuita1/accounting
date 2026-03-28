@@ -28,4 +28,4 @@ class HomeController{
         require_once ROOT_PATH . '/views/home/HomeView.php';
     }
 }
-//
+
