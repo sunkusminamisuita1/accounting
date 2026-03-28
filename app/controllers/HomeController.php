@@ -5,7 +5,7 @@ class HomeController{
         $this->service = new ReportService();
     }
     public function index() {
-        $ReportType = $_POST['ReportType'] ?? '月次試算表';
+        require_once ROOT_PATH . '/app/services/HomeService.php';
         $messege = "";
 		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			requirePost();
@@ -13,7 +13,7 @@ class HomeController{
             verifyCsrfToken($_POST['csrfToken'] ?? '');
             if(!isset($_POST['ReportType'])){
                 $messege = "試算表の種類を選択してください。";
-                require_once ROOT_PATH . '/view/Auth/Login.php';
+                require_once ROOT_PATH . '/views/auth/Login.php';
                 exit;
             }else{
                 $_SESSION['HomeController']['ReportType'] = $_POST['ReportType'];
@@ -22,7 +22,6 @@ class HomeController{
                 if(GetujiSisanhyou === $RepotType){
                     echo "HomeController debug ";exit;
                 }
-                require_once ROOT_PATH . '/app/service/HomeService.php';
             }
         }
         require_once ROOT_PATH . '/views/home/HomeView.php';

@@ -1,4 +1,6 @@
 <?php
+require_once ROOT_PATH . '/app/DTO/Constants.php';
+require_once ROOT_PATH . '/app/services/lib/HomeLib.php';
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
@@ -8,16 +10,12 @@ if (!defined('ROOT_PATH')) {
 $ReportType = $_POST['ReportType'] ?? '月次試算表';
 $result = [];
 $from = $_POST['from'] ?? '';			$to   = $_POST['to']   ?? '';
-define('ACCOUNT_START', '2020-01-01');	define('BS_TYPE', ['資産','負債','純資産']);
-define('PL_TYPE', ['収益','費用']);		define('RuisekiSisanhyou', '累積試算表');
-define('GetujiSisanhyou', '月次試算表');	define('NenjiSisanhyou', '年次試算表');
-define('KikanSisanhyou', '期間入力');	define('ZenkiHikaku', '前期比較');
 $displayOrder = [
 			'資産'     => 1, '負債'     => 2, '純資産'   => 3,
 			'収益'     => 4, '費用'     => 5,
 ];
 // --- 1. 入力値の受け取り  ---
-	$data		=	calcPeriod($ReportType);
+	$data		=	StartEnd($ReportType);
 	$from		=	$data['cur']['from']??"";
 	$to			=	$data['cur']['to']??"";
 	$zenki_from	=	$data['prev']['from']??"";
@@ -26,7 +24,7 @@ $displayOrder = [
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	$pdo = getPDO();
 // --- 1. 入力値の受け取り  ---
-	$data		=	calcPeriod($ReportType);
+	$data		=	StartEnd($ReportType);
 	$from		=	$data['cur']['from']??"";
 	$to			=	$data['cur']['to']??"";
 	$zenki_from	=	$data['prev']['from']??"";

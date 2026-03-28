@@ -7,7 +7,7 @@ function StartEnd($sisan_syurui) {
 				'prev'  => ['from'=>null,'to'=>null]	
 			];
 // --- 1. 年次試算表 $from, $to を再計算 ---
-echo "資産種類；{$sisan_syurui}    年次年；{$_GET['nenji_nen']}<br>";
+//echo "資産種類；{$sisan_syurui}    年次年；{$_GET['nenji_nen']}<br>";
 	if ($sisan_syurui === NenjiSisanhyou && isset($_GET['nenji_nen'])) {
 		echo "資産種類；{$sisan_syurui}    年次年；{$_GET['nenji_nen']}<br>";
 		$from = $_GET['nenji_nen'] . '-01-01';

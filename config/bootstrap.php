@@ -2,6 +2,7 @@
 echo "bootstrap.php0 debug";
 define('ROOT_PATH', dirname(__DIR__));
 echo "bootstrap.php1 debug";
+require_once ROOT_PATH . '/app/DTO/Constants.php';
 require_once ROOT_PATH . '/config/session.php';
 echo "bootstrap.php2 debug";
 require_once ROOT_PATH . '/config/db.php';

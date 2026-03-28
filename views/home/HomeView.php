@@ -1,4 +1,6 @@
-<?php echo "xx"; ?>
+<?php echo "xx";
+require_once ROOT_PATH . '/app/DTO/Constants.php';
+?>
 <!DOCTYPE html>
     <html lang="ja">
             <head>
@@ -43,30 +45,30 @@
                 $today = new DateTime();
                 $nenji_nen = $nenji_nen ?? "";
                 $lastDate = $today->modify('-1 month');
-                if ($sisan_syurui) {
-                    if($sisan_syurui === GetujiSisanhyou){
+                if ($ReportType) {
+                    if($ReportType === GetujiSisanhyou){
 ?>
                         年月：<input type="month" name="from"
                         value="<?= h($from) ?>" required>
 <?php               } 
-                    if($sisan_syurui === NenjiSisanhyou){
+                    if($ReportType === NenjiSisanhyou){
 ?>
                         年：<input type="number" name="nenji_nen" min='1900' max='2100'
                         value="<?= h($nenji_nen) ?>" required placeholder="例: 2025">
 <?php
                         $from = isset($_GET['nenji_nen'])?$_GET['nenji_nen'] . '0101':"";
                     };
-                    if($sisan_syurui === RuisekiSisanhyou){
+                    if($ReportType === RuisekiSisanhyou){
 ?>
                         試算表期日：<input type="date" name="to" value="<?= h($to) ?>" required>
 <?php               }
-                    if($sisan_syurui === ZenkiHikaku){
+                    if($ReportType === ZenkiHikaku){
 ?>
                         基準年：<input type="number" name="kijyun_nen" min='1900' max='2100'
                         value="" required placeholder="例: 2025">
 <?php                   $from = isset($_GET['kijyun_nen'])?$_GET['kijyun_nen'] . '0101':"";
                     };
-                    if($sisan_syurui === KikanSisanhyou){
+                    if($ReportType === KikanSisanhyou){
 ?>
                         開始日：<input type="date" name="from" value="<?= h($from) ?>" required>
                         終了日：<input type="date" name="to" value="" required>
@@ -78,7 +80,7 @@
 			<button type="submit">計算実行</button>
 		</form>
 <?php
-    if (in_array($sisan_syurui, [GetujiSisanhyou, NenjiSisanhyou, KikanSisanhyou])){
+    if (in_array($ReportType, [GetujiSisanhyou, NenjiSisanhyou, KikanSisanhyou])){
 ?>
         <p>抽出期間： <?= h($from) ?> 〜 <?= h($to) ?></p>
         <table>
@@ -117,7 +119,7 @@
         </table>
 <?php
     }
-    if (in_array($sisan_syurui,[RuisekiSisanhyou])):
+    if (in_array($ReportType,[RuisekiSisanhyou])):
 ?>
         <p>期間： <?= h($from) ?> 〜 <?= h($to) ?></p>
         <table>
@@ -160,7 +162,7 @@
     endif;
 ?>
 <?php
-    if (in_array($sisan_syurui,[ZenkiHikaku])){
+    if (in_array($ReportType,[ZenkiHikaku])){
 ?>
         <p>当期期間： <?= h($from) ?> 〜 <?= h($to) ?></p>
         <p>前期期間： <?= h($zenki_from) ?> 〜 <?= h($zenki_to) ?></p>
@@ -189,7 +191,7 @@
 ?>
 	        </tbody>
         </table>
-    /html>
+    </html>
 
 
 
