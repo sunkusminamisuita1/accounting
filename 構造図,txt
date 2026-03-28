@@ -1,0 +1,88 @@
+test6/
+│
+├── app/
+│   │
+│   ├── controllers/        ← HTTP処理
+│   │     AuthController.php
+│   │     VoucherController.php
+│   │
+│   ├── services/           ← 業務ロジック
+│   │     AuthService.php
+│   │     VoucherService.php
+│   │     LedgerService.php
+│   │     TrialBalanceService.php
+│   │     ProfitLossService.php
+│   │     BalanceSheetService.php
+│   │
+│   ├── repositories/       ← DB操作
+│   │     UserRepository.php
+│   │     VoucherRepository.php
+│   │     AccountRepository.php
+│   │
+│   └── models/             ← データ構造
+│         User.php
+│         Voucher.php
+│         VoucherDetail.php
+│         Account.php
+│
+├── config/
+│     bootstrap.php
+│     db.php
+│     session.php
+│
+├── lib/
+│     helpers.php
+│     security.php
+│
+├── public/                 ← DocumentRoot
+│     index.php
+│
+├── views/                  ← HTML
+│     layout/
+│         header.php
+│         footer.php
+│
+│     auth/
+│         login.php
+│         register.php
+│
+│     voucher/
+│         create.php
+│
+│     reports/
+│         ledger.php
+│         trial_balance.php
+│         profit_loss.php
+│         balance_sheet.php
+│
+└── storage/
+      backup/
+      logs/
+
+
+
+1. プロレベル構造（4層）
+
+一般的な業務システムは次の構造です。
+
+Controller
+   ↓
+Service
+   ↓
+Repository
+   ↓
+Model
+   ↓
+Database
+
+役割はこうです。
+
+層	役割
+Controller	HTTP処理 (POST / GET)
+Service	業務ロジック
+Repository	DB操作
+Model	データ構造
+
+資産     → 借方がプラス
+負債     → 貸方がプラス
+純資産   → 貸方がプラス
