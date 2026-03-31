@@ -21,7 +21,7 @@ class HomeController{
                 $RepotType = $_POST['ReportType'];
                 $startEnd = StartEnd(GetujiSisanhyou);
                 if(GetujiSisanhyou === $RepotType){
-                    echo "HomeController debug ";exit;
+                    echo "HomeController debugiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii ";exit;
                 }
             }
         }
