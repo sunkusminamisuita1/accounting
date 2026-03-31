@@ -12,6 +12,7 @@ echo "bootstrap.php4 debug";
 require_once ROOT_PATH . '/app/auth.php';
 echo "bootstrap.php5 debug";
 require_once ROOT_PATH . '/app/controllers/AuthController.php';
+require_once ROOT_PATH . '/app/controllers/LogoutController.php';
 echo "bootstrap.php6 debug";
 require_once ROOT_PATH . '/app/repositories/ReportRepository.php';
 echo "bootstrap.php7 debug";

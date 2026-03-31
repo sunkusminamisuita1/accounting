@@ -4,7 +4,6 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 require_once __DIR__.'/../config/bootstrap.php';
 $route = $_GET['route'] ?? 'login';
-echo "index.php0 debug:route={$route}<br>";
 $routes =   [
                 'login' => [
                         'controller' => AuthController::class,
@@ -36,8 +35,14 @@ $routes =   [
                 'voucher.store' => [
                         'controller' => VoucherController::class,
                         'method' => 'store',
-                'auth' => true
+                        'auth' => true
                 ],
+                'logout' => [
+                        'controller' => LogoutController::class,
+                        'method' => 'index',
+                        'auth' => true
+                ],
+
 ];
 if (!isset($routes[$route])) {
     http_response_code(404);

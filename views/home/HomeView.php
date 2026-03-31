@@ -19,12 +19,13 @@ require_once ROOT_PATH . '/app/DTO/Constants.php';
                     <h1>ホーム画面</h1>
                         <p>ようこそ <?= htmlspecialchars($_SESSION['user']['username'] ?? 'ゲスト') ?></p>
                     <form action="index.php?route=logout" method="post">
-                        <input type="hidden" name="csrfToken" value="<?= h(generateCsrfToken()) ?>">
+                        <input type="hidden" name="csrfToken" value="<?= h($_SESSION['csrfTokens'][$token]) ?>">
                         <button type="submit">ログアウト</button>
                     </form>
                     <h2>試算表表示：<?= $ReportType ?></h2>
-                    <form action="index.php?route=home" method="post">
-                        試算表<br>
+                    <form action="index.php?route=home" method="post">試算表<br>
+                        <input type="hidden" name="csrfToken" value="<?= h($_SESSION['csrfTokens'][$token]) ?>">
+                        <input type="hidden" name="csrfTokenKey" value="<?= h($token) ?>">
                         <input type="radio" name="ReportType"
                             value=<?= '"'. GetujiSisanhyou .'"'?>>月次試算表出力
                         <input type="radio" name="ReportType"
@@ -39,8 +40,7 @@ require_once ROOT_PATH . '/app/DTO/Constants.php';
                         <button type="submit">切替</button><br><br>
                     </form>
                     <form method="post" action="index.php?route=home">
-                        <input type="hidden" name="ReportType"
-                            value="<?= h($ReportType ?? '') ?>">
+                        <input type="hidden" name="ReportType" value="<?= h($ReportType ?? '') ?>">
 <?php
                 $today = new DateTime();
                 $nenji_nen = $nenji_nen ?? "";
@@ -76,9 +76,9 @@ require_once ROOT_PATH . '/app/DTO/Constants.php';
                     };
                 }
 ?>
-			<br>
-			<button type="submit">計算実行</button>
-		</form>
+			            <br>
+			            <button type="submit">計算実行</button>
+		            </form>
 <?php
     if (in_array($ReportType, [GetujiSisanhyou, NenjiSisanhyou, KikanSisanhyou])){
 ?>

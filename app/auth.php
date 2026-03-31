@@ -15,8 +15,10 @@ function generateCsrfToken(): string
 function verifyCsrfToken(string $token): void
 {
 	if (empty($token) || empty($_SESSION['csrfTokens'][$token]) ) {
+		echo "<br>verifyCsrfToken:token={$token}<br>";
+		echo "<br>verifyCsrfToken:time={$_SESSION['csrfTokens'][$token]}<br>";
 		http_response_code(403);
-		exit('Invalid CSRF token');
+		exit('Invalid CSRF token-X');
 	}
 	$created = ($_SESSION['csrfTokens'][$token])??"";
 	// 600秒 = 10分

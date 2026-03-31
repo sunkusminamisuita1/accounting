@@ -6,11 +6,12 @@ class HomeController{
     }
     public function index() {
         require_once ROOT_PATH . '/app/services/HomeService.php';
+        require_once ROOT_PATH . '/app/auth.php';
         $messege = "";
 		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			requirePost();
             requireLogin();
-            verifyCsrfToken($_POST['csrfToken'] ?? '');
+            verifyCsrfToken($_POST['csrfTokenKey'] ?? '');
             if(!isset($_POST['ReportType'])){
                 $messege = "試算表の種類を選択してください。";
                 require_once ROOT_PATH . '/views/auth/Login.php';
@@ -24,6 +25,8 @@ class HomeController{
                 }
             }
         }
+        $token = generateCsrfToken();
+        $_SESSION['TokenKey'] = $token;
         require_once ROOT_PATH . '/views/home/HomeView.php';
     }
 }
