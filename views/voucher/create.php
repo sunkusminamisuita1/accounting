@@ -1,7 +1,8 @@
 <?php $token = generateCsrfToken(); ?>
 <h1>伝票入力</h1>
     <form method="post" action="index.php?route=voucher.add">
-        <input type="hidden" name="csrfToken" value="<?=h($token)?>">
+        <input type="hidden" name="csrfTokenKey" value="<?=h($_SESSION['csrfTokenKey'])?>">
+        <input type="hidden" name="csrfTokenTime" value="<?=h($_SESSION['csrfTokens'][$_SESSION['csrfTokenKey']])?>">
             <select name="account_id">
 <?php foreach($accounts as $a): ?>
                 <option value="<?=$a['id']?>">

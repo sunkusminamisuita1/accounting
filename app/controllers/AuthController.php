@@ -5,7 +5,7 @@ class AuthController{
 		$message = '';
 		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			requirePost();
-			verifyCsrfToken($_POST['csrfToken'] ?? '');
+			verifyCsrfToken($_POST['csrfTokenKey'] ?? '');
 			$pdo = getPDO();
 			$email = trim($_POST['email']);
 			$password = $_POST['password'];
@@ -25,13 +25,14 @@ class AuthController{
 				$message = "メールアドレスまたはパスワードが間違っています。";
 			}
 		}
+		$TokenKey = generateCsrfToken();
 		require ROOT_PATH.'/views/auth/login.php';
 	}
 	public function register()	{
 		$message = '';
 		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			requirePost();
-			verifyCsrfToken($_POST['csrfToken'] ?? '');
+			verifyCsrfToken($_POST['csrfTokenKey'] ?? '');
 			$pdo = getPDO();
 			$username = trim($_POST['username']);
 			$email = trim($_POST['email']);

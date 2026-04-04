@@ -4,7 +4,7 @@ class AuthController{
 	public function login()	{
 		$message = '';
 		requirePost();
-		verifyCsrfToken($_POST['csrfToken'] ?? '');
+		verifyCsrfToken($_POST['csrfTokenKey'] ?? '');
 		$pdo = getPDO();
 		$email = trim($_POST['email']);
 		$password = $_POST['password'];
@@ -28,7 +28,7 @@ class AuthController{
 	public function register()	{
 		$message = '';
 		requirePost();
-		verifyCsrfToken($_POST['csrfToken'] ?? '');
+		verifyCsrfToken($_POST['csrfTokenKey'] ?? '');
 		$pdo = getPDO();
 		$username = trim($_POST['username']);
 		$email = trim($_POST['email']);

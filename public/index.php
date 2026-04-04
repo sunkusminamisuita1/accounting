@@ -3,6 +3,8 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 require_once __DIR__.'/../config/bootstrap.php';
+//$_SESSION['csrfTokenKey'] =  generateCsrfToken();
+//echo "csrftokenTIme=".($_SESSION['csrfTokens'][$_SESSION['csrfTokenKey']]??"")."<br>";
 $route = $_GET['route'] ?? 'login';
 $routes =   [
                 'login' => [

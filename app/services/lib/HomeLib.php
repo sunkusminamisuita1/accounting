@@ -7,39 +7,39 @@ function StartEnd($sisan_syurui) {
 				'prev'  => ['from'=>null,'to'=>null]	
 			];
 // --- 1. 年次試算表 $from, $to を再計算 ---
-//echo "資産種類；{$sisan_syurui}    年次年；{$_GET['nenji_nen']}<br>";
-	if ($sisan_syurui === NenjiSisanhyou && isset($_GET['nenji_nen'])) {
-		echo "資産種類；{$sisan_syurui}    年次年；{$_GET['nenji_nen']}<br>";
-		$from = $_GET['nenji_nen'] . '-01-01';
-		$to   = $_GET['nenji_nen'] . '-12-31';
+//echo "資産種類；{$sisan_syurui}    年次年；{$_POST['nenji_nen']}<br>";
+	if ($sisan_syurui === NenjiSisanhyou && isset($_POST['nenji_nen'])) {
+		echo "資産種類；{$sisan_syurui}    年次年；{$_POST['nenji_nen']}<br>";
+		$from = $_POST['nenji_nen'] . '-01-01';
+		$to   = $_POST['nenji_nen'] . '-12-31';
 		$result['cur'] = ['from'=>$from, 'to'=>$to];
 		print_r($result);
 	}
 // --- 2. 月次試算表 $from, $to を再計算 ---
-	if ($sisan_syurui === GetujiSisanhyou && isset($_GET['from'])) {
-		$from = substr($_GET['from'],0,7) . '-01';
+	if ($sisan_syurui === GetujiSisanhyou && isset($_POST['from'])) {
+		$from = substr($_POST['from'],0,7) . '-01';
 		$to   = date('Y-m-t', strtotime($from));
 		$result['cur'] = ['from'=>$from, 'to'=>$to];
 	}
 // --- 3. 累積試算表 $from, $to を再計算 ---ACCOUNT_START
-	if ($sisan_syurui === RuisekiSisanhyou && isset($_GET['to'])) {
+	if ($sisan_syurui === RuisekiSisanhyou && isset($_POST['to'])) {
 		$from = ACCOUNT_START;
-		$to   = $_GET['to'];
+		$to   = $_POST['to'];
 		$result['cur'] = ['from'=>$from, 'to'=>$to];
 	}
 // --- 4. 前期比較試算表 $from, $to を再計算 ---
-	if ($sisan_syurui === ZenkiHikaku && isset($_GET['kijyun_nen'])) {
-		$from = $_GET['kijyun_nen'] . '-01-01';
-		$to   = $_GET['kijyun_nen'] . '-12-31';
-		$prev_from = ($_GET['kijyun_nen'] - 1 ) . '-01-01';
-		$prev_to   = ($_GET['kijyun_nen'] - 1 ) . '-12-31';
+	if ($sisan_syurui === ZenkiHikaku && isset($_POST['kijyun_nen'])) {
+		$from = $_POST['kijyun_nen'] . '-01-01';
+		$to   = $_POST['kijyun_nen'] . '-12-31';
+		$prev_from = ($_POST['kijyun_nen'] - 1 ) . '-01-01';
+		$prev_to   = ($_POST['kijyun_nen'] - 1 ) . '-12-31';
 		$result['cur']  = ['from'=>$from, 'to'=>$to];
 		$result['prev'] = ['from'=>$prev_from, 'to'=>$prev_to];
 	}
 // --- 5. 期間入力 $from, $to を再計算 ---
-	if ($sisan_syurui === KikanSisanhyou && isset($_GET['to'])) {
-		$from = $_GET['from'];
-		$to   = $_GET['to'];
+	if ($sisan_syurui === KikanSisanhyou && isset($_POST['to'])) {
+		$from = $_POST['from'];
+		$to   = $_POST['to'];
 		$result['cur'] = ['from'=>$from, 'to'=>$to];
 	}
 	return $result;

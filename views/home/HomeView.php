@@ -19,37 +19,44 @@ require_once ROOT_PATH . '/app/DTO/Constants.php';
                     <h1>ホーム画面</h1>
                         <p>ようこそ <?= htmlspecialchars($_SESSION['user']['username'] ?? 'ゲスト') ?></p>
                     <form action="index.php?route=logout" method="post">
-                        <input type="hidden" name="csrfToken" value="<?= h($_SESSION['csrfTokens'][$token]) ?>">
+                        <input type="hidden" name="csrfTokenTime" value="<?= h($TokenTime) ?>">
+                        <input type="hidden" name="csrfTokenKey" value="<?= h($TokenKey) ?>">
                         <button type="submit">ログアウト</button>
                     </form>
                     <h2>試算表表示：<?= $ReportType ?></h2>
                     <form action="index.php?route=home" method="post">試算表<br>
-                        <input type="hidden" name="csrfToken" value="<?= h($_SESSION['csrfTokens'][$token]) ?>">
-                        <input type="hidden" name="csrfTokenKey" value="<?= h($token) ?>">
+                        <input type="hidden" name="csrfTokenTime" value="<?= h($TokenTime) ?>">
+                        <input type="hidden" name="csrfTokenKey" value="<?= h($TokenKey) ?>">
                         <input type="radio" name="ReportType"
-                            value=<?= '"'. GetujiSisanhyou .'"'?>>月次試算表出力
+                            value=<?= GetujiSisanhyou ?>>月次試算表出力
                         <input type="radio" name="ReportType"
-                            value=<?= '"'. NenjiSisanhyou .'"'?>>年次試算表出力
+                            value=<?= NenjiSisanhyou ?>>年次試算表出力
                         <input type="radio" name="ReportType"
-                            value=<?= '"'. RuisekiSisanhyou .'"'?>>累積試算表出力
+                            value=<?=  RuisekiSisanhyou ?>>累積試算表出力
                         <input type="radio" name="ReportType"
-                            value=<?= '"'. ZenkiHikaku .'"'?>>前期比較出力
+                            value=<?=  ZenkiHikaku ?>>前期比較出力
                         <input type="radio" name="ReportType"
-                            value=<?= '"'. KikanSisanhyou .'"'?>>期間入力試算表出力
+                            value=<?=  KikanSisanhyou ?>>期間入力試算表出力
                         <br>
                         <button type="submit">切替</button><br><br>
                     </form>
                     <form method="post" action="index.php?route=home">
-                        <input type="hidden" name="ReportType" value="<?= h($ReportType ?? '') ?>">
+                        <input type="hidden" name="csrftokenTime" value="<?= h($TokenTime) ?>">
+                        <input type="hidden" name="csrfTokenKey" value="<?= h($TokenKey) ?>">
 <?php
                 $today = new DateTime();
                 $nenji_nen = $nenji_nen ?? "";
                 $lastDate = $today->modify('-1 month');
+                $from = $from ?? $lastDate->format('Y-m-d');
+                $from1 = $from1 ?? $lastDate->format('Ym');
+
+                $to = $to ?? date('Y-m-d');
+                $result = [];
                 if ($ReportType) {
                     if($ReportType === GetujiSisanhyou){
 ?>
                         年月：<input type="month" name="from"
-                        value="<?= h($from) ?>" required>
+                        value="<?= h($from1) ?>" required>
 <?php               } 
                     if($ReportType === NenjiSisanhyou){
 ?>
@@ -77,7 +84,7 @@ require_once ROOT_PATH . '/app/DTO/Constants.php';
                 }
 ?>
 			            <br>
-			            <button type="submit">計算実行</button>
+			            <button name="KeisanJikkou" type="submit" value="Exec"> 計算実行</button>
 		            </form>
 <?php
     if (in_array($ReportType, [GetujiSisanhyou, NenjiSisanhyou, KikanSisanhyou])){
@@ -164,8 +171,8 @@ require_once ROOT_PATH . '/app/DTO/Constants.php';
 <?php
     if (in_array($ReportType,[ZenkiHikaku])){
 ?>
-        <p>当期期間： <?= h($from) ?> 〜 <?= h($to) ?></p>
-        <p>前期期間： <?= h($zenki_from) ?> 〜 <?= h($zenki_to) ?></p>
+        <p>当期期間： <?= h($HmSvcInstance->from) ?> 〜 <?= h($HmSvcInstance->to) ?></p>
+        <p>前期期間： <?= h($HmSvcInstance->zenki_from) ?> 〜 <?= h($HmSvcInstance->zenki_to) ?></p>
         <table>
 	        <thead>
 		        <tr>
