@@ -17,7 +17,7 @@ class HomeServiceCls{
 
 	}
 	public function HomeService(){
-		echo "gggggggggggggggggggggggggggggggghomecontroller debug:ReportType";exit;
+		echo "homeservice1";exit;
 		require_once ROOT_PATH . '/app/DTO/Constants.php';
 		require_once ROOT_PATH . '/app/services/lib/HomeLib.php';
 		ini_set('display_errors', 1);

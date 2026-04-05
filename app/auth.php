@@ -40,7 +40,9 @@ function verifyCsrfToken(string $FmTknKey): void
 }
 function requireLogin(): void
 {
+	echo "requireLogin2<br>";
 	if (!getLoginUserId()) {
+		echo "requireLogin1<br>";
 		header('Location: index.php?route=login');
 		exit;
 	}

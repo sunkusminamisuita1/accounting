@@ -5,34 +5,54 @@ class HomeController{
         $this->service = new ReportService();
     }
     public function index() {
+        echo "homecontroller1<br>";
         require_once ROOT_PATH . '/app/services/lib/HomeLib.php';
         require_once ROOT_PATH . '/app/services/HomeService.php';
         require_once ROOT_PATH . '/app/auth.php';
         $messege = "";
-        $ReportType = $_POST['ReportType'] ?? '月次試算表';
+
+
+//        $_SESSION['ReportType'] = $_POST['ReportType'] ?? '月次試算表';
+//        $ReportType = $_POST['ReportType'] ?? $_SESSION['ReportType'];
+
+        // POST > SESSION > デフォルト の優先順位で確定させる
+        $ReportType = $_POST['ReportType'] ?? $_SESSION['ReportType'] ?? '月次試算表';
+        // 次回のためにセッションを更新しておく
+        $_SESSION['ReportType'] = $ReportType;
+
+
+
+        echo "homecontroller2<br>";
 		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            echo "homecontroller3<br>";
 			requirePost();
+            echo "homecontroller4<br>";
             requireLogin();
+            echo "homecontroller5<br>"; 
             verifyCsrfToken($_POST['csrfTokenKey'] ?? '');
-            if(!isset($_POST['ReportType'])){
+            echo "homecontroller6<br>"; 
+            if(!isset($ReportType)){
+                echo "homecontroller7<br>";
                 $messege = "試算表の種類を選択してください。";
                 require_once ROOT_PATH . '/views/auth/login.php';
                 exit;
             }
-            $ReportType = $_POST['ReportType'] ?? '月次試算表';
             echo "2222222222222222222<br>";
             $HmSvcInstance = new HomeServiceCls($ReportType);
             echo "1111111111111111111<br>";
             var_dump($_POST);
-            $HmSvcInstance->HomeService();
+ //           $HmSvcInstance->HomeService();
             echo "////////////////////////////////////////////////<br>";
             var_dump($_POST);
-            if(isset($_POST['KeisanJikkou']) && $_POST['KeisanJikkou'] === "Exec"){
+            if(isset($_POST['KeisanJikkou']) && ($_POST['KeisanJikkou'] === "Exec")){
+                echo "3333333333333333333<br>";
+                $_SESSION['ReportType'] = "";
  //               if($_POST['from'] || $_POST['to'] || $_POST['nenji_nen'] || $_POST['kijyun_nen']){
                     $HmSvcInstance->HomeService();
  //               }
             }
         }
+        echo "44444444444<br>";
         $TokenKey  = generateCsrfToken();
         $TokenTime = $_SESSION['csrfTokens'][$TokenKey] ?? '';
         require_once ROOT_PATH . '/views/home/HomeView.php';
