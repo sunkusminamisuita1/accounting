@@ -17,7 +17,7 @@ class HomeServiceCls{
 
 	}
 	public function HomeService(){
-		echo "homeservice1";exit;
+		echo "homeservice1";
 		require_once ROOT_PATH . '/app/DTO/Constants.php';
 		require_once ROOT_PATH . '/app/services/lib/HomeLib.php';
 		ini_set('display_errors', 1);
@@ -31,28 +31,31 @@ class HomeServiceCls{
 				'収益'     => 4, '費用'     => 5,
 		];
 // --- 1. 入力値の受け取り  ---
-		$data				=	StartEnd($this->ReportType);
-		$this->from			=	$data['cur']['from']??"";
-		$this->to			=	$data['cur']['to']??"";
-		$this->zenki_from	=	$data['prev']['from']??"";
-		$this->zenki_to		=	$data['prev']['to']??"";
+//		$data				=	StartEnd($this->ReportType);
+//		$this->from			=	$data['cur']['from']??"";
+//		$this->to			=	$data['cur']['to']??"";
+//		$this->zenki_from	=	$data['prev']['from']??"";
+//		$this->zenki_to		=	$data['prev']['to']??"";
 //	print_r($data);
 		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			$pdo = getPDO();
 // --- 1. 入力値の受け取り  ---
 			$data				=	StartEnd($this->ReportType);
+			echo "homeservice2:{$this->ReportType}<br>";
+			print_r($data);
 			$this->from			=	$data['cur']['from']??"";
 			$this->to			=	$data['cur']['to']??"";
 			$this->zenki_from	=	$data['prev']['from']??"";
 			$this->zenki_to		=	$data['prev']['to']??"";
 //	print_r($data);
 //対象データ読込
+			echo "homeservice3:from=";	
 			$trial_cur		= 	getTrial($pdo,$this->from,$this->to);
+			echo "homeservice4:to=";
 			$trial_cur_bs	= 	getTrial($pdo, ACCOUNT_START, $this->to);
 			if ($this->zenki_from && $this->zenki_to) {
 				$trial_prev		= getTrial($pdo,$this->zenki_from,$this->zenki_to);
 				$trial_prev_bs	= getTrial($pdo, ACCOUNT_START, $this->zenki_to);
-				echo "<br>trial_prev_bs=";print_r($trial_prev_bs);echo "vv".ACCOUNT_START."vv{$this->zenki_to}<br>";
 			}else{
 				$trial_prev	= [];
 				$trial_prev_bs	= [];

@@ -1,6 +1,6 @@
 <?php
 //・・・・・・・・・・・・・・・・・使用していない・・・・・・・・・・・・・・・・・・・
-class AuthController{
+class AuthControllerxxxxxxxxxxxxxxxxxx{
 	public function login()	{
 		$message = '';
 		requirePost();

@@ -49,6 +49,7 @@ function buildLogicalRows(array $trial): array
 {
 	$rows = [];
 	foreach ($trial as $id => $row) {
+		echo "buildLogicalRows: account_id={$id} name={$row['name']} type={$row['type']} debit={$row['debit']} credit={$row['credit']}<br>";
 		$rows[$id] = [
 			'name'    => $row['name'],
 			'type'    => $row['type'],
@@ -93,12 +94,14 @@ function getTrial($pdo,$from,$to){
 		GROUP BY a.id, a.name, a.type, jd.side
 		ORDER BY a.id
 		";
-		$userId = $_SETTION['user']['user_id'];
+		$userId = $_SESSION['user']['user_id'];
+		echo "getTrial1: {$userId}<br>";
 		$stmt = $pdo->prepare($sql);
 		$stmt->execute([':from' => $from, ':to' => $to, ':userId' => $userId]);
 		$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 	$trial = [];
 	foreach ($rows as $row) {
+		echo "getTrial2: account_id={$row['account_id']} name={$row['name']} type={$row['type']} side={$row['side']} total={$row['total']}<br>";
 		$id = $row['account_id'];
 		if (!isset($trial[$id])) {
 			$trial[$id] = ['name'	=> $row['name'],
@@ -109,6 +112,9 @@ function getTrial($pdo,$from,$to){
 		}
 		$trial[$id][$row['side']] += $row['total'];
 	}
+	echo "getTrial3: from={$from} to={$to}<br>";
+	print_r($trial);
+	echo "<br>";
 	return $trial;
 }
 function getPeriodProfit(array $logicalRows): int{

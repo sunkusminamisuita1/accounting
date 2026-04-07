@@ -19,6 +19,17 @@ class AuthController{
 			$user = $stmt->fetch(PDO::FETCH_ASSOC);
 			if ($user && password_verify($password, $user['password_hash'])) {
 				$this->loginUser($user);
+
+				session_regenerate_id(true);
+					$_SESSION['user']	=	[
+												'id'			=>	(int)$user['id'],
+												'user_id'		=>	(int)$user['id'],
+												'username'		=>	$user['username'],
+												'fiscalMonth'	=>	$user['fiscal_month'],
+												'fiscalDay'		=>	$user['fiscal_day']
+											];
+
+
 				header('Location: index.php?route=home');
 				exit;
 			} else {
@@ -70,5 +81,6 @@ class AuthController{
 			'fiscalMonth' => $user['fiscal_month'],
 			'fiscalDay' => $user['fiscal_day']
 		];
+		echo "loginUser debug1: user_id={$_SESSION['user']['id']}<br>";
 	}
 }

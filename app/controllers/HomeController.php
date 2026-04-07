@@ -10,6 +10,7 @@ class HomeController{
         require_once ROOT_PATH . '/app/services/HomeService.php';
         require_once ROOT_PATH . '/app/auth.php';
         $messege = "";
+        $ViewResult = [];
 
 
 //        $_SESSION['ReportType'] = $_POST['ReportType'] ?? '月次試算表';
@@ -47,9 +48,16 @@ class HomeController{
             if(isset($_POST['KeisanJikkou']) && ($_POST['KeisanJikkou'] === "Exec")){
                 echo "3333333333333333333<br>";
                 $_SESSION['ReportType'] = "";
- //               if($_POST['from'] || $_POST['to'] || $_POST['nenji_nen'] || $_POST['kijyun_nen']){
-                    $HmSvcInstance->HomeService();
- //               }
+                $HmSvcInstance->HomeService();
+                $ViewResult = $HmSvcInstance->result;
+                $ReportType = $HmSvcInstance->ReportType;
+                $from = $HmSvcInstance->from;
+                $to = $HmSvcInstance->to;
+                $zenki_from = $HmSvcInstance->zenki_from;
+                $zenki_to = $HmSvcInstance->zenki_to;
+                echo "homecontroller8<br>";
+                echo "result=";print_r($result);echo "<br>";
+                echo "ReportType={$ReportType} from={$from} to={$to} zenki_from={$zenki_from} zenki_to={$zenki_to}<br>";
             }
         }
         echo "44444444444<br>";

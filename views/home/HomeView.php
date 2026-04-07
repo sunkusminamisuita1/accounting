@@ -44,19 +44,20 @@ require_once ROOT_PATH . '/app/DTO/Constants.php';
                         <input type="hidden" name="csrftokenTime" value="<?= h($TokenTime) ?>">
                         <input type="hidden" name="csrfTokenKey" value="<?= h($TokenKey) ?>">
 <?php
+                echo "homeview0 in view: {$ReportType}<br>";
                 $today = new DateTime();
                 $nenji_nen = $nenji_nen ?? "";
-                $lastDate = $today->modify('-1 month');
+                $lastDate = $today->modify('-1 month');               
                 $from = $from ?? $lastDate->format('Y-m-d');
-                $from1 = $from1 ?? $lastDate->format('Ym');
-
                 $to = $to ?? date('Y-m-d');
                 $result = [];
                 if ($ReportType) {
                     if($ReportType === GetujiSisanhyou){
+        //                $from = $from ?? $lastDate->format('Y-m');
+                        $from = date('Y-m', strtotime($from));
 ?>
                         年月：<input type="month" name="from"
-                        value="<?= h($from1) ?>" required>
+                        value="<?= h($from ) ?>" required>
 <?php               } 
                     if($ReportType === NenjiSisanhyou){
 ?>
@@ -101,8 +102,10 @@ require_once ROOT_PATH . '/app/DTO/Constants.php';
 	        </thead>
 	        <tbody>
 <?php
-    foreach ($result as $row){
+    foreach ($ViewResult as $row){
+        echo "Processing0 row: name={$row['name']} debit={$row['debit']} credit={$row['credit']} <br>"; 
         if ($row['row_type'] === 'account'){
+            echo "account row: name={$row['name']} debit={$row['debit']} credit={$row['credit']} balance={$row['balance']}<br>";
 ?>
 		        <tr>
 			        <td class="text-left"><?= h($row['name']) ?></td>
@@ -138,7 +141,7 @@ require_once ROOT_PATH . '/app/DTO/Constants.php';
 	        </thead>
 	    <tbody>
 <?php
-        foreach ($result as $row):
+        foreach ($ViewResult as $row):
             if ($row['row_type'] === 'account'):
 ?>
 	            <tr>
@@ -184,7 +187,7 @@ require_once ROOT_PATH . '/app/DTO/Constants.php';
 	        </thead>
 	        <tbody>
 <?php
-        foreach ($result as $row){
+        foreach ($ViewResult as $row){
  ?>
 		        <tr>
 			        <td class="text-left"><?= h($row['name']) ?></td>

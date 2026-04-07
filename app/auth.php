@@ -19,7 +19,7 @@ function verifyCsrfToken(string $FmTknKey): void
 
 		$trace = debug_backtrace();
     	$caller = $trace[1]; // インデックス 0 は現在の関数、1 は呼び出し元
-    	echo "error;". $trace[0] . "呼び出し元: " . $caller['file'] . " 行 " . $caller['line'] . "<br>";
+//    	echo "error;". "$trace[0]" . "呼び出し元: " . $caller['file'] . " 行 " . $caller['line'] . "<br>";
 
 
 
@@ -28,14 +28,23 @@ function verifyCsrfToken(string $FmTknKey): void
 	}
 	$created = ($_SESSION['csrfTokens'][$FmTknKey])??"";
 	// 600秒 = 10分
-	if (time() - $created > 600) {
+	if (time() - $created > 100) {
 		// ワンタイムなので削除
 		unset($_SESSION['csrfTokens'][$FmTknKey]);
 		http_response_code(403);
 		$trace = debug_backtrace();
     	$caller = $trace[1]; // インデックス 0 は現在の関数、1 は呼び出し元
-    	echo "error;". $trace[0] . "呼び出し元: " . $caller['file'] . " 行 " . $caller['line'] . "<br>";
-		exit('CSRF token expired');
+//    	echo "error;". "$trace[0]" . "呼び出し元: " . $caller['file'] . " 行 " . $caller['line'] . "<br>";
+//		exit('CSRF token expired');
+
+		echo "	<script>
+    			    alert('セッションの有効期限が切れたか、不正な操作が行われました。\\n再度ログインしてください。');
+        			window.location.href = 'index.php?route=login';
+    			</script>
+		";
+		exit;
+
+
 	}
 }
 function requireLogin(): void

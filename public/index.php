@@ -52,7 +52,7 @@ if (!isset($routes[$route])) {
 }
 $routeInfo = $routes[$route];
 print_r($routeInfo);
-echo "index.phpx debug1:{$routeInfo['auth']}<br>";var_dump($routeInfo['auth']);
+echo "index.phpx debug1:{$routeInfo['auth']}<br>/";var_dump($routeInfo['auth']);
 if ($routeInfo['auth']) {
     requireLogin();
 }
