@@ -21,20 +21,6 @@ $displayOrder = [
 ];
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	$pdo = getPDO();
-//	$sisan_syurui = $_GET['sisan_syurui'] ?? '月次試算表';
-//	$result = [];
-//	$from = $_GET['from'] ?? '';			$to   = $_GET['to']   ?? '';
-//	define('ACCOUNT_START', '2020-01-01');	define('BS_TYPE', ['資産','負債','純資産']);
-//	define('PL_TYPE', ['収益','費用']);		define('RuisekiSisanhyou', '累積試算表');
-//	define('GetujiSisanhyou', '月次試算表');	define('NenjiSisanhyou', '年次試算表');
-//	define('KikanSisanhyou', '期間入力');	define('ZenkiHikaku', '前期比較');
-//	$displayOrder = [
-//	    '資産'     => 1,
-//	    '負債'     => 2,
-//	    '純資産'   => 3,
-//	    '収益'     => 4,
-//	    '費用'     => 5,
-//	];
 // --- 1. 入力値の受け取り  ---
 	$data		=	calcPeriod($sisan_syurui);
 	$from		=	$data['cur']['from']??"";
@@ -47,7 +33,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	if ($zenki_from && $zenki_to) {
 		$trial_prev		= getTrial($pdo,$zenki_from,$zenki_to);
 		$trial_prev_bs	= getTrial($pdo, ACCOUNT_START, $zenki_to);
-		echo "<br>trial_prev_bs=";print_r($trial_prev_bs);echo "vv".ACCOUNT_START."vv{$zenki_to}<br>";
 	}else{
 		$trial_prev	= [];
 		$trial_prev_bs	= [];

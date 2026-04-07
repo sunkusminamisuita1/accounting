@@ -42,10 +42,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		if (isset($_POST['update_key'])) {
 			$key = $_POST['update_key'];
 			$target = $_SESSION['voucherRows'][$key];
-//			echo "target=";print_r($target);exit;
 // 入力欄に値を戻すためのフラグや値をセット（セッションなど）
 			$_SESSION['edit_data'] = $target; 
-//			echo "target={$_SESSION['edit_data']['side']}";exit;
 // 元のデータは一旦消す
 			unset($_SESSION['voucherRows'][$key]);
 		}

@@ -1,7 +1,6 @@
 <?php
 class AuthController{
 	public function login()	{
-		echo "AuthController::login debug<br>";
 		$message = '';
 		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			requirePost();
@@ -81,6 +80,5 @@ class AuthController{
 			'fiscalMonth' => $user['fiscal_month'],
 			'fiscalDay' => $user['fiscal_day']
 		];
-		echo "loginUser debug1: user_id={$_SESSION['user']['id']}<br>";
 	}
 }

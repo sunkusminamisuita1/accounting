@@ -3,8 +3,6 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 require_once __DIR__.'/../config/bootstrap.php';
-//$_SESSION['csrfTokenKey'] =  generateCsrfToken();
-//echo "csrftokenTIme=".($_SESSION['csrfTokens'][$_SESSION['csrfTokenKey']]??"")."<br>";
 $route = $_GET['route'] ?? 'login';
 $routes =   [
                 'login' => [
@@ -51,15 +49,10 @@ if (!isset($routes[$route])) {
     exit('Not Found');
 }
 $routeInfo = $routes[$route];
-print_r($routeInfo);
-echo "index.phpx debug1:{$routeInfo['auth']}<br>/";var_dump($routeInfo['auth']);
 if ($routeInfo['auth']) {
     requireLogin();
 }
-echo "index.php debug2<br>";
 $controllerName = $routeInfo['controller'];
 $method = $routeInfo['method'];
 $controller = new $controllerName();
-echo "index.phpx debug3:{$routeInfo['auth']}<br>";var_dump($routeInfo);echo "<br>";
 $controller->$method();
-echo "index.php debug4<br>";

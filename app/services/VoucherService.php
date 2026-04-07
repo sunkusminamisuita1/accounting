@@ -1,5 +1,4 @@
 <?php
-echo "<br>voucherservice.php";
 require_once ROOT_PATH.'/app/repositories/voucherRepository.php';
 class VoucherService{
     private $repo;

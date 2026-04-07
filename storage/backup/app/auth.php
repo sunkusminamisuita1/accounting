@@ -1,13 +1,5 @@
 <?php
-//echo dirname(__DIR__) . '/config/session.php';exit;
 require_once  dirname(__DIR__) . '/config/session.php';
-//function requireLogin(): void
-//{
-//	if (empty($_SESSION['user']['id'])) {
-//		header('Location:'. '/index.php?route=login');
-//		exit;
-//	}
-//}
 function getLoginUserId(): int
 {
 	if (empty($_SESSION['user']['id'])) {

@@ -1,19 +1,15 @@
 <?php
 function StartEnd($sisan_syurui) {
-	echo "資産種類；{$sisan_syurui}<br>";
 	$from = ""; $to =""; $zenki_from=""; $zenki_to=""; $result="";
 	$result =	[	
 				'cur'   => ['from'=>null,'to'=>null],
 				'prev'  => ['from'=>null,'to'=>null]	
 			];
 // --- 1. 年次試算表 $from, $to を再計算 ---
-//echo "資産種類；{$sisan_syurui}    年次年；{$_POST['nenji_nen']}<br>";
 	if ($sisan_syurui === NenjiSisanhyou && isset($_POST['nenji_nen'])) {
-		echo "資産種類；{$sisan_syurui}    年次年；{$_POST['nenji_nen']}<br>";
 		$from = $_POST['nenji_nen'] . '-01-01';
 		$to   = $_POST['nenji_nen'] . '-12-31';
 		$result['cur'] = ['from'=>$from, 'to'=>$to];
-		print_r($result);
 	}
 // --- 2. 月次試算表 $from, $to を再計算 ---
 	if ($sisan_syurui === GetujiSisanhyou && isset($_POST['from'])) {
@@ -49,7 +45,6 @@ function buildLogicalRows(array $trial): array
 {
 	$rows = [];
 	foreach ($trial as $id => $row) {
-		echo "buildLogicalRows: account_id={$id} name={$row['name']} type={$row['type']} debit={$row['debit']} credit={$row['credit']}<br>";
 		$rows[$id] = [
 			'name'    => $row['name'],
 			'type'    => $row['type'],
@@ -95,13 +90,11 @@ function getTrial($pdo,$from,$to){
 		ORDER BY a.id
 		";
 		$userId = $_SESSION['user']['user_id'];
-		echo "getTrial1: {$userId}<br>";
 		$stmt = $pdo->prepare($sql);
 		$stmt->execute([':from' => $from, ':to' => $to, ':userId' => $userId]);
 		$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 	$trial = [];
 	foreach ($rows as $row) {
-		echo "getTrial2: account_id={$row['account_id']} name={$row['name']} type={$row['type']} side={$row['side']} total={$row['total']}<br>";
 		$id = $row['account_id'];
 		if (!isset($trial[$id])) {
 			$trial[$id] = ['name'	=> $row['name'],
@@ -112,9 +105,6 @@ function getTrial($pdo,$from,$to){
 		}
 		$trial[$id][$row['side']] += $row['total'];
 	}
-	echo "getTrial3: from={$from} to={$to}<br>";
-	print_r($trial);
-	echo "<br>";
 	return $trial;
 }
 function getPeriodProfit(array $logicalRows): int{

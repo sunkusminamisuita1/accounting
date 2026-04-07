@@ -1,5 +1,4 @@
 <?php
-echo "reportrepository.php";
 class VoucherRepository{
     public function getAccounts()  {
         $pdo = getPDO();

@@ -18,11 +18,7 @@ function verifyCsrfToken(string $FmTknKey): void
 
 
 		$trace = debug_backtrace();
-    	$caller = $trace[1]; // インデックス 0 は現在の関数、1 は呼び出し元
-//    	echo "error;". "$trace[0]" . "呼び出し元: " . $caller['file'] . " 行 " . $caller['line'] . "<br>";
-
-
-
+    	$caller = $trace[1]; 
 		http_response_code(403);
 		exit('Invalid CSRF token-X');
 	}
@@ -33,25 +29,18 @@ function verifyCsrfToken(string $FmTknKey): void
 		unset($_SESSION['csrfTokens'][$FmTknKey]);
 		http_response_code(403);
 		$trace = debug_backtrace();
-    	$caller = $trace[1]; // インデックス 0 は現在の関数、1 は呼び出し元
-//    	echo "error;". "$trace[0]" . "呼び出し元: " . $caller['file'] . " 行 " . $caller['line'] . "<br>";
-//		exit('CSRF token expired');
-
+    	$caller = $trace[1];
 		echo "	<script>
     			    alert('セッションの有効期限が切れたか、不正な操作が行われました。\\n再度ログインしてください。');
         			window.location.href = 'index.php?route=login';
     			</script>
 		";
 		exit;
-
-
 	}
 }
 function requireLogin(): void
 {
-	echo "requireLogin2<br>";
 	if (!getLoginUserId()) {
-		echo "requireLogin1<br>";
 		header('Location: index.php?route=login');
 		exit;
 	}

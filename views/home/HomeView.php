@@ -1,4 +1,4 @@
-<?php echo "xx";
+<?php 
 require_once ROOT_PATH . '/app/DTO/Constants.php';
 ?>
 <!DOCTYPE html>
@@ -44,7 +44,6 @@ require_once ROOT_PATH . '/app/DTO/Constants.php';
                         <input type="hidden" name="csrftokenTime" value="<?= h($TokenTime) ?>">
                         <input type="hidden" name="csrfTokenKey" value="<?= h($TokenKey) ?>">
 <?php
-                echo "homeview0 in view: {$ReportType}<br>";
                 $today = new DateTime();
                 $nenji_nen = $nenji_nen ?? "";
                 $lastDate = $today->modify('-1 month');               
@@ -103,9 +102,7 @@ require_once ROOT_PATH . '/app/DTO/Constants.php';
 	        <tbody>
 <?php
     foreach ($ViewResult as $row){
-        echo "Processing0 row: name={$row['name']} debit={$row['debit']} credit={$row['credit']} <br>"; 
         if ($row['row_type'] === 'account'){
-            echo "account row: name={$row['name']} debit={$row['debit']} credit={$row['credit']} balance={$row['balance']}<br>";
 ?>
 		        <tr>
 			        <td class="text-left"><?= h($row['name']) ?></td>

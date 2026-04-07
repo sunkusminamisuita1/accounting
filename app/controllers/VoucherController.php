@@ -67,4 +67,3 @@ class AuthControllerxxxxxxxxxxxxxxxxxx{
 		];
 	}
 }
-	echo "vouchercontroller2;".ROOT_PATH;exit;

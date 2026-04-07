@@ -47,7 +47,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	if ($zenki_from && $zenki_to) {
 		$trial_prev		= getTrial($pdo,$zenki_from,$zenki_to);
 		$trial_prev_bs	= getTrial($pdo, ACCOUNT_START, $zenki_to);
-		echo "<br>trial_prev_bs=";print_r($trial_prev_bs);echo "vv".ACCOUNT_START."vv{$zenki_to}<br>";
 	}else{
 		$trial_prev	= [];
 		$trial_prev_bs	= [];
