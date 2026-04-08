@@ -37,6 +37,7 @@ class HomeServiceCls{
 			$this->to			=	$data['cur']['to']??"";
 			$this->zenki_from	=	$data['prev']['from']??"";
 			$this->zenki_to		=	$data['prev']['to']??"";
+			print_r($data);
 //対象データ読込
 			$trial_cur		= 	getTrial($pdo,$this->from,$this->to);
 			$trial_cur_bs	= 	getTrial($pdo, ACCOUNT_START, $this->to);

@@ -10,6 +10,7 @@ function generateCsrfToken(): string
 {
 	$tokenKey = bin2hex(random_bytes(32));
 	$_SESSION['csrfTokens'][$tokenKey] = time();
+//	$_SESSION['csrfTokenKey'] = $tokenKey;
 	return $tokenKey;
 }
 function verifyCsrfToken(string $FmTknKey): void

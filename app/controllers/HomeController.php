@@ -1,9 +1,9 @@
 <?php
 class HomeController{
-    private $service;
-    public function __construct() {
-        $this->service = new ReportService();
-    }
+//    private $service;
+//    public function __construct() {
+//        $this->service = new ReportService();
+//    }
     public function index() {
         require_once ROOT_PATH . '/app/services/lib/HomeLib.php';
         require_once ROOT_PATH . '/app/services/HomeService.php';
@@ -24,16 +24,13 @@ class HomeController{
                 exit;
             }
             $HmSvcInstance = new HomeServiceCls($ReportType);
-            if(isset($_POST['KeisanJikkou']) && ($_POST['KeisanJikkou'] === "Exec")){
-                $_SESSION['ReportType'] = "";
-                $HmSvcInstance->HomeService();
-                $ViewResult = $HmSvcInstance->result;
-                $ReportType = $HmSvcInstance->ReportType;
-                $from = $HmSvcInstance->from;
-                $to = $HmSvcInstance->to;
-                $zenki_from = $HmSvcInstance->zenki_from;
-                $zenki_to = $HmSvcInstance->zenki_to;
-            }
+            $HmSvcInstance->HomeService();
+            $ViewResult = $HmSvcInstance->result;
+            $ReportType = $HmSvcInstance->ReportType;
+            $from = $HmSvcInstance->from;
+            $to = $HmSvcInstance->to;
+            $zenki_from = $HmSvcInstance->zenki_from;
+            $zenki_to = $HmSvcInstance->zenki_to;
         }
         $TokenKey  = generateCsrfToken();
         $TokenTime = $_SESSION['csrfTokens'][$TokenKey] ?? '';

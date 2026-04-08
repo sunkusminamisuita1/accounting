@@ -89,7 +89,8 @@ function getTrial($pdo,$from,$to){
 		GROUP BY a.id, a.name, a.type, jd.side
 		ORDER BY a.id
 		";
-		$userId = $_SESSION['user']['user_id'];
+//		$userId = $_SESSION['user']['user_id'];
+		$userId = $_SESSION['user']['id'];
 		$stmt = $pdo->prepare($sql);
 		$stmt->execute([':from' => $from, ':to' => $to, ':userId' => $userId]);
 		$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
