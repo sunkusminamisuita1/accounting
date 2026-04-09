@@ -23,6 +23,7 @@ class AuthControllerxxxxxxxxxxxxxxxxxx{
 		} else {
 				$message = "メールアドレスまたはパスワードが間違っています。";
 		}
+		$TokenKey  = generateCsrfToken();
 		require ROOT_PATH.'/views/auth/login.php';
 	}
 	public function register()	{
@@ -51,9 +52,10 @@ class AuthControllerxxxxxxxxxxxxxxxxxx{
 			]);
 			header('Location: index.php?route=login');
 			exit;
-	} catch (PDOException $e) {
+		} catch (PDOException $e) {
 			$message = "登録に失敗しました。";
 		}
+		$TokenKey = generateCsrfToken();
 		require ROOT_PATH.'/views/auth/register.php';
 	}
 	private function loginUser(array $user): void{

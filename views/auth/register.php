@@ -12,7 +12,7 @@
 
 	<form method="post" action="index.php?route=register">
 
-		<input type="hidden" name="csrfToken" value="<?= h($token) ?>">
+		<input type="hidden" name="csrfTokenKey" value="<?= h($TokenKey) ?>">
 
 			<p>ユーザー名
 				<input type="text" name="username" required>

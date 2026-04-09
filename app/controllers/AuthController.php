@@ -56,6 +56,7 @@ class AuthController{
                 $message = $e->getMessage();
             }
         }
+        $TokenKey = generateCsrfToken();
         require ROOT_PATH.'/views/auth/register.php';
     }
 }

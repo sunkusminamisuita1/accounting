@@ -1,13 +1,9 @@
 <?php
 class HomeController{
-//    private $service;
-//    public function __construct() {
-//        $this->service = new ReportService();
-//    }
     public function index() {
         require_once ROOT_PATH . '/app/services/lib/HomeLib.php';
         require_once ROOT_PATH . '/app/services/HomeService.php';
-        require_once ROOT_PATH . '/app/auth.php';
+        require_once ROOT_PATH . '/app/contorollers/lib/auth.php';
         $messege = "";
         $ViewResult = [];
         // POST > SESSION > デフォルト の優先順位で確定させる
@@ -33,7 +29,7 @@ class HomeController{
             $zenki_to = $HmSvcInstance->zenki_to;
         }
         $TokenKey  = generateCsrfToken();
-        $TokenTime = $_SESSION['csrfTokens'][$TokenKey] ?? '';
+    //    $TokenTime = $_SESSION['csrfTokens'][$TokenKey] ?? '';
         require_once ROOT_PATH . '/views/home/HomeView.php';
     }
 }
