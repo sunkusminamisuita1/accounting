@@ -3,7 +3,7 @@ class HomeController{
     public function index() {
         require_once ROOT_PATH . '/app/services/lib/HomeLib.php';
         require_once ROOT_PATH . '/app/services/HomeService.php';
-        require_once ROOT_PATH . '/app/contorollers/lib/auth.php';
+        require_once ROOT_PATH . '/app/controllers/lib/auth.php';
         $messege = "";
         $ViewResult = [];
         // POST > SESSION > デフォルト の優先順位で確定させる
