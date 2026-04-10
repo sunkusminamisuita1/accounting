@@ -33,8 +33,8 @@ class UserRepository
             $dto->username,
             $dto->email,
             $dto->password,
-            $dto->fiscal_month,
-            $dto->fiscal_day
+            $dto->fiscalMonth,
+            $dto->fiscalDay
         ]);
     }
 }
