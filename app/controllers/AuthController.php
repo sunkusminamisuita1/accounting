@@ -10,8 +10,7 @@ class AuthController{
     {
         $message = '';
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            requirePost();
-            verifyCsrfToken($_POST['csrfTokenKey'] ?? '');
+            requireCsrf();
             try {
 
 
@@ -53,8 +52,7 @@ class AuthController{
     {
         $message = '';
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            requirePost();
-            verifyCsrfToken($_POST['csrfTokenKey'] ?? '');
+            requireCsrf();
             try {
                 require_once ROOT_PATH.'/app/DTO/RegisterDTO.php';
                 $dto =  new RegisterDTO(

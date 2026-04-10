@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
 <h1>新規登録</h1>
 <form method="post">
-	<input type="hidden" name="csrfToken" value="<?= h($token) ?>">
+	<input type="hidden" name="csrfTokenKey" value="<?= h($token) ?>">
 	<p>ユーザー名: <input type="text" name="username" required></p>
 	<p>メールアドレス: <input type="email" name="email" required></p>
 	<p>パスワード: <input type="password" name="password" required></p>

@@ -11,9 +11,8 @@ class HomeController{
         // 次回のためにセッションを更新しておく
         $_SESSION['ReportType'] = $ReportType;
 		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-			requirePost();
+			requireCsrf();
             requireLogin();
-            verifyCsrfToken($_POST['csrfTokenKey'] ?? '');
             if(!isset($ReportType)){
                 $messege = "試算表の種類を選択してください。";
                 require_once ROOT_PATH . '/views/auth/login.php';

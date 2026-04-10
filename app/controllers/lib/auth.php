@@ -6,13 +6,21 @@ function getLoginUserId(): int
 	}
 	return (int)$_SESSION['user']['id'];
 }
+
 function generateCsrfToken(): string
 {
+	    // 古いトークン削除（2時間以上）
+    foreach ($_SESSION['csrfTokens'] ?? [] as $t => $time) {
+        if (time() - $time > 7200) {
+            unset($_SESSION['csrfTokens'][$t]);
+        }
+    }
 	$tokenKey = bin2hex(random_bytes(32));
 	$_SESSION['csrfTokens'][$tokenKey] = time();
 //	$_SESSION['csrfTokenKey'] = $tokenKey;
 	return $tokenKey;
 }
+
 function verifyCsrfToken(string $FmTknKey): void
 {
 	if (empty($FmTknKey) || empty($_SESSION['csrfTokens'][$FmTknKey]) ) {
@@ -25,7 +33,7 @@ function verifyCsrfToken(string $FmTknKey): void
 	}
 	$created = ($_SESSION['csrfTokens'][$FmTknKey])??"";
 	// 600秒 = 10分
-	if (time() - $created > 100) {
+	if (time() - $created > 600) {
 		// ワンタイムなので削除
 		unset($_SESSION['csrfTokens'][$FmTknKey]);
 		http_response_code(403);
@@ -38,12 +46,21 @@ function verifyCsrfToken(string $FmTknKey): void
 		";
 		exit;
 	}
+	// ワンタイムなので削除
+	unset($_SESSION['csrfTokens'][$FmTknKey]);
 }
+
 function requireLogin(): void
 {
 	if (!getLoginUserId()) {
 		header('Location: index.php?route=login');
 		exit;
 	}
+}
+
+function requireCsrf(): void
+{
+    requirePost();
+    verifyCsrfToken($_POST['csrfTokenKey'] ?? '');
 }
 ?>

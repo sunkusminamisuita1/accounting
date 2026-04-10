@@ -1,5 +1,3 @@
-<?php $token = generateCsrfToken(); ?>
-
 <!DOCTYPE html>
 <html lang="ja">
 <head>

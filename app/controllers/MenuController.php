@@ -3,8 +3,7 @@ class MenuController{
 	public function login()	{
 		$message = '';
 		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-			requirePost();
-			verifyCsrfToken($_POST['csrfTokenKey'] ?? '');
+			requireCsrf();
 			$pdo = getPDO();
 			$email = trim($_POST['email']);
 			$password = $_POST['password'];

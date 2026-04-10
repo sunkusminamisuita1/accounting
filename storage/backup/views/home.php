@@ -344,7 +344,7 @@ function isPL($type) {
 	<h1>ホーム画面</h1>
 	<p>ようこそ <?= htmlspecialchars($_SESSION['user']['username'] ?? 'ゲスト') ?></p>
 	<form action="index.php?route=logout" method="post">
-		<input type="hidden" name="csrfToken" value="<?= h(generateCsrfToken()) ?>">
+		<input type="hidden" name="csrfTokenKey" value="<?= h(generateCsrfToken()) ?>">
 		<button type="submit">ログアウト</button>
 	</form>
 		<h2>試算表表示：<?= $sisan_syurui ?></h2>		

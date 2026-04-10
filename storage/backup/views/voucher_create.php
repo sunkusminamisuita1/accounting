@@ -110,7 +110,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	
 	
 	
-	<input type="hidden" name="csrfToken" value="<?= h(generateCsrfToken()) ?>">
+	<input type="hidden" name="csrfTokenKey" value="<?= h(generateCsrfToken()) ?>">
 	<table>
 		<tbody>
 			<tr>
