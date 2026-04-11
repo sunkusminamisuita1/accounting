@@ -1,34 +1,175 @@
 <?php
-require_once ROOT_PATH.'/app/repositories/voucherRepository.php';
-class VoucherService{
-    private $repo;
-    public function __construct() {
+require_once ROOT_PATH . '/app/repositories/voucherRepository.php';
+
+class VoucherService
+{
+    private VoucherRepository $repo;
+
+    public function __construct()
+    {
         $this->repo = new VoucherRepository();
     }
-//reportrepository.php getaccountと重複のためコメントアウト
-//    public function getAccounts() {
-//        return $this->repo->getAccounts();
-//    }
-    public function addEntry($data) {
-        $side = $data['side'];
-        $entry = [
-            'account_id' => $data['account_id'],
-            'amount' => (int)$data['amount']
-        ];
-        if ($side === 'debit') {
-            $_SESSION['voucherDebit'][] = $entry;
-        } else {
-            $_SESSION['voucherCredit'][] = $entry;
+
+    public function initializeSession(): void
+    {
+        if (!isset($_SESSION['voucherRows'])) {
+            $_SESSION['voucherRows'] = [];
+        }
+        if (!isset($_SESSION['slipNum'])) {
+            $_SESSION['slipNum'] = 0;
+        }
+        if (!isset($_SESSION['editData'])) {
+            $_SESSION['editData'] = [];
+        }
+        if (!isset($_SESSION['debitAmountTotal'])) {
+            $_SESSION['debitAmountTotal'] = 0;
+        }
+        if (!isset($_SESSION['creditAmountTotal'])) {
+            $_SESSION['creditAmountTotal'] = 0;
         }
     }
-    public function saveVoucher($data) {
-        $debits  = $_SESSION['voucherDebit'] ?? [];
-        $credits = $_SESSION['voucherCredit'] ?? [];
-        $debitTotal  = array_sum(array_column($debits,'amount'));
-        $creditTotal = array_sum(array_column($credits,'amount'));
-        if ($debitTotal !== $creditTotal) {
-            throw new Exception("借方と貸方が一致しません");
+
+    public function getAccounts(): array
+    {
+        return $this->repo->getAccounts();
+    }
+
+    public function getVoucherRows(): array
+    {
+        return $_SESSION['voucherRows'] ?? [];
+    }
+
+    public function getEditData(): array
+    {
+        return $_SESSION['editData'] ?? [];
+    }
+
+    public function getTotals(): array
+    {
+        return [
+            'debitAmountTotal' => $_SESSION['debitAmountTotal'] ?? 0,
+            'creditAmountTotal' => $_SESSION['creditAmountTotal'] ?? 0,
+        ];
+    }
+
+    public function addEntry(array $data): void
+    {
+        $this->initializeSession();
+
+        $voucherDate = $data['voucherDate'] ?? date('Y-m-d');
+        $side = $data['side'] ?? '';
+        $accountId = isset($data['account_id']) ? (int)$data['account_id'] : 9999;
+        $amount = $data['amount'] ?? 0;
+        $summary = $data['summary'] ?? '';
+
+        $accountName = $this->resolveAccountName($accountId);
+
+        if ($accountId !== 9999 && $accountId > 0) {
+            $_SESSION['voucherRows'][$_SESSION['slipNum']] = [
+                'date' => $voucherDate,
+                'side' => $side,
+                'accountId' => $accountId,
+                'accountName' => $accountName,
+                'amount' => $amount,
+                'summary' => $summary,
+            ];
+            $_SESSION['slipNum']++;
         }
-        $this->repo->insertVoucher($data,$debits,$credits);
+
+        $this->recalculateTotals();
+    }
+
+    public function deleteRows(array $keys): void
+    {
+        foreach ($keys as $key) {
+            unset($_SESSION['voucherRows'][(int)$key]);
+        }
+        $this->recalculateTotals();
+    }
+
+    public function setEditRow(int $key): void
+    {
+        if (isset($_SESSION['voucherRows'][$key])) {
+            $_SESSION['editData'] = $_SESSION['voucherRows'][$key];
+            unset($_SESSION['voucherRows'][$key]);
+            $this->recalculateTotals();
+        }
+    }
+
+    public function clearEntries(): void
+    {
+        unset($_SESSION['voucherRows']);
+        unset($_SESSION['slipNum']);
+        unset($_SESSION['editData']);
+        unset($_SESSION['debitAmountTotal']);
+        unset($_SESSION['creditAmountTotal']);
+    }
+
+    public function saveVoucher(array $data): void
+    {
+        $rows = $this->getVoucherRows();
+        $this->recalculateTotals();
+
+        $debitTotal = $_SESSION['debitAmountTotal'] ?? 0;
+        $creditTotal = $_SESSION['creditAmountTotal'] ?? 0;
+
+        if ($debitTotal !== $creditTotal) {
+            throw new Exception('借方と貸方の合計が一致しません');
+        }
+
+        if (empty($rows)) {
+            throw new Exception('伝票明細がありません');
+        }
+
+        $voucherData = [
+            'voucher_date' => $data['voucher_date'] ?? $rows[array_key_first($rows)]['date'],
+            'summary' => $data['summary'] ?? '',
+        ];
+
+        $debits = $this->buildDetails($rows, '借方');
+        $credits = $this->buildDetails($rows, '貸方');
+
+        $this->repo->insertVoucher($voucherData, $debits, $credits);
+        $this->clearEntries();
+    }
+
+    private function resolveAccountName(int $accountId): string
+    {
+        foreach ($this->getAccounts() as $account) {
+            if ($account['id'] === $accountId) {
+                return $account['name'];
+            }
+        }
+        return '';
+    }
+
+    private function buildDetails(array $rows, string $side): array
+    {
+        $items = [];
+        foreach ($rows as $row) {
+            if ($row['side'] === $side) {
+                $items[] = [
+                    'account_id' => $row['accountId'],
+                    'amount' => (int)$row['amount'],
+                    'side' => $side === '借方' ? 'debit' : 'credit',
+                ];
+            }
+        }
+        return $items;
+    }
+
+    private function recalculateTotals(): void
+    {
+        $debit = 0;
+        $credit = 0;
+        foreach ($_SESSION['voucherRows'] ?? [] as $row) {
+            if ($row['side'] === '貸方') {
+                $credit += (int)$row['amount'];
+            } else {
+                $debit += (int)$row['amount'];
+            }
+        }
+        $_SESSION['debitAmountTotal'] = $debit;
+        $_SESSION['creditAmountTotal'] = $credit;
     }
 }

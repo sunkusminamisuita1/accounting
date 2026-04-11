@@ -1,39 +1,128 @@
 <?php $token = generateCsrfToken(); ?>
-<h1>伝票入力</h1>
-    <form method="post" action="index.php?route=voucher.add">
-        <input type="hidden" name="csrfTokenKey" value="<?=h($_SESSION['csrfTokenKey'])?>">
-<!--        <input type="hidden" name="csrfTokenTime" value="<?=h($_SESSION['csrfTokens'][$_SESSION['csrfTokenKey']])?>"> -->
-            <select name="account_id">
-<?php foreach($accounts as $a): ?>
-                <option value="<?=$a['id']?>">
-<?=h($a['name'])?>
-                </option>
-<?php endforeach; ?>
-            </select>
-        <input type="number" name="amount">
-            <select name="side">
-                <option value="debit">借方</option>
-                <option value="credit">貸方</option>
-            </select>
-        <button>追加</button>
-    </form>
-    <hr>
-<h3>借方</h3>
-<?php foreach($debits as $d): ?>
-    <?=$d['account_id']?>
-    <?=$d['amount']?><br>
-<?php endforeach; ?>
-<h3>貸方</h3>
-<?php foreach($credits as $c): ?>
-    <?=$c['account_id']?>
-    <?=$c['amount']?><br>
-<?php endforeach; ?>
-    <hr>
-<form method="post" action="index.php?route=voucher.store">
-    <input type="hidden" name="csrfTokenkey" value="<?=h($TokenKey)?>">
-        日付
-    <input type="date" name="voucher_date">
-        摘要
-    <input type="text" name="summary">
-    <button>伝票保存</button>
+<?php $voucherDate = $editData['date'] ?? date('Y-m-d'); ?>
+<h2>伝票入力</h2>
+<?php if (!empty($flashMessage)): ?>
+    <div style="background-color: #d4edda; color: #155724; padding: 10px; border: 1px solid #c3e6cb; margin-bottom: 20px;">
+        <?= h($flashMessage) ?>
+    </div>
+<?php endif; ?>
+<form method="post" action="index.php?route=voucher.add">
+    <button type="submit" name="clear">全明細を削除</button>
+    <button type="submit" name="add">明細追加</button>
+    <button type="submit" name="alt">修正削除一括実行</button>
+    <div style="margin-top: 20px; text-align: right;">
+        <?php if ($isBalanced): ?>
+            <button type="submit" name="save_db" formaction="index.php?route=voucher.store" style="padding: 10px 20px; background-color: #28a745; color: white;">
+                この伝票を登録する
+            </button>
+        <?php else: ?>
+            <p style="color: red;">※貸借合計不一致:登録不可</p>
+        <?php endif; ?>
+    </div>
+    <input type="hidden" name="csrfToken" value="<?= h($token) ?>">
+    <div style="margin-top: 20px;">
+        <label>
+            伝票摘要: <input type="text" name="voucher_summary" value="" style="width: 360px;">
+        </label>
+    </div>
+    <table>
+        <tbody>
+            <tr>
+                <th><h3>伝票日付</h3></th>
+                <th><h3>借方/貸方</h3></th>
+                <th><h3>科目</h3></th>
+                <th><h3>金額</h3></th>
+                <th><h3>摘要</h3></th>
+            </tr>
+            <tr>
+                <td>
+                    <input type="date" name="voucherDate" value="<?= h($voucherDate) ?>" <?= empty($voucherRows) ? 'required' : 'readonly' ?>>
+                </td>
+                <td>
+                    <select name="side">
+                        <option value="貸方"<?= (isset($editData['side']) && $editData['side'] === '貸方') ? ' selected' : '' ?>>貸方</option>
+                        <option value="借方"<?= (isset($editData['side']) && $editData['side'] === '借方') ? ' selected' : '' ?>>借方</option>
+                    </select>
+                </td>
+                <td>
+                    <select name="account_id">
+                        <?php foreach ($accounts as $a): ?>
+                            <option value="<?= h($a['id']) ?>"<?= (isset($editData['accountId']) && $editData['accountId'] == $a['id']) ? ' selected' : '' ?>>
+                                <?= h($a['name']) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </td>
+                <td>
+                    <input type="number" name="amount" value="<?= h($editData['amount'] ?? '') ?>">
+                </td>
+                <td>
+                    <input type="text" name="summary" value="<?= h($editData['summary'] ?? '') ?>">
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table>
+        <tbody>
+            <tr>
+                <th>日付</th>
+                <th>借方科目</th>
+                <th>借方金額</th>
+                <th>貸方科目</th>
+                <th>貸方金額</th>
+                <th>摘要</th>
+                <th>削除</th>
+                <th>修正</th>
+            </tr>
+            <?php foreach ($voucherRows as $key => $row): ?>
+                <tr>
+                    <td><?= h($row['date']) ?></td>
+                    <td><?= $row['side'] === '借方' ? h($row['accountName']) : '' ?></td>
+                    <td class="amount"><?= $row['side'] === '借方' ? h(number_format((int)$row['amount'])) : '' ?></td>
+                    <td><?= $row['side'] === '貸方' ? h($row['accountName']) : '' ?></td>
+                    <td class="amount"><?= $row['side'] === '貸方' ? h(number_format((int)$row['amount'])) : '' ?></td>
+                    <td><?= h($row['summary']) ?></td>
+                    <td><input type="checkbox" name="deleteKeys[]" value="<?= h($key) ?>"></td>
+                    <td><input type="radio" name="update_key" value="<?= h($key) ?>"></td>
+                </tr>
+            <?php endforeach; ?>
+            <tr style="background-color: <?= $isBalanced ? '#e3f2fd' : '#fff5f5' ?>;">
+                <td colspan="2">合計</td>
+                <td class="amount"><?= h(number_format($totals['debitAmountTotal'])) ?></td>
+                <td></td>
+                <td class="amount"><?= h(number_format($totals['creditAmountTotal'])) ?></td>
+                <td colspan="3">
+                    <?php if ($totals['debitAmountTotal'] !== $totals['creditAmountTotal']): ?>
+                        <b style="color: red;">差額: <?= h(number_format(abs($totals['debitAmountTotal'] - $totals['creditAmountTotal']))) ?></b>
+                    <?php else: ?>
+                        <b style="color: green;">貸借一致 ✓</b>
+                    <?php endif; ?>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </form>
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        font-size: 14px;
+    }
+    table th, table td {
+        border: 1px solid #ccc;
+        padding: 8px 12px;
+        text-align: center;
+    }
+    table th {
+        background-color: #f2f2f2;
+        color: #333;
+        font-weight: bold;
+    }
+    .amount {
+        text-align: right;
+    }
+    table tr:hover {
+        background-color: #fafafa;
+    }
+</style>

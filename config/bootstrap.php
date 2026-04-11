@@ -12,5 +12,6 @@ require_once ROOT_PATH . '/app/services/ReportService.php';
 require_once ROOT_PATH . '/app/services/lib/HomeLib.php';
 require_once ROOT_PATH . '/app/controllers/HomeController.php';
 require_once ROOT_PATH . '/app/services/lib/HomeLib.php';
+require_once ROOT_PATH . '/app/controllers/VoucherController.php';
 
 ?>
