@@ -1,5 +1,52 @@
 <?php
 class VoucherRepository{
+
+    public function findAllByUser(int $userId): array {
+        $pdo = getPDO();
+        $stmt = $pdo->prepare("
+            SELECT id, voucher_date, summary
+            FROM journal_vouchers
+            WHERE user_id = ?
+            ORDER BY voucher_date DESC
+        ");
+        $stmt->execute([$userId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function find(int $id) {
+        $pdo = getPDO();
+        $stmt = $pdo->prepare("
+            SELECT *
+            FROM journal_vouchers
+            WHERE id = ?
+        ");
+        $stmt->execute([$id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function update(int $id, array $data) {
+        $pdo = getPDO();
+        $stmt = $pdo->prepare("
+            UPDATE journal_vouchers
+            SET voucher_date = ?, summary = ?
+            WHERE id = ?
+        ");
+        $stmt->execute([
+            $data['date'],
+            $data['summary'],
+            $id
+        ]);
+    }
+
+    public function delete(int $id) {
+        $pdo = getPDO();
+        $stmt = $pdo->prepare("
+            DELETE FROM journal_vouchers
+            WHERE id = ?
+        ");
+        $stmt->execute([$id]);
+    }
+
     public function getAccounts()  {
         $pdo = getPDO();
         $stmt = $pdo->query("
@@ -9,6 +56,7 @@ class VoucherRepository{
         ");
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    
     public function insertVoucher($data,$debits,$credits){
         $pdo = getPDO();
         $pdo->beginTransaction();

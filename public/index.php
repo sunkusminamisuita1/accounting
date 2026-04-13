@@ -22,16 +22,39 @@ $routes =   [
                         'method' => 'index',
                         'auth' => true
                 ],
+                'voucher.index' => [
+                        'controller' => VoucherController::class,
+                        'method' => 'index',
+                        'auth' => true
+                ],
+
+                'voucher.edit' => [
+                        'controller' => VoucherController::class,
+                        'method' => 'edit',
+                        'auth' => true
+                ],
+
+                'voucher.update' => [
+                        'controller' => VoucherController::class,
+                        'method' => 'update',
+                        'auth' => true
+                ],
+
+                'voucher.delete' => [
+                        'controller' => VoucherController::class,
+                        'method' => 'delete',
+                        'auth' => true
+                ],
                 'voucher.create' => [
                         'controller' => VoucherController::class,
                         'method' => 'create',
                         'auth' => true
                 ],
-                'voucher.add' => [
-                        'controller' => VoucherController::class,
-                        'method' => 'add',
-                        'auth' => true
-                ],
+//               'voucher.add' => [
+//                       'controller' => VoucherController::class,
+//                       'method' => 'add',
+//                       'auth' => true
+//                ],
                 'voucher.store' => [
                         'controller' => VoucherController::class,
                         'method' => 'store',
