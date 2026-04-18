@@ -1,9 +1,9 @@
 <?php
 define('ROOT_PATH', dirname(__DIR__));
-echo "1".$_SESSION['flash_message']."<br>";
+echo "1".$_SESSION['ErrMsg']."<br>";
 require_once ROOT_PATH . '/app/DTO/Constants.php';
 require_once ROOT_PATH . '/lib/helpers.php';
-echo "2".$_SESSION['flash_message']."<br>";
+echo "2".$_SESSION['ErrMsg']."<br>";
 
 require_once ROOT_PATH . '/config/session.php';
 
