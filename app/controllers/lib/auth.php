@@ -1,10 +1,21 @@
 <?php
 function getLoginUserId(): int
 {
-	if (empty($_SESSION['user']['id'])) {
-		throw new Exception('ログインしていません');
-	}
+//	if (empty($_SESSION['user']['id'])) {
+//		throw new Exception('ログインしていません');
+//	}
+//	return (int)$_SESSION['user']['id'];
+
+if (empty($_SESSION['user']['id'])) {
+    // 1. エラーメッセージをセッションに保存（移動先で表示するため）
+    $_SESSION['flash_message'] = "再度ログインしてください。";
+}
+
 	return (int)$_SESSION['user']['id'];
+
+
+
+
 }
 
 function generateCsrfToken(): string

@@ -11,13 +11,24 @@ class VoucherController
 
     public function create(): void    {
         $this->service->InitializeSession();
+
+        //accountsテーブルから勘定科目を取得
         $accounts = $this->service->getAccounts();
+
+        //セッションから伝票行、編集対象データ、合計金額を取得(初回は初期化データが入る)
         $voucherRows = $this->service->getVoucherRows();
+
+        //$_SESSION['editData'] を代入　初回は初期化データが入る
         $editData = $this->service->getEditData();
+
+        //借り方合計、貸し方合計を取得　初回は0が入る
         $totals = $this->service->getTotals();
+
+        //借方合計と貸方合計が等しいかつ伝票行が空でない場合はバランスしているとみなす(真偽値が$isBalancedに入る)
         $isBalanced = 
             $totals['debitAmountTotal'] === $totals['creditAmountTotal'] && !empty($voucherRows);
         $flashMessage = $_SESSION['flash_message'] ?? null;
+        
         unset($_SESSION['flash_message']);
         require ROOT_PATH . '/views/voucher/create.php';
     }
@@ -52,10 +63,29 @@ class VoucherController
 
         requirePost();
         $data = $_POST;
-        var_dump($_POST);
-        exit;
+        $details = [];
+
+        foreach ($_POST['details'] as $i => $d) {
+            $details[] = [
+                'account_id' => (int)$d['account_id'],
+                'amount' => (int)$d['amount'],
+                'side' => $d['side'],
+                'line_no' => $i
+            ];
+        }
+
+        $data = [
+            'date' => $_POST['voucher_date'],
+            'summary' => $_POST['summary'],
+            'user_id' => getLoginUserId(),
+            'details' => $details
+        ];
+
+        $this->service->saveVoucher($data);
+//        var_dump($_POST);
+//        exit;
         // ここでDTOに変換（次のステップ）
-        $this->service->saveFromPost($data);
+//        $this->service->saveFromPost($data);
 
         header('Location: index.php?route=voucher.index');
         exit;

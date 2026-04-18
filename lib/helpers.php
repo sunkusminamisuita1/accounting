@@ -14,4 +14,18 @@ function requirePost(): void
         exit('Method Not Allowed');
     }
 }
+
+function DispErrorMsg(): ?int
+{
+    echo $_SESSION['flash_message'];
+    if (!empty($_SESSION['flash_message'])) {
+
+        echo "<div class='error-message'>" . h($_SESSION['flash_message']  ) . "</div>";
+
+       // $_SESSION['flash_message'] = null;
+        return 1;
+    }
+    return null;
+   
+}
 ?>
