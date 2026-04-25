@@ -10,7 +10,26 @@ class VoucherController
     }
 
     public function create(): void    {
-        $this->service->InitializeSession();
+        $TokenKey  = generateCsrfToken();
+        $details = [];
+        for ($i = 0; $i < 5; $i++) {
+            $details[$i] = [
+                'account_id' => '',
+                'amount' => '',
+                'side' => ''
+            ];
+        }
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            requireCsrf();
+        //    var_dump($_POST);
+              if (isset($_POST['add_row'])) {
+                  $this->service->addEntry($_POST);
+                  header('Location: index.php?route=voucher.store');
+                  exit;
+              }
+        }
+
+         $this->service->InitializeSession();
 
         //accountsテーブルから勘定科目を取得
         $accounts = $this->service->getAccounts();
@@ -28,7 +47,7 @@ class VoucherController
         $isBalanced = 
             $totals['debitAmountTotal'] === $totals['creditAmountTotal'] && !empty($voucherRows);
         $flashMessage = $_SESSION['flash_message'] ?? null;
-        
+
         unset($_SESSION['flash_message']);
         require ROOT_PATH . '/views/voucher/create.php';
     }
@@ -51,7 +70,7 @@ class VoucherController
     //    }
     //    header('Location: index.php?route=voucher.create');
     //    exit;
-    //}
+    
 
     public function store(): void {
     //    requirePost();
@@ -63,7 +82,7 @@ class VoucherController
 
         requirePost();
         $data = $_POST;
-        $details = [];
+        
 
         foreach ($_POST['details'] as $i => $d) {
             $details[] = [

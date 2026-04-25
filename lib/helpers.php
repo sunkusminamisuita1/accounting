@@ -15,17 +15,32 @@ function requirePost(): void
     }
 }
 
-function DispErrorMsg(): ?int
+function DispErrorMsg($ErrMsg)
 {
-    echo $_SESSION['flash_message'];
-    if (!empty($_SESSION['flash_message'])) {
+    if (!empty($ErrMsg)) {
 
-        echo "<div class='error-message'>" . h($_SESSION['flash_message']  ) . "</div>";
+ 
 
-       // $_SESSION['flash_message'] = null;
+
+        echo "<script type='text/javascript'>
+                    alert('". h($ErrMsg) ."');
+                    window.location.href = 'index.php?route=login';
+                  </script>";
+
+
         return 1;
     }
     return null;
    
 }
+
+
+
+
+
+//echo "<script type='text/javascript'>
+//            alert('ログインしていません。ログイン画面へ戻ります。');
+//            window.location.href = '/login.php';
+//          </script>";
+//    exit;
 ?>

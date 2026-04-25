@@ -2,21 +2,21 @@
 <?php
 require_once ROOT_PATH . '/views/lib/ProcSlct.php';
 
+// 1. まずPOSTされたデータを取得
 $details = $_POST['details'] ?? [
-    0 => [],
+    ['account_id' => '', 'amount' => '', 'side' => 'debit'] // 初期1行目
 ];
-if($_POST['add_row'] ?? false) {
-    $details[] = [];
-} 
-if($_POST['delete_row'] ?? false) {
-    $idx = (int)$_POST['delete_row'];
-    unset($details[$idx]);
-    $details = array_values($details); // インデックスを並べ直す
-} 
-print_r($details);
+
+// 2. 行追加ボタンが押された場合のみ、末尾に空の要素を追加
+if (isset($_POST['add_row'])) {
+    $details[] = ['account_id' => '', 'amount' => '', 'side' => 'debit'];
+}
+
+// デバッグ用確認
+// print_r($details); 
 ?>
 
-<form method="POST" action="index.php?route=voucher.create">   
+<form method="POST" action="index.php?route=voucher.create">
     日付 <input type="date" name="voucher_date" value="<?= h($_POST['voucher_date'] ?? '') ?>"><br>
     摘要 <input type="text" name="summary" value="<?= h($_POST['summary'] ?? '') ?>"><br>
     <hr>
@@ -31,7 +31,7 @@ print_r($details);
         <?php foreach ($details as $i => $row): ?>
         <tr>
             <td>
-                <select name="details[<?= $i ?>][account_id]" required >
+                <select name="details[<?= $i ?>][account_id]" required>
                     <option value="">選択してください</option>
                     <?php foreach($accounts as $a): ?>
                         <option value="<?= h($a['id']) ?>" <?= (isset($row['account_id']) && $row['account_id'] == $a['id']) ? 'selected' : '' ?>>
@@ -42,25 +42,21 @@ print_r($details);
             </td>
 
             <td>
-                <input type="number" name="details[<?= $i ?>][amount]" value="<?= h($details[$i]['amount'] ?? '') ?>" required>
+                <input type="number" name="details[<?= $i ?>][amount]" value="<?= h($row['amount'] ?? '') ?>" required>
             </td>
 
             <td>
                 <select name="details[<?= $i ?>][side]" required>
-                    <option value="debit" <?= h($details[$i]['side'] ?? '') == 'debit' ? 'selected' : '' ?>>借方</option>
-                    <option value="credit" <?= h($details[$i]['side'] ?? '') == 'credit' ? 'selected' : '' ?>>貸方</option>
+                    <option value="debit" <?= ($row['side'] ?? '') == 'debit' ? 'selected' : '' ?>>借方</option>
+                    <option value="credit" <?= ($row['side'] ?? '') == 'credit' ? 'selected' : '' ?>>貸方</option>
                 </select>
             </td>
             <td> 
-                <button name="add_row" type="submit" value="add_row">行追加</button> 
-            </td>
-             <td> 
-                <button name="delete_row" type="submit" value="<?= $i ?>" formnovalidate>行削除</button> 
+                <button name="add_row" type="submit" value="1">行追加</button> 
             </td>
         </tr>
         <?php endforeach; ?>
-
     </table>
-    <button name="save" type="submit">保存</button>
+    <br>
+    <button type="submit" name="save">保存</button>
 </form>
-<?php

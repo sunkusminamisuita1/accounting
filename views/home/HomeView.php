@@ -13,16 +13,47 @@ require_once ROOT_PATH . '/app/DTO/Constants.php';
                     th { background: #f4f4f4; text-align: center; }
                     td { border: 1px solid #ccc; padding: 8px; text-align: right; }
                     .text-left { text-align: left; }
+/*                    .ProcSlct, .ProcSlct td {
+                        border: none !important; 
+                    }
+                    .ProcSlct { border-collapse: collapse; border: none; width: 20%; } */
                 </style>
             </head>
                 <body>
                     <h1>ホーム画面</h1>
                         <p>ようこそ <?= htmlspecialchars($_SESSION['user']['username'] ?? 'ゲスト') ?></p>
-                    <form action="index.php?route=logout" method="post">
-                        <!--	<input type="hidden" name="csrfTokenTime" value="<?= h($TokenTime) ?>"> -->
+
+                        <?php
+                            echo "qqqqqqq : {$_GET['route']}";
+                            require_once ROOT_PATH.'/views/lib/ProcSlct.php'; 
+                        ?>
+
+
+ 
+ 
+<!--                    <table class="ProcSlct">
+                        <tr>
+                            <td>
+                                <a href="index.php?route=voucher.create">
+                                    <button type="button">仕分処理</button>
+                                </a>
+                            </td>
+                            <td>
+                                <a href="index.php?route=logout">
+                                    <button type="button">ログアウト</button>
+                                </a>
+                        </td>
+                        </tr>
+                    </table>
+-->
+
+<!--                <form action="index.php?route=logout" method="post">
                         <input type="hidden" name="csrfTokenKey" value="<?= h($TokenKey) ?>">
                         <button type="submit">ログアウト</button>
                     </form>
+-->
+
+
                     <h2>試算表表示：<?= $ReportType ?></h2>
                     <form action="index.php?route=home" method="post">試算表<br>
 <!--                        <input type="hidden" name="csrfTokenTime" value="<?= h($TokenTime) ?>"> -->
