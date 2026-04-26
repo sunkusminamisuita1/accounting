@@ -50,13 +50,13 @@ class VoucherService{
         ];
     }
 
-    public function addEntry(array $data): void {
+    public function addEntry($VoucherDto): void {
         $this->initializeSession();
-        $voucherDate = $data['voucherDate'] ?? date('Y-m-d');
-        $side = $data['side'] ?? '';
-        $accountId = isset($data['account_id']) ? (int)$data['account_id'] : 9999;
-        $amount = $data['amount'] ?? 0;
-        $summary = $data['summary'] ?? '';
+        $voucherDate = $VoucherDto->Date;
+        $side = $VoucherDto->side ?? '';
+        $accountId = isset($VoucherDto->accountId) ? (int)$VoucherDto->accountId : 9999;
+        $amount = $VoucherDto->amount ?? 0;
+        $summary = $VoucherDto->Summary ?? '';
         $accountName = $this->resolveAccountName($accountId);
         if ($accountId !== 9999 && $accountId > 0) {
             $_SESSION['voucherRows'][$_SESSION['slipNum']] = [
@@ -95,25 +95,39 @@ class VoucherService{
         unset($_SESSION['creditAmountTotal']);
     }
 
-    public function saveVoucher(array $data): void{
-        $rows = $this->getVoucherRows();
-        $this->recalculateTotals();
-        $debitTotal = $_SESSION['debitAmountTotal'] ?? 0;
-        $creditTotal = $_SESSION['creditAmountTotal'] ?? 0;
-        if ($debitTotal !== $creditTotal) {
-            throw new Exception('借方と貸方の合計が一致しません');
-        }
-        if (empty($rows)) {
-            throw new Exception('伝票明細がありません');
-        }
-        $voucherData = [
-            'voucher_date' => $data['voucher_date'] ?? $rows[array_key_first($rows)]['date'],
-            'summary' => $data['summary'] ?? '',
-        ];
-        $debits = $this->buildDetails($rows, '借方');
-        $credits = $this->buildDetails($rows, '貸方');
-        $this->repo->insertVoucher($voucherData, $debits, $credits);
-        $this->clearEntries();
+    public function saveVoucher(array $VoucherDto): void{
+
+        $IndexCnt = count($VoucherDto->AccountId) ?? 0;
+        $this->repo->insertVoucher($voucherDto); 
+
+
+
+
+
+
+
+
+
+
+
+    //    $rows = $this->getVoucherRows();
+    //    $this->recalculateTotals();
+    //    $debitTotal = $_SESSION['debitAmountTotal'] ?? 0;
+    //    $creditTotal = $_SESSION['creditAmountTotal'] ?? 0;
+    //    if ($debitTotal !== $creditTotal) {
+    //        throw new Exception('借方と貸方の合計が一致しません');
+    //    }
+    //    if (empty($rows)) {
+    //        throw new Exception('伝票明細がありません');
+    //    }
+    //    $voucherData = [
+    //        'voucher_date' => $data['voucher_date'] ?? $rows[array_key_first($rows)]['date'],
+    //        'summary' => $data['summary'] ?? '',
+    //    ];
+    //    $debits = $this->buildDetails($rows, '借方');
+    //    $credits = $this->buildDetails($rows, '貸方');
+    //    $this->repo->insertVoucher($voucherData, $debits, $credits);
+    //    $this->clearEntries();
     }
 
     private function resolveAccountName(int $accountId): string {

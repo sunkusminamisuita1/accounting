@@ -1,15 +1,20 @@
 <?php
 require_once ROOT_PATH . '/app/services/VoucherService.php';
+require_once ROOT_PATH . '/app/DTO/VoucherDTO.php';
+require_once ROOT_PATH . '/app/Validators/voucherValidator.php';
 
 class VoucherController
 {
     private VoucherService $service;
+    private VoucherDTO $VoucherDto;
+    private VoucherValidator $validator;
 
     public function __construct()  {
         $this->service = new VoucherService();
+        $this->validator = new VoucherValidator();
     }
-
     public function create(): void    {
+        
         $TokenKey  = generateCsrfToken();
         $details = [];
         for ($i = 0; $i < 5; $i++) {
@@ -21,34 +26,61 @@ class VoucherController
         }
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             requireCsrf();
-        //    var_dump($_POST);
-              if (isset($_POST['add_row'])) {
-                  $this->service->addEntry($_POST);
-                  header('Location: index.php?route=voucher.store');
-                  exit;
+             if (isset($_POST['add_row'])) {
+                $details[] = [
+                    'account_id' => '',
+                    'amount' => '',
+                    'side' => ''
+                ];
+            }
+            
+             if (isset($_POST['delete_row'])) {
+                $idx = (int)$_POST['delete_row'];
+                unset($details[$idx]);
+                $details = array_values($details); // インデックスを並べ直す     saveVoucher(array $data)
+            }
+
+            foreach ($_POST['details'] as $i => $d) {
+                $details[] = [
+                    'account_id' => (int)$d['account_id'],
+                    'amount' => (int)$d['amount'],
+                    'side' => $d['side'],
+                    'line_no' => $i
+                ];
+            }
+
+            if (isset($_POST['save'])) {
+                    $this->VoucherDto = new VoucherDTO($details);
+                    $this->validator->validate($this->VoucherDto);
+                    $this->service->saveVoucher($this->VoucherDto);
+                   
+        //          $this->service->addEntry($this->VoucherDto);
+                    echo "<br>voucher save<br>";
+        //          header('Location: index.php?route=voucher.create');
+        //            exit;
               }
         }
 
-         $this->service->InitializeSession();
+        $this->service->InitializeSession();//voucher.createでは不要かも？
 
         //accountsテーブルから勘定科目を取得
         $accounts = $this->service->getAccounts();
 
         //セッションから伝票行、編集対象データ、合計金額を取得(初回は初期化データが入る)
-        $voucherRows = $this->service->getVoucherRows();
+        //$voucherRows = $this->service->getVoucherRows();  //voucher.createでは不要かも
 
         //$_SESSION['editData'] を代入　初回は初期化データが入る
-        $editData = $this->service->getEditData();
+        //$editData = $this->service->getEditData();  //voucher.createでは不要かも
 
         //借り方合計、貸し方合計を取得　初回は0が入る
-        $totals = $this->service->getTotals();
+        //$totals = $this->service->getTotals();
 
         //借方合計と貸方合計が等しいかつ伝票行が空でない場合はバランスしているとみなす(真偽値が$isBalancedに入る)
-        $isBalanced = 
-            $totals['debitAmountTotal'] === $totals['creditAmountTotal'] && !empty($voucherRows);
-        $flashMessage = $_SESSION['flash_message'] ?? null;
+        //$isBalanced = 
+        //    $totals['debitAmountTotal'] === $totals['creditAmountTotal'] && !empty($voucherRows);
+        //$flashMessage = $_SESSION['flash_message'] ?? null;
 
-        unset($_SESSION['flash_message']);
+        //unset($_SESSION['flash_message']);
         require ROOT_PATH . '/views/voucher/create.php';
     }
 

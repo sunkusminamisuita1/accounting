@@ -4,31 +4,31 @@ class VoucherValidator
 {
     public function validate(VoucherDTO $dto): void
     {
-        if (empty($dto->date)) {
+        if (empty($dto->Date)) {
             throw new Exception('日付は必須です');
         }
 
-        if (empty($dto->details)) {
-            throw new Exception('明細がありません');
+        if (empty($dto->Summary)) {
+            throw new Exception('摘要は必須です');
         }
 
         $debit = 0;
         $credit = 0;
 
-        foreach ($dto->details as $d) {
+        foreach ($dto->DtoDetails as $idx => $row) {
 
-            if ($d->amount <= 0) {
+            if ($row['amount'] <= 0) {
                 throw new Exception('金額は0より大きくしてください');
             }
 
-            if (!in_array($d->side, ['debit', 'credit'])) {
+            if (!in_array($row['side'], ['debit', 'credit'])) {
                 throw new Exception('貸借区分が不正です');
             }
 
-            if ($d->side === 'debit') {
-                $debit += $d->amount;
+            if ($row['side'] === 'debit') {
+                $debit += $row['amount'];
             } else {
-                $credit += $d->amount;
+                $credit += $row['amount'];
             }
         }
 

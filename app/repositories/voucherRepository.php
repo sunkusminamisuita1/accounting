@@ -57,42 +57,48 @@ class VoucherRepository{
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     
-    public function insertVoucher($data,$debits,$credits){
+    public function insertVoucher($Dto){
+        $IndexCount = count($Dto->accountId);
         $pdo = getPDO();
         $pdo->beginTransaction();
         try {
+            
             $stmt = $pdo->prepare("
-            INSERT INTO journal_vouchers
-            (voucher_date, summary, user_id)
-            VALUES (?,?,?)
+                INSERT INTO journal_vouchers
+                    (voucher_date, summary, user_id)
+                    VALUES (?,?,?)
             ");
             $stmt->execute([
-                $data['voucher_date'],
-                $data['summary'],
+                $Dto->Date,
+                $Dto->Summary  ,
                 $_SESSION['user']['id']
             ]);
-            $voucherId = $pdo->lastInsertId();
+            
             $stmtDetail = $pdo->prepare("
                 INSERT INTO journal_details
                     (voucher_id, account_id, side, amount)
                     VALUES (?,?,?,?)
             ");
-            foreach ($debits as $d) {
-                $stmtDetail->execute([
-                    $voucherId,
-                    $d['account_id'],
-                    'debit',
-                    $d['amount']
-                ]);
+            $voucherId = $pdo->lastInsertId();
+
+            for ($i = 0; $i < $IndexCount; $i++) {
+                if($Dto->side === 'debit') {
+                    $stmtDetail->execute([
+                        $voucherId,
+                        $Dto->account_id,
+                        'debit',
+                        $Dto->amount
+                    ]);
+                } else {
+                     $stmtDetail->execute([
+                        $voucherId,
+                        $Dto->account_id,
+                        'credit',
+                        $Dto->amount
+                    ]);
+                }
             }
-            foreach ($credits as $c) {
-                $stmtDetail->execute([
-                    $voucherId,
-                    $c['account_id'],
-                    'credit',
-                    $c['amount']
-                ]);
-            }
+
             $pdo->commit();
         } catch (Exception $e) {
             $pdo->rollBack();
