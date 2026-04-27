@@ -95,10 +95,10 @@ class VoucherService{
         unset($_SESSION['creditAmountTotal']);
     }
 
-    public function saveVoucher(array $VoucherDto): void{
+    public function saveVoucher( VoucherDTO $VoucherDto): void{
 
-        $IndexCnt = count($VoucherDto->AccountId) ?? 0;
-        $this->repo->insertVoucher($voucherDto); 
+        $IndexCnt = count($VoucherDto->account_id) ?? 0;
+        $this->repo->insertVoucher($VoucherDto); 
 
 
 

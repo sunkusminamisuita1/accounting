@@ -58,20 +58,21 @@ class VoucherRepository{
     }
     
     public function insertVoucher($Dto){
-        $IndexCount = count($Dto->accountId);
+        $IndexCount = count($Dto->account_id);
         $pdo = getPDO();
         $pdo->beginTransaction();
         try {
             
             $stmt = $pdo->prepare("
                 INSERT INTO journal_vouchers
-                    (voucher_date, summary, user_id)
-                    VALUES (?,?,?)
+                    (voucher_date, summary, user_id, created_at)
+                    VALUES (?,?,?,?)
             ");
             $stmt->execute([
                 $Dto->Date,
                 $Dto->Summary  ,
-                $_SESSION['user']['id']
+                $_SESSION['user']['id'],
+                date('Y-m-d H:i:s')
             ]);
             
             $stmtDetail = $pdo->prepare("
@@ -85,16 +86,16 @@ class VoucherRepository{
                 if($Dto->side === 'debit') {
                     $stmtDetail->execute([
                         $voucherId,
-                        $Dto->account_id,
+                        $Dto->account_id[$i],
                         'debit',
-                        $Dto->amount
+                        $Dto->amount[$i]
                     ]);
                 } else {
                      $stmtDetail->execute([
                         $voucherId,
-                        $Dto->account_id,
+                        $Dto->account_id[$i],
                         'credit',
-                        $Dto->amount
+                        $Dto->amount[$i]
                     ]);
                 }
             }
