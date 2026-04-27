@@ -14,7 +14,6 @@ class VoucherValidator
 
         $debit = 0;
         $credit = 0;
-
         foreach ($dto->DtoDetails as $idx => $row) {
 
             if ($row['amount'] <= 0) {

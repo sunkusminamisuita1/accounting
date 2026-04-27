@@ -13,7 +13,6 @@ if($_POST['delete_row'] ?? false) {
     unset($details[$idx]);
     $details = array_values($details); // インデックスを並べ直す
 } 
-print_r($details);
 ?>
 
 <form method="POST" action="index.php?route=voucher.create">   

@@ -17,13 +17,13 @@ class VoucherController
         
         $TokenKey  = generateCsrfToken();
         $details = [];
-        for ($i = 0; $i < 5; $i++) {
-            $details[$i] = [
-                'account_id' => '',
-                'amount' => '',
-                'side' => ''
-            ];
-        }
+    //    for ($i = 0; $i < 5; $i++) {
+    //        $details[$i] = [
+    //            'account_id' => '',
+    //            'amount' => '',
+    //            'side' => ''
+    //        ];
+    //    }
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             requireCsrf();
              if (isset($_POST['add_row'])) {

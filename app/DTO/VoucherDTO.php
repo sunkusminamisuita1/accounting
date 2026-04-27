@@ -4,7 +4,7 @@ class VoucherDTO
 {
     public  $Date;
     public  $Summary;
-    public array $accountId = [];
+    public array $account_id = [];
     public array $side = [];
     public array $amount = [];
     public array $DtoDetails = []; //明細行の配列
@@ -17,7 +17,7 @@ class VoucherDTO
             if (!isset($row['account_id'], $row['side'], $row['amount'])) {
                 throw new InvalidArgumentException('Invalid detail data');
             }
-            $this->accountId[$idx]  = $row['account_id'];
+            $this->account_id[$idx]  = $row['account_id'];
             $this->side[$idx]       = $row['side'];
             $this->amount[$idx]     = $row['amount'];
             $this->DtoDetails       = $Details;
