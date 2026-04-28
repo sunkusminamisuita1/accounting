@@ -2,14 +2,23 @@
 // app/validators/VoucherValidator.php
 class VoucherValidator
 {
+
+    private int $errno;
+    public function __construct()    {
+        $this->errno = 0;
+    }
+
+
     public function validate(VoucherDTO $dto): void
     {
         if (empty($dto->Date)) {
-            throw new Exception('日付は必須です');
+            $dto->ErrData['VoucherDto'] = '日付は必須です';
+            //throw new Exception('日付は必須です');
         }
 
         if (empty($dto->Summary)) {
-            throw new Exception('摘要は必須です');
+            $dto->ErrData['VoucherDto'] = '摘要は必須です';
+            //throw new Exception('摘要は必須です');
         }
 
         $debit = 0;
@@ -17,11 +26,13 @@ class VoucherValidator
         foreach ($dto->DtoDetails as $idx => $row) {
 
             if ($row['amount'] <= 0) {
-                throw new Exception('金額は0より大きくしてください');
+                $dto->ErrData['VoucherDto'] = '金額は0より大きくしてください';
+                //throw new Exception('金額は0より大きくしてください');
             }
 
             if (!in_array($row['side'], ['debit', 'credit'])) {
-                throw new Exception('貸借区分が不正です');
+                $dto->ErrData['VoucherDto'] = '貸借区分が不正です';
+                //throw new Exception('貸借区分が不正です');
             }
 
             if ($row['side'] === 'debit') {
@@ -32,7 +43,8 @@ class VoucherValidator
         }
 
         if ($debit !== $credit) {
-            throw new Exception('借方と貸方が一致しません');
+            $dto->ErrData['VoucherDto'] = '借方と貸方が一致しません';
+            //throw new Exception('借方と貸方が一致しません');
         }
     }
 }

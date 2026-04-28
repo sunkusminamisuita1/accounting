@@ -15,6 +15,14 @@ if($_POST['delete_row'] ?? false) {
 } 
 ?>
 
+<?php if (!empty($this->VoucherDto->ErrData)): ?>
+    <ul style="color: red;">
+        <?php foreach ($this->VoucherDto->ErrData as $mod => $err): ?>
+            <li><?= h($mod) . ": " . h($err) ?></li>
+        <?php endforeach; ?>
+    </ul>
+<?php endif; ?>
+
 <form method="POST" action="index.php?route=voucher.create">   
     日付 <input type="date" name="voucher_date" value="<?= h($_POST['voucher_date'] ?? '') ?>"><br>
     摘要 <input type="text" name="summary" value="<?= h($_POST['summary'] ?? '') ?>"><br>
