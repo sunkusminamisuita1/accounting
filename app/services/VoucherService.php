@@ -95,10 +95,10 @@ class VoucherService{
         unset($_SESSION['creditAmountTotal']);
     }
 
-    public function saveVoucher( VoucherDTO $VoucherDto): void{
+    //public function saveVoucher( VoucherDTO $VoucherDto): void{
 
-        $IndexCnt = count($VoucherDto->account_id) ?? 0;
-        $this->repo->insertVoucher($VoucherDto); 
+    //    $IndexCnt = count($VoucherDto->account_id) ?? 0;
+    //    $this->repo->insertVoucher($VoucherDto); 
 
 
 
@@ -128,7 +128,7 @@ class VoucherService{
     //    $credits = $this->buildDetails($rows, '貸方');
     //    $this->repo->insertVoucher($voucherData, $debits, $credits);
     //    $this->clearEntries();
-    }
+    //}
 
     private function resolveAccountName(int $accountId): string {
         foreach ($this->getAccounts() as $account) {
@@ -166,4 +166,42 @@ class VoucherService{
         $_SESSION['debitAmountTotal'] = $debit;
         $_SESSION['creditAmountTotal'] = $credit;
     }
+
+
+
+
+
+
+    private function VcrRowAdd($VcrDTO){
+        $details = $_POST['details'] ?? [];
+        $AddKey = (int)$_POST['add_row'] + 1; //追加する行の位置
+        $AddRow = [['account_id' => '', 'amount' => '', 'side' => 'debit']]; //初期値は借方
+        array_splice($details, $AddKey, 0, $AddRow);
+        $VcrDTO->DtoDetails = array_values($details); // インデックスを並べ直す     saveVoucher(array $data)
+    }
+            
+    private function VcrRowDel($VcrDTO){
+        $details = $_POST['details'] ?? [];
+        $idx = (int)$_POST['delete_row'];
+        unset($details[$idx]);
+        $VcrDTO->DtoDetails = array_values($details); // インデックスを並べ直す     saveVoucher(array $data)
+    }
+
+    private function VcrSave($VcrDTO,$Vcrvalidator){
+        //$this->VoucherDto = new VoucherDTO($details);
+        $Vcrvalidator->validate($VcrDTO);
+        if (empty($this->VcrDTO->ErrData)) {
+            //$this->service->saveVoucher($this->VoucherDto);
+            $IndexCnt = count($VcrDTO->account_id) ?? 0;
+            $this->repo->insertVoucher($VcrDTO); 
+        }
+    }
+
+
+
+
+
+
+
+
 }

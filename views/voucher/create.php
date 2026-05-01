@@ -1,20 +1,7 @@
 <h1>仕訳入力</h1>
 <?php
 require_once ROOT_PATH . '/views/lib/ProcSlct.php';
-
-$details = $_POST['details'] ?? [
-    0 => [],
-];
-if($_POST['add_row'] ?? false) {
-    $details[] = [];
-} 
-if($_POST['delete_row'] ?? false) {
-    $idx = (int)$_POST['delete_row'];
-    unset($details[$idx]);
-    $details = array_values($details); // インデックスを並べ直す
-} 
 ?>
-
 <?php if (!empty($this->VoucherDto->ErrData)): ?>
     <ul style="color: red;">
         <?php foreach ($this->VoucherDto->ErrData as $mod => $err): ?>
@@ -59,7 +46,7 @@ if($_POST['delete_row'] ?? false) {
                 </select>
             </td>
             <td> 
-                <button name="add_row" type="submit" value="add_row">行追加</button> 
+                <button name="add_row" type="submit" value="<?= $i ?>">行追加</button> 
             </td>
              <td> 
                 <button name="delete_row" type="submit" value="<?= $i ?>" formnovalidate>行削除</button> 

@@ -7,7 +7,7 @@ class VoucherDTO
     public array $account_id = [];
     public array $side = [];
     public array $amount = [];
-    public array $DtoDetails = []; //明細行の配列
+    public array $DtoDetails = [0 => ['account_id' => '', 'amount' => '', 'side' => 'debit']]; //明細行の配列
     public array $ErrData = []; //エラー行の配列 ['ModName' => 'エラーメッセージ']
 
 
@@ -22,8 +22,8 @@ class VoucherDTO
             $this->account_id[$idx]  = $row['account_id'];
             $this->side[$idx]       = $row['side'];
             $this->amount[$idx]     = $row['amount'];
-            $this->DtoDetails       = $Details;
+            $this->DtoDetails       = $_POST['details'] ?? [$Details];
         }
-        $_SESSION['VoucherDetail'] = $this->DtoDetails ?? ''; //セッションに伝票一枚分を保存(Voucher.create)
+        $_SESSION['VoucherDetail'] = $this->DtoDetails; //セッションに伝票一枚分を保存(Voucher.create)
     }
 }
