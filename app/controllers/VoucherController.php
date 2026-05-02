@@ -20,7 +20,7 @@ class VoucherController
         $accounts = $this->service->getAccounts();
         $this->VoucherDto = new VoucherDTO($_POST['details'] ?? []); //DTOにPOSTされた明細行を渡す
         $details = $this->VoucherDto->DtoDetails; //DTOから明細行を取得
-        print_r($details); echo "<br>";// デバッグ用
+        print_r($details); echo "date: " . $this->VoucherDto->Date . "<br>";// デバッグ用
         if ($_SERVER['REQUEST_METHOD'] === 'POST') 
         {
             requireCsrf();
@@ -49,7 +49,8 @@ class VoucherController
             //    if (empty($this->VoucherDto->ErrData)) {
             //        $this->service->saveVoucher($this->VoucherDto);
             //    }
-            }        
+            }
+            $details = $this->VoucherDto->DtoDetails; //DTOから明細行を再取得
         
         }
         require ROOT_PATH . '/views/voucher/create.php';

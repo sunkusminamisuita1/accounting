@@ -172,7 +172,7 @@ class VoucherService{
 
 
 
-    private function VcrRowAdd($VcrDTO){
+    public function VcrRowAdd($VcrDTO){
         $details = $_POST['details'] ?? [];
         $AddKey = (int)$_POST['add_row'] + 1; //追加する行の位置
         $AddRow = [['account_id' => '', 'amount' => '', 'side' => 'debit']]; //初期値は借方
@@ -180,14 +180,14 @@ class VoucherService{
         $VcrDTO->DtoDetails = array_values($details); // インデックスを並べ直す     saveVoucher(array $data)
     }
             
-    private function VcrRowDel($VcrDTO){
+    public function VcrRowDel($VcrDTO){
         $details = $_POST['details'] ?? [];
         $idx = (int)$_POST['delete_row'];
         unset($details[$idx]);
         $VcrDTO->DtoDetails = array_values($details); // インデックスを並べ直す     saveVoucher(array $data)
     }
 
-    private function VcrSave($VcrDTO,$Vcrvalidator){
+    public function VcrSave($VcrDTO,$Vcrvalidator){
         //$this->VoucherDto = new VoucherDTO($details);
         $Vcrvalidator->validate($VcrDTO);
         if (empty($this->VcrDTO->ErrData)) {

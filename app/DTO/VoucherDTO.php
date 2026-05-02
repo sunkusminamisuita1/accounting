@@ -2,8 +2,8 @@
 // app/DTO/VoucherDTO.php
 class VoucherDTO
 {
-    public  $Date;
-    public  $Summary;
+    public  $Date = '';
+    public  $Summary = '';
     public array $account_id = [];
     public array $side = [];
     public array $amount = [];
