@@ -10,7 +10,6 @@ class VoucherDTO
     public array $DtoDetails = [0 => ['account_id' => '', 'amount' => '', 'side' => 'debit']]; //明細行の配列
     public array $ErrData = []; //エラー行の配列 ['ModName' => 'エラーメッセージ']
 
-
     public function __construct(array $Details)
     {
         $this->Date      = $_POST['voucher_date'] ?? ''; //create.phpのVoucherDate

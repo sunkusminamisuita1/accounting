@@ -95,41 +95,6 @@ class VoucherService{
         unset($_SESSION['creditAmountTotal']);
     }
 
-    //public function saveVoucher( VoucherDTO $VoucherDto): void{
-
-    //    $IndexCnt = count($VoucherDto->account_id) ?? 0;
-    //    $this->repo->insertVoucher($VoucherDto); 
-
-
-
-
-
-
-
-
-
-
-
-    //    $rows = $this->getVoucherRows();
-    //    $this->recalculateTotals();
-    //    $debitTotal = $_SESSION['debitAmountTotal'] ?? 0;
-    //    $creditTotal = $_SESSION['creditAmountTotal'] ?? 0;
-    //    if ($debitTotal !== $creditTotal) {
-    //        throw new Exception('借方と貸方の合計が一致しません');
-    //    }
-    //    if (empty($rows)) {
-    //        throw new Exception('伝票明細がありません');
-    //    }
-    //    $voucherData = [
-    //        'voucher_date' => $data['voucher_date'] ?? $rows[array_key_first($rows)]['date'],
-    //        'summary' => $data['summary'] ?? '',
-    //    ];
-    //    $debits = $this->buildDetails($rows, '借方');
-    //    $credits = $this->buildDetails($rows, '貸方');
-    //    $this->repo->insertVoucher($voucherData, $debits, $credits);
-    //    $this->clearEntries();
-    //}
-
     private function resolveAccountName(int $accountId): string {
         foreach ($this->getAccounts() as $account) {
             if ($account['id'] === $accountId) {
@@ -167,11 +132,6 @@ class VoucherService{
         $_SESSION['creditAmountTotal'] = $credit;
     }
 
-
-
-
-
-
     public function VcrRowAdd($VcrDTO){
         $details = $_POST['details'] ?? [];
         $AddKey = (int)$_POST['add_row'] + 1; //追加する行の位置
@@ -187,21 +147,12 @@ class VoucherService{
         $VcrDTO->DtoDetails = array_values($details); // インデックスを並べ直す     saveVoucher(array $data)
     }
 
-    public function VcrSave($VcrDTO,$Vcrvalidator){
+    public function VcrSave($VcrDTO,$VcrValidator){
         //$this->VoucherDto = new VoucherDTO($details);
-        $Vcrvalidator->validate($VcrDTO);
-        if (empty($this->VcrDTO->ErrData)) {
-            //$this->service->saveVoucher($this->VoucherDto);
+        $VcrValidator->validate($VcrDTO);
+        if (empty($VcrDTO->ErrData)) {
             $IndexCnt = count($VcrDTO->account_id) ?? 0;
             $this->repo->insertVoucher($VcrDTO); 
         }
     }
-
-
-
-
-
-
-
-
 }

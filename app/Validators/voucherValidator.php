@@ -1,5 +1,4 @@
 <?php
-// app/validators/VoucherValidator.php
 class VoucherValidator
 {
 
@@ -13,26 +12,24 @@ class VoucherValidator
     {
         if (empty($dto->Date)) {
             $dto->ErrData['VoucherDto'] = '日付は必須です';
-            //throw new Exception('日付は必須です');
+            return;
         }
 
         if (empty($dto->Summary)) {
             $dto->ErrData['VoucherDto'] = '摘要は必須です';
-            //throw new Exception('摘要は必須です');
+            return;
         }
-
         $debit = 0;
         $credit = 0;
         foreach ($dto->DtoDetails as $idx => $row) {
 
             if ($row['amount'] <= 0) {
                 $dto->ErrData['VoucherDto'] = '金額は0より大きくしてください';
-                //throw new Exception('金額は0より大きくしてください');
             }
 
             if (!in_array($row['side'], ['debit', 'credit'])) {
                 $dto->ErrData['VoucherDto'] = '貸借区分が不正です';
-                //throw new Exception('貸借区分が不正です');
+                return;
             }
 
             if ($row['side'] === 'debit') {
@@ -44,8 +41,7 @@ class VoucherValidator
 
         if ($debit !== $credit) {
             $dto->ErrData['VoucherDto'] = '借方と貸方が一致しません';
-            //throw new Exception('借方と貸方が一致しません');
+            return;
         }
     }
 }
-?>
