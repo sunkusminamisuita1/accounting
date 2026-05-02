@@ -18,6 +18,8 @@ class VoucherController
         $this->service->InitializeSession();//voucher.createでは不要かも？
         //accountsテーブルから勘定科目を取得
         $accounts = $this->service->getAccounts();
+        echo "DATE:の内容: " . ($_POST['voucher_date'] ?? 'setなし') . "<br>"; // デバッグ用
+
         $this->VoucherDto = new VoucherDTO($_POST['details'] ?? []); //DTOにPOSTされた明細行を渡す
         $details = $this->VoucherDto->DtoDetails; //DTOから明細行を取得
         print_r($details); echo "date: " . $this->VoucherDto->Date . "<br>";// デバッグ用
