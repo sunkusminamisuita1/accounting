@@ -13,15 +13,4 @@ class VoucherDetailDTO
         $this->amount = $amount;
     }
 }
-
-
-
-
-//class VoucherDetailDTO
-//{
-//    public int $accountId;
-//    public string $side;
-//    public int $amount;
-//    public int $lineNo;
-//}
 ?>
