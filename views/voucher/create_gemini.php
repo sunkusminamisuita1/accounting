@@ -11,11 +11,7 @@ $details = $_POST['details'] ?? [
 if (isset($_POST['add_row'])) {
     $details[] = ['account_id' => '', 'amount' => '', 'side' => 'debit'];
 }
-
-// デバッグ用確認
-// print_r($details); 
 ?>
-
 <form method="POST" action="index.php?route=voucher.create">
     日付 <input type="date" name="voucher_date" value="<?= h($_POST['voucher_date'] ?? '') ?>"><br>
     摘要 <input type="text" name="summary" value="<?= h($_POST['summary'] ?? '') ?>"><br>

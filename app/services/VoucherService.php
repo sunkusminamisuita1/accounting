@@ -148,7 +148,6 @@ class VoucherService{
     }
 
     public function VcrSave($VcrDTO,$VcrValidator){
-        //$this->VoucherDto = new VoucherDTO($details);
         $VcrValidator->validate($VcrDTO);
         if (empty($VcrDTO->ErrData)) {
             $IndexCnt = count($VcrDTO->account_id) ?? 0;

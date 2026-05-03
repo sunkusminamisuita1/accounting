@@ -18,10 +18,6 @@ function requirePost(): void
 function DispErrorMsg($ErrMsg)
 {
     if (!empty($ErrMsg)) {
-
- 
-
-
         echo "<script type='text/javascript'>
                     alert('". h($ErrMsg) ."');
                     window.location.href = 'index.php?route=login';
@@ -33,14 +29,3 @@ function DispErrorMsg($ErrMsg)
     return null;
    
 }
-
-
-
-
-
-//echo "<script type='text/javascript'>
-//            alert('ログインしていません。ログイン画面へ戻ります。');
-//            window.location.href = '/login.php';
-//          </script>";
-//    exit;
-?>

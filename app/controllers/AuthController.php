@@ -12,24 +12,12 @@ class AuthController{
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             requireCsrf();
             try {
-
-
-
-
                 require_once ROOT_PATH.'/app/DTO/LoginDTO.php';
                 $dto = new LoginDTO(
                                     trim($_POST['email']),
                                     $_POST['password']
                                     );
                 $user = $this->service->login($dto);
-
-
-
-            //    $user = $this->service->login(
-            //        trim($_POST['email']),
-            //        $_POST['password']
-            //    );
-                // SESSIONはControllerでのみ扱う
                 session_regenerate_id(true);
                 $_SESSION['user'] = [
                     'id' => (int)$user['id'],
@@ -72,35 +60,5 @@ class AuthController{
         $TokenKey = generateCsrfToken();
         require ROOT_PATH.'/views/auth/register.php';
     }
-
-
-
-//    public function register()
-//    {
-//        $message = '';
-//        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-//            requirePost();
-//            verifyCsrfToken($_POST['csrfTokenKey'] ?? '');
-//            try {
-//                $this->service->register([
-//                    'username' => trim($_POST['username']),
-//                    'email' => trim($_POST['email']),
-//                    'password' => $_POST['password'],
-//                    'fiscal_month' => (int)$_POST['fiscal_month'],
-//                    'fiscal_day' => (int)$_POST['fiscal_day']
-//                ]);
-//                header('Location: index.php?route=login');
-//                exit;
-//            } catch (Exception $e) {
-//                $message = $e->getMessage();
-//            }
-//        }
-//        $TokenKey = generateCsrfToken();
-//        require ROOT_PATH.'/views/auth/register.php';
-//    }
-
-
-
-
 }
 ?>

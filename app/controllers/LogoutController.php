@@ -1,9 +1,5 @@
 <?php
 class LogoutController{
-//    private $service;
-//    public function __construct() {
-//        $this->service = new ReportService();
-//    }
     public function index() {
 // セッション開始（未開始の場合）
         if (session_status() == PHP_SESSION_NONE) {

@@ -1,21 +1,11 @@
 <?php
 function getLoginUserId(): int
 {
-//	if (empty($_SESSION['user']['id'])) {
-//		throw new Exception('ログインしていません');
-//	}
-//	return (int)$_SESSION['user']['id'];
-
-if (empty($_SESSION['user']['id'])) {
-    // 1. エラーメッセージをセッションに保存（移動先で表示するため）
-    $_SESSION['flash_message'] = "再度ログインしてください。";
-}
-
+	if (empty($_SESSION['user']['id'])) {
+    	// 1. エラーメッセージをセッションに保存（移動先で表示するため）
+    	$_SESSION['flash_message'] = "再度ログインしてください。";
+	}
 	return (int)$_SESSION['user']['id'];
-
-
-
-
 }
 
 function generateCsrfToken(): string
@@ -28,7 +18,6 @@ function generateCsrfToken(): string
     }
 	$tokenKey = bin2hex(random_bytes(32));
 	$_SESSION['csrfTokens'][$tokenKey] = time();
-//	$_SESSION['csrfTokenKey'] = $tokenKey;
 	return $tokenKey;
 }
 

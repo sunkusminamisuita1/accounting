@@ -68,7 +68,6 @@ class VoucherController
     public function index() {
         $userId = getLoginUserId();
         $vouchers = $this->Service->list($userId);
-        //print_r($vouchers);
         require ROOT_PATH.'/views/voucher/index.php';
     }
 
