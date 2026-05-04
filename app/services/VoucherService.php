@@ -148,7 +148,7 @@ class VoucherService{
     }
 
     public function VcrSave($VcrDTO,$VcrValidator){
-        $VcrValidator->validate($VcrDTO);
+        //$VcrValidator->validate($VcrDTO);
         if (empty($VcrDTO->ErrData)) {
             $IndexCnt = count($VcrDTO->account_id) ?? 0;
             $this->repo->insertVoucher($VcrDTO); 

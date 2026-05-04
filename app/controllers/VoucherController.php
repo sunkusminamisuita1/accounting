@@ -15,26 +15,12 @@ class VoucherController
     }
     public function create(): void    {
         $TokenKey  = generateCsrfToken();
-        $this->Service->InitializeSession();//voucher.createでは不要かも？
-        //accountsテーブルから勘定科目を取得
         $accounts = $this->Service->getAccounts();
         $this->VoucherDto = new VoucherDTO($_POST['details'] ?? []); //DTOにPOSTされた明細行を渡す
         $details = $this->VoucherDto->DtoDetails; //DTOから明細行を取得
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') 
-        {
-            requireCsrf();
-            if (isset($_POST['add_row'])) {  
-                $this->Service->VcrRowAdd($this->VoucherDto);
-            }
-            if (isset($_POST['delete_row'])) {
-                $this->Service->VcrRowDel($this->VoucherDto);
-            }
-
-            if (isset($_POST['save'])) {
-                $this->Service->VcrSave($this->VoucherDto,$this->validator);
-            }
+        if ($_SERVER['REQUEST_METHOD'] === 'POST'){
+            $this->PvtVcrsave();
             $details = $this->VoucherDto->DtoDetails; //DTOから明細行を再取得
-        
         }
         require ROOT_PATH . '/views/voucher/create.php';
     }
@@ -97,5 +83,18 @@ class VoucherController
         $this->Service->delete($id);
         header('Location: index.php?route=voucher.index');
         exit;
+    }
+    private function PvtVcrsave(){
+        requireCsrf();
+        if (isset($_POST['add_row'])) {  
+            $this->Service->VcrRowAdd($this->VoucherDto);
+        }
+        if (isset($_POST['delete_row'])) {
+            $this->Service->VcrRowDel($this->VoucherDto);
+        }
+        if (isset($_POST['save'])) {
+            $this->validator->validate($this->VoucherDto);
+            $this->Service->VcrSave($this->VoucherDto,$this->validator);
+        }
     }
 }
