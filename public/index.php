@@ -22,21 +22,29 @@ $routes =   [
                         'method' => 'index',
                         'auth' => true
                 ],
+                //仕分け伝票一覧
                 'voucher.index' => [
                         'controller' => VoucherController::class,
                         'method' => 'index',
                         'auth' => true
                 ],
-
+                //仕分け伝票編集
                 'voucher.edit' => [
                         'controller' => VoucherController::class,
                         'method' => 'edit',
                         'auth' => true
                 ],
-
+                //仕分け伝票更新
                 'voucher.update' => [
                         'controller' => VoucherController::class,
                         'method' => 'update',
+                        'auth' => true
+                ],
+
+                //仕分け伝票修正検索
+                'voucher.list' => [
+                        'controller' => VoucherController::class,
+                        'method' => 'list',
                         'auth' => true
                 ],
 

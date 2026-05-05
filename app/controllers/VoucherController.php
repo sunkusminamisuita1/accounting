@@ -13,6 +13,7 @@ class VoucherController
         $this->Service = new VoucherService();
         $this->validator = new VoucherValidator();
     }
+
     public function create(): void    {
         $TokenKey  = generateCsrfToken();
         $accounts = $this->Service->getAccounts();
@@ -50,12 +51,20 @@ class VoucherController
         header('Location: index.php?route=voucher.index');
         exit;
     }
-        // 一覧
+    // 一覧
     public function index() {
         $userId = getLoginUserId();
         $vouchers = $this->Service->list($userId);
         require ROOT_PATH.'/views/voucher/index.php';
     }
+
+    // 修正、削除データ検索
+    public function list() {
+        $userId = getLoginUserId();
+        $vouchers = $this->Service->list($userId);
+        require ROOT_PATH.'/views/voucher/index.php';
+    }
+
 
     // 編集画面
     public function edit(){
