@@ -1,17 +1,17 @@
 <?php
 require_once ROOT_PATH . '/app/services/VoucherService.php';
 require_once ROOT_PATH . '/app/DTO/VoucherDTO.php';
-require_once ROOT_PATH . '/app/Validators/voucherValidator.php';
+//require_once ROOT_PATH . '/app/Validators/VoucherValidator.php';
 
 class VoucherController
 {
     private VoucherService $Service;
     private VoucherDTO $VoucherDto;
-    private VoucherValidator $validator;
+    //private VoucherValidator $validator;
 
     public function __construct()  {
         $this->Service = new VoucherService();
-        $this->validator = new VoucherValidator();
+        //$this->validator = new VoucherValidator();
     }
 
     public function create(): void    {
@@ -20,8 +20,14 @@ class VoucherController
         $this->VoucherDto = new VoucherDTO($_POST['details'] ?? []); //DTOにPOSTされた明細行を渡す
         $details = $this->VoucherDto->DtoDetails; //DTOから明細行を取得
         if ($_SERVER['REQUEST_METHOD'] === 'POST'){
-            $this->PvtVcrsave();
-            $details = $this->VoucherDto->DtoDetails; //DTOから明細行を再取得
+        //    $this->PvtVcrsave();
+        //    $details = $this->VoucherDto->DtoDetails; //DTOから明細行を再取得
+        $this->Service->VcrCreate($this->VoucherDto)
+
+
+
+
+
         }
         require ROOT_PATH . '/views/voucher/create.php';
     }
@@ -60,6 +66,8 @@ class VoucherController
 
     // 修正、削除データ検索
     public function list() {
+        $TokenKey  = generateCsrfToken();
+        $accounts = $this->Service->getAccounts();
         $userId = getLoginUserId();
         $vouchers = $this->Service->list($userId);
         require ROOT_PATH.'/views/voucher/index.php';
@@ -93,17 +101,17 @@ class VoucherController
         header('Location: index.php?route=voucher.index');
         exit;
     }
-    private function PvtVcrsave(){
-        requireCsrf();
-        if (isset($_POST['add_row'])) {  
-            $this->Service->VcrRowAdd($this->VoucherDto);
-        }
-        if (isset($_POST['delete_row'])) {
-            $this->Service->VcrRowDel($this->VoucherDto);
-        }
-        if (isset($_POST['save'])) {
-            $this->validator->validate($this->VoucherDto);
-            $this->Service->VcrSave($this->VoucherDto,$this->validator);
-        }
-    }
+    //private function PvtVcrsave(){
+    //    requireCsrf();
+    //    if (isset($_POST['add_row'])) {  
+    //        $this->Service->VcrRowAdd($this->VoucherDto);
+    //    }
+    //    if (isset($_POST['delete_row'])) {
+    //        $this->Service->VcrRowDel($this->VoucherDto);
+    //    }
+    //    if (isset($_POST['save'])) {
+    //        $this->validator->validate($this->VoucherDto);
+    //        $this->Service->VcrSave($this->VoucherDto,$this->validator);
+    //    }
+    //}
 }

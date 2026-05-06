@@ -1,10 +1,12 @@
 <?php
 require_once ROOT_PATH . '/app/repositories/voucherRepository.php';
+require_once ROOT_PATH . '/app/Validators/VoucherValidator.php';
 
 class VoucherService{
     private VoucherRepository $repo;
     public function __construct()    {
-        $this->repo = new VoucherRepository();
+        $this->Repo = new VoucherRepository();
+        $this->Validator = new VoucherValidator();
     }
 
     public function list(int $userId): array {
@@ -130,6 +132,22 @@ class VoucherService{
         }
         $_SESSION['debitAmountTotal'] = $debit;
         $_SESSION['creditAmountTotal'] = $credit;
+    }
+
+    
+    
+    public function VcrCreate($VoucherDto){
+        requireCsrf();
+        if (isset($_POST['add_row'])) {  
+            VcrRowAdd($VoucherDto);
+        }
+        if (isset($_POST['delete_row'])) {
+            VcrRowDel($VoucherDto);
+        }
+        if (isset($_POST['save'])) {
+            $this->Validator->validate($VoucherDto);
+            VcrSave($VoucherDto,$this->Validator);
+        }
     }
 
     public function VcrRowAdd($VcrDTO){

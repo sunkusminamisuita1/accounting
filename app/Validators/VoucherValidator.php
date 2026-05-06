@@ -8,7 +8,7 @@ class VoucherValidator
     }
 
 
-    public function validate(VoucherDTO $dto): void
+    public function Validate(VoucherDTO $dto): void
     {
         if (empty($dto->Date)) {
             $dto->ErrData['VoucherDto'] = '日付は必須です';
