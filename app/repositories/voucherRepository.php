@@ -83,7 +83,7 @@ class VoucherRepository{
             $voucherId = $pdo->lastInsertId();
 
             for ($i = 0; $i < $IndexCount; $i++) {
-                if($Dto->side === 'debit') {
+                if($Dto->side[$i] === 'debit') {
                     $stmtDetail->execute([
                         $voucherId,
                         $Dto->account_id[$i],

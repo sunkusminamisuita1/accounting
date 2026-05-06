@@ -3,26 +3,27 @@ require_once ROOT_PATH . '/app/repositories/voucherRepository.php';
 require_once ROOT_PATH . '/app/Validators/VoucherValidator.php';
 
 class VoucherService{
-    private VoucherRepository $repo;
+    private VoucherRepository $Repo;
+    private VoucherValidator $Validator;
     public function __construct()    {
         $this->Repo = new VoucherRepository();
         $this->Validator = new VoucherValidator();
     }
 
     public function list(int $userId): array {
-        return $this->repo->findAllByUser($userId);
+        return $this->Repo->findAllByUser($userId);
     }
 
     public function find(int $id) {
-        return $this->repo->find($id);
+        return $this->Repo->find($id);
     }
 
     public function update(int $id, array $data){
-        $this->repo->update($id, $data);
+        $this->Repo->update($id, $data);
     }
 
     public function delete(int $id) {
-        $this->repo->delete($id);
+        $this->Repo->delete($id);
     }
 
     public function InitializeSession(): void    {
@@ -34,7 +35,7 @@ class VoucherService{
     }
 
     public function getAccounts(): array {
-        return $this->repo->getAccounts();
+        return $this->Repo->getAccounts();
     }
 
     public function getVoucherRows(): array {
@@ -134,19 +135,17 @@ class VoucherService{
         $_SESSION['creditAmountTotal'] = $credit;
     }
 
-    
-    
     public function VcrCreate($VoucherDto){
         requireCsrf();
         if (isset($_POST['add_row'])) {  
-            VcrRowAdd($VoucherDto);
+            $this->VcrRowAdd($VoucherDto);
         }
         if (isset($_POST['delete_row'])) {
-            VcrRowDel($VoucherDto);
+            $this->VcrRowDel($VoucherDto);
         }
         if (isset($_POST['save'])) {
             $this->Validator->validate($VoucherDto);
-            VcrSave($VoucherDto,$this->Validator);
+            $this->VcrSave($VoucherDto,$this->Validator);
         }
     }
 
@@ -169,7 +168,7 @@ class VoucherService{
         //$VcrValidator->validate($VcrDTO);
         if (empty($VcrDTO->ErrData)) {
             $IndexCnt = count($VcrDTO->account_id) ?? 0;
-            $this->repo->insertVoucher($VcrDTO); 
+            $this->Repo->insertVoucher($VcrDTO); 
         }
     }
 }

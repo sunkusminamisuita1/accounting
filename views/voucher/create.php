@@ -1,6 +1,7 @@
 <h1>仕訳入力</h1>
 <?php
 require_once ROOT_PATH . '/views/lib/ProcSlct.php';
+$details = $this->VoucherDto->DtoDetails;
 ?>
 <?php if (!empty($this->VoucherDto->ErrData)): ?>
     <ul style="color: red;">
