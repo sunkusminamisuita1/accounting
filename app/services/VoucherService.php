@@ -146,6 +146,10 @@ class VoucherService{
         if (isset($_POST['save'])) {
             $this->Validator->validate($VoucherDto);
             $this->VcrSave($VoucherDto,$this->Validator);
+            if(empty($VoucherDto->ErrData)) {
+                $VoucherDto->InitDetailsDto(); //保存成功後、DTOの明細行を初期化
+                $VoucherDto->ErrData = ['VoucherService' => '保存が完了しました'];
+            }
         }
     }
 
