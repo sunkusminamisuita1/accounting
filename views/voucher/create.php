@@ -10,7 +10,7 @@ $details = $this->VoucherDto->DtoDetails;
         <?php endforeach; ?>
     </ul>
 <?php endif; ?>
-
+<br>
 <form method="POST" action="index.php?route=voucher.create">   
     日付 <input type="date" name="voucher_date" value="<?= h($_POST['voucher_date'] ?? '') ?>"><br>
     摘要 <input type="text" name="summary" value="<?= h($_POST['summary'] ?? '') ?>"><br>

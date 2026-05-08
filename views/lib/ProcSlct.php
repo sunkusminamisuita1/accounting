@@ -1,23 +1,22 @@
 <?php
 // 1. ルート設定をデータとして定義（保守が楽）
 
-$url = $_SERVER['HTTP_REFERER'];
-$url = ltrim(strchr($url,'route='), 'route='); //'='前を削除
+$RtnRoute = $_SERVER['HTTP_REFERER']??'route=home'; //呼び出し元URLを取得
+$RtnRoute = ltrim(strchr($RtnRoute,'route='), 'route='); //'='前を削除
 
 $all_routes = [
+    'home'           => 'ホーム',
     'voucher.create' => '仕分処理',
     'voucher.list'   => '仕分伝票修正',
     'voucher.edit'   => '仕分修正',
     'voucher.delete' => '仕分削除',
     'voucher.index'  => '仕分一覧',
     'logout'         => 'ログアウト',
-    $url             => '戻る', //呼び出し元に戻るボタンを追加  
+//    $url             => '戻る', //呼び出し元に戻るボタンを追加  
 ];
 
 $route = $_GET['route'] ?? '';
-//$route = $_SERVER['REQUEST_URI'];
-//$route = ltrim(strchr($route,'route='), 'route='); //'='以前を削除
-echo "現在のルート: " . h($route) . "<br>"; // デバッグ用表示
+echo "route:{$route}<br>";
 // 2. ガード節（エラーなら先に終わらせる）
 if (empty($route) || ($route !== 'home' && !isset($all_routes[$route]))) {
     DispErrorMsg("ルート「{$route}」は正しくありません。");
@@ -29,7 +28,8 @@ if (empty($route) || ($route !== 'home' && !isset($all_routes[$route]))) {
 // 'home' の時は全部ON、それ以外の時は自分以外をONにする
 $display_buttons = [];
 foreach ($all_routes as $key => $label) {
-    if ($route === 'home' || $route !== $key) {
+    //if ($route === 'home' || $route !== $key) {
+    if ($route !== $key) {
         $display_buttons[$key] = $label;
     }
 }
@@ -46,9 +46,17 @@ foreach ($all_routes as $key => $label) {
         <?php foreach  ($display_buttons as $key => $label): ?>
             <td>
                 <a href="http://test5.local/index.php?route=<?= h($key) ?>">
-                    <button type="button"><?= h($label) ?></button>
+                    <button type="button"><?= h($label) ?>
+                    </button>
                 </a>
             </td>
         <?php endforeach; ?>
+            <td>
+                <a href="http://test5.local/index.php?route=<?= h($RtnRoute) ?>">
+                    <button type="button"><?= h('戻る') ?>
+                    </button>
+                </a>
+
+            </td>
     </tr>
 </table>
