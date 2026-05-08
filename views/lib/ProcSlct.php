@@ -1,15 +1,23 @@
 <?php
 // 1. ルート設定をデータとして定義（保守が楽）
+
+$url = $_SERVER['HTTP_REFERER'];
+$url = ltrim(strchr($url,'route='), 'route='); //'='前を削除
+
 $all_routes = [
     'voucher.create' => '仕分処理',
+    'voucher.list'   => '仕分伝票修正',
     'voucher.edit'   => '仕分修正',
     'voucher.delete' => '仕分削除',
     'voucher.index'  => '仕分一覧',
     'logout'         => 'ログアウト',
+    $url             => '戻る', //呼び出し元に戻るボタンを追加  
 ];
 
 $route = $_GET['route'] ?? '';
-
+//$route = $_SERVER['REQUEST_URI'];
+//$route = ltrim(strchr($route,'route='), 'route='); //'='以前を削除
+echo "現在のルート: " . h($route) . "<br>"; // デバッグ用表示
 // 2. ガード節（エラーなら先に終わらせる）
 if (empty($route) || ($route !== 'home' && !isset($all_routes[$route]))) {
     DispErrorMsg("ルート「{$route}」は正しくありません。");
@@ -37,7 +45,7 @@ foreach ($all_routes as $key => $label) {
     <tr>
         <?php foreach  ($display_buttons as $key => $label): ?>
             <td>
-                <a href="index.php?route=<?= h($key) ?>">
+                <a href="http://test5.local/index.php?route=<?= h($key) ?>">
                     <button type="button"><?= h($label) ?></button>
                 </a>
             </td>

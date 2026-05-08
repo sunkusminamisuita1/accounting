@@ -57,10 +57,11 @@ class VoucherController
     // 修正、削除データ検索
     public function list() {
         $TokenKey  = generateCsrfToken();
+        $this->VoucherDto = new VoucherDTO($_POST['details'] ?? []);
         $accounts = $this->Service->getAccounts();
         $userId = getLoginUserId();
-        $vouchers = $this->Service->list($userId);
-        require ROOT_PATH.'/views/voucher/index.php';
+        //$vouchers = $this->Service->list($userId);
+        require ROOT_PATH.'/views/voucher/list.php';
     }
 
     // 編集画面
