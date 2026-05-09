@@ -144,12 +144,24 @@ class VoucherService{
             $this->VcrRowDel($VoucherDto);
         }
         if (isset($_POST['save'])) {
-            $this->Validator->validate($VoucherDto);
+            $this->Validator->Create($VoucherDto);
             $this->VcrSave($VoucherDto,$this->Validator);
             if(empty($VoucherDto->ErrData)) {
                 $VoucherDto->InitDetailsDto(); //保存成功後、DTOの明細行を初期化
                 $VoucherDto->ErrData = ['VoucherService' => '保存が完了しました'];
             }
+        }
+    }
+
+    public function VcrList($VoucherDto){
+        requireCsrf();
+        $VoucherDto->List(); //DTOのListメソッドで検索条件をセット
+        if (isset($_POST['SimpleSearch'])) {  
+            //echo "SimpleSearch selected";exit; // デバッグ用出力
+            $this->Validator->list($VoucherDto);
+        }
+        if (isset($_POST['CompoundSearch'])) {
+            $this->Validator->list($VoucherDto);
         }
     }
 
@@ -169,7 +181,6 @@ class VoucherService{
     }
 
     public function VcrSave($VcrDTO,$VcrValidator){
-        //$VcrValidator->validate($VcrDTO);
         if (empty($VcrDTO->ErrData)) {
             $IndexCnt = count($VcrDTO->account_id) ?? 0;
             $this->Repo->insertVoucher($VcrDTO); 

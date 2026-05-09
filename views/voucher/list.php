@@ -3,6 +3,13 @@
 require_once ROOT_PATH . '/views/lib/ProcSlct.php';
 $details = $this->VoucherDto->DtoDetails;
 ?>
+<?php if (!empty($this->VoucherDto->ErrData)): ?>
+    <ul style="color: red;">
+        <?php foreach ($this->VoucherDto->ErrData as $mod => $err): ?>
+            <li><?= h($mod) . ": " . h($err) ?></li>
+        <?php endforeach; ?>
+    </ul>
+<?php endif; ?>
     <br><hr>
 <h3>単独検索(伝票No，取引日付，取引金額，摘要欄あいまい検索)は、<br>
     １つ以上の検索条件を入力して検索ボタンを押してください。
@@ -16,7 +23,7 @@ $details = $this->VoucherDto->DtoDetails;
             </td>
 
             <td>
-                <input type="text" name="ListDate" value="<?= h($_POST['ListDate'] ?? '') ?>">
+                <input type="text" name="ListVcrNum" value="<?= h($_POST['ListVcrNum'] ?? '') ?>">
             </td>
 
         <tr>　
@@ -28,7 +35,7 @@ $details = $this->VoucherDto->DtoDetails;
             </td>
 
             <td>
-                <input type="date" name="ListDate" value="<?= h($_POST['ListDate'] ?? '') ?>">
+                <input type="date" name="ListVcrDate" value="<?= h($_POST['ListVcrDate'] ?? '') ?>">
             </td>
         </tr>
 
@@ -41,7 +48,7 @@ $details = $this->VoucherDto->DtoDetails;
             </td>
 
             <td>
-                <input type="text" name="ListSummary" value="<?= h($_POST['ListSummary'] ?? '') ?>">
+                <input type="text" name="ListVcrSummary" value="<?= h($_POST['ListVcrSummary'] ?? '') ?>">
             </td>
         </tr>
     </table>

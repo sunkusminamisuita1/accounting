@@ -7,8 +7,7 @@ class VoucherValidator
         $this->errno = 0;
     }
 
-
-    public function Validate(VoucherDTO $dto): void
+    public function Create(VoucherDTO $dto): void
     {
         if (empty($dto->Date)) {
             $dto->ErrData['VoucherDto'] = '日付は必須です';
@@ -43,5 +42,21 @@ class VoucherValidator
             $dto->ErrData['VoucherDto'] = '借方と貸方が一致しません';
             return;
         }
+    }
+
+    public function List(VoucherDTO $dto): void
+    {
+        $dto->ErrData = [];
+        if (empty($dto->SearchType)) {
+             $dto->ErrData['VoucherDto'] = '検索条件を選択してください';
+             return;
+        }
+        
+        if($this->dto->SearchType === 'SimpleSearch') {
+            if (empty($dto->Date) && empty($dto->Summary) && empty($dto->ListVcrNum)) {
+                $dto->ErrData['VoucherDto'] = '日付,摘要,伝票Noのどれかを入力してください';
+                return;
+            }
+        }        
     }
 }
