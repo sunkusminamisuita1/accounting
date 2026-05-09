@@ -53,7 +53,7 @@ $details = $this->VoucherDto->DtoDetails;
         </tr>
     </table>
     <br>
-    <button name="SimpleSearch" type="submit">検索</button>
+    <button name="SimpleSearch" type="submit" value="<?= h('SimpleSearch') ?>">検索</button>
 </form>
 <hr>
 <?

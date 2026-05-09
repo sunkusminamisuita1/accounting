@@ -52,7 +52,7 @@ class VoucherValidator
              return;
         }
         
-        if($this->dto->SearchType === 'SimpleSearch') {
+        if($dto->SearchType === 'SimpleSearch') {
             if (empty($dto->Date) && empty($dto->Summary) && empty($dto->ListVcrNum)) {
                 $dto->ErrData['VoucherDto'] = '日付,摘要,伝票Noのどれかを入力してください';
                 return;
