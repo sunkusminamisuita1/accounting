@@ -11,6 +11,7 @@ class VoucherDTO
     public array $InitDetails = [0 => ['account_id' => '', 'amount' => '', 'side' => 'debit']]; //明細行の配列
     public  $SearchType = '';
     public  $ListVcrNum = '';
+    public  $UserId = 0;
     public array $ErrData = []; //エラー行の配列 ['ModName' => 'エラーメッセージ']
 
     public function __construct(array $Details)
@@ -18,6 +19,8 @@ class VoucherDTO
         $this->Date      = $_POST['voucher_date'] ?? ''; //create.phpのVoucherDate
         $this->Summary   = $_POST['summary'] ?? '';      //create.phpのVoucherSummary
         $this->SearchType = $_POST['search_type'] ?? ''; //search.phpのSearchType
+        $this->UserId     = $_SESSION['user']['id'] ?? 0;
+
         foreach ($Details as $idx => $row) {
             if (!isset($row['account_id'], $row['side'], $row['amount'])) {
                 throw new InvalidArgumentException('Invalid detail data');
@@ -50,14 +53,18 @@ class VoucherDTO
         $this->account_id   = [];
         $this->side         = [];
         $this->amount       = [];
+
         if (!empty($_POST['SimpleSearch'])) {
             //echo "SimpleSearch selected"; // デバッグ用出力
             $this->SearchType = $_POST['SimpleSearch'] ?? '';
+            $this->ListVcrNum = $_POST['ListVcrNum'] ?? '';
+            $this->Date = $_POST['ListVcrDate'] ?? '';
+            $this->Summary = $_POST['ListVcrSummary'] ?? '';
         }else {
             //echo "CompoundSearch selected"; // デバッグ用出力
             $this->SearchType = $_POST['CompoundSearch'] ?? '';
         }
-        var_dump($_POST); 
+        //var_dump($_POST); 
         //return();
 
     }

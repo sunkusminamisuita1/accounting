@@ -156,12 +156,19 @@ class VoucherService{
     public function VcrList($VoucherDto){
         requireCsrf();
         $VoucherDto->List(); //DTOのListメソッドで検索条件をセット
+
         if (isset($_POST['SimpleSearch'])) {  
             //echo "SimpleSearch selected";exit; // デバッグ用出力
             $this->Validator->list($VoucherDto);
+            $VchListRsult = $this->Repo->VcrListSearch($VoucherDto)??[];
+            echo "VcelistResult = " . var_dump($VchListRsult) . "<br>";
+
+            exit;
         }
         if (isset($_POST['CompoundSearch'])) {
             $this->Validator->list($VoucherDto);
+            $this->Repo->VcrListSearch($VoucherDto);
+            exit;
         }
     }
 

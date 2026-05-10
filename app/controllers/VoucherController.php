@@ -59,10 +59,7 @@ class VoucherController
         $TokenKey  = generateCsrfToken();
         $this->VoucherDto = new VoucherDTO($_POST['details'] ?? []);
         $accounts = $this->Service->getAccounts();
-        $userId = getLoginUserId();
         if ($_SERVER['REQUEST_METHOD'] === 'POST'){
-            //echo "search_type: ";
-            //print_r($this->VoucherDto->SearchType);exit; // デバッグ用出力
             $this->Service->VcrList($this->VoucherDto);
         }
         require ROOT_PATH.'/views/voucher/list.php';

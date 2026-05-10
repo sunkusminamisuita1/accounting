@@ -106,4 +106,40 @@ class VoucherRepository{
             throw $e;
         }
     }
+
+    public function VcrListSearch($VcrDto) {
+        $pdo = getPDO();
+        $stmt = $pdo->prepare(
+                    "SELECT
+                        a.id as account_id,
+                        a.name,
+                        a.type
+                    FROM journal_details jd
+                    JOIN journal_vouchers jv
+                        ON jd.voucher_id = jv.id
+                    JOIN accounts a
+                        ON jd.account_id = a.id
+                    WHERE jv.voucher_date BETWEEN :from AND :to
+                        AND jv.user_id = :user_id
+                        AND jv.id = :vchrnumber
+                        AND jv.summary LIKE :vchrsummary
+                    GROUP BY a.id,a.name,a.type
+                    ORDER BY a.id"
+        );
+        $from = $VcrDto->Date;
+        $to = $VcrDto->Date;
+        $UserId =  $_SESSION['user']['id'] ?? 0;
+        echo "From:  $from, To: $to, User ID: {$VcrDto->UserId}:{$UserId}, Voucher Number: {$VcrDto->ListVcrNum}, Summary: {$VcrDto->Summary}<br>";
+        $stmt->execute([
+            ':from'=>$from,
+            ':to'=>$to,
+            ':user_id'=>$VcrDto->UserId,
+            ':vchrnumber'=>$VcrDto->ListVcrNum,
+            ':vchrsummary'=>$VcrDto->Summary
+        ]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+
+
 }

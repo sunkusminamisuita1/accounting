@@ -26,4 +26,6 @@ class ReportRepository{
         ]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+
 }

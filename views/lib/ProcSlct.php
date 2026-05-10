@@ -16,7 +16,7 @@ $all_routes = [
 ];
 
 $route = $_GET['route'] ?? '';
-echo "route:{$route}<br>";
+//echo "route:{$route}<br>";
 // 2. ガード節（エラーなら先に終わらせる）
 if (empty($route) || ($route !== 'home' && !isset($all_routes[$route]))) {
     DispErrorMsg("ルート「{$route}」は正しくありません。");

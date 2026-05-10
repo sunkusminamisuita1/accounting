@@ -20,7 +20,7 @@ require_once ROOT_PATH . '/app/DTO/Constants.php';
                         <p>ようこそ <?= htmlspecialchars($_SESSION['user']['username'] ?? 'ゲスト') ?></p>
 
                         <?php
-                            echo "qqqqqqq : {$_GET['route']}";
+                            //echo "qqqqqqq : {$_GET['route']}";
                             require_once ROOT_PATH.'/views/lib/ProcSlct.php'; 
                         ?>
 
