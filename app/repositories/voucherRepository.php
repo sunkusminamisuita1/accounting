@@ -128,6 +128,7 @@ class VoucherRepository{
         );
         $from = $VcrDto->Date;
         $to = $VcrDto->Date;
+        $UserId = getLoginUserId();
         $UserId =  $_SESSION['user']['id'] ?? 0;
         echo "From:  $from, To: $to, User ID: {$VcrDto->UserId}:{$UserId}, Voucher Number: {$VcrDto->ListVcrNum}, Summary: {$VcrDto->Summary}<br>";
         $stmt->execute([
