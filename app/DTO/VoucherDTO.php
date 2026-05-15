@@ -11,15 +11,15 @@ class VoucherDTO
     public array $InitDetails = [0 => ['account_id' => '', 'amount' => '', 'side' => 'debit']]; //明細行の配列
     public  $SearchType = '';
     public  $ListVcrNum = '';
-    public  $UserId = 0;
     public array $ErrData = []; //エラー行の配列 ['ModName' => 'エラーメッセージ']
+    public array $VcrListResult = []; //検索結果の配列
+    public array $VcrListDatePeriod = []; //検索日付期間    [開始日付=>9999-99-99,終了日付=>9999-99-99]
 
     public function __construct(array $Details)
     {
         $this->Date      = $_POST['voucher_date'] ?? ''; //create.phpのVoucherDate
         $this->Summary   = $_POST['summary'] ?? '';      //create.phpのVoucherSummary
         $this->SearchType = $_POST['search_type'] ?? ''; //search.phpのSearchType
-        $this->UserId     = $_SESSION['user']['id'] ?? 0;
 
         foreach ($Details as $idx => $row) {
             if (!isset($row['account_id'], $row['side'], $row['amount'])) {
@@ -43,7 +43,7 @@ class VoucherDTO
         $this->amount       = [];
     }
 
-    public function List()   //不要かも
+    public function List()
     {
         $this->DtoDetails   = $this->InitDetails??[]; //初期値の明細行をDTOにセット
         $_SESSION['VoucherDetail'] = $this->InitDetails??[]; //セッションに初期値の明細行を保存(Voucher.create)
@@ -53,6 +53,7 @@ class VoucherDTO
         $this->account_id   = [];
         $this->side         = [];
         $this->amount       = [];
+        $this->VcrListDatePeriod   =   ['検索開始日付' => $_POST['LstVcrSerchStartDate'] , '検索終了日付' => $_POST['ListVcrSerchEndDate']]??[];
 
         if (!empty($_POST['SimpleSearch'])) {
             //echo "SimpleSearch selected"; // デバッグ用出力

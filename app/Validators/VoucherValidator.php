@@ -53,10 +53,26 @@ class VoucherValidator
         }
         
         if($dto->SearchType === 'SimpleSearch') {
-            if (empty($dto->Date) && empty($dto->Summary) && empty($dto->ListVcrNum)) {
-                $dto->ErrData['VoucherDto'] = '日付,摘要,伝票Noのどれかを入力してください';
+//            if (empty($dto->Date) && empty($dto->Summary) && empty($dto->ListVcrNum)) {
+//                $dto->ErrData['VoucherDto'] = '日付,摘要,伝票Noのどれかを入力してください';
+//                return;
+//           }        
+    
+//          日付期間のチェック　未着手
+            if (!empty($dto->Date) && !empty($dto->VcrListDatePeriod)) {
+                $dto->ErrData['VoucherDto'] = '日付,検索期間は同時入力不可です。';
                 return;
             }
-        }        
+//          日付期間のチェック
+            // 期間検索パラメータが渡されている場合、開始日と終了日の両方を必須とする
+            if (!empty($dto->VcrListDatePeriod)) {
+                $start = $dto->VcrListDatePeriod['検索開始日付'] ?? '';
+                $end = $dto->VcrListDatePeriod['検索終了日付'] ?? '';
+                if (empty($start) || empty($end)) {
+                    $dto->ErrData['VoucherDto'] = '期間検索では開始日付・終了日付の両方を入力してください。';
+                    return;
+                }
+            }
+        }
     }
 }

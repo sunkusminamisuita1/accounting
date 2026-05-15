@@ -108,39 +108,69 @@ class VoucherRepository{
     }
 
     public function VcrListSearch($VcrDto) {
-        $pdo = getPDO();
-        $stmt = $pdo->prepare(
-                    "SELECT
-                        a.id as account_id,
-                        a.name,
-                        a.type
-                    FROM journal_details jd
-                    JOIN journal_vouchers jv
-                        ON jd.voucher_id = jv.id
-                    JOIN accounts a
-                        ON jd.account_id = a.id
-                    WHERE jv.voucher_date BETWEEN :from AND :to
-                        AND jv.user_id = :user_id
-                        AND jv.id = :vchrnumber
-                        AND jv.summary LIKE :vchrsummary
-                    GROUP BY a.id,a.name,a.type
-                    ORDER BY a.id"
-        );
-        $from = $VcrDto->Date;
-        $to = $VcrDto->Date;
+        $from = !empty($VcrDto->Date) ? date('Y-m-d', strtotime($VcrDto->Date)) : '1900-01-01';
+        $to   = !empty($VcrDto->Date) ? date('Y-m-d', strtotime($VcrDto->Date)) : '2099-12-31';
         $UserId = getLoginUserId();
-        $UserId =  $_SESSION['user']['id'] ?? 0;
-        echo "From:  $from, To: $to, User ID: {$VcrDto->UserId}:{$UserId}, Voucher Number: {$VcrDto->ListVcrNum}, Summary: {$VcrDto->Summary}<br>";
-        $stmt->execute([
-            ':from'=>$from,
-            ':to'=>$to,
-            ':user_id'=>$VcrDto->UserId,
-            ':vchrnumber'=>$VcrDto->ListVcrNum,
-            ':vchrsummary'=>$VcrDto->Summary
-        ]);
+        $pdo = getPDO();
+        $sql = "SELECT 
+                jv.id,
+                jd.id as JdId,
+                jv.voucher_date,
+                jv.summary,
+                a.id as account_id,
+                a.name,
+                a.type,
+                jd.side,
+                jd.amount,
+                jd.voucher_id,
+                sum(case jd.side when 'debit' then jd.amount else 0 end) AS debit_total,
+                sum(case jd.side when 'credit' then jd.amount else 0 end) AS credit_total
+            FROM journal_vouchers jv
+            JOIN journal_details jd ON jv.id            = jd.voucher_id
+            JOIN accounts a         ON jd.account_id    = a.id
+            WHERE jv.user_id = :user_id
+              AND jv.voucher_date BETWEEN :from AND :to";
+
+
+        //$sql = "SELECT 
+        //        jv.id,
+        //        COALESCE(jd.id, 999999999) as JdId, 
+        //        jv.voucher_date,
+        //        jv.summary,
+        //        a.id as account_id,
+        //        a.name,
+        //        a.type,
+        //        jd.side,
+        //        jd.amount,
+        //        jd.voucher_id,
+        //        sum(case jd.side when 'debit' then jd.amount else 0 end) AS debit_total,
+        //        sum(case jd.side when 'credit' then jd.amount else 0 end) AS credit_total
+        //    FROM journal_vouchers jv
+        //    JOIN journal_details jd ON jv.id            = jd.voucher_id
+        //    JOIN accounts a         ON jd.account_id    = a.id
+        //    WHERE jv.user_id = :user_id
+        //      AND jv.voucher_date BETWEEN :from AND :to";
+
+
+
+        // 条件がある場合だけ絞り込むロジック（動的SQLの簡易版）
+        if (!empty($VcrDto->ListVcrNum)) {
+            $sql .= " AND jv.id = :vchrnumber ";
+        }
+        if (!empty($VcrDto->Summary)) {
+            $sql .= " AND jv.summary LIKE :vchrsummary ";
+        }
+        $sql .= " GROUP BY jd.voucher_id,jd.id WITH ROLLUP";
+
+        $stmt = $pdo->prepare($sql);    
+        $params = [
+            ':from'   => $from,
+            ':to'     => $to,
+            ':user_id' => $UserId
+        ];
+        if (!empty($VcrDto->ListVcrNum)) $params[':vchrnumber'] = $VcrDto->ListVcrNum;
+        if (!empty($VcrDto->Summary))   $params[':vchrsummary'] = '%' . $VcrDto->Summary . '%';
+        $stmt->execute($params);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-
-
-
 }

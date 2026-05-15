@@ -158,17 +158,26 @@ class VoucherService{
         $VoucherDto->List(); //DTOのListメソッドで検索条件をセット
 
         if (isset($_POST['SimpleSearch'])) {  
-            //echo "SimpleSearch selected";exit; // デバッグ用出力
+            $VoucherDto->List(); //DTOのListメソッドで検索条件をセット
             $this->Validator->list($VoucherDto);
-            $VchListRsult = $this->Repo->VcrListSearch($VoucherDto)??[];
-            echo "VcelistResult = " . var_dump($VchListRsult) . "<br>";
-
-            exit;
-        }
-        if (isset($_POST['CompoundSearch'])) {
-            $this->Validator->list($VoucherDto);
-            $this->Repo->VcrListSearch($VoucherDto);
-            exit;
+//////////////////////////このif追加
+            if(empty($VoucherDto->ErrData)){
+                $VcrListResult = $this->Repo->VcrListSearch($VoucherDto)??[];           
+                foreach($VcrListResult as $idx => $row) {
+                    echo "<br>Vcr index = {$idx}    ";
+                    foreach ( $row as $key => $value) {
+                        //echo "{$key} = {$value}　";
+                        $VcrListResult[$idx][$key]=$value;
+                        if(empty($VcrListResult[$idx]['voucher_id']))  {
+                            $VcrListResult[$idx]['voucher_id']='999999999999';
+                        }else {
+                            $VcrListResult[$idx][$key]=$value;
+                        }
+                        echo "{$key}={$VcrListResult[$idx][$key]}　";
+                    }
+                }
+                $VoucherDto->VcrListResult = $VcrListResult;
+            }        
         }
     }
 
