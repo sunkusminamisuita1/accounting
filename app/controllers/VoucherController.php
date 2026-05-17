@@ -13,7 +13,7 @@ class VoucherController
 
     public function create(): void    {
         $TokenKey  = generateCsrfToken();
-        $accounts = $this->Service->getAccounts();
+        //$accounts = $this->Service->getAccounts();
         $this->VoucherDto = new VoucherDTO($_POST['details'] ?? []); //DTOにPOSTされた明細行を渡す
         $details = $this->VoucherDto->DtoDetails; //DTOから明細行を取得
         if ($_SERVER['REQUEST_METHOD'] === 'POST'){
@@ -63,6 +63,16 @@ class VoucherController
         if ($_SERVER['REQUEST_METHOD'] === 'POST'){
             $this->Service->VcrList($this->VoucherDto);
         }
+        //print_r($this->VoucherDto->AccountTbl);
+        foreach($this->VoucherDto->AccountTbl as $a){
+            echo "<br>id={$a['id']}　name={$a['name']}";
+        }
+        $VcrListResult = $this->VoucherDto->VcrListResult;
+        foreach ($VcrListResult as $VcrId => $Row){
+            echo "<br>";
+            print_r($Row);
+        }
+        
         require ROOT_PATH.'/views/voucher/list.php';
     }
 

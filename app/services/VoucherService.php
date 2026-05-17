@@ -137,6 +137,7 @@ class VoucherService{
 
     public function VcrCreate($VoucherDto){
         requireCsrf();
+        $accounts = $this->getAccounts();
         if (isset($_POST['add_row'])) {  
             $this->VcrRowAdd($VoucherDto);
         }
@@ -155,11 +156,14 @@ class VoucherService{
 
     public function VcrList($VoucherDto){
         requireCsrf();
-
+        $AccountTbl = $this->getAccounts();
+        $VoucherDto->AccountTbl = $AccountTbl;
         $VoucherDto->List(); //DTOのListメソッドで検索条件をセット
-        echo "<br>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx<br>";
-        print_r($_SESSION['VoucherDetail']);
-        echo "<br>YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY<br>";
+        //echo "<br>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx<br>";
+        //print_r($_SESSION['VoucherDetail']);
+        //echo "<br>YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY<br>";
+        echo "<br>zzzzzzzzzzzzzzzzzz"; var_dump($_POST) ; echo "UUUUUUUUUUUUUUUUU<br>";
+
         if (isset($_POST['SimpleSearch'])) {  
             $VoucherDto->List(); //DTOのListメソッドで検索条件をセット
             $this->Validator->list($VoucherDto);
@@ -167,7 +171,7 @@ class VoucherService{
             if(empty($VoucherDto->ErrData)){
                 $VcrListResult = $this->Repo->VcrListSearch($VoucherDto)??[];           
                 foreach($VcrListResult as $idx => $row) {
-                    echo "<br>Vcr index = {$idx}    ";
+                    //echo "<br>Vcr index = {$idx}    ";
                     foreach ( $row as $key => $value) {
                         //echo "{$key} = {$value}　";
                         $VcrListResult[$idx][$key]=$value;
@@ -176,7 +180,7 @@ class VoucherService{
                         }else {
                             $VcrListResult[$idx][$key]=$value;
                         }
-                        echo "{$key}={$VcrListResult[$idx][$key]}　";
+                        //echo "{$key}={$VcrListResult[$idx][$key]}　";
                     }
                 }
                 $VoucherDto->VcrListResult = $VcrListResult;
@@ -191,10 +195,13 @@ class VoucherService{
 
 
 //修正エリアのロジック
-        if (isset($_POST['VcrUpdate'])) {
+        if (isset($_POST['VcrUpdateNo'])) {
             $VoucherDto->VcrListResult = $_SESSION['VoucherDetail'];
-            echo "VcrList-Update-test Vcr_Id= {$_POST['VcrUpdate']}<br>";
-            print_r($_SESSION['VoucherDetail']);
+            $VoucherDto->VcrUpdRow =  $_POST['VcrUpdateNo'] ?? [];
+            echo "<br>zzzzzzzzzzzzzzzzzz"; var_dump($VoucherDto->VcrUpdRow) ; echo "UUUUUUUUUUUUUUUUU<br>";
+            //echo "VcrList-Update-test Vcr_Id= {$_POST['VcrUpdate']}<br>";
+            //print_r($_SESSION['VoucherDetail']);
+            //print_r($AccountTbl);
             
         }
 

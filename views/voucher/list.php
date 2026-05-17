@@ -105,7 +105,7 @@
                 <?php $VcrIdSW = 0; $VcrListResult = $this->VoucherDto->VcrListResult;
                         $CreditAmount = 0; $DebitAmount = 0; $CreditName = ''; $DebitName = '';
                 ?>
-                <?php foreach ($VcrListResult as $VcrId => $Row):  ?>
+                <?php foreach ($VcrListResult as $VcrRowNo => $Row):  ?>
                     <?php if($Row['side'] === 'credit') {
                         $CreditAmount = (int)$Row['amount']??'0';
                         $CreditName = $Row['name']??'';
@@ -124,13 +124,14 @@
                                 <th>借方科目</th>
                                 <th>摘要</th>
                                 <th>
+                                    <?= var_dump($this->VoucherDto->VcrListResult[$VcrId]['voucher_id']); ?>
                                     <?php if($this->VoucherDto->VcrListResult[$VcrId]['voucher_id'] !== '999999999999'): ?>
                                          <button name="VcrUpdate" type="submit" value="<?= h('VcrUpdate') ?>">修正実行</button>
                                     <?php endif; ?>
                                 </th>
                             </tr>
                     <?php endif; ?>
-                        <tr>
+                    <tr>
                 <?php if (!empty($Row['JdId'])): ?>
                     <?php if ($VcrIdSW !== $Row['voucher_id']): ?>
                         <?php $VcrIdSW = $Row['voucher_id']; ?>
@@ -144,18 +145,66 @@
                             <td></td>
                             <td></td>
                     <?php endif; ?>
-                            <td  style="font-weight: bold; text-align: center;">
-                                <?= h($CreditName) ?>
+                            <td>
+                                <?php if($Row['side'] === 'credit'): ?>
+                                    <select name="details[<?= $i ?>][account_id]" required >
+                                        <option value="">選択してください</option>
+                                            <?php foreach($this->VoucherDto->AccountTbl as $a): ?>
+                                                <option value="<?= h($a['id']) ?>" 
+                                                    <?= (isset($Row['account_id']) && $Row['account_id'] == $a['id']) ? 'selected' : '' ?>>
+                                                    <?= h($a['name']) ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                    </select>
+                                <?php endif; ?>
                             </td>
+
+
+
+
+                            
                             <td  style="font-weight: bold; text-align: right;">
-                                <?= h($CreditAmount) ?>
+                                <?php if($Row['side'] === 'credit'): ?>
+                                    <input type="text" name="ListVcrNum" value="<?= h($Row['amount']) ?? '' ?>">
+                                <?php endif; ?>
                             </td>
+
+
+
+
                             <td  style="font-weight: bold; text-align: right;">
-                                <?= h($DebitAmount) ?>
+                                <?php if($Row['side'] === 'debit'): ?>
+                                    <input type="text" name="ListVcrNum" value="<?= h($Row['amount']) ?? '' ?>">
+                                <?php endif; ?>
                             </td>
-                            <td  style="font-weight: bold; text-align: center;">
-                                <?= h($DebitName) ?>
+
+
+
+
+                            <td>
+                                 <?php if($Row['side'] === 'debit'): ?>
+                                    <select name="details[<?= $i ?>][account_id]" required >
+                                        <option value="">選択してください</option>
+                                            <?php foreach($this->VoucherDto->AccountTbl as $a): ?>
+                                                <option value="<?= h($a['id']) ?>" 
+                                                    <?= (isset($Row['account_id']) && $Row['account_id'] == $a['id']) ? 'selected' : '' ?>>
+                                                    <?= h($a['name']) ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                    </select>
+                                <?php endif; ?>                           
+
+
+
+
+
+
+
                             </td>
+
+
+
+
                             <td  style="font-weight: bold; text-align: center;">
                                 <?= h($Row['summary']??'') ?>
                             </td>
@@ -165,6 +214,7 @@
                         <!--    <td  style="font-weight: bold; text-align: center;">
                                 <?= h($Row['total_credit']??'') ?>
                             </td> -->
+                        </tr>
                 <?php else: ?>
                             <td></td>
                             <td></td>
@@ -210,7 +260,7 @@
 </td>
 
 
-<td>
+<td style="width: 50%; vertical-align: top;">
     <h3>検索結果</h3>
         <form method="POST" action="index.php?route=voucher.list">
             <input type="hidden" name="csrfTokenKey" value="<?= h($TokenKey) ?>">
@@ -240,8 +290,9 @@
                                 <th>借方科目</th>
                                 <th>摘要</th>
                                 <th>
+                                    <?= var_dump($this->VoucherDto->VcrListResult[$VcrId]['voucher_id']); ?>
                                     <?php if($this->VoucherDto->VcrListResult[$VcrId]['voucher_id'] !== '999999999999'): ?>
-                                         <button name="VcrUpdate" type="submit" value="<?= h($Row['voucher_id']) ?>">修正</button>
+                                         <button name="VcrUpdateNo" type="submit" value="<?= h($Row['voucher_id']) ?>">修正</button>
                                     <?php endif; ?>
                                 </th>
                             </tr>

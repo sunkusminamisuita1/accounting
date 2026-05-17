@@ -14,6 +14,8 @@ class VoucherDTO
     public array $ErrData = []; //エラー行の配列 ['ModName' => 'エラーメッセージ']
     public array $VcrListResult = []; //検索結果の配列
     public array $VcrListDatePeriod = []; //検索日付期間    [開始日付=>9999-99-99,終了日付=>9999-99-99]
+    public array $AccountTbl = [];
+    public array $VcrUpdRpw = [];
 
     public function __construct(array $Details)
     {
