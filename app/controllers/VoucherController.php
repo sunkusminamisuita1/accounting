@@ -58,6 +58,7 @@ class VoucherController
     public function list() {
         $TokenKey  = generateCsrfToken();
         $this->VoucherDto = new VoucherDTO($_POST['details'] ?? []);
+
         $accounts = $this->Service->getAccounts();
         if ($_SERVER['REQUEST_METHOD'] === 'POST'){
             $this->Service->VcrList($this->VoucherDto);

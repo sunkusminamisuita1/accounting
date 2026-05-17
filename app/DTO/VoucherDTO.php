@@ -30,7 +30,7 @@ class VoucherDTO
             $this->amount[$idx]     = $row['amount'];
             $this->DtoDetails       = $_POST['details'] ?? [$Details];
         }
-        $_SESSION['VoucherDetail'] = $this->DtoDetails; //セッションに伝票一枚分を保存(Voucher.create)
+        //$_SESSION['VoucherDetail'] = $this->DtoDetails; //セッションに伝票一枚分を保存(Voucher.create)
     }
 
     public function InitDetailsDto()
@@ -46,14 +46,14 @@ class VoucherDTO
     public function List()
     {
         $this->DtoDetails   = $this->InitDetails??[]; //初期値の明細行をDTOにセット
-        $_SESSION['VoucherDetail'] = $this->InitDetails??[]; //セッションに初期値の明細行を保存(Voucher.create)
+        $_SESSION['VoucherDetail'] = $_SESSION['VoucherDetail']  ?? $this->InitDetails; //セッションに初期値の明細行を保存(Voucher.create)
         $this->Date         = $_POST['ListVcrDate'] ?? '';
         $this->Summary      = $_POST['ListVcrSummary'] ?? '';
         $this->ListVcrNum   = $_POST['ListVcrNum'] ?? '';
         $this->account_id   = [];
         $this->side         = [];
         $this->amount       = [];
-        $this->VcrListDatePeriod   =   ['検索開始日付' => $_POST['LstVcrSerchStartDate'] , '検索終了日付' => $_POST['ListVcrSerchEndDate']]??[];
+        $this->VcrListDatePeriod   =   [ '検索開始日付' => $_POST['LstVcrSearchStartDate'] ?? '' , '検索終了日付' => $_POST['LstVcrSearchEndDate'] ?? '' ];
 
         if (!empty($_POST['SimpleSearch'])) {
             //echo "SimpleSearch selected"; // デバッグ用出力

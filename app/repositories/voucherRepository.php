@@ -110,6 +110,8 @@ class VoucherRepository{
     public function VcrListSearch($VcrDto) {
         $from = !empty($VcrDto->Date) ? date('Y-m-d', strtotime($VcrDto->Date)) : '1900-01-01';
         $to   = !empty($VcrDto->Date) ? date('Y-m-d', strtotime($VcrDto->Date)) : '2099-12-31';
+        $from = !empty($VcrDto->VcrListDatePeriod['検索開始日付']) ? date('Y-m-d', strtotime($VcrDto->VcrListDatePeriod['検索開始日付'])) : '1900-01-01';
+        $to   = !empty($VcrDto->VcrListDatePeriod['検索終了日付']) ? date('Y-m-d', strtotime($VcrDto->VcrListDatePeriod['検索終了日付'])) : '2099-12-31';
         $UserId = getLoginUserId();
         $pdo = getPDO();
         $sql = "SELECT 

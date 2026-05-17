@@ -155,8 +155,11 @@ class VoucherService{
 
     public function VcrList($VoucherDto){
         requireCsrf();
-        $VoucherDto->List(); //DTOのListメソッドで検索条件をセット
 
+        $VoucherDto->List(); //DTOのListメソッドで検索条件をセット
+        echo "<br>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx<br>";
+        print_r($_SESSION['VoucherDetail']);
+        echo "<br>YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY<br>";
         if (isset($_POST['SimpleSearch'])) {  
             $VoucherDto->List(); //DTOのListメソッドで検索条件をセット
             $this->Validator->list($VoucherDto);
@@ -177,8 +180,26 @@ class VoucherService{
                     }
                 }
                 $VoucherDto->VcrListResult = $VcrListResult;
+                $_SESSION['VoucherDetail'] = $VcrListResult;
+                //echo "<br>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx<br>";
+                //print_r($_SESSION['VoucherDetail']);
+                //echo "<br>YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY<br>";
+
             }        
         }
+
+
+
+//修正エリアのロジック
+        if (isset($_POST['VcrUpdate'])) {
+            $VoucherDto->VcrListResult = $_SESSION['VoucherDetail'];
+            echo "VcrList-Update-test Vcr_Id= {$_POST['VcrUpdate']}<br>";
+            print_r($_SESSION['VoucherDetail']);
+            
+        }
+
+
+
     }
 
     public function VcrRowAdd($VcrDTO){

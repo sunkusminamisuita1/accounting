@@ -47,28 +47,27 @@ class VoucherValidator
     public function List(VoucherDTO $dto): void
     {
         $dto->ErrData = [];
-        if (empty($dto->SearchType)) {
-             $dto->ErrData['VoucherDto'] = '検索条件を選択してください';
-             return;
-        }
+        $Start  = $dto->VcrListDatePeriod['検索開始日付'] ?? '';
+        $End    = $dto->VcrListDatePeriod['検索終了日付'] ?? '';
+        $Date   = $dto->Date??'';
+        $_SESSION['ListInputData'] = ['検索日付' => $Date , '検索開始日付'=> $Start , '検索終了日付' => $End ] ;
+        //var_dump($_SESSION['ListInputData']);
+
+    //    if (empty($dto->SearchType)) {
+    //         $dto->ErrData['VoucherDto'] = '検索条件を選択してください';
+    //         return;
+    //    }
         
-        if($dto->SearchType === 'SimpleSearch') {
-//            if (empty($dto->Date) && empty($dto->Summary) && empty($dto->ListVcrNum)) {
-//                $dto->ErrData['VoucherDto'] = '日付,摘要,伝票Noのどれかを入力してください';
-//                return;
-//           }        
-    
+        if($dto->SearchType === 'SimpleSearch') {    
 //          日付期間のチェック　未着手
-            if (!empty($dto->Date) && !empty($dto->VcrListDatePeriod)) {
+            //var_dump($Date,$Start,$End);
+            if (!empty($Date) && (!empty($Start) || !empty($End))) {
                 $dto->ErrData['VoucherDto'] = '日付,検索期間は同時入力不可です。';
                 return;
             }
-//          日付期間のチェック
             // 期間検索パラメータが渡されている場合、開始日と終了日の両方を必須とする
-            if (!empty($dto->VcrListDatePeriod)) {
-                $start = $dto->VcrListDatePeriod['検索開始日付'] ?? '';
-                $end = $dto->VcrListDatePeriod['検索終了日付'] ?? '';
-                if (empty($start) || empty($end)) {
+            if(!empty($Start) || !empty($End)){
+                if (empty($Start) || empty($End)) {
                     $dto->ErrData['VoucherDto'] = '期間検索では開始日付・終了日付の両方を入力してください。';
                     return;
                 }
