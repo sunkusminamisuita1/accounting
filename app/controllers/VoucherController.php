@@ -65,14 +65,14 @@ class VoucherController
         }
         //print_r($this->VoucherDto->AccountTbl);
         foreach($this->VoucherDto->AccountTbl as $a){
-            echo "<br>id={$a['id']}　name={$a['name']}";
+            //echo "<br>id={$a['id']}　name={$a['name']}";
         }
         $VcrListResult = $this->VoucherDto->VcrListResult;
         foreach ($VcrListResult as $VcrId => $Row){
-            echo "<br>";
-            print_r($Row);
+            //echo "<br>";
+            //print_r($Row);
         }
-        
+
         require ROOT_PATH.'/views/voucher/list.php';
     }
 

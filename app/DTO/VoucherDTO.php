@@ -15,7 +15,9 @@ class VoucherDTO
     public array $VcrListResult = []; //検索結果の配列
     public array $VcrListDatePeriod = []; //検索日付期間    [開始日付=>9999-99-99,終了日付=>9999-99-99]
     public array $AccountTbl = [];
-    public array $VcrUpdRpw = [];
+    public array $VcrUpdRow = [];
+    public $VcrUpdNo = 0;
+    public array $VcrSearchedData =[];
 
     public function __construct(array $Details)
     {

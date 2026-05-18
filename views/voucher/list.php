@@ -1,6 +1,6 @@
 <style>
     .ProcSlct, .ProcSlct td { border: none !important; }
-    .UpdTbl { border-collapse: collapse; width: 100%; border: 1px solid #000000; } /* 幅は中身に合わせるのが一般的 */
+    .UpdTbl { border-collapse: collapse; width: 100%; table-layout: fixed; border: 1px solid #000000; } /* 幅は中身に合わせるのが一般的 */
     .ProcSlct button { cursor: pointer; padding: 5px 15px; }
     th,td {  padding: 0.6em; border: 1px solid #000000; }
 </style>
@@ -81,31 +81,17 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!--　　　　修正エリアの表示　　　-->
+<!--　##################　仕分け伝票　修正　エリア  ###################-->
     <div>
             <h3>仕分け伝票修正エリア</h3>
     </div>
         <form method="POST" action="index.php?route=voucher.list">
             <input type="hidden" name="csrfTokenKey" value="<?= h($TokenKey) ?>">
             <table class="UpdTbl">
-                <?php $VcrIdSW = 0; $VcrListResult = $this->VoucherDto->VcrListResult;
+                <?php $VcrIdSW = 0; $VcrSearchedData = $this->VoucherDto->VcrSearchedData;
                         $CreditAmount = 0; $DebitAmount = 0; $CreditName = ''; $DebitName = '';
                 ?>
-                <?php foreach ($VcrListResult as $VcrRowNo => $Row):  ?>
+                <?php foreach ($VcrSearchedData as $VcrRowNo => $Row):  ?>
                     <?php if($Row['side'] === 'credit') {
                         $CreditAmount = (int)$Row['amount']??'0';
                         $CreditName = $Row['name']??'';
@@ -115,22 +101,23 @@
                     }
                     ?>
                     <?php if ($VcrIdSW !== $Row['voucher_id']): ?>
+                        <?php //if($this->VoucherDto->VcrSearchedData[$VcrRowNo]['voucher_id'] !== '999999999999'): ?>
                             <tr style="background-color: #e0e0e1; font-weight: bold; text-align: center;">
-                                <th>伝票No</th>
-                                <th>日付</th>
-                                <th>貸方科目</th>
+                                <th style=" width: 6%;" >伝票No</th>
+                                <th style=" width: 10%;" >日付</th>
+                                <th style=" width: 10%;" >貸方科目</th>
                                 <th>貸方金額</th>
                                 <th>借方金額</th>
                                 <th>借方科目</th>
                                 <th>摘要</th>
                                 <th>
-                                    <?= var_dump($this->VoucherDto->VcrListResult[$VcrId]['voucher_id']); ?>
-                                    <?php if($this->VoucherDto->VcrListResult[$VcrId]['voucher_id'] !== '999999999999'): ?>
-                                         <button name="VcrUpdate" type="submit" value="<?= h('VcrUpdate') ?>">修正実行</button>
-                                    <?php endif; ?>
+                                    <?= var_dump($this->VoucherDto->VcrSearchedData[$VcrRowNo]['voucher_id']); ?>                                    
+                                    <button name="VcrUpdate" type="submit" value="<?= h('VcrUpdate') ?>">修正実行</button>                                    
                                 </th>
                             </tr>
+                        <?php //endif; ?>
                     <?php endif; ?>
+            <?php if($this->VoucherDto->VcrSearchedData[$VcrRowNo]['voucher_id'] !== '999999999999'): ?>
                     <tr>
                 <?php if (!empty($Row['JdId'])): ?>
                     <?php if ($VcrIdSW !== $Row['voucher_id']): ?>
@@ -147,7 +134,7 @@
                     <?php endif; ?>
                             <td>
                                 <?php if($Row['side'] === 'credit'): ?>
-                                    <select name="details[<?= $i ?>][account_id]" required >
+                                    <select  style=" width: 95%;"  name="details[<?= $i ?>][account_id]" required >
                                         <option value="">選択してください</option>
                                             <?php foreach($this->VoucherDto->AccountTbl as $a): ?>
                                                 <option value="<?= h($a['id']) ?>" 
@@ -156,34 +143,21 @@
                                                 </option>
                                             <?php endforeach; ?>
                                     </select>
-                                <?php endif; ?>
+            <?php endif; ?>
                             </td>
-
-
-
-
-                            
                             <td  style="font-weight: bold; text-align: right;">
                                 <?php if($Row['side'] === 'credit'): ?>
-                                    <input type="text" name="ListVcrNum" value="<?= h($Row['amount']) ?? '' ?>">
+                                    <input style="width : 95%;" type="text" name="ListVcrNum" value="<?= h($Row['amount']) ?? '' ?>">
                                 <?php endif; ?>
                             </td>
-
-
-
-
                             <td  style="font-weight: bold; text-align: right;">
                                 <?php if($Row['side'] === 'debit'): ?>
-                                    <input type="text" name="ListVcrNum" value="<?= h($Row['amount']) ?? '' ?>">
+                                    <input style="width : 95%;" type="text" name="ListVcrNum" value="<?= h($Row['amount']) ?? '' ?>">
                                 <?php endif; ?>
                             </td>
-
-
-
-
                             <td>
                                  <?php if($Row['side'] === 'debit'): ?>
-                                    <select name="details[<?= $i ?>][account_id]" required >
+                                    <select style=" width: 95%;" name="details[<?= $i ?>][account_id]" required >
                                         <option value="">選択してください</option>
                                             <?php foreach($this->VoucherDto->AccountTbl as $a): ?>
                                                 <option value="<?= h($a['id']) ?>" 
@@ -193,18 +167,7 @@
                                             <?php endforeach; ?>
                                     </select>
                                 <?php endif; ?>                           
-
-
-
-
-
-
-
                             </td>
-
-
-
-
                             <td  style="font-weight: bold; text-align: center;">
                                 <?= h($Row['summary']??'') ?>
                             </td>
@@ -215,6 +178,7 @@
                                 <?= h($Row['total_credit']??'') ?>
                             </td> -->
                         </tr>
+            <?php endif; ?>            
                 <?php else: ?>
                             <td></td>
                             <td></td>
@@ -241,25 +205,12 @@
         </form>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 </td>
 
 
+
+
+<!--　##################　検索結果表示エリア  ###################-->
 <td style="width: 50%; vertical-align: top;">
     <h3>検索結果</h3>
         <form method="POST" action="index.php?route=voucher.list">
@@ -290,7 +241,6 @@
                                 <th>借方科目</th>
                                 <th>摘要</th>
                                 <th>
-                                    <?= var_dump($this->VoucherDto->VcrListResult[$VcrId]['voucher_id']); ?>
                                     <?php if($this->VoucherDto->VcrListResult[$VcrId]['voucher_id'] !== '999999999999'): ?>
                                          <button name="VcrUpdateNo" type="submit" value="<?= h($Row['voucher_id']) ?>">修正</button>
                                     <?php endif; ?>

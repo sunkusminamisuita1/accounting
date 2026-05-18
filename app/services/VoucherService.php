@@ -155,15 +155,12 @@ class VoucherService{
     }
 
     public function VcrList($VoucherDto){
+//修正伝票検索エリアのロジック
         requireCsrf();
         $AccountTbl = $this->getAccounts();
         $VoucherDto->AccountTbl = $AccountTbl;
+        $VoucherDto->VcrSearchedData = [];
         $VoucherDto->List(); //DTOのListメソッドで検索条件をセット
-        //echo "<br>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx<br>";
-        //print_r($_SESSION['VoucherDetail']);
-        //echo "<br>YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY<br>";
-        echo "<br>zzzzzzzzzzzzzzzzzz"; var_dump($_POST) ; echo "UUUUUUUUUUUUUUUUU<br>";
-
         if (isset($_POST['SimpleSearch'])) {  
             $VoucherDto->List(); //DTOのListメソッドで検索条件をセット
             $this->Validator->list($VoucherDto);
@@ -171,41 +168,54 @@ class VoucherService{
             if(empty($VoucherDto->ErrData)){
                 $VcrListResult = $this->Repo->VcrListSearch($VoucherDto)??[];           
                 foreach($VcrListResult as $idx => $row) {
-                    //echo "<br>Vcr index = {$idx}    ";
                     foreach ( $row as $key => $value) {
-                        //echo "{$key} = {$value}　";
                         $VcrListResult[$idx][$key]=$value;
                         if(empty($VcrListResult[$idx]['voucher_id']))  {
                             $VcrListResult[$idx]['voucher_id']='999999999999';
                         }else {
                             $VcrListResult[$idx][$key]=$value;
                         }
-                        //echo "{$key}={$VcrListResult[$idx][$key]}　";
                     }
                 }
                 $VoucherDto->VcrListResult = $VcrListResult;
                 $_SESSION['VoucherDetail'] = $VcrListResult;
-                //echo "<br>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx<br>";
-                //print_r($_SESSION['VoucherDetail']);
-                //echo "<br>YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY<br>";
-
             }        
         }
-
-
-
 //修正エリアのロジック
         if (isset($_POST['VcrUpdateNo'])) {
             $VoucherDto->VcrListResult = $_SESSION['VoucherDetail'];
-            $VoucherDto->VcrUpdRow =  $_POST['VcrUpdateNo'] ?? [];
-            echo "<br>zzzzzzzzzzzzzzzzzz"; var_dump($VoucherDto->VcrUpdRow) ; echo "UUUUUUUUUUUUUUUUU<br>";
-            //echo "VcrList-Update-test Vcr_Id= {$_POST['VcrUpdate']}<br>";
-            //print_r($_SESSION['VoucherDetail']);
-            //print_r($AccountTbl);
-            
+            $VoucherDto->VcrUpdNo =  $_POST['VcrUpdateNo'] ?? 0;
+            //foreach ($VoucherDto->VcrListResult as $no0 => $value0){
+            //    //echo "<br>RecNo={$no0}";
+            //    foreach($value0 as $no1 => $value1){
+            //        //echo "　{$no1} = {$value1}";
+            //        //if ($value1 == $VoucherDto->VcrUpdNo){ echo "ok<br>";   } 
+            //        if( ($no1 === 'voucher_id') && ($value1 == $VoucherDto->VcrUpdNo) ){
+            //            $VcrSearchedData[$no0] = $value0;
+            //            //echo "<br>value0=";var_dump($VcrSearchedData);
+            //        }
+            //    }
+            //}
+
+
+            foreach ($VoucherDto->VcrListResult as $no0 => $value0) {
+                if (isset($value0['voucher_id']) && 
+                    $value0['voucher_id'] == $VoucherDto->VcrUpdNo &&
+                    isset($value0['JdId'])) {
+                    $VoucherDto->VcrSearchedData[$no0] = $value0;
+                }
+            }
+
+
+            //echo $_POST['VcrUpdateNo'];//デバッグ
+            foreach ($VoucherDto->VcrSearchedData as $no0 => $value0){
+                echo "<br>RecNo={$no0}";//デバッグ
+                foreach($value0 as $no1 => $value1){
+                    echo "　{$no1} = {$value1}";//デバッグ
+                }
+            }
+
         }
-
-
 
     }
 
