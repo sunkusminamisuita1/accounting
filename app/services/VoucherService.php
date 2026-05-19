@@ -197,13 +197,22 @@ class VoucherService{
             //    }
             //}
 
-
+            $CreditTotal = 0;$DebitTotal = 0;
             foreach ($VoucherDto->VcrListResult as $no0 => $value0) {
                 if (isset($value0['voucher_id']) && 
                     $value0['voucher_id'] == $VoucherDto->VcrUpdNo &&
-                    isset($value0['JdId'])) {
+                    isset($value0['JdId'])) 
+                {
                     $VoucherDto->VcrSearchedData[$no0] = $value0;
+                    if($value0['side'] === 'credit'){
+                        $CreditTotal += $value0['amount'];
+                    }else{
+                        $DebitTotal  += $value0['amount'];
+                    }
                 }
+            }
+            if( $CreditTotal !== $DebitTotal ){
+                $VoucherDto->ErrData['VoucherService'] = "貸方合計　¥{$CreditTotal}　借方合計　¥{$DebitTotal}　不一致です。";
             }
 
 

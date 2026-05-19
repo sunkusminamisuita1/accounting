@@ -101,7 +101,6 @@
                     }
                     ?>
                     <?php if ($VcrIdSW !== $Row['voucher_id']): ?>
-                        <?php //if($this->VoucherDto->VcrSearchedData[$VcrRowNo]['voucher_id'] !== '999999999999'): ?>
                             <tr style="background-color: #e0e0e1; font-weight: bold; text-align: center;">
                                 <th style=" width: 6%;" >伝票No</th>
                                 <th style=" width: 10%;" >日付</th>
@@ -111,17 +110,13 @@
                                 <th>借方科目</th>
                                 <th>摘要</th>
                                 <th>
-                                    <?= var_dump($this->VoucherDto->VcrSearchedData[$VcrRowNo]['voucher_id']); ?>                                    
                                     <button name="VcrUpdate" type="submit" value="<?= h('VcrUpdate') ?>">修正実行</button>                                    
                                 </th>
                             </tr>
-                        <?php //endif; ?>
                     <?php endif; ?>
-            <?php if($this->VoucherDto->VcrSearchedData[$VcrRowNo]['voucher_id'] !== '999999999999'): ?>
                     <tr>
-                <?php if (!empty($Row['JdId'])): ?>
                     <?php if ($VcrIdSW !== $Row['voucher_id']): ?>
-                        <?php $VcrIdSW = $Row['voucher_id']; ?>
+                        <?php $VcrIdSW   = $Row['voucher_id']; ?>
                             <td  style="font-weight: bold; text-align: center;">
                                 <?= h($Row['voucher_id']) ?>
                             </td>
@@ -143,7 +138,7 @@
                                                 </option>
                                             <?php endforeach; ?>
                                     </select>
-            <?php endif; ?>
+                                <?php endif; ?>
                             </td>
                             <td  style="font-weight: bold; text-align: right;">
                                 <?php if($Row['side'] === 'credit'): ?>
@@ -171,35 +166,10 @@
                             <td  style="font-weight: bold; text-align: center;">
                                 <?= h($Row['summary']??'') ?>
                             </td>
-                            <td  style="font-weight: bold; text-align: center;">
-                                <?= h($Row['total_debit']??'') ?>
+                            <td>
                             </td>
-                        <!--    <td  style="font-weight: bold; text-align: center;">
-                                <?= h($Row['total_credit']??'') ?>
-                            </td> -->
-                        </tr>
-            <?php endif; ?>            
-                <?php else: ?>
-                            <td></td>
-                            <td></td>
-                            <td style="font-weight: bold; text-align: center;">
-                                合計</td>
-                            <td style="font-weight: bold; text-align: right;">
-                                <?= h($Row['credit_total']??'') ?>
                             </td>
-                            <td style="font-weight: bold; text-align: right;">
-                                <?= h($Row['debit_total']??'') ?>
-                            </td>
-                            <td></td>
-                            <td style="font-weight: bold; text-align: right;">
-                                ステータス
-                            </td>
-                            <td style="color: #ff0073; font-weight: bold; text-align: center;">
-                                <?= h($Row['credit_total']??'') === h($Row['debit_total']??'') ? ' ': '貸借不一致' ?>
-                            </td>
-                        <!--    <td></td> -->
-                <?php endif; ?>
-                        </tr>
+                    </tr>
                 <?php endforeach; ?>
             </table>
         </form>
