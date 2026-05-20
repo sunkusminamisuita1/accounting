@@ -4,6 +4,7 @@ class VoucherDTO
 {
     public  $Date = '';
     public  $Summary = '';
+    public array $Accounts = [];
     public array $account_id = [];
     public array $side = [];
     public array $amount = [];
@@ -69,8 +70,6 @@ class VoucherDTO
             //echo "CompoundSearch selected"; // デバッグ用出力
             $this->SearchType = $_POST['CompoundSearch'] ?? '';
         }
-        //var_dump($_POST); 
-        //return();
 
     }
 

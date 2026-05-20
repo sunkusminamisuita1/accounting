@@ -55,7 +55,7 @@ class VoucherService{
 
     public function addEntry($VoucherDto): void {
         $this->initializeSession();
-        $voucherDate = $VoucherDto->Date;
+        $voucherDate = $VoucherDto->Date; // ###############################3
         $side = $VoucherDto->side ?? '';
         $accountId = isset($VoucherDto->accountId) ? (int)$VoucherDto->accountId : 9999;
         $amount = $VoucherDto->amount ?? 0;
@@ -135,21 +135,21 @@ class VoucherService{
         $_SESSION['creditAmountTotal'] = $credit;
     }
 
-    public function VcrCreate($VoucherDto){
+    public function VcrCreate($Dto){
         requireCsrf();
-        $accounts = $this->getAccounts();
+        $accounts = $Dto->Accounts;
         if (isset($_POST['add_row'])) {  
-            $this->VcrRowAdd($VoucherDto);
+            $this->VcrRowAdd($Dto);
         }
         if (isset($_POST['delete_row'])) {
-            $this->VcrRowDel($VoucherDto);
+            $this->VcrRowDel($Dto);
         }
         if (isset($_POST['save'])) {
-            $this->Validator->Create($VoucherDto);
-            $this->VcrSave($VoucherDto,$this->Validator);
-            if(empty($VoucherDto->ErrData)) {
-                $VoucherDto->InitDetailsDto(); //保存成功後、DTOの明細行を初期化
-                $VoucherDto->ErrData = ['VoucherService' => '保存が完了しました'];
+            $this->Validator->Create($Dto);
+            $this->VcrSave($Dto,$this->Validator);
+            if(empty($Dto->ErrData)) {
+                $Dto->InitDetailsDto(); //保存成功後、DTOの明細行を初期化
+                $Dto->ErrData = ['VoucherService' => '保存が完了しました'];
             }
         }
     }
@@ -185,18 +185,6 @@ class VoucherService{
         if (isset($_POST['VcrUpdateNo'])) {
             $VoucherDto->VcrListResult = $_SESSION['VoucherDetail'];
             $VoucherDto->VcrUpdNo =  $_POST['VcrUpdateNo'] ?? 0;
-            //foreach ($VoucherDto->VcrListResult as $no0 => $value0){
-            //    //echo "<br>RecNo={$no0}";
-            //    foreach($value0 as $no1 => $value1){
-            //        //echo "　{$no1} = {$value1}";
-            //        //if ($value1 == $VoucherDto->VcrUpdNo){ echo "ok<br>";   } 
-            //        if( ($no1 === 'voucher_id') && ($value1 == $VoucherDto->VcrUpdNo) ){
-            //            $VcrSearchedData[$no0] = $value0;
-            //            //echo "<br>value0=";var_dump($VcrSearchedData);
-            //        }
-            //    }
-            //}
-
             $CreditTotal = 0;$DebitTotal = 0;
             foreach ($VoucherDto->VcrListResult as $no0 => $value0) {
                 if (isset($value0['voucher_id']) && 
@@ -223,9 +211,7 @@ class VoucherService{
                     echo "　{$no1} = {$value1}";//デバッグ
                 }
             }
-
         }
-
     }
 
     public function VcrRowAdd($VcrDTO){

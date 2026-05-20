@@ -5,19 +5,20 @@ require_once ROOT_PATH . '/app/DTO/VoucherDTO.php';
 class VoucherController
 {
     private VoucherService $Service;
-    private VoucherDTO $VoucherDto;
-
+    private VoucherDTO $Dto;
+    private VoucherRepository $Repo;
     public function __construct()  {
         $this->Service = new VoucherService();
+        $this->Repo = new VoucherRepository();
     }
-
     public function create(): void    {
         $TokenKey  = generateCsrfToken();
-        //$accounts = $this->Service->getAccounts();
-        $this->VoucherDto = new VoucherDTO($_POST['details'] ?? []); //DTOにPOSTされた明細行を渡す
-        $details = $this->VoucherDto->DtoDetails; //DTOから明細行を取得
+        $this->Dto = new VoucherDTO($_POST['details'] ?? []); //DTOにPOSTされた明細行を渡す
+        $details = $this->Dto->DtoDetails; //DTOから明細行を取得
+        $Accounts = $this->Repo->getAccounts();
+        $this->Dto->Accounts = $Accounts;
         if ($_SERVER['REQUEST_METHOD'] === 'POST'){
-            $this->Service->VcrCreate($this->VoucherDto);
+            $this->Service->VcrCreate($this->Dto);
         }
         require ROOT_PATH . '/views/voucher/create.php';
     }
@@ -57,22 +58,13 @@ class VoucherController
     // 修正、削除データ検索
     public function list() {
         $TokenKey  = generateCsrfToken();
-        $this->VoucherDto = new VoucherDTO($_POST['details'] ?? []);
+        $this->Dto = new VoucherDTO($_POST['details'] ?? []);
 
         $accounts = $this->Service->getAccounts();
         if ($_SERVER['REQUEST_METHOD'] === 'POST'){
-            $this->Service->VcrList($this->VoucherDto);
+            $this->Service->VcrList($this->Dto);
         }
-        //print_r($this->VoucherDto->AccountTbl);
-        foreach($this->VoucherDto->AccountTbl as $a){
-            //echo "<br>id={$a['id']}　name={$a['name']}";
-        }
-        $VcrListResult = $this->VoucherDto->VcrListResult;
-        foreach ($VcrListResult as $VcrId => $Row){
-            //echo "<br>";
-            //print_r($Row);
-        }
-
+        $VcrListResult = $this->Dto->VcrListResult;
         require ROOT_PATH.'/views/voucher/list.php';
     }
 

@@ -108,10 +108,27 @@ class VoucherRepository{
     }
 
     public function VcrListSearch($VcrDto) {
-        $from = !empty($VcrDto->Date) ? date('Y-m-d', strtotime($VcrDto->Date)) : '1900-01-01';
-        $to   = !empty($VcrDto->Date) ? date('Y-m-d', strtotime($VcrDto->Date)) : '2099-12-31';
-        $from = !empty($VcrDto->VcrListDatePeriod['検索開始日付']) ? date('Y-m-d', strtotime($VcrDto->VcrListDatePeriod['検索開始日付'])) : '1900-01-01';
-        $to   = !empty($VcrDto->VcrListDatePeriod['検索終了日付']) ? date('Y-m-d', strtotime($VcrDto->VcrListDatePeriod['検索終了日付'])) : '2099-12-31';
+        echo "cccccccccccccccccccccccccccccccccc";
+        var_dump($VcrDto->Date);
+        var_dump($VcrDto->VcrListDatePeriod['検索開始日付']);
+        var_dump($VcrDto->VcrListDatePeriod['検索終了日付']);
+        if(!empty($VcrDto->Date)){
+            $from = date('Y-m-d', strtotime($VcrDto->Date));
+            $to =   date('Y-m-d', strtotime($VcrDto->Date));
+        }else{
+            $from = date('Y-m-d', strtotime($VcrDto->VcrListDatePeriod['検索開始日付']));
+            $to   =  date('Y-m-d', strtotime($VcrDto->VcrListDatePeriod['検索終了日付']));
+        }
+
+        if(empty($from) || empty($to)) {
+            $from   =   '1900-01-01';
+            $to     =   '2099-12-31';
+        }
+
+        //$from = !empty($VcrDto->Date) ? date('Y-m-d', strtotime($VcrDto->Date)) : '1900-01-01';
+        //$to   = !empty($VcrDto->Date) ? date('Y-m-d', strtotime($VcrDto->Date)) : '2099-12-02';
+        //$from = !empty($VcrDto->VcrListDatePeriod['検索開始日付']) ? date('Y-m-d', strtotime($VcrDto->VcrListDatePeriod['検索開始日付']));
+        //$to   = !empty($VcrDto->VcrListDatePeriod['検索終了日付']) ? date('Y-m-d', strtotime($VcrDto->VcrListDatePeriod['検索終了日付']));
         $UserId = getLoginUserId();
         $pdo = getPDO();
         $sql = "SELECT 
@@ -133,29 +150,10 @@ class VoucherRepository{
             WHERE jv.user_id = :user_id
               AND jv.voucher_date BETWEEN :from AND :to";
 
-
-        //$sql = "SELECT 
-        //        jv.id,
-        //        COALESCE(jd.id, 999999999) as JdId, 
-        //        jv.voucher_date,
-        //        jv.summary,
-        //        a.id as account_id,
-        //        a.name,
-        //        a.type,
-        //        jd.side,
-        //        jd.amount,
-        //        jd.voucher_id,
-        //        sum(case jd.side when 'debit' then jd.amount else 0 end) AS debit_total,
-        //        sum(case jd.side when 'credit' then jd.amount else 0 end) AS credit_total
-        //    FROM journal_vouchers jv
-        //    JOIN journal_details jd ON jv.id            = jd.voucher_id
-        //    JOIN accounts a         ON jd.account_id    = a.id
-        //    WHERE jv.user_id = :user_id
-        //      AND jv.voucher_date BETWEEN :from AND :to";
-
-
-
         // 条件がある場合だけ絞り込むロジック（動的SQLの簡易版）
+        echo "<br> from={$from}";
+        echo "<br> to={$to}";
+
         if (!empty($VcrDto->ListVcrNum)) {
             $sql .= " AND jv.id = :vchrnumber ";
         }

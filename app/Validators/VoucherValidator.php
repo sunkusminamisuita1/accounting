@@ -49,8 +49,8 @@ class VoucherValidator
         $dto->ErrData = [];
         $Start  = $dto->VcrListDatePeriod['検索開始日付'] ?? '';
         $End    = $dto->VcrListDatePeriod['検索終了日付'] ?? '';
-        $Date   = $dto->Date??'';
-        $_SESSION['ListInputData'] = ['検索日付' => $Date , '検索開始日付'=> $Start , '検索終了日付' => $End ] ;
+        $Date   = $dto->Date??'';   //###########################
+        $_SESSION['ListInputData'] = ['検索日付' => $Date , '検索開始日付'=> $Start , '検索終了日付' => $End ] ; //############################
         //var_dump($_SESSION['ListInputData']);
 
     //    if (empty($dto->SearchType)) {

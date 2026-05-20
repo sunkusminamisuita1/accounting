@@ -1,11 +1,11 @@
 <h1>仕訳入力</h1>
 <?php
 require_once ROOT_PATH . '/views/lib/ProcSlct.php';
-$details = $this->VoucherDto->DtoDetails;
+$details = $this->Dto->DtoDetails;
 ?>
-<?php if (!empty($this->VoucherDto->ErrData)): ?>
+<?php if (!empty($this->Dto->ErrData)): ?>
     <ul style="color: red;">
-        <?php foreach ($this->VoucherDto->ErrData as $mod => $err): ?>
+        <?php foreach ($this->Dto->ErrData as $mod => $err): ?>
             <li><?= h($mod) . ": " . h($err) ?></li>
         <?php endforeach; ?>
     </ul>
@@ -28,7 +28,7 @@ $details = $this->VoucherDto->DtoDetails;
             <td>
                 <select name="details[<?= $i ?>][account_id]" required >
                     <option value="">選択してください</option>
-                    <?php foreach($accounts as $a): ?>
+                    <?php foreach($Accounts as $a): ?>
                         <option value="<?= h($a['id']) ?>" <?= (isset($row['account_id']) && $row['account_id'] == $a['id']) ? 'selected' : '' ?>>
                             <?= h($a['name']) ?>
                         </option>
@@ -58,4 +58,3 @@ $details = $this->VoucherDto->DtoDetails;
     </table>
     <button name="save" type="submit">保存</button>
 </form>
-<?php
