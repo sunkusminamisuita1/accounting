@@ -18,6 +18,15 @@ class VoucherController
         $Accounts = $this->Repo->getAccounts();
         $this->Dto->Accounts = $Accounts;
         if ($_SERVER['REQUEST_METHOD'] === 'POST'){
+
+
+        foreach($details as $key => $value){
+            echo "<br>key={$key}";
+            foreach($value as $key1 => $value1){
+                echo "連想key={$key1} => 値 ={$value1}";
+            }
+        }
+
             $this->Service->VcrCreate($this->Dto);
         }
         require ROOT_PATH . '/views/voucher/create.php';
@@ -59,12 +68,24 @@ class VoucherController
     public function list() {
         $TokenKey  = generateCsrfToken();
         $this->Dto = new VoucherDTO($_POST['details'] ?? []);
-
         $accounts = $this->Service->getAccounts();
         if ($_SERVER['REQUEST_METHOD'] === 'POST'){
             $this->Service->VcrList($this->Dto);
         }
         $VcrListResult = $this->Dto->VcrListResult;
+        $VcrSearchedData =  $this->Dto->VcrSearchedData;
+
+
+            foreach ($this->Dto->VcrSearchedData as $no0 => $value0){
+                echo "<br>RecNo={$no0}";//デバッグ
+                foreach($value0 as $no1 => $value1){
+                    echo "　{$no1} = {$value1}";//デバッグ
+                }
+            }
+        
+
+
+
         require ROOT_PATH.'/views/voucher/list.php';
     }
 

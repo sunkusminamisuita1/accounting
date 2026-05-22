@@ -58,7 +58,7 @@ class VoucherRepository{
     }
     
     public function insertVoucher($Dto){
-        $IndexCount = count($Dto->account_id);
+        $IndexCount = count($Dto->DtoDetails);
         $pdo = getPDO();
         $pdo->beginTransaction();
         try {
@@ -82,23 +82,47 @@ class VoucherRepository{
             ");
             $voucherId = $pdo->lastInsertId();
 
-            for ($i = 0; $i < $IndexCount; $i++) {
-                if($Dto->side[$i] === 'debit') {
+            //for ($i = 0; $i < $IndexCount; $i++) {
+            //    if($Dto->side[$i] === 'debit') {
+            //        $stmtDetail->execute([
+            //            $voucherId,
+            //            $Dto->account_id[$i],
+            //            //$Dto->DtoDetails[$i][account_id],
+            //            'debit',
+            //            $Dto->amount[$i]
+            //        ]);
+            //    } else {
+            //         $stmtDetail->execute([
+            //            $voucherId,
+            //            $Dto->account_id[$i],
+            //            'credit',
+            //            $Dto->amount[$i]
+            //        ]);
+            //    }
+            //}
+
+
+
+
+            foreach ($Dto->DtoDetails as $RecNo => $Row){
+                if($Row['side'] === 'debit') {
                     $stmtDetail->execute([
                         $voucherId,
-                        $Dto->account_id[$i],
+                        $Row['account_id'],
                         'debit',
-                        $Dto->amount[$i]
+                        $Row['amount']
                     ]);
                 } else {
                      $stmtDetail->execute([
                         $voucherId,
-                        $Dto->account_id[$i],
+                        $Row['account_id'],
                         'credit',
-                        $Dto->amount[$i]
+                        $Row['amount']
                     ]);
                 }
             }
+
+
 
             $pdo->commit();
         } catch (Exception $e) {
@@ -108,27 +132,26 @@ class VoucherRepository{
     }
 
     public function VcrListSearch($VcrDto) {
-        echo "cccccccccccccccccccccccccccccccccc";
-        var_dump($VcrDto->Date);
-        var_dump($VcrDto->VcrListDatePeriod['検索開始日付']);
-        var_dump($VcrDto->VcrListDatePeriod['検索終了日付']);
+
         if(!empty($VcrDto->Date)){
             $from = date('Y-m-d', strtotime($VcrDto->Date));
             $to =   date('Y-m-d', strtotime($VcrDto->Date));
-        }else{
+        }
+        if(
+            !empty($VcrDto->VcrListDatePeriod['検索開始日付'] )   &&
+            !empty($VcrDto->VcrListDatePeriod['検索終了日付'] )
+        )
+        {
             $from = date('Y-m-d', strtotime($VcrDto->VcrListDatePeriod['検索開始日付']));
             $to   =  date('Y-m-d', strtotime($VcrDto->VcrListDatePeriod['検索終了日付']));
         }
 
         if(empty($from) || empty($to)) {
-            $from   =   '1900-01-01';
+            $from   =   '1970-01-01';
             $to     =   '2099-12-31';
         }
+        var_dump($from);var_dump($to);
 
-        //$from = !empty($VcrDto->Date) ? date('Y-m-d', strtotime($VcrDto->Date)) : '1900-01-01';
-        //$to   = !empty($VcrDto->Date) ? date('Y-m-d', strtotime($VcrDto->Date)) : '2099-12-02';
-        //$from = !empty($VcrDto->VcrListDatePeriod['検索開始日付']) ? date('Y-m-d', strtotime($VcrDto->VcrListDatePeriod['検索開始日付']));
-        //$to   = !empty($VcrDto->VcrListDatePeriod['検索終了日付']) ? date('Y-m-d', strtotime($VcrDto->VcrListDatePeriod['検索終了日付']));
         $UserId = getLoginUserId();
         $pdo = getPDO();
         $sql = "SELECT 
@@ -151,8 +174,6 @@ class VoucherRepository{
               AND jv.voucher_date BETWEEN :from AND :to";
 
         // 条件がある場合だけ絞り込むロジック（動的SQLの簡易版）
-        echo "<br> from={$from}";
-        echo "<br> to={$to}";
 
         if (!empty($VcrDto->ListVcrNum)) {
             $sql .= " AND jv.id = :vchrnumber ";

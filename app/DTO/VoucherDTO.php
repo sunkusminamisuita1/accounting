@@ -5,9 +5,9 @@ class VoucherDTO
     public  $Date = '';
     public  $Summary = '';
     public array $Accounts = [];
-    public array $account_id = [];
-    public array $side = [];
-    public array $amount = [];
+//    public array $account_id = [];
+    //public array $side = [];
+    //public array $amount = [];
     public array $DtoDetails = [0 => ['account_id' => '', 'amount' => '', 'side' => 'debit']]; //明細行の配列
     public array $InitDetails = [0 => ['account_id' => '', 'amount' => '', 'side' => 'debit']]; //明細行の配列
     public  $SearchType = '';
@@ -25,16 +25,19 @@ class VoucherDTO
         $this->Date      = $_POST['voucher_date'] ?? ''; //create.phpのVoucherDate
         $this->Summary   = $_POST['summary'] ?? '';      //create.phpのVoucherSummary
         $this->SearchType = $_POST['search_type'] ?? ''; //search.phpのSearchType
-
-        foreach ($Details as $idx => $row) {
-            if (!isset($row['account_id'], $row['side'], $row['amount'])) {
-                throw new InvalidArgumentException('Invalid detail data');
-            }
-            $this->account_id[$idx]  = $row['account_id'];
-            $this->side[$idx]       = $row['side'];
-            $this->amount[$idx]     = $row['amount'];
-            $this->DtoDetails       = $_POST['details'] ?? [$Details];
+        $this->DtoDetails       = $_POST['details'] ?? [$Details];
+        if(empty($this->VcrSearchedData) && !empty($_SESSION['VcrSearchedData'])){
+            $this->VcrSearchedData = $_SESSION['VcrSearchedData'];
         }
+//        foreach ($Details as $idx => $row) {
+//            if (!isset($row['account_id'], $row['side'], $row['amount'])) {
+//                throw new InvalidArgumentException('Invalid detail data');
+//            }
+////            $this->account_id[$idx]  = $row['account_id'];
+//            $this->side[$idx]       = $row['side'];
+//            $this->amount[$idx]     = $row['amount'];
+//            $this->DtoDetails       = $_POST['details'] ?? [$Details];
+//        }
         //$_SESSION['VoucherDetail'] = $this->DtoDetails; //セッションに伝票一枚分を保存(Voucher.create)
     }
 
@@ -43,7 +46,7 @@ class VoucherDTO
         $this->DtoDetails   = $this->InitDetails; //初期値の明細行をDTOにセット
         $_SESSION['VoucherDetail'] = $this->InitDetails; //セッションに初期値の明細行を保存(Voucher.create)
         $this->Summary      = '';
-        $this->account_id   = [];
+//        $this->account_id   = [];
         $this->side         = [];
         $this->amount       = [];
     }
@@ -55,9 +58,9 @@ class VoucherDTO
         $this->Date         = $_POST['ListVcrDate'] ?? '';
         $this->Summary      = $_POST['ListVcrSummary'] ?? '';
         $this->ListVcrNum   = $_POST['ListVcrNum'] ?? '';
-        $this->account_id   = [];
-        $this->side         = [];
-        $this->amount       = [];
+//        $this->account_id   = [];
+//        $this->side         = [];
+//        $this->amount       = [];
         $this->VcrListDatePeriod   =   [ '検索開始日付' => $_POST['LstVcrSearchStartDate'] ?? '' , '検索終了日付' => $_POST['LstVcrSearchEndDate'] ?? '' ];
 
         if (!empty($_POST['SimpleSearch'])) {

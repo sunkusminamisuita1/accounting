@@ -3,6 +3,12 @@
     .UpdTbl { border-collapse: collapse; width: 100%; table-layout: fixed; border: 1px solid #000000; } /* 幅は中身に合わせるのが一般的 */
     .ProcSlct button { cursor: pointer; padding: 5px 15px; }
     th,td {  padding: 0.6em; border: 1px solid #000000; }
+
+    .button-container {
+    display: flex;
+    justify-content: space-between; /* 左右に均等配置する */
+    width: 100%; /* 必要に応じて幅を指定 */
+}
 </style>
 <table class="UpdTbl">
 <tr>
@@ -102,14 +108,14 @@
                     ?>
                     <?php if ($VcrIdSW !== $Row['voucher_id']): ?>
                             <tr style="background-color: #e0e0e1; font-weight: bold; text-align: center;">
-                                <th style=" width: 6%;" >伝票No</th>
-                                <th style=" width: 10%;" >日付</th>
-                                <th style=" width: 10%;" >貸方科目</th>
-                                <th>貸方金額</th>
-                                <th>借方金額</th>
-                                <th>借方科目</th>
-                                <th>摘要</th>
-                                <th>
+                                <th style=" width: 5%;" >伝票No</th>
+                                <th style=" width: 11%;" >日付</th>
+                                <th style=" width: 13%;" >借方科目</th>
+                                <th style=" width: 10%;">借方金額</th>
+                                <th style=" width: 10%;">貸方金額</th>
+                                <th style=" width: 13%;">貸方科目</th>
+                                <th style=" width: 15%;">摘要</th>
+                                <th style=" width: 22%;">
                                     <button name="VcrUpdate" type="submit" value="<?= h('VcrUpdate') ?>">修正実行</button>                                    
                                 </th>
                             </tr>
@@ -128,7 +134,7 @@
                             <td></td>
                     <?php endif; ?>
                             <td>
-                                <?php if($Row['side'] === 'credit'): ?>
+                                <?php if($Row['side'] === 'debit'): ?>
                                     <select  style=" width: 95%;"  name="details[<?= $i ?>][account_id]" required >
                                         <option value="">選択してください</option>
                                             <?php foreach($this->Dto->AccountTbl as $a): ?>
@@ -141,17 +147,17 @@
                                 <?php endif; ?>
                             </td>
                             <td  style="font-weight: bold; text-align: right;">
-                                <?php if($Row['side'] === 'credit'): ?>
-                                    <input style="width : 95%;" type="text" name="ListVcrNum" value="<?= h($Row['amount']) ?? '' ?>">
-                                <?php endif; ?>
-                            </td>
-                            <td  style="font-weight: bold; text-align: right;">
                                 <?php if($Row['side'] === 'debit'): ?>
                                     <input style="width : 95%;" type="text" name="ListVcrNum" value="<?= h($Row['amount']) ?? '' ?>">
                                 <?php endif; ?>
                             </td>
+                            <td  style="font-weight: bold; text-align: right;">
+                                <?php if($Row['side'] === 'credit'): ?>
+                                    <input style="width : 95%;" type="text" name="ListVcrNum" value="<?= h($Row['amount']) ?? '' ?>">
+                                <?php endif; ?>
+                            </td>
                             <td>
-                                 <?php if($Row['side'] === 'debit'): ?>
+                                 <?php if($Row['side'] === 'credit'): ?>
                                     <select style=" width: 95%;" name="details[<?= $i ?>][account_id]" required >
                                         <option value="">選択してください</option>
                                             <?php foreach($this->Dto->AccountTbl as $a): ?>
@@ -167,7 +173,12 @@
                                 <?= h($Row['summary']??'') ?>
                             </td>
                             <td>
-                            </td>
+                              <div class="button-container">
+                                <input type="hidden" name="VcrCurrentLine" value="<?= h($VcrRowNo) ?>">
+                                <button name="VcrUpdate" type="submit" value="<?= h('借方行追加') ?>">借方行追加</button>
+                                <button name="VcrUpdate" type="submit" value="<?= h('貸方行追加') ?>">貸方行追加</button>
+                                <button name="VcrUpdate" type="submit" value="<?= h('行削除') ?>">行削除</button>
+                              </div>    
                             </td>
                     </tr>
                 <?php endforeach; ?>
@@ -203,12 +214,12 @@
                     ?>
                     <?php if ($VcrIdSW !== $Row['voucher_id']): ?>
                             <tr style="background-color: #e0e0e1; font-weight: bold; text-align: center;">
-                                <th>伝票No</th>
-                                <th>日付</th>
-                                <th>貸方科目</th>
-                                <th>貸方金額</th>
-                                <th>借方金額</th>
+                                <th width 5%>伝票No</th>
+                                <th width 8%>日付</th>
                                 <th>借方科目</th>
+                                <th>借方金額</th>
+                                <th>貸方金額</th>
+                                <th>貸方科目</th>
                                 <th>摘要</th>
                                 <th>
                                     <?php if($this->Dto->VcrListResult[$VcrId]['voucher_id'] !== '999999999999'): ?>
@@ -232,16 +243,16 @@
                             <td></td>
                     <?php endif; ?>
                             <td  style="font-weight: bold; text-align: center;">
-                                <?= h($CreditName) ?>
-                            </td>
-                            <td  style="font-weight: bold; text-align: right;">
-                                <?= h($CreditAmount) ?>
+                                <?= h($DebitName) ?>
                             </td>
                             <td  style="font-weight: bold; text-align: right;">
                                 <?= h($DebitAmount) ?>
                             </td>
+                            <td  style="font-weight: bold; text-align: right;">
+                                <?= h($CreditAmount) ?>
+                            </td>
                             <td  style="font-weight: bold; text-align: center;">
-                                <?= h($DebitName) ?>
+                                <?= h($CreditName) ?>
                             </td>
                             <td  style="font-weight: bold; text-align: center;">
                                 <?= h($Row['summary']??'') ?>
@@ -255,10 +266,10 @@
                             <td style="font-weight: bold; text-align: center;">
                                 合計</td>
                             <td style="font-weight: bold; text-align: right;">
-                                <?= h($Row['credit_total']??'') ?>
+                                <?= h($Row['devit_total']??'') ?>
                             </td>
                             <td style="font-weight: bold; text-align: right;">
-                                <?= h($Row['debit_total']??'') ?>
+                                <?= h($Row['credit_total']??'') ?>
                             </td>
                             <td></td>
                             <td style="font-weight: bold; text-align: right;">

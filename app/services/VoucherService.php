@@ -53,27 +53,27 @@ class VoucherService{
         ];
     }
 
-    public function addEntry($VoucherDto): void {
-        $this->initializeSession();
-        $voucherDate = $VoucherDto->Date; // ###############################3
-        $side = $VoucherDto->side ?? '';
-        $accountId = isset($VoucherDto->accountId) ? (int)$VoucherDto->accountId : 9999;
-        $amount = $VoucherDto->amount ?? 0;
-        $summary = $VoucherDto->Summary ?? '';
-        $accountName = $this->resolveAccountName($accountId);
-        if ($accountId !== 9999 && $accountId > 0) {
-            $_SESSION['voucherRows'][$_SESSION['slipNum']] = [
-                'date' => $voucherDate,
-                'side' => $side,
-                'accountId' => $accountId,
-                'accountName' => $accountName,
-                'amount' => $amount,
-                'summary' => $summary,
-            ];
-            $_SESSION['slipNum']++;
-        }
-        $this->recalculateTotals();
-    }
+//    public function addEntry($VoucherDto): void {
+//        $this->initializeSession();
+//        $voucherDate = $VoucherDto->Date; // ###############################3
+//        $side = $VoucherDto->side ?? '';
+//        $accountId = isset($VoucherDto->accountId) ? (int)$VoucherDto->accountId : 9999;
+//        $amount = $VoucherDto->amount ?? 0;
+//        $summary = $VoucherDto->Summary ?? '';
+//        $accountName = $this->resolveAccountName($accountId);
+//        if ($accountId !== 9999 && $accountId > 0) {
+//            $_SESSION['voucherRows'][$_SESSION['slipNum']] = [
+//                'date' => $voucherDate,
+//                'side' => $side,
+//                'accountId' => $accountId,
+//                'accountName' => $accountName,
+//                'amount' => $amount,
+//                'summary' => $summary,
+//            ];
+//            $_SESSION['slipNum']++;
+//        }
+//        $this->recalculateTotals();
+///   }
 
     public function deleteRows(array $keys): void {
         foreach ($keys as $key) {
@@ -164,7 +164,6 @@ class VoucherService{
         if (isset($_POST['SimpleSearch'])) {  
             $VoucherDto->List(); //DTOのListメソッドで検索条件をセット
             $this->Validator->list($VoucherDto);
-//////////////////////////このif追加
             if(empty($VoucherDto->ErrData)){
                 $VcrListResult = $this->Repo->VcrListSearch($VoucherDto)??[];           
                 foreach($VcrListResult as $idx => $row) {
@@ -181,7 +180,8 @@ class VoucherService{
                 $_SESSION['VoucherDetail'] = $VcrListResult;
             }        
         }
-//修正エリアのロジック
+        //if($_POST['VcrUpdate'] === '借方行追加')
+        //修正エリアのロジック
         if (isset($_POST['VcrUpdateNo'])) {
             $VoucherDto->VcrListResult = $_SESSION['VoucherDetail'];
             $VoucherDto->VcrUpdNo =  $_POST['VcrUpdateNo'] ?? 0;
@@ -212,6 +212,13 @@ class VoucherService{
                 }
             }
         }
+
+        if(isset($_POST['VcrUpdate']) && $_POST['VcrUpdate'] === '借方行追加'){
+            $NewRow = ['voucher_id' => '' , 'voucher_date' => '' , 'side' => 'debit' , 'account_id' => '' , 'amount' => '0'];
+            array_splice($VoucherDto->VcrSearchedData, $_POST['VcrCurrentLine'], 0, [$NewRow]);
+            $_SESSION['VcrSearchedData'] = $VoucherDto->VcrSearchedData;
+        }
+
     }
 
     public function VcrRowAdd($VcrDTO){
@@ -231,7 +238,7 @@ class VoucherService{
 
     public function VcrSave($VcrDTO,$VcrValidator){
         if (empty($VcrDTO->ErrData)) {
-            $IndexCnt = count($VcrDTO->account_id) ?? 0;
+//            $IndexCnt = count($VcrDTO->account_id) ?? 0;
             $this->Repo->insertVoucher($VcrDTO); 
         }
     }
