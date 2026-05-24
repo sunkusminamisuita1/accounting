@@ -159,7 +159,7 @@ class VoucherService{
         requireCsrf();
         $AccountTbl = $this->getAccounts();
         $VoucherDto->AccountTbl = $AccountTbl;
-        $VoucherDto->VcrSearchedData = [];
+        $VoucherDto->VcrSearchedData = $VoucherDto->InitVcrSearchedData ;
         $VoucherDto->List(); //DTOのListメソッドで検索条件をセット
         if (isset($_POST['SimpleSearch'])) {  
             $VoucherDto->List(); //DTOのListメソッドで検索条件をセット
@@ -176,14 +176,20 @@ class VoucherService{
                         }
                     }
                 }
+                //echo "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+                //print_r($VcrListResult);
                 $VoucherDto->VcrListResult = $VcrListResult;
                 $_SESSION['VoucherDetail'] = $VcrListResult;
             }        
         }
-        //if($_POST['VcrUpdate'] === '借方行追加')
-        //修正エリアのロジック
+        //print_r($_SESSION['VoucherDetail']);
+        $VoucherDto->VcrListResult = $_SESSION['VoucherDetail'] ?? [];
+//        $_SESSION['VoucherDetail'] = $VcrListResult;
+//修正エリアのロジック 
+        //修正ボタンを押したとき
         if (isset($_POST['VcrUpdateNo'])) {
-            $VoucherDto->VcrListResult = $_SESSION['VoucherDetail'];
+            //print_r($VoucherDto->VcrListResult);//デバッグ
+            //$VoucherDto->VcrListResult = $_SESSION['VoucherDetail'];
             $VoucherDto->VcrUpdNo =  $_POST['VcrUpdateNo'] ?? 0;
             $CreditTotal = 0;$DebitTotal = 0;
             foreach ($VoucherDto->VcrListResult as $no0 => $value0) {
@@ -199,6 +205,7 @@ class VoucherService{
                     }
                 }
             }
+            $_SESSION['VcrSearchedData'] = $VoucherDto->VcrSearchedData;
             if( $CreditTotal !== $DebitTotal ){
                 $VoucherDto->ErrData['VoucherService'] = "貸方合計　¥{$CreditTotal}　借方合計　¥{$DebitTotal}　不一致です。";
             }
@@ -212,11 +219,39 @@ class VoucherService{
                 }
             }
         }
-
+        //借方行追加ボタンを押したとき
         if(isset($_POST['VcrUpdate']) && $_POST['VcrUpdate'] === '借方行追加'){
-            $NewRow = ['voucher_id' => '' , 'voucher_date' => '' , 'side' => 'debit' , 'account_id' => '' , 'amount' => '0'];
-            array_splice($VoucherDto->VcrSearchedData, $_POST['VcrCurrentLine'], 0, [$NewRow]);
+            echo "ccccccccccccccccccccccccccccc";
+            $VcrSearchedData = $_SESSION['VcrSearchedData'];
+            $VoucherDto->VcrSearchedData = $_SESSION['VcrSearchedData'];
+
+            //print_r($VcrSearchedData);
+            $NewJdId = (float)$_POST['JdId'] + 0.00001;
+            $NewRow = [
+                        'id' => $_POST['id'] , 'JdId' => $NewJdId , 'voucher_date' => '' ,
+                        'summary' => '' , 'account_id' => '' , 'name' => '' , 'type' => '' , 'side' => 'debit' , 'amount' => '0' ,
+                        'summary' => '' , 'voucher_id' => $_POST['voucher_id'] , 'debit_total' => '' , 'credit_total' => '' , 
+                      ];
+            array_splice($VoucherDto->VcrSearchedData, $NewJdId, 0, [$NewRow]);
             $_SESSION['VcrSearchedData'] = $VoucherDto->VcrSearchedData;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         }
 
     }

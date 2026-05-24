@@ -66,6 +66,7 @@ class VoucherController
 
     // 修正、削除データ検索
     public function list() {
+        //print_r($_SESSION['VcrSearchedData']);
         $TokenKey  = generateCsrfToken();
         $this->Dto = new VoucherDTO($_POST['details'] ?? []);
         $accounts = $this->Service->getAccounts();

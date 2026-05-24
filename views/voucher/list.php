@@ -93,6 +93,7 @@
     </div>
         <form method="POST" action="index.php?route=voucher.list">
             <input type="hidden" name="csrfTokenKey" value="<?= h($TokenKey) ?>">
+            <input type="hidden" name="JdId" value="<?= h($TokenKey) ?>">
             <table class="UpdTbl">
                 <?php $VcrIdSW = 0; $VcrSearchedData = $this->Dto->VcrSearchedData;
                         $CreditAmount = 0; $DebitAmount = 0; $CreditName = ''; $DebitName = '';
@@ -106,7 +107,8 @@
                         $DebitName = $Row['name']??'';
                     }
                     ?>
-                    <?php if ($VcrIdSW !== $Row['voucher_id']): ?>
+                    <?=  "<br> {$VcrIdSW} xxx {$Row['voucher_id']}"  ?>
+                    <?php if ($VcrIdSW != $Row['voucher_id']): ?>
                             <tr style="background-color: #e0e0e1; font-weight: bold; text-align: center;">
                                 <th style=" width: 5%;" >伝票No</th>
                                 <th style=" width: 11%;" >日付</th>
@@ -121,7 +123,7 @@
                             </tr>
                     <?php endif; ?>
                     <tr>
-                    <?php if ($VcrIdSW !== $Row['voucher_id']): ?>
+                    <?php if ($VcrIdSW != $Row['voucher_id']): ?>
                         <?php $VcrIdSW   = $Row['voucher_id']; ?>
                             <td  style="font-weight: bold; text-align: center;">
                                 <?= h($Row['voucher_id']) ?>
@@ -174,7 +176,11 @@
                             </td>
                             <td>
                               <div class="button-container">
-                                <input type="hidden" name="VcrCurrentLine" value="<?= h($VcrRowNo) ?>">
+                                <input type="hidden" name="VcrRowNo.<= $VcrRowNo =>" value="<?= h($VcrRowNo) ?>">
+                                <input type="hidden" name="VcrCurrentLine<= $VcrRowNo =>" value="<?= h($VcrRowNo) ?>">
+                                <input type="hidden" name="JdId<= $VcrRowNo =>" value="<?= h($Row['JdId'] ?? 0) ?>">
+                                <input type="hidden" name="id<= $VcrRowNo =>" value="<?= h($Row['id'] ?? '') ?>">
+                                <input type="hidden" name="voucher_id<= $VcrRowNo =>" value="<?= h($Row['voucher_id'] ?? '') ?>">
                                 <button name="VcrUpdate" type="submit" value="<?= h('借方行追加') ?>">借方行追加</button>
                                 <button name="VcrUpdate" type="submit" value="<?= h('貸方行追加') ?>">貸方行追加</button>
                                 <button name="VcrUpdate" type="submit" value="<?= h('行削除') ?>">行削除</button>
