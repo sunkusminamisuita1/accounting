@@ -230,7 +230,7 @@ class VoucherService{
             if(isset($_POST['VcrAddDebit'])){
                 $NewVcrRowAddr = (int)$_POST['VcrAddDebit'];
                 $NewJdId = $_POST['JdId' . $NewVcrRowAddr] ?? 0;
-                $NewJdId = (float)$NewJdId + 0.00001;
+                $NewJdId = (float)$NewJdId ;
                 $NewId = $_POST['id' . $_POST['VcrAddDebit']] ?? '';
                 $NewRow = [
                         'id' => $NewId , 'JdId' => $NewJdId , 'voucher_date' => '' ,

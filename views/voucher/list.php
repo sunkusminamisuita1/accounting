@@ -150,12 +150,12 @@
                             </td>
                             <td  style="font-weight: bold; text-align: right;">
                                 <?php if($Row['side'] === 'debit'): ?>
-                                    <input style="width : 95%;" type="text" name="ListVcrNum[<?= $VcrRowNo ?>]" value="<?= h($Row['amount']) ?? '' ?>">
+                                    <input style="width : 95%;" type="text" name="ListVcrNum" value="<?= h($Row['amount']) ?? '' ?>">
                                 <?php endif; ?>
                             </td>
                             <td  style="font-weight: bold; text-align: right;">
                                 <?php if($Row['side'] === 'credit'): ?>
-                                    <input style="width : 95%;" type="text" name="ListVcrNum[<?= $VcrRowNo ?>]" value="<?= h($Row['amount']) ?? '' ?>">
+                                    <input style="width : 95%;" type="text" name="ListVcrNum" value="<?= h($Row['amount']) ?? '' ?>">
                                 <?php endif; ?>
                             </td>
                             <td>
