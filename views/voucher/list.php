@@ -137,7 +137,7 @@
                     <?php endif; ?>
                             <td>
                                 <?php if($Row['side'] === 'debit'): ?>
-                                    <select  style=" width: 95%;"  name="details[<?= $i ?>][account_id]" required >
+                                    <select  style=" width: 95%;"  name="details[<?= $VcrRowNo ?>][account_id]" required >
                                         <option value="">選択してください</option>
                                             <?php foreach($this->Dto->AccountTbl as $a): ?>
                                                 <option value="<?= h($a['id']) ?>" 
@@ -150,17 +150,17 @@
                             </td>
                             <td  style="font-weight: bold; text-align: right;">
                                 <?php if($Row['side'] === 'debit'): ?>
-                                    <input style="width : 95%;" type="text" name="ListVcrNum" value="<?= h($Row['amount']) ?? '' ?>">
+                                    <input style="width : 95%;" type="text" name="ListVcrNum[<?= $VcrRowNo ?>]" value="<?= h($Row['amount']) ?? '' ?>">
                                 <?php endif; ?>
                             </td>
                             <td  style="font-weight: bold; text-align: right;">
                                 <?php if($Row['side'] === 'credit'): ?>
-                                    <input style="width : 95%;" type="text" name="ListVcrNum" value="<?= h($Row['amount']) ?? '' ?>">
+                                    <input style="width : 95%;" type="text" name="ListVcrNum[<?= $VcrRowNo ?>]" value="<?= h($Row['amount']) ?? '' ?>">
                                 <?php endif; ?>
                             </td>
                             <td>
                                  <?php if($Row['side'] === 'credit'): ?>
-                                    <select style=" width: 95%;" name="details[<?= $i ?>][account_id]" required >
+                                    <select style=" width: 95%;" name="details[<?= $VcrRowNo ?>][account_id]" required >
                                         <option value="">選択してください</option>
                                             <?php foreach($this->Dto->AccountTbl as $a): ?>
                                                 <option value="<?= h($a['id']) ?>" 
@@ -176,14 +176,12 @@
                             </td>
                             <td>
                               <div class="button-container">
-                                <input type="hidden" name="VcrRowNo.<= $VcrRowNo =>" value="<?= h($VcrRowNo) ?>">
-                                <input type="hidden" name="VcrCurrentLine<= $VcrRowNo =>" value="<?= h($VcrRowNo) ?>">
-                                <input type="hidden" name="JdId<= $VcrRowNo =>" value="<?= h($Row['JdId'] ?? 0) ?>">
-                                <input type="hidden" name="id<= $VcrRowNo =>" value="<?= h($Row['id'] ?? '') ?>">
-                                <input type="hidden" name="voucher_id<= $VcrRowNo =>" value="<?= h($Row['voucher_id'] ?? '') ?>">
-                                <button name="VcrUpdate" type="submit" value="<?= h('借方行追加') ?>">借方行追加</button>
-                                <button name="VcrUpdate" type="submit" value="<?= h('貸方行追加') ?>">貸方行追加</button>
-                                <button name="VcrUpdate" type="submit" value="<?= h('行削除') ?>">行削除</button>
+                                <input type="hidden" name="JdId<?= $VcrRowNo ?>" value="<?= h($Row['JdId'] ?? 0) ?>">
+                                <input type="hidden" name="id<?= $VcrRowNo ?>" value="<?= h($Row['id'] ?? '') ?>">
+                                <input type="hidden" name="voucher_id<?= $VcrRowNo ?>" value="<?= h($Row['voucher_id'] ?? '') ?>">
+                                <button name="VcrAddDebit" type="submit" value="<?= h($VcrRowNo ?? '') ?>">借方行追加</button>
+                                <button name="VcrAddCredit" type="submit" value="<?= h($VcrRowNo ?? '') ?>">貸方行追加</button>
+                                <button name="VcrDelete" type="submit" value="<?= h($VcrRowNo ?? '') ?>">行削除</button>
                               </div>    
                             </td>
                     </tr>
