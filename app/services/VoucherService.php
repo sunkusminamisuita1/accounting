@@ -221,7 +221,6 @@ class VoucherService{
         }
         //借方行追加ボタンを押したとき
         if(isset($_POST['VcrAddDebit'])){
-            echo "ccccccccccccccccccccccccccccc";
             $VcrSearchedData = $_SESSION['VcrSearchedData'];
             $VoucherDto->VcrSearchedData = $_SESSION['VcrSearchedData'];
 
@@ -230,9 +229,9 @@ class VoucherService{
             var_dump($_POST);
             if(isset($_POST['VcrAddDebit'])){
                 $NewVcrRowAddr = (int)$_POST['VcrAddDebit'];
-                $NewJdId = $_POST['JdId'] . $_POST['VcrAddDebit'];
-                $NewJdId = (int)$NewJdId;
-                $NewId = $_POST['id'] . $_POST['VcrAddDebit'];
+                $NewJdId = $_POST['JdId' . $NewVcrRowAddr] ?? 0;
+                $NewJdId = (float)$NewJdId + 0.00001;
+                $NewId = $_POST['id' . $_POST['VcrAddDebit']] ?? '';
                 $NewRow = [
                         'id' => $NewId , 'JdId' => $NewJdId , 'voucher_date' => '' ,
                         'summary' => '' , 'account_id' => '' , 'name' => '' , 'type' => '' , 'side' => 'debit' , 'amount' => '0' ,
