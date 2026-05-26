@@ -15,6 +15,6 @@
 	<button type="submit">ログイン</button>
 </form>
 <p style="color:red;"><?= htmlspecialchars($message, ENT_QUOTES, 'UTF-8') ?></p>
-<p><a href="register.php">新規登録はこちら</a></p>
+<p><a href="index.php?route=register">新規登録はこちら</a></p>
 </body>
 </html>

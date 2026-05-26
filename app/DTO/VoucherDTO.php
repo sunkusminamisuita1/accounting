@@ -12,6 +12,7 @@ class VoucherDTO
     public array $ErrData = []; //エラー行の配列 ['ModName' => 'エラーメッセージ']
     public array $VcrListResult =  []; //検索結果の配列
     public array $VcrSearchedData = [];
+    public array $VcrUpdData = [];//vcrlistで修正対象行のデータを格納する配列
     //public array $InitVcrSearchedData = 
     //[0 => [
     //        'id' => '',
@@ -33,6 +34,8 @@ class VoucherDTO
     public array $AccountTbl = [];
     public array $VcrUpdRow = [];
     public $VcrUpdNo = 0;
+    public $VcrDeleteNo = 0;//vcrlistで伝票削除行の行番号を格納する変数(voucher_id)
+
 
     public function __construct(array $Details)
     {

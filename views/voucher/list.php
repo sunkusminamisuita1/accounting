@@ -118,7 +118,8 @@
                                 <th style=" width: 13%;">貸方科目</th>
                                 <th style=" width: 15%;">摘要</th>
                                 <th style=" width: 22%;">
-                                    <button name="VcrUpdate" type="submit" value="<?= h('VcrUpdate') ?>">修正実行</button>                                    
+                                    <button name="VcrUpdate" type="submit" value="<?= h('VcrUpdate') ?>">修正実行</button>
+                                    <button name="VcrDelete" type="submit" value="<?= h('VcrDelete') ?>">伝票削除</button>
                                 </th>
                             </tr>
                     <?php endif; ?>
@@ -150,12 +151,12 @@
                             </td>
                             <td  style="font-weight: bold; text-align: right;">
                                 <?php if($Row['side'] === 'debit'): ?>
-                                    <input style="width : 95%;" type="text" name="ListVcrNum" value="<?= h($Row['amount']) ?? '' ?>">
+                                    <input style="width : 95%;" type="text" name="Amount" value="<?= h($Row['amount']) ?? '' ?>">
                                 <?php endif; ?>
                             </td>
                             <td  style="font-weight: bold; text-align: right;">
                                 <?php if($Row['side'] === 'credit'): ?>
-                                    <input style="width : 95%;" type="text" name="ListVcrNum" value="<?= h($Row['amount']) ?? '' ?>">
+                                    <input style="width : 95%;" type="text" name="Amount" value="<?= h($Row['amount']) ?? '' ?>">
                                 <?php endif; ?>
                             </td>
                             <td>
@@ -181,7 +182,7 @@
                                 <input type="hidden" name="voucher_id<?= $VcrRowNo ?>" value="<?= h($Row['voucher_id'] ?? '') ?>">
                                 <button name="VcrAddDebit" type="submit" value="<?= h($VcrRowNo ?? '') ?>">借方行追加</button>
                                 <button name="VcrAddCredit" type="submit" value="<?= h($VcrRowNo ?? '') ?>">貸方行追加</button>
-                                <button name="VcrDelete" type="submit" value="<?= h($VcrRowNo ?? '') ?>">行削除</button>
+                                <button name="VcrDetailLineDel" type="submit" value="<?= h($Row['voucher_id'] ?? '') ?>">行削除</button>
                               </div>    
                             </td>
                     </tr>
@@ -270,7 +271,7 @@
                             <td style="font-weight: bold; text-align: center;">
                                 合計</td>
                             <td style="font-weight: bold; text-align: right;">
-                                <?= h($Row['devit_total']??'') ?>
+                                <?= h($Row['debit_total']??'') ?>
                             </td>
                             <td style="font-weight: bold; text-align: right;">
                                 <?= h($Row['credit_total']??'') ?>
