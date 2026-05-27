@@ -185,31 +185,32 @@ class VoucherService{
         }
 
 //行追加・行削除ボタンを押したときの処理
-        foreach ($_SESSION['VcrSearchedData'] as $no0 => $value0){
-            if(isset($_POST['VcrAddDebit'] . $no0)  ||
-               isset($_POST['VcrAddCredit'] . $no0) ||
-               isset($_POST['VcrDetailLineDel'] . $no0) ){
+            if(isset($_POST['VcrAddDebit'])  ||
+               isset($_POST['VcrAddCredit']) ||
+               isset($_POST['VcrDetailLineDel']) ){
                 $VcrSearchedData = $_SESSION['VcrSearchedData'];
                 $VoucherDto->VcrSearchedData = $_SESSION['VcrSearchedData'];
-                if(isset($_POST['VcrAddDebit'] . $no0)){   //借方 追加行の行番号を取得
-                    $NewVcrRowAddr = (int)$_POST['VcrAddDebit' . $no0]  + 1;
-                    $NewId = $_POST['id' . $_POST['VcrAddDebit' . $no0]] ?? '';
+                if(isset($_POST['VcrAddDebit'])){   //借方 追加行の行番号を取得
+                    $NewVcrRowAddr = (int)$_POST['VcrAddDebit']  + 1;
+                    $NewId = $_POST['id'] ?? '';
+                    $Side = 'debit';
                 }
-                if(isset($_POST['VcrAddCredit'] . $no0 )){  //貸方 追加行の行番号を取得
-                    $NewVcrRowAddr = (int)$_POST['VcrAddCredit' . $no0] + 1;
-                    $NewId = $_POST['id' . $_POST['VcrAddCredit' . $no0]] ?? '';
+                if(isset($_POST['VcrAddCredit'])){  //貸方 追加行の行番号を取得
+                    $NewVcrRowAddr = (int)$_POST['VcrAddCredit'] + 1;
+                    $NewId = $_POST['id'] ?? '';
+                    $Side = 'credit';
                 }
                 if(!isset($_POST['VcrDetailLineDel'])){ //借方、貸方　共通設定項目
-                    $NewJdId = (int)$_POST['JdId' . $no0] ?? 0;
+                    $NewJdId = (int)$_POST['JdId'] ?? 0;
                     $NewRow = [
                             'id' => $NewId , 'JdId' => $NewJdId , 'voucher_date' => '' , 'summary' => '',
-                            'account_id' => '' , 'name' => '' , 'type' => '' , 'side' => 'credit' , 'amount' => '0' ,
+                            'account_id' => '' , 'name' => '' , 'type' => '' , 'side' => $Side , 'amount' => '0' ,
                             'summary' => '' , 'voucher_id' => $NewId , 'debit_total' => '' , 'credit_total' => '' , 
                               ];
                     echo "追加行No. = " . $NewVcrRowAddr . "<br>";//デバッグ
                     array_splice($VoucherDto->VcrSearchedData , $NewVcrRowAddr , 0, [$NewRow]); //行挿入
                 }else {                                            //行削除
-                    $NewVcrRowAddr = (int)$_POST['VcrDetailLineDel' . $no0];
+                    $NewVcrRowAddr = (int)$_POST['VcrDetailLineDel'];
                     array_splice($VoucherDto->VcrSearchedData, $NewVcrRowAddr, 1);
                 }
                 $VoucherDto->VcrSearchedData = array_values($VoucherDto->VcrSearchedData); //インデックスを振り直す
@@ -237,7 +238,7 @@ class VoucherService{
                     //repo sql 呼び出す
                 }
             }
-        }    
+            
     }
 
     public function VcrRowAdd($VcrDTO){

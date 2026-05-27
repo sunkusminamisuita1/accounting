@@ -177,11 +177,11 @@
                             </td>
                             <td>
                               <div class="button-container">
-                                <input type="hidden" name="JdId<?= $VcrRowNo ?>" value="<?= h($Row['JdId'] ?? 0) ?>">
-                                <input type="hidden" name="id<?= $VcrRowNo ?>" value="<?= h($Row['id'] ?? '') ?>">
-                                <input type="hidden" name="voucher_id<?= $VcrRowNo ?>" value="<?= h($Row['voucher_id'] ?? '') ?>">
-                                <button name="VcrAddDebit<?= $VcrRowNo ?>" type="submit" value="<?= h($VcrRowNo ?? '') ?>">借方行追加</button>
-                                <button name="VcrAddCredit<?= $VcrRowNo ?>" type="submit" value="<?= h($VcrRowNo ?? '') ?>">貸方行追加</button>
+                                <input type="hidden" name="JdId" value="<?= h($Row['JdId'] ?? 0) ?>">
+                                <input type="hidden" name="id" value="<?= h($Row['id'] ?? '') ?>">
+                                <input type="hidden" name="voucher_id" value="<?= h($Row['voucher_id'] ?? '') ?>">
+                                <button name="VcrAddDebit" type="submit" value="<?= h($VcrRowNo ?? '') ?>">借方行追加</button>
+                                <button name="VcrAddCredit" type="submit" value="<?= h($VcrRowNo ?? '') ?>">貸方行追加</button>
                                 <button name="VcrDetailLineDel" type="submit" value="<?= h($VcrRowNo ?? '') ?>">行削除</button>
                               </div>    
                             </td>
