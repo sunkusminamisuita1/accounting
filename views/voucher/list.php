@@ -151,12 +151,12 @@
                             </td>
                             <td  style="font-weight: bold; text-align: right;">
                                 <?php if($Row['side'] === 'debit'): ?>
-                                    <input style="width : 95%;" type="text" name="Amount" value="<?= h($Row['amount']) ?? '' ?>">
+                                    <input style="width : 95%;" type="text" name="Amount<?= $VcrRowNo ?>" value="<?= h($Row['amount']) ?? '' ?>">
                                 <?php endif; ?>
                             </td>
                             <td  style="font-weight: bold; text-align: right;">
                                 <?php if($Row['side'] === 'credit'): ?>
-                                    <input style="width : 95%;" type="text" name="Amount" value="<?= h($Row['amount']) ?? '' ?>">
+                                    <input style="width : 95%;" type="text" name="Amount<?= $VcrRowNo ?>" value="<?= h($Row['amount']) ?? '' ?>">
                                 <?php endif; ?>
                             </td>
                             <td>
@@ -180,8 +180,8 @@
                                 <input type="hidden" name="JdId<?= $VcrRowNo ?>" value="<?= h($Row['JdId'] ?? 0) ?>">
                                 <input type="hidden" name="id<?= $VcrRowNo ?>" value="<?= h($Row['id'] ?? '') ?>">
                                 <input type="hidden" name="voucher_id<?= $VcrRowNo ?>" value="<?= h($Row['voucher_id'] ?? '') ?>">
-                                <button name="VcrAddDebit" type="submit" value="<?= h($VcrRowNo ?? '') ?>">借方行追加</button>
-                                <button name="VcrAddCredit" type="submit" value="<?= h($VcrRowNo ?? '') ?>">貸方行追加</button>
+                                <button name="VcrAddDebit<?= $VcrRowNo ?>" type="submit" value="<?= h($VcrRowNo ?? '') ?>">借方行追加</button>
+                                <button name="VcrAddCredit<?= $VcrRowNo ?>" type="submit" value="<?= h($VcrRowNo ?? '') ?>">貸方行追加</button>
                                 <button name="VcrDetailLineDel" type="submit" value="<?= h($VcrRowNo ?? '') ?>">行削除</button>
                               </div>    
                             </td>
