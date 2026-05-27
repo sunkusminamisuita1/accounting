@@ -183,56 +183,34 @@ class VoucherService{
                 $VoucherDto->ErrData['VoucherService'] = "貸方合計　¥{$CreditTotal}　借方合計　¥{$DebitTotal}　不一致です。";
             }
         }
-        //借方行追加ボタンを押したとき
-        if(isset($_POST['VcrAddDebit'])){
+
+//行追加・行削除ボタンを押したときの処理
+        if(isset($_POST['VcrAddDebit']) || isset($_POST['VcrAddCredit']) || isset($_POST['VcrDetailLineDel'])){
             $VcrSearchedData = $_SESSION['VcrSearchedData'];
             $VoucherDto->VcrSearchedData = $_SESSION['VcrSearchedData'];
-            if(isset($_POST['VcrAddDebit'])){
-                $NewVcrRowAddr = (int)$_POST['VcrAddDebit'];
-                $NewJdId = $_POST['JdId' . $NewVcrRowAddr] ?? 0;
-                $NewJdId = (float)$NewJdId ;
+            if(isset($_POST['VcrAddDebit'])){   //借方 追加行の行番号を取得
+                $NewVcrRowAddr = (int)$_POST['VcrAddDebit']  + 1;
                 $NewId = $_POST['id' . $_POST['VcrAddDebit']] ?? '';
-                $NewRow = [
-                        'id' => $NewId , 'JdId' => $NewJdId , 'voucher_date' => '' ,
-                        'summary' => '' , 'account_id' => '' , 'name' => '' , 'type' => '' , 'side' => 'debit' , 'amount' => '0' ,
-                        'summary' => '' , 'voucher_id' => $NewId , 'debit_total' => '' , 'credit_total' => '' , 
-                          ];
-                array_splice($VoucherDto->VcrSearchedData, $NewVcrRowAddr, 0, [$NewRow]); //行挿入
-
-                $_SESSION['VcrSearchedData'] = $VoucherDto->VcrSearchedData;
             }
-        }
-
-        //貸方行追加ボタンを押したとき
-        if(isset($_POST['VcrAddCredit'])){
-            $VcrSearchedData = $_SESSION['VcrSearchedData'];
-            $VoucherDto->VcrSearchedData = $_SESSION['VcrSearchedData'];
-            if(isset($_POST['VcrAddCredit'])){
-                $NewVcrRowAddr = (int)$_POST['VcrAddCredit'];
-                $NewJdId = $_POST['JdId' . $NewVcrRowAddr] ?? 0;
-                $NewJdId = (float)$NewJdId ;
+            if(isset($_POST['VcrAddCredit'])){  //貸方 追加行の行番号を取得
+                $NewVcrRowAddr = (int)$_POST['VcrAddCredit'] + 1;
                 $NewId = $_POST['id' . $_POST['VcrAddCredit']] ?? '';
+            }
+            if(!isset($_POST['VcrDetailLineDel'])){ //借方、貸方　共通設定項目
+                $NewJdId = (float)$_POST['JdId' . $NewVcrRowAddr] ?? 0;
                 $NewRow = [
                         'id' => $NewId , 'JdId' => $NewJdId , 'voucher_date' => '' ,
                         'summary' => '' , 'account_id' => '' , 'name' => '' , 'type' => '' , 'side' => 'credit' , 'amount' => '0' ,
                         'summary' => '' , 'voucher_id' => $NewId , 'debit_total' => '' , 'credit_total' => '' , 
                           ];
+                echo "追加行No. = " . $NewVcrRowAddr . "<br>";//デバッグ
                 array_splice($VoucherDto->VcrSearchedData , $NewVcrRowAddr , 0, [$NewRow]); //行挿入
-                $_SESSION['VcrSearchedData'] = $VoucherDto->VcrSearchedData;
-            }
-        }
-
-        //行削除ボタンを押したとき
-        if(isset($_POST['VcrDetailLineDel'])){
-            $VcrSearchedData = $_SESSION['VcrSearchedData'];
-            $VoucherDto->VcrSearchedData = $_SESSION['VcrSearchedData'];
-            if(isset($_POST['VcrDetailLineDel'])){
+            }else {                                            //行削除
                 $NewVcrRowAddr = (int)$_POST['VcrDetailLineDel'];
-                echo "削除行No. = " . $NewVcrRowAddr . "<br>";//デバッグ
-                array_splice($VoucherDto->VcrSearchedData, $NewVcrRowAddr, 1); //行削除
-                $VoucherDto->VcrSearchedData = array_values($VoucherDto->VcrSearchedData); //インデックスを振り直す
-                $_SESSION['VcrSearchedData'] = $VoucherDto->VcrSearchedData;
+                array_splice($VoucherDto->VcrSearchedData, $NewVcrRowAddr, 1);
             }
+            $VoucherDto->VcrSearchedData = array_values($VoucherDto->VcrSearchedData); //インデックスを振り直す
+            $_SESSION['VcrSearchedData'] = $VoucherDto->VcrSearchedData;//行追加・行削除後のデータをセッションに保存
         }
 
             foreach ($VoucherDto->VcrSearchedData as $no0 => $value0){

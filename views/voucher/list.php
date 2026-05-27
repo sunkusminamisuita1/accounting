@@ -182,7 +182,7 @@
                                 <input type="hidden" name="voucher_id<?= $VcrRowNo ?>" value="<?= h($Row['voucher_id'] ?? '') ?>">
                                 <button name="VcrAddDebit" type="submit" value="<?= h($VcrRowNo ?? '') ?>">借方行追加</button>
                                 <button name="VcrAddCredit" type="submit" value="<?= h($VcrRowNo ?? '') ?>">貸方行追加</button>
-                                <button name="VcrDetailLineDel" type="submit" value="<?= h($Row['voucher_id'] ?? '') ?>">行削除</button>
+                                <button name="VcrDetailLineDel" type="submit" value="<?= h($VcrRowNo ?? '') ?>">行削除</button>
                               </div>    
                             </td>
                     </tr>
