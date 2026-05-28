@@ -30,7 +30,11 @@
     <?php
         $this->ErrMsgPopUp->Show($this->Dto);
     ?>
-
+<?php
+    echo 'VIEW BEFORE SHOW<br>';
+    $this->ErrMsgPopUp->Show($this->Dto);
+    echo 'VIEW AFTER SHOW<br>';
+?>
 
 
     <br><hr>

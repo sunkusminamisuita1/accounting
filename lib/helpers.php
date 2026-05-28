@@ -47,14 +47,15 @@ class ErrMsgPopUp
                     echo "<script type='text/javascript'>
                         alert('". h($ErrMsg) ."');
                       </script>";
-        if(!empty($Dto) && !empty($Dto->ErrData)){
+        if(!empty($Dto)){
+            $ErrMsg = '';
             foreach ($Dto->ErrData as $mod => $ErrData) {
                  $ErrMsg .= $mod . ": " . $ErrData . '\n';
             }
         }else{
             $ErrMsg = 'Program Error lib/helpers.php Dtoが空です。';            
         }
-
+        
         if(!empty($ErrMsg)){
 //            echo "<script type='text/javascript'>
 //                        alert('". h($ErrMsg) ."');
