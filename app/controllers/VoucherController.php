@@ -1,15 +1,19 @@
 <?php
 require_once ROOT_PATH . '/app/services/VoucherService.php';
 require_once ROOT_PATH . '/app/DTO/VoucherDTO.php';
+require_once ROOT_PATH . '/lib/helpers.php';
+
 
 class VoucherController
 {
     private VoucherService $Service;
     private VoucherDTO $Dto;
     private VoucherRepository $Repo;
+    private ErrMsgPopUp $ErrMsgPopUp;
     public function __construct()  {
         $this->Service = new VoucherService();
         $this->Repo = new VoucherRepository();
+        $this->ErrMsgPopUp = new ErrMsgPopUp();
     }
     public function create(): void    {
         $TokenKey  = generateCsrfToken();

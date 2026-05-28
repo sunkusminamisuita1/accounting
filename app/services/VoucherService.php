@@ -207,7 +207,6 @@ class VoucherService{
                             'account_id' => '' , 'name' => '' , 'type' => '' , 'side' => $Side , 'amount' => '0' ,
                             'summary' => '' , 'voucher_id' => $NewId , 'debit_total' => '' , 'credit_total' => '' , 
                               ];
-                    echo "追加行No. = " . $NewVcrRowAddr . "<br>";//デバッグ
                     array_splice($VoucherDto->VcrSearchedData , $NewVcrRowAddr , 0, [$NewRow]); //行挿入
                 }else {                                            //行削除
                     $NewVcrRowAddr = (int)$_POST['VcrDetailLineDel'];
@@ -215,13 +214,6 @@ class VoucherService{
                 }
                 $VoucherDto->VcrSearchedData = array_values($VoucherDto->VcrSearchedData); //インデックスを振り直す
                 $_SESSION['VcrSearchedData'] = $VoucherDto->VcrSearchedData;//行追加・行削除後のデータをセッションに保存
-
-                foreach ($VoucherDto->VcrSearchedData as $no0 => $value0){
-                    echo "<br>RecNo={$no0}";//デバッグ
-                    foreach($value0 as $no1 => $value1){
-                        echo "　{$no1} = {$value1}";//デバッグ
-                    }
-                }
 
                     //修正実行ボタンを押したとき　voucherNoでテーブルjournal_detailから削除VcrDetailLineDel
                     //その後テーブルjournal_detailsに$voucherdto->vcrsearcheddataの内容をinsertする。
@@ -238,7 +230,6 @@ class VoucherService{
                     //repo sql 呼び出す
                 }
             }
-            
     }
 
     public function VcrRowAdd($VcrDTO){

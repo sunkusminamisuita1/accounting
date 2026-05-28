@@ -25,6 +25,14 @@
             <?php endforeach; ?>
         </ul>
     <?php endif; ?>
+
+
+    <?php
+        $this->ErrMsgPopUp->Show($this->Dto);
+    ?>
+
+
+
     <br><hr>
     <h3>単独検索(伝票No，取引日付，取引金額，摘要欄あいまい検索)は、<br>
     １つ以上の検索条件を入力して検索ボタンを押してください。

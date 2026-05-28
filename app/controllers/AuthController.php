@@ -1,5 +1,6 @@
 <?php
 require_once ROOT_PATH.'/app/services/AuthService.php';
+require_once ROOT_PATH.'/lib/helpers.php';
 class AuthController{
     private $service;
     public function __construct()

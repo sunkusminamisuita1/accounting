@@ -17,6 +17,12 @@ function requirePost(): void
 
 function DispErrorMsg($ErrMsg)
 {
+    //$dto->ErrData['VoucherDto'] = '借方と貸方が一致しません';
+    if(!empty(VoucherDTO->ErrData)){
+        //$ErrMsg = $VoucherDto->ErrData['VoucherDto'];
+        $ErrMsg = implode('\n', $ErrMsg->ErrData);
+    }
+    $ErrMsg = $ErrMsg ?? '';
     if (!empty($ErrMsg)) {
         echo "<script type='text/javascript'>
                     alert('". h($ErrMsg) ."');
@@ -28,4 +34,37 @@ function DispErrorMsg($ErrMsg)
     }
     return null;
    
+}
+
+class ErrMsgPopUp
+{
+    //    public function __construct($Dto)  {
+    //    }
+    public  function Show($Dto)
+    {
+        echo "vvvvvvvvvvvvvvvvvvvvvvvvvvv";
+        $ErrMsg = '11';
+                    echo "<script type='text/javascript'>
+                        alert('". h($ErrMsg) ."');
+                      </script>";
+        if(!empty($Dto) && !empty($Dto->ErrData)){
+            foreach ($Dto->ErrData as $mod => $ErrData) {
+                 $ErrMsg .= $mod . ": " . $ErrData . '\n';
+            }
+        }else{
+            $ErrMsg = 'Program Error lib/helpers.php Dtoが空です。';            
+        }
+
+        if(!empty($ErrMsg)){
+//            echo "<script type='text/javascript'>
+//                        alert('". h($ErrMsg) ."');
+//                        window.location.href = 'index.php?route=login';
+//                      </script>";
+            echo "<script type='text/javascript'>
+                        alert('". h($ErrMsg) ."');
+                      </script>";
+            return 1;
+        }
+        return null;
+    }
 }
