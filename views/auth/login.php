@@ -7,7 +7,7 @@
 <body>
 <h1>ログイン</h1>
 <form method="post" action="index.php?route=login">
-<!--    <input type="hidden" name="csrfTokenTime" value="<?= h($TokenTime) ?>"> -->
+<!--    <input type="hidden" name="csrfTokenTime" value="<?php //echo h($TokenTime); ?>"> -->
     <input type="hidden" name="csrfTokenKey" value="<?= h($TokenKey) ?>">
 <!--	<p>ユーザーID: <input type="text" name="id" required></p>   -->
 	<p>メールアドレス: <input type="email" name="email" required></p>

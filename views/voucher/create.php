@@ -1,4 +1,6 @@
 <h1>仕訳入力</h1>
+<!-- ##############     エラーメッセージ表示    ################ -->
+<?=  $this->ErrMsgPopUp->Show($this->Dto);  ?>
 <?php
 require_once ROOT_PATH . '/views/lib/ProcSlct.php';
 $details = $this->Dto->DtoDetails;

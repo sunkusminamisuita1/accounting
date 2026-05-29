@@ -26,7 +26,7 @@ require_once ROOT_PATH . '/app/DTO/Constants.php';
 
                     <h2>試算表表示：<?= $ReportType ?></h2>
                     <form action="index.php?route=home" method="post">試算表<br>
-<!--                        <input type="hidden" name="csrfTokenTime" value="<?= h($TokenTime) ?>"> -->
+<!--                        <input type="hidden" name="csrfTokenTime" value="<?php //echo h($TokenTime); ?>"> -->
                         <input type="hidden" name="csrfTokenKey" value="<?= h($TokenKey) ?>">
                         <input type="radio" name="ReportType"
                             value=<?= GetujiSisanhyou ?>>月次試算表出力
@@ -42,7 +42,7 @@ require_once ROOT_PATH . '/app/DTO/Constants.php';
                         <button type="submit">切替</button><br><br>
                     </form>
                     <form method="post" action="index.php?route=home">
-<!--                        <input type="hidden" name="csrftokenTime" value="<?= h($TokenTime) ?>">  -->
+<!--                        <input type="hidden" name="csrftokenTime" value="<?php //echo h($TokenTime); ?>">  -->
                         <input type="hidden" name="csrfTokenKey" value="<?= h($TokenKey) ?>">
 <?php
                 $today = new DateTime();

@@ -41,30 +41,30 @@ class ErrMsgPopUp
     //    public function __construct($Dto)  {
     //    }
     public  function Show($Dto)
+
     {
-        echo "vvvvvvvvvvvvvvvvvvvvvvvvvvv";
-        $ErrMsg = '11';
-                    echo "<script type='text/javascript'>
-                        alert('". h($ErrMsg) ."');
-                      </script>";
-        if(!empty($Dto)){
-            $ErrMsg = '';
-            foreach ($Dto->ErrData as $mod => $ErrData) {
-                 $ErrMsg .= $mod . ": " . $ErrData . '\n';
-            }
-        }else{
+        file_put_contents('/tmp/debug.log', "メソッド通ったよ！\n", FILE_APPEND);
+
+
+        $ErrMsg = '';
+
+        if(empty($Dto)){
             $ErrMsg = 'Program Error lib/helpers.php Dtoが空です。';            
+        }else{
+            if(!empty($Dto->ErrData)){
+                foreach($Dto->ErrData as $key => $value){
+                    $ErrMsg .= " . $value ";
+                }
+            }
         }
-        
+
         if(!empty($ErrMsg)){
-//            echo "<script type='text/javascript'>
-//                        alert('". h($ErrMsg) ."');
-//                        window.location.href = 'index.php?route=login';
-//                      </script>";
-            echo "<script type='text/javascript'>
-                        alert('". h($ErrMsg) ."');
+            //echo "<script type='text/javascript'>
+            //            alert('". h($ErrMsg) ."');
+            //          </script>";
+            return "<script type='text/javascript'>
+                        alert('". addslashes($ErrMsg) ."');
                       </script>";
-            return 1;
         }
         return null;
     }

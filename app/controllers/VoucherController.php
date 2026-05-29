@@ -16,6 +16,9 @@ class VoucherController
         $this->ErrMsgPopUp = new ErrMsgPopUp();
     }
     public function create(): void    {
+        file_put_contents('/var/www/html/test6/public/debug.log', "メソッド通ったよ！\n", FILE_APPEND);
+        //file_put_contents(__DIR__ . '/../../debug.log', "メソッド通ったよ！\n", FILE_APPEND);
+
         $TokenKey  = generateCsrfToken();
         $this->Dto = new VoucherDTO($_POST['details'] ?? []); //DTOにPOSTされた明細行を渡す
         $details = $this->Dto->DtoDetails; //DTOから明細行を取得
