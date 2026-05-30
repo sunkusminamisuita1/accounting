@@ -86,3 +86,7 @@ Model	データ構造
 資産     → 借方がプラス
 負債     → 貸方がプラス
 純資産   → 貸方がプラス
+
+ログ出力について
+デバッグログ出力    php     file_put_contents('/tmp/debug.log', "メソッド通ったよ！\n", FILE_APPEND);
+                            file_put_contents(__DIR__ . '/../../debug.log', "メソッド通ったよ！\n", FILE_APPEND);

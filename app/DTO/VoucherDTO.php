@@ -44,6 +44,7 @@ class VoucherDTO
         $this->Date      = $_POST['voucher_date'] ?? ''; //create.phpのVoucherDate
         $this->Summary   = $_POST['summary'] ?? '';      //create.phpのVoucherSummary
         $this->SearchType = $_POST['search_type'] ?? ''; //search.phpのSearchType
+        $this->VcrUpdNo = $_SESSION['VcrUpdNo'] ?? 0; //vcrlistで修正対象行の伝票番号を格納する変数
         $this->DtoDetails       = $_POST['details'] ?? [$Details];
         if(empty($this->VcrSearchedData) && !empty($_SESSION['VcrSearchedData'])){
             $this->VcrSearchedData = $_SESSION['VcrSearchedData'];
