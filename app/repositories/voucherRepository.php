@@ -39,6 +39,24 @@ class VoucherRepository{
     }
 
     public function delete(int $id) {
+        file_put_contents('/var/www/html/test6/public/debug.log', "vcrupdate にはいった\n", FILE_APPEND);
+        try{
+            $pdo = getPDO();
+            $pdo->beginTransaction();
+
+            // 伝票に紐づく明細を削除
+            // $stmtDetails = $pdo->prepare("DELETE FROM journal_details WHERE voucher_id = ?");
+            // $stmtDetails->execute([$id]);
+
+            // 伝票を削除
+            $stmtVoucher = $pdo->prepare("DELETE FROM journal_vouchers WHERE id = ?");
+            $stmtVoucher->execute([$id]);
+
+            $pdo->commit();
+        } catch (Exception $e) {
+            $pdo->rollBack();
+            throw $e;
+        }
         $pdo = getPDO();
         $stmt = $pdo->prepare("
             DELETE FROM journal_vouchers

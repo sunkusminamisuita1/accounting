@@ -216,17 +216,18 @@ class VoucherService{
                 $VoucherDto->VcrSearchedData = array_values($VoucherDto->VcrSearchedData); //インデックスを振り直す
                 $_SESSION['VcrSearchedData'] = $VoucherDto->VcrSearchedData;//行追加・行削除後のデータをセッションに保存
             }
-             echo "削除ロジック直前。";//デバッグ
+             echo "削除ロジック直前。<br>";//デバッグ
+             var_dump($_POST);
             if(isset($_POST['VcrUpdate'])){
                     echo "削除ロジックupdateにはいった。";//デバッグ
-                    file_put_contents(__DIR__ . '/../../debug.log', "vcrupdate！\n", FILE_APPEND);
+                    file_put_contents('/var/www/html/test6/public/debug.log', "vcrupdate！\n", FILE_APPEND);
                     //修正実行ボタンを押したとき　$VoucherDto->VcrUpdNoでテーブルjournal_detailから削除VcrDetailLineDel
                     //その後テーブルjournal_detailsに$voucherdto->vcrsearcheddataの内容をinsertする。
                     //journal_vouchersフォーマット
                     //| id  | voucher_date | summary   | user_id | created_at |
                     //journal_detailsのフォーマット 
                     //| id       | voucher_id | line_no | account_id | side   | amount   |
-                    $this->Repo->VcrDelete($VoucherDto); //リポジトリのVcrDeleteメソッドで削除処理を呼び出す
+                    $this->Repo->delete($VoucherDto->VcrUpdNo); //リポジトリのVcrDeleteメソッドで削除処理を呼び出す
                     //更新後、更新した伝票のデータを再検索して$VoucherDto->VcrSearchedDataにセットする。
                     //$VoucherDto->VcrSearchedData = $this->Repo->VcrListSearch($VoucherDto); //リポジトリのVcrListSearchメソッドで更新した伝票のデータを再検索して$VoucherDto->VcrSearchedDataにセットする。
                     //$_SESSION['VcrSearchedData'] = $VoucherDto->VcrSearchedData;//更新後のデータをセッションに保存
