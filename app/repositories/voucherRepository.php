@@ -45,8 +45,8 @@ class VoucherRepository{
             $pdo->beginTransaction();
 
             // 伝票に紐づく明細を削除
-            // $stmtDetails = $pdo->prepare("DELETE FROM journal_details WHERE voucher_id = ?");
-            // $stmtDetails->execute([$id]);
+             $stmtDetails = $pdo->prepare("DELETE FROM journal_details WHERE voucher_id = ?");
+             $stmtDetails->execute([$id]);
 
             // 伝票を削除
             $stmtVoucher = $pdo->prepare("DELETE FROM journal_vouchers WHERE id = ?");
