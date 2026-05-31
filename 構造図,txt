@@ -88,5 +88,16 @@ Model	データ構造
 純資産   → 貸方がプラス
 
 ログ出力について
-デバッグログ出力    php     file_put_contents('/tmp/debug.log', "メソッド通ったよ！\n", FILE_APPEND);
+デバッグログ出力    php     file_put_contents('/var/www/html/test6/public/debug.log', "メソッド通ったよ！\n", FILE_APPEND);
                             file_put_contents(__DIR__ . '/../../debug.log', "メソッド通ったよ！\n", FILE_APPEND);
+
+処理続行、停止確認メッセージ
+                                    <button name="VcrDelete" type="submit" 
+                                        onclick="return confirm('この伝票を削除すると、紐づく明細データもすべて削除されます。\n本当に削除してもよろしいですか？');" 
+                                        class="btn btn-danger"
+                                        value="<?= h('VcrDelete') ?>">伝票削除
+                                    </button>
+
+mysqlでdelete insert create 操作を行った後、成功したかどうかを確認する方法は、PDOの場合はexecute()の返り値を確認するか、rowCount()メソッドを使用して影響を受けた行数を確認することが一般的です。
+                            行数が入る
+          mysql rowCount()                          

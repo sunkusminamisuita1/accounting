@@ -122,7 +122,11 @@
                                 <th style=" width: 15%;">摘要</th>
                                 <th style=" width: 22%;">
                                     <button name="VcrUpdate" type="submit" value="<?= h('VcrUpdate') ?>">修正実行</button>
-                                    <button name="VcrDelete" type="submit" value="<?= h('VcrDelete') ?>">伝票削除</button>
+                                    <button name="VcrDelete" type="submit" 
+                                        onclick="return confirm('この伝票を削除すると、紐づく明細データもすべて削除されます。\n本当に削除してもよろしいですか？');" 
+                                        class="btn btn-danger"
+                                        value="<?= h('VcrDelete') ?>">伝票削除
+                                    </button>
                                 </th>
                             </tr>
                     <?php endif; ?>

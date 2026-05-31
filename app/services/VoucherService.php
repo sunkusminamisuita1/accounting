@@ -136,6 +136,7 @@ class VoucherService{
 //修正伝票検索エリアのロジック
         requireCsrf();
         $AccountTbl = $this->getAccounts();
+        $Repo = new VoucherRepository();
         $VoucherDto->AccountTbl = $AccountTbl;
         $VoucherDto->VcrSearchedData = $VoucherDto->InitVcrSearchedData ;
         $VoucherDto->List(); //DTOのListメソッドで検索条件をセット
@@ -216,11 +217,9 @@ class VoucherService{
                 $VoucherDto->VcrSearchedData = array_values($VoucherDto->VcrSearchedData); //インデックスを振り直す
                 $_SESSION['VcrSearchedData'] = $VoucherDto->VcrSearchedData;//行追加・行削除後のデータをセッションに保存
             }
-             echo "削除ロジック直前。<br>";//デバッグ
              var_dump($_POST);
             if(isset($_POST['VcrUpdate'])){
-                    echo "削除ロジックupdateにはいった。{$VoucherDto->VcrUpdNo}";//デバッグ
-                    file_put_contents('/var/www/html/test6/public/debug.log', "vcrupdate!{$VoucherDto->VcrUpdNo}\n", FILE_APPEND);
+                    //file_put_contents('/var/www/html/test6/public/debug.log', "vcrupdate!{$VoucherDto->VcrUpdNo}\n", FILE_APPEND);
                     //修正実行ボタンを押したとき　$VoucherDto->VcrUpdNoでテーブルjournal_detailから削除VcrDetailLineDel
                     //その後テーブルjournal_detailsに$voucherdto->vcrsearcheddataの内容をinsertする。
                     //journal_vouchersフォーマット
@@ -237,11 +236,24 @@ class VoucherService{
             }
 
                     //伝票削除ボタンを押したとき　voucherNoでテーブルjournal_vouchersから削除　CASCADEでjournal_detailsも削除されるはず
-            if(isset($_POST['VcrDetailLineDel'])){
-                echo "削除ロジックにはいった。";//デバッグ
-                $VoucherDto->VcrDeleteNo = $_POST['VcrDetailLineDel'] ?? 0;
-                $this->repo->delete($VoucherDto->VcrDeleteNo);//repo sql 呼び出す
-                echo "削除完了しました。";//デバッグ
+            if(isset($_POST['VcrDelete'])){
+                // $VoucherDto->VcrDeleteNo = $_POST['VcrDetailLineDel'] ?? 0;  //これは明細行一行の削除
+                $Success = $this->Repo->delete($VoucherDto->VcrUpdNo);//repo sql 呼び出す　仕分け明細、該当のjournal_vouchersの行を削除する。CASCADEでjournal_detailsも削除されるはず
+                file_put_contents('/var/www/html/test6/public/debug.log', "Success1 = {$Success}！\n", FILE_APPEND);
+                if ($Success) {
+                    file_put_contents('/var/www/html/test6/public/debug.log', "Success2 = {$Success}！\n", FILE_APPEND);
+                    unset($_SESSION['VcrListResult']); //セッションの検索結果をクリア
+                    unset($_SESSION['VcrSearchedData']); //セッションの修正用デ
+                    // 3. ユーザーへの完了通知メッセージだけをセッションに仕込む
+                    $_SESSION['flash_message'] = "伝票を正常に削除しました。";
+        
+                    // 4. そのまま一覧画面（または新規作成画面）へ一発リダイレクト！
+                    header('Location: index.php?route=voucher.list'); //リダイレクトしてPOSTデータの再送信を防止
+                    exit;
+                } else {
+                    // 失敗した場合はセッションを残したまま元の画面へ　$VoucherDto->VcrListResult
+                    //$this->render('voucher/edit', ['VoucherDto' => $VoucherDto]);
+                }               
             }
             
     }

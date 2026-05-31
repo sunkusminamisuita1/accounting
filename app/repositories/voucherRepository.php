@@ -39,7 +39,6 @@ class VoucherRepository{
     }
 
     public function delete(int $id) {
-        file_put_contents('/var/www/html/test6/public/debug.log', "vcrupdate にはいった\n", FILE_APPEND);
         try{
             $pdo = getPDO();
             $pdo->beginTransaction();
@@ -57,12 +56,17 @@ class VoucherRepository{
             $pdo->rollBack();
             throw $e;
         }
-        $pdo = getPDO();
-        $stmt = $pdo->prepare("
-            DELETE FROM journal_vouchers
-            WHERE id = ?
-        ");
-        $stmt->execute([$id]);
+        //$pdo = getPDO();
+        //$stmt = $pdo->prepare("
+        //    DELETE FROM journal_vouchers
+        //    WHERE id = ?
+        //");
+        //$stmt->execute([$id]);
+        if ($stmtVoucher->rowCount() > $stmtDetails->rowCount()) {
+            return $stmtVoucher->rowCount();
+        } else {
+            return $stmtDetails->rowCount();
+        }
     }
 
     public function getAccounts()  {
