@@ -74,6 +74,7 @@ class VoucherController
     // 修正、削除データ検索
     public function list() {
         //print_r($_SESSION['VcrSearchedData']);
+        file_put_contents('/var/www/html/test6/public/debug.log', "移動先に到着！メッセージの中身 = " . ($_SESSION['flash_message'] ?? '空っぽです！') . "\n", FILE_APPEND);
         $TokenKey  = generateCsrfToken();
         $this->Dto = new VoucherDTO($_POST['details'] ?? []);
         $accounts = $this->Service->getAccounts();
