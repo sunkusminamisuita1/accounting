@@ -56,12 +56,6 @@ class VoucherRepository{
             $pdo->rollBack();
             throw $e;
         }
-        //$pdo = getPDO();
-        //$stmt = $pdo->prepare("
-        //    DELETE FROM journal_vouchers
-        //    WHERE id = ?
-        //");
-        //$stmt->execute([$id]);
         if ($stmtVoucher->rowCount() > $stmtDetails->rowCount()) {
             return $stmtVoucher->rowCount();
         } else {
@@ -103,29 +97,6 @@ class VoucherRepository{
                     VALUES (?,?,?,?)
             ");
             $voucherId = $pdo->lastInsertId();
-
-            //for ($i = 0; $i < $IndexCount; $i++) {
-            //    if($Dto->side[$i] === 'debit') {
-            //        $stmtDetail->execute([
-            //            $voucherId,
-            //            $Dto->account_id[$i],
-            //            //$Dto->DtoDetails[$i][account_id],
-            //            'debit',
-            //            $Dto->amount[$i]
-            //        ]);
-            //    } else {
-            //         $stmtDetail->execute([
-            //            $voucherId,
-            //            $Dto->account_id[$i],
-            //            'credit',
-            //            $Dto->amount[$i]
-            //        ]);
-            //    }
-            //}
-
-
-
-
             foreach ($Dto->DtoDetails as $RecNo => $Row){
                 if($Row['side'] === 'debit') {
                     $stmtDetail->execute([
@@ -143,9 +114,6 @@ class VoucherRepository{
                     ]);
                 }
             }
-
-
-
             $pdo->commit();
         } catch (Exception $e) {
             $pdo->rollBack();

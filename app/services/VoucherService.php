@@ -22,9 +22,9 @@ class VoucherService{
         $this->Repo->update($id, $data);
     }
 
-    public function delete(int $id) {
-        $this->Repo->delete($id);
-    }
+//    public function delete(int $id) {
+//        $this->Repo->delete($id);
+//    }
 
     public function InitializeSession(): void    {
         $_SESSION['voucherRows'] = $_SESSION['voucherRows'] ?? [];
@@ -114,7 +114,6 @@ class VoucherService{
     }
 
     public function VcrCreate($Dto){
-        requireCsrf();
         $accounts = $Dto->Accounts;
         if (isset($_POST['add_row'])) {  
             $this->VcrRowAdd($Dto);
@@ -132,19 +131,12 @@ class VoucherService{
         }
     }
 
-    public function VcrList($VoucherDto){
-//修正伝票検索エリアのロジック
-        requireCsrf();
-        $AccountTbl = $this->getAccounts();
-        $Repo = new VoucherRepository();
-        $VoucherDto->AccountTbl = $AccountTbl;
-        $VoucherDto->VcrSearchedData = $VoucherDto->InitVcrSearchedData ;
-        $VoucherDto->List(); //DTOのListメソッドで検索条件をセット
-        if (isset($_POST['SimpleSearch'])) {  
+
+    public function VcrSimpleSearch(VoucherDTO $Dto): void {
             //$VoucherDto->List(); //DTOのListメソッドで検索条件をセット
-            $this->Validator->list($VoucherDto);
-            if(empty($VoucherDto->ErrData)){
-                $VcrListResult = $this->Repo->VcrListSearch($VoucherDto)??[];           
+            $this->Validator->list($Dto);
+            if(empty($Dto->ErrData)){
+                $VcrListResult = $this->Repo->VcrListSearch($Dto)??[];           
                 foreach($VcrListResult as $idx => $row) {
                     foreach ( $row as $key => $value) {
                         $VcrListResult[$idx][$key]=$value;
@@ -155,24 +147,24 @@ class VoucherService{
                         }
                     }
                 }
-                $VoucherDto->VcrListResult = $VcrListResult;
-                $_SESSION['VoucherDetail'] = $VcrListResult;
+                $Dto->VcrListResult = empty($VcrListResult) ? [] : $VcrListResult;
+                $_SESSION['VcrListResult'] = empty($VcrListResult) ? [] : $VcrListResult; //変数名上に合わしたほうがベター
             }        
-        }
-                //$VoucherDto->VcrListResult = $_SESSION['VoucherDetail'] ?? [];
+    }
 //修正エリアのロジック 
                     //修正ボタンを押したとき修正データ作成 $VoucherDto->VcrSearchedData
-        if (isset($_POST['VcrUpdateNo'])) {
-            $VoucherDto->VcrUpdNo =  $_POST['VcrUpdateNo'] ?? 0; //VcrUpdNoに伝票番号(VoucerDetail->voucher_id)をセット
-            $_SESSION['VcrUpdNo'] = $VoucherDto->VcrUpdNo; //セッションにVcrUpdNoを保存 リダイレクト時、Dtoで復元される
+    public function VcrUpdNo(VoucherDTO $Dto , VoucherRepository $Repo, VoucherValidator $Validator): void {
             $CreditTotal = 0;$DebitTotal = 0; $LineNo = 0;
-            foreach ($VoucherDto->VcrListResult as $no0 => $value0) {
+            $Dto->VcrSearchedData = [];                 //修正用データを格納する配列を初期化
+            $Dto->VcrUpdNo        =  $_POST['VcrUpdateNo'] ?? 0; //VcrUpdNoに伝票番号(VoucerDetail->voucher_id)をセット
+            $_SESSION['VcrUpdNo'] = $_POST['VcrUpdateNo'];     //セッションにVcrUpdNoを保存 リダイレクト時、Dtoで復元される
+            $Dto->VcrListResult   = $_SESSION['VcrListResult'] ?? []; //検索結果をセッションから復元
+            foreach ($Dto->VcrListResult as $no0 => $value0) {
                 if (isset($value0['voucher_id']) && 
-                    $value0['voucher_id'] == $VoucherDto->VcrUpdNo &&
-                    isset($value0['JdId'])) 
-                {
-                    $VoucherDto->VcrSearchedData[$LineNo] = $value0;
-                    $LineNo++;//編集用データ$VoucherDto->VcrSearchedDataの行番号を0から振り直すための変数
+                    $value0['voucher_id'] == $Dto->VcrUpdNo &&
+                    isset($value0['JdId']))   {   //修正対象伝票のデータだけを$VoucherDto->VcrSearchedDataに格納
+                    $Dto->VcrSearchedData[$LineNo] = $value0;
+                    $LineNo++;                          //編集用データ$VoucherDto->VcrSearchedDataの行番号を0から振り直すための変数
                     if($value0['side'] === 'credit'){
                         $CreditTotal += $value0['amount'];
                     }else{
@@ -180,84 +172,93 @@ class VoucherService{
                     }
                 }
             }
-            $_SESSION['VcrSearchedData'] = $VoucherDto->VcrSearchedData;//修正用データをセッションに保存
+            $_SESSION['VcrSearchedData'] = $Dto->VcrSearchedData;//修正用データをセッションに保存
             if( $CreditTotal !== $DebitTotal ){
-                $VoucherDto->ErrData['VoucherService'] = "貸方合計　¥{$CreditTotal}　借方合計　¥{$DebitTotal}　不一致です。";
+                $Dto->ErrData['VoucherService'] = "貸方合計　¥{$CreditTotal}　借方合計　¥{$DebitTotal}　不一致です。";
             }
-        }
-
-//行追加・行削除ボタンを押したときの処理
-            if(isset($_POST['VcrAddDebit'])  ||
-               isset($_POST['VcrAddCredit']) ||
-               isset($_POST['VcrDetailLineDel']) ){
-                $VcrSearchedData = $_SESSION['VcrSearchedData'];
-                $VoucherDto->VcrSearchedData = $_SESSION['VcrSearchedData'];
-                if(isset($_POST['VcrAddDebit'])){   //借方 追加行の行番号を取得
-                    $NewVcrRowAddr = (int)$_POST['VcrAddDebit']  + 1;
-                    $NewId = $_POST['id'] ?? '';
-                    $Side = 'debit';
-                }
-                if(isset($_POST['VcrAddCredit'])){  //貸方 追加行の行番号を取得
-                    $NewVcrRowAddr = (int)$_POST['VcrAddCredit'] + 1;
-                    $NewId = $_POST['id'] ?? '';
-                    $Side = 'credit';
-                }
-                if(!isset($_POST['VcrDetailLineDel'])){ //借方、貸方　共通設定項目
-                    $NewJdId = (int)$_POST['JdId'] ?? 0;
-                    $NewRow = [
-                            'id' => $NewId , 'JdId' => $NewJdId , 'voucher_date' => '' , 'summary' => '',
-                            'account_id' => '' , 'name' => '' , 'type' => '' , 'side' => $Side , 'amount' => '0' ,
-                            'summary' => '' , 'voucher_id' => $NewId , 'debit_total' => '' , 'credit_total' => '' , 
-                              ];
-                    array_splice($VoucherDto->VcrSearchedData , $NewVcrRowAddr , 0, [$NewRow]); //行挿入
-                }else {                                            //行削除
-                    $NewVcrRowAddr = (int)$_POST['VcrDetailLineDel'];
-                    array_splice($VoucherDto->VcrSearchedData, $NewVcrRowAddr, 1);
-                }
-                $VoucherDto->VcrSearchedData = array_values($VoucherDto->VcrSearchedData); //インデックスを振り直す
-                $_SESSION['VcrSearchedData'] = $VoucherDto->VcrSearchedData;//行追加・行削除後のデータをセッションに保存
-            }
-             var_dump($_POST);
-            if(isset($_POST['VcrUpdate'])){
-                    //file_put_contents('/var/www/html/test6/public/debug.log', "vcrupdate!{$VoucherDto->VcrUpdNo}\n", FILE_APPEND);
-                    //修正実行ボタンを押したとき　$VoucherDto->VcrUpdNoでテーブルjournal_detailから削除VcrDetailLineDel
-                    //その後テーブルjournal_detailsに$voucherdto->vcrsearcheddataの内容をinsertする。
-                    //journal_vouchersフォーマット
-                    //| id  | voucher_date | summary   | user_id | created_at |
-                    //journal_detailsのフォーマット 
-                    //| id       | voucher_id | line_no | account_id | side   | amount   |
-                    $this->Repo->delete($VoucherDto->VcrUpdNo); //リポジトリのVcrDeleteメソッドで削除処理を呼び出す
-                    //$this->Repo->delete((int)'132'); //リポジトリのVcrDeleteメソッドで削除処理を呼び出す
-
-                    //更新後、更新した伝票のデータを再検索して$VoucherDto->VcrSearchedDataにセットする。
-                    //$VoucherDto->VcrSearchedData = $this->Repo->VcrListSearch($VoucherDto); //リポジトリのVcrListSearchメソッドで更新した伝票のデータを再検索して$VoucherDto->VcrSearchedDataにセットする。
-                    //$_SESSION['VcrSearchedData'] = $VoucherDto->VcrSearchedData;//更新後のデータをセッションに保存
-            
-            }
-
-                    //伝票削除ボタンを押したとき　voucherNoでテーブルjournal_vouchersから削除　CASCADEでjournal_detailsも削除されるはず
-            if(isset($_POST['VcrDelete'])){
-                // $VoucherDto->VcrDeleteNo = $_POST['VcrDetailLineDel'] ?? 0;  //これは明細行一行の削除
-                $Success = $this->Repo->delete($VoucherDto->VcrUpdNo);//repo sql 呼び出す　仕分け明細、該当のjournal_vouchersの行を削除する。CASCADEでjournal_detailsも削除されるはず
-                file_put_contents('/var/www/html/test6/public/debug.log', "Success1 = {$Success}！\n", FILE_APPEND);
-                if ($Success) {
-                    file_put_contents('/var/www/html/test6/public/debug.log', "Success2 = {$Success}！\n", FILE_APPEND);
-                    unset($_SESSION['VcrListResult']); //セッションの検索結果をクリア
-                    unset($_SESSION['VcrSearchedData']); //セッションの修正用デ
-                    // 3. ユーザーへの完了通知メッセージだけをセッションに仕込む
-                    $_SESSION['flash_message'] = "伝票を正常に削除しました。";
-        
-                    // 4. そのまま一覧画面（または新規作成画面）へ一発リダイレクト！
-                    header('Location: index.php?route=voucher.list'); //リダイレクトしてPOSTデータの再送信を防止
-                    exit;
-                } else {
-                    // 失敗した場合はセッションを残したまま元の画面へ　$VoucherDto->VcrListResult
-                    //$this->render('voucher/edit', ['VoucherDto' => $VoucherDto]);
-                }               
-            }
-            
     }
 
+//行追加・行削除ボタンを押したときの処理
+    public function VcrAddDebit(VoucherDTO $Dto, VoucherRepository $Repo, VoucherValidator $Validator): void {
+        $NewVcrRowAddr = (int)$_POST['VcrAddDebit']  + 1;
+        $NewId = $_POST['id'] ?? '';
+        $Side = 'debit';
+        $this->VcrAddRowIns( $Dto, $NewVcrRowAddr, $NewId, $Side);
+        $this->VcrTmpDataSave($Dto, $Repo, $Validator);
+    }
+
+    public function VcrAddCredit(VoucherDTO $Dto, VoucherRepository $Repo, VoucherValidator $Validator): void {
+        $NewVcrRowAddr = (int)$_POST['VcrAddCredit'] + 1;
+        $NewId = $_POST['id'] ?? '';
+        $Side = 'credit';
+        $this->VcrAddRowIns( $Dto, $NewVcrRowAddr, $NewId, $Side);
+        $this->VcrTmpDataSave($Dto, $Repo, $Validator);
+    }
+
+    public function VcrDetailLineDel(VoucherDTO $Dto, VoucherRepository $Repo, VoucherValidator $Validator): void {
+        $Dto->VcrSearchedData = $_SESSION['VcrSearchedData'] ; //行追加前のデータをセッションから復元
+        $NewVcrRowAddr = (int)$_POST['VcrDetailLineDel'];
+        array_splice($Dto->VcrSearchedData, $NewVcrRowAddr, 1);
+        $_SESSION['VcrSearchedData'] = $Dto->VcrSearchedData; //行削除後のデータをセッションに保存
+        $Dto->VcrSearchedData = array_values($Dto->VcrSearchedData ); // インデックスを並べ直す     saveVoucher(array $data)
+        $Dto->VcrListResult   = $_SESSION['VcrListResult'] ?? []; //viewデータ用をセッションから復元
+        $this->VcrTmpDataSave($Dto, $Repo, $Validator);
+    }
+
+    private function VcrAddRowIns(VoucherDTO $Dto , $NewVcrRowAddr, $NewId, $Side): void {
+        //file_put_contents('/var/www/html/test6/public/debug.log', var_dump($Dto->VcrSearchedData)."VcrAddRowIns！\n", FILE_APPEND);
+        $NewJdId = (int)$_POST['JdId'] ?? 0;
+        $NewRow = [
+                'id' => $NewId , 'JdId' => $NewJdId , 'voucher_date' => '' , 'summary' => '',
+                'account_id' => '' , 'name' => '' , 'type' => '' , 'side' => $Side , 'amount' => '0' ,
+                'summary' => '' , 'voucher_id' => $NewId , 'debit_total' => '' , 'credit_total' => '' , 
+                  ];
+        $Dto->VcrSearchedData = $_SESSION['VcrSearchedData'] ; //行追加前のデータをセッションから復元
+        array_splice($Dto->VcrSearchedData , $NewVcrRowAddr , 0, [$NewRow]); //行挿入
+        $Dto->VcrSearchedData = array_values($Dto->VcrSearchedData ); // インデックスを並べ直す     saveVoucher(array $data)
+        $Dto->VcrListResult   = $_SESSION['VcrListResult'] ?? []; //viewデータ用をセッションから復元
+        $_SESSION['VcrSearchedData'] = $Dto->VcrSearchedData; //行追加後のデータをセッションに保存
+    }
+
+    private function VcdRowAddCommon(VoucherDTO $Dto, VoucherRepository $Repo, VoucherValidator $Validator): void {
+        $VcrSearchedData = $_SESSION['VcrSearchedData'];
+        $Dto->VcrSearchedData = $_SESSION['VcrSearchedData'];
+        $NewVcrRowAddr = (int)$_POST['VcrAddDebit']  + 1;
+        $NewId = $_POST['id'] ?? '';
+    }
+
+    private function VcrTmpDataSave(VoucherDTO $Dto, VoucherRepository $Repo, VoucherValidator $Validator): void {
+        $Dto->VcrSearchedData = array_values($Dto->VcrSearchedData); //インデックスを振り直す
+        $_SESSION['VcrSearchedData'] = $Dto->VcrSearchedData;//行追加・行削除後のデータをセッションに保存
+    }
+
+    public function VcrDelete(VoucherDTO $Dto, VoucherRepository $Repo, VoucherValidator $Validator): bool {
+        //requireCsrf();　　　　　//CSRFトークンの検証はコントローラーで行う
+
+        $Dto->VcrUpdNo  =   $_SESSION['VcrUpdNo'] ?? 0;      //セッションにVcrUpdNoをDtoに保存
+        $voucherId      =   $_SESSION['VcrUpdNo'] ?? 0;       //セッションから伝票番号を取得
+        //$voucherId = (int)$_POST['VcrDeleteNo'];
+        $Repo->delete($voucherId);
+//        $pdo = getPDO();
+//        try {
+//            $pdo->beginTransaction();
+
+//            // 伝票IDに紐づく仕訳明細を削除
+//            $stmtDetail = $pdo->prepare("DELETE FROM journal_details WHERE voucher_id = ?");
+//            $stmtDetail->execute([$voucherId]);
+//
+//            // 伝票を削除
+//            $stmtVoucher = $pdo->prepare("DELETE FROM journal_vouchers WHERE id = ?");
+//            $stmtVoucher->execute([$voucherId]);
+
+//            $pdo->commit();
+//            return true;
+//        } catch (Exception $e) {
+//            $pdo->rollBack();
+//            throw $e;
+//        }
+        return true;
+    }
     public function VcrRowAdd($VcrDTO){
         $details = $_POST['details'] ?? [];
         $AddKey = (int)$_POST['add_row'] + 1; //追加する行の位置

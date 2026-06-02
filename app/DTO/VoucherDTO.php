@@ -1,11 +1,12 @@
 <?php
 // app/DTO/VoucherDTO.php
 class VoucherDTO
-{
+{       //##############   DTOでは$_SESSIONからデータを取得してプロパティにセットする。その後$_SESSIONは初期化する。 ##############
     public  $Date = '';
     public  $Summary = '';
     public array $Accounts = [];
     public array $DtoDetails = [0 => ['account_id' => '', 'amount' => '', 'side' => 'debit']]; //明細行の配列
+    //public array $VcrDetailAddRow = [0 => ['account_id' => '', 'amount' => '', 'side' => 'debit']]; //明細行の配列
     public array $InitDetails = [0 => ['account_id' => '', 'amount' => '', 'side' => 'debit']]; //明細行の配列
     public  $SearchType = '';
     public  $ListVcrNum = '';
@@ -13,22 +14,6 @@ class VoucherDTO
     public array $VcrListResult =  []; //検索結果の配列
     public array $VcrSearchedData = [];
     public array $VcrUpdData = [];//vcrlistで修正対象行のデータを格納する配列
-    //public array $InitVcrSearchedData = 
-    //[0 => [
-    //        'id' => '',
-    //        'JdId' => '',
-    //        'voucher_date' => '',
-    //        'summary' => '',
-    //        'account_id' => '',
-    //        'name' => '',
-    //        'type' => '',
-    //        'side' => '',
-    //        'amount' => '',
-    //        'voucher_id' => '',
-    //        'debit_total' => '',
-    //        'credit_total' => ''
-    //     ]
-    //];///////////////
     public array $InitVcrSearchedData = [];
     public array $VcrListDatePeriod = []; //検索日付期間    [開始日付=>9999-99-99,終了日付=>9999-99-99]
     public array $AccountTbl = [];
@@ -39,16 +24,13 @@ class VoucherDTO
 
     public function __construct(array $Details)
     {
-        $this->VcrListResult = $_SESSION['VoucherDetail'] ?? []; //検索結果の配列
-
-        $this->Date      = $_POST['voucher_date'] ?? ''; //create.phpのVoucherDate
-        $this->Summary   = $_POST['summary'] ?? '';      //create.phpのVoucherSummary
-        $this->SearchType = $_POST['search_type'] ?? ''; //search.phpのSearchType
-        $this->VcrUpdNo = $_SESSION['VcrUpdNo'] ?? 0; //vcrlistで修正対象行の伝票番号を格納する変数
-        $this->DtoDetails       = $_POST['details'] ?? [$Details];
-        if(empty($this->VcrSearchedData) && !empty($_SESSION['VcrSearchedData'])){
-            $this->VcrSearchedData = $_SESSION['VcrSearchedData'];
-        }
+        $this->VcrListResult =  []; //検索結果の配列
+        $this->Date      =  ''; //create.phpのVoucherDate
+        $this->Summary   =  '';      //create.phpのVoucherSummary
+        $this->SearchType =  ''; //search.phpのSearchType
+        $this->VcrUpdNo =  0; //vcrlistで修正対象行の伝票番号を格納する変数
+        $this->DtoDetails      =  [];
+        $this->VcrSearchedData = [];
     }
 
     public function InitDetailsDto()
@@ -81,4 +63,35 @@ class VoucherDTO
 
     }
 
+    public function VcrCreData()
+    {
+        $this->VcrListResult = $_SESSION['VoucherDetail'] ?? [];         //検索結果の配列
+        unset ($_SESSION['VoucherDetail']);                              //セッションの検索結果を初期化
+        $this->Date      = $_POST['voucher_date'] ?? '';                 //create.phpのVoucherDate
+        $this->Summary   = $_POST['summary'] ?? '';                      //create.phpのVoucherSummary
+        $this->SearchType = $_POST['search_type'] ?? '';                 //search.phpのSearchType
+        $this->VcrUpdNo = $_SESSION['VcrUpdNo'] ?? 0;                    //vcrlistで修正対象行の伝票番号を格納する変数
+        unset($_SESSION['VcrUpdNo']);                               //vcrlistで修正対象行の伝票番号を格納する変数を初期化
+        $this->DtoDetails       = $_POST['details'] ?? [$this->InitDetails[0]]; //create.phpの明細行
+        if(empty($this->VcrSearchedData) && !empty($_SESSION['VcrSearchedData'])){
+            $this->VcrSearchedData = $_SESSION['VcrSearchedData'];
+            unset($_SESSION['VcrSearchedData']);
+        }
+    }
 }
+    //public array $InitVcrSearchedData = 
+    //[0 => [
+    //        'id' => '',
+    //        'JdId' => '',
+    //        'voucher_date' => '',
+    //        'summary' => '',
+    //        'account_id' => '',
+    //        'name' => '',
+    //        'type' => '',
+    //        'side' => '',
+    //        'amount' => '',
+    //        'voucher_id' => '',
+    //        'debit_total' => '',
+    //        'credit_total' => ''
+    //     ]
+    //];///////////////

@@ -14,25 +14,6 @@
 <tr>
 <td style="width: 50%; vertical-align: top;">
     <h1>仕分伝票修正-対象伝票検索</h1>
-
-
-
-<?php if (!empty($_SESSION['flash_message'])): ?>
-    <div class="alert alert-success alert-dismissible fade show" role="alert" style="margin: 15px 0;">
-        <strong>お手柄！</strong> <?= htmlspecialchars($_SESSION['flash_message'], ENT_QUOTES, 'UTF-8'); ?>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-    </div>
-    
-    <?php 
-    // 2. 画面に出し終わった「後」で、キレイにお掃除する！
-    unset($_SESSION['flash_message']); 
-    ?>
-<?php endif; ?>
-
-
-
-
-
     <?php
         require_once ROOT_PATH . '/views/lib/ProcSlct.php';
         $details = $this->Dto->DtoDetails;
@@ -215,12 +196,7 @@
                 <?php endforeach; ?>
             </table>
         </form>
-
-
 </td>
-
-
-
 
 <!--　##################　検索結果表示エリア  ###################-->
 <td style="width: 50%; vertical-align: top;">
