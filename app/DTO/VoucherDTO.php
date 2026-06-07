@@ -46,11 +46,26 @@ class VoucherDTO
     public function List()
     {
         $this->DtoDetails   = $this->InitDetails??[]; //初期値の明細行をDTOにセット
-        $_SESSION['VoucherDetail'] = $_SESSION['VoucherDetail']  ?? $this->InitDetails; //セッションに初期値の明細行を保存(Voucher.create)
-        $this->Date         = $_POST['ListVcrDate'] ?? '';
-        $this->Summary      = $_POST['ListVcrSummary'] ?? '';
-        $this->ListVcrNum   = $_POST['ListVcrNum'] ?? '';
-        $this->VcrListDatePeriod   =   [ '検索開始日付' => $_POST['LstVcrSearchStartDate'] ?? '' , '検索終了日付' => $_POST['LstVcrSearchEndDate'] ?? '' ];
+        $_SESSION['VoucherDetail'] = $_SESSION['VoucherDetail']  ?? $this->InitDetails;                 //セッションに初期値の明細行を保存(Voucher.create)
+
+
+        $this->Date         = $_POST['ListVcrDate'] ?? $_SESSION['VcrSearchCond']['Date'] ?? '';        //search.phpのListVcrDate
+
+
+
+        $this->Summary      = $_POST['ListVcrSummary'] ?? $_SESSION['VcrSearchCond']['Summary'] ?? '';  //search.phpのListVcrSummary
+        $this->ListVcrNum   = $_POST['ListVcrNum'] ?? $_SESSION['VcrSearchCond']['ListVcrNum'] ?? '';   //search.phpのListVcrNum
+        if(empty($_POST['LstVcrSearchStartDate']) && empty($_POST['LstVcrSearchEndDate']) ) {
+            $this->VcrListDatePeriod   = $_SESSION['VcrSearchCond']['VcrListDatePeriod'] ?? ['検索開始日付' => '' , '検索終了日付' => '']; //search.phpの検索日付期間
+        }else{
+            $this->VcrListDatePeriod   =   [ '検索開始日付' => $_POST['LstVcrSearchStartDate'] ?? '' , '検索終了日付' => $_POST['LstVcrSearchEndDate'] ?? '' ];
+        }
+
+        $_SESSION['VcrSearchCond'] = ['Date'                => $this->Date ,
+                                      'Summary'             => $this->Summary,
+                                      'ListVcrNum'          => $this->ListVcrNum,
+                                      'VcrListDatePeriod'   => $this->VcrListDatePeriod
+                                     ];
 
         if (!empty($_POST['SimpleSearch'])) {
             $this->SearchType = $_POST['SimpleSearch'] ?? '';
@@ -60,7 +75,6 @@ class VoucherDTO
         }else {
             $this->SearchType = $_POST['CompoundSearch'] ?? '';
         }
-
     }
 
     public function VcrCreData()
@@ -79,19 +93,4 @@ class VoucherDTO
         }
     }
 }
-    //public array $InitVcrSearchedData = 
-    //[0 => [
-    //        'id' => '',
-    //        'JdId' => '',
-    //        'voucher_date' => '',
-    //        'summary' => '',
-    //        'account_id' => '',
-    //        'name' => '',
-    //        'type' => '',
-    //        'side' => '',
-    //        'amount' => '',
-    //        'voucher_id' => '',
-    //        'debit_total' => '',
-    //        'credit_total' => ''
-    //     ]
-    //];///////////////
+

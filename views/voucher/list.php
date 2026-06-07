@@ -14,6 +14,22 @@
 <tr>
 <td style="width: 50%; vertical-align: top;">
     <h1>仕分伝票修正-対象伝票検索</h1>
+
+    
+
+
+
+
+<?php if (!empty($_SESSION['flash_message'])): ?>
+    <script>
+      alert(<?= json_encode($_SESSION['flash_message']) ?>);
+    </script>
+<?php unset($_SESSION['flash_message']); endif; ?>
+
+
+
+
+
     <?php
         require_once ROOT_PATH . '/views/lib/ProcSlct.php';
         $details = $this->Dto->DtoDetails;
@@ -41,7 +57,7 @@
                 </td>
 
                 <td>
-                    <input type="text" name="ListVcrNum" value="<?= h($_POST['ListVcrNum'] ?? '') ?>">
+                    <input type="text" name="ListVcrNum" value="<?= h($this->Dto->ListVcrNum ?? '') ?>">
                 </td>
 
             <tr>　
@@ -53,7 +69,7 @@
                 </td>
 
                 <td>
-                    <input type="date" name="ListVcrDate" value="<?= h($_SESSION['ListInputData']['検索日付'] ?? '') ?>">
+                    <input type="date" name="ListVcrDate" value="<?= h($this->Dto->Date ?? '') ?>">
                 </td>
             </tr>
 
@@ -62,10 +78,10 @@
                     期間        
                 </td>
                 <td>
-                    開始<input type="date" name="LstVcrSearchStartDate" value="<?= h($_SESSION['ListInputData']['検索開始日付'] ?? '') ?>">
+                    開始<input type="date" name="LstVcrSearchStartDate" value="<?= h($this->VcrListDatePeriod['検索開始日付'] ?? '') ?>">
                 
                 
-                    　　　終了<input type="date" name="LstVcrSearchEndDate" value="<?= h($_SESSION['ListInputData']['検索終了日付'] ?? '') ?>">
+                    　　　終了<input type="date" name="LstVcrSearchEndDate" value="<?= h($this->VcrListDatePeriod['検索終了日付'] ?? '') ?>">
                 </td>
             </tr>
 
@@ -78,7 +94,7 @@
                 </td>
 
                 <td>
-                    <input type="text" name="ListVcrSummary" value="<?= h($_POST['ListVcrSummary'] ?? '') ?>">
+                    <input type="text" name="ListVcrSummary" value="<?= h($this->Dto->Summary ?? '') ?>">
                 </td>
             </tr>
         </table>
@@ -145,7 +161,7 @@
                     <?php endif; ?>
                             <td>
                                 <?php if($Row['side'] === 'debit'): ?>
-                                    <select  style=" width: 95%;"  name="details[<?= $VcrRowNo ?>][account_id]" required >
+                                    <select  style=" width: 95%;"  name="account_id[<?= $VcrRowNo ?>][account_id]" required >
                                         <option value="">選択してください</option>
                                             <?php foreach($this->Dto->AccountTbl as $a): ?>
                                                 <option value="<?= h($a['id']) ?>" 
@@ -158,17 +174,17 @@
                             </td>
                             <td  style="font-weight: bold; text-align: right;">
                                 <?php if($Row['side'] === 'debit'): ?>
-                                    <input style="width : 95%;" type="text" name="Amount<?= $VcrRowNo ?>" value="<?= h($Row['amount']) ?? '' ?>">
+                                    <input style="width : 95%;" type="text" name="amount[<?= $VcrRowNo ?>][amount]" value="<?= h($Row['amount']) ?? '' ?>">
                                 <?php endif; ?>
                             </td>
                             <td  style="font-weight: bold; text-align: right;">
                                 <?php if($Row['side'] === 'credit'): ?>
-                                    <input style="width : 95%;" type="text" name="Amount<?= $VcrRowNo ?>" value="<?= h($Row['amount']) ?? '' ?>">
+                                    <input style="width : 95%;" type="text" name="amount[<?= $VcrRowNo ?>][amount]" value="<?= h($Row['amount']) ?? '' ?>">
                                 <?php endif; ?>
                             </td>
                             <td>
                                  <?php if($Row['side'] === 'credit'): ?>
-                                    <select style=" width: 95%;" name="details[<?= $VcrRowNo ?>][account_id]" required >
+                                    <select style=" width: 95%;" name="account_id[<?= $VcrRowNo ?>][account_id]" required >
                                         <option value="">選択してください</option>
                                             <?php foreach($this->Dto->AccountTbl as $a): ?>
                                                 <option value="<?= h($a['id']) ?>" 
@@ -209,7 +225,7 @@
                         <td colspan="9">検索条件に一致する伝票が見つかりませんでした。</td>
                     </tr>
                 <?php endif; ?>
-                <?php $VcrIdSW = 0; $VcrListResult = $this->Dto->VcrListResult; ?>
+                <?php (int)$VcrIdSW = 0; $VcrListResult = $this->Dto->VcrListResult; ?>
                 <?php foreach ($VcrListResult as $VcrId => $Row): $CreditAmount = 0; $DebitAmount = 0; $CreditName = ''; $DebitName = ''; ?>
                     <?php if($Row['side'] === 'credit') {
                         $CreditAmount = (int)$Row['amount']??'0';
@@ -219,7 +235,7 @@
                         $DebitName = $Row['name']??'';
                     }
                     ?>
-                    <?php if ($VcrIdSW !== $Row['voucher_id']): ?>
+                    <?php if ($VcrIdSW !== (int)$Row['voucher_id']): ?>
                             <tr style="background-color: #e0e0e1; font-weight: bold; text-align: center;">
                                 <th width 5%>伝票No</th>
                                 <th width 8%>日付</th>
@@ -236,57 +252,57 @@
                             </tr>
                     <?php endif; ?>
                         <tr>
-                <?php if (!empty($Row['JdId'])): ?>
-                    <?php if ($VcrIdSW !== $Row['voucher_id']): ?>
-                        <?php $VcrIdSW = $Row['voucher_id']; ?>
-                            <td  style="font-weight: bold; text-align: center;">
-                                <?= h($Row['voucher_id']) ?>
-                            </td>
-                            <td style="font-weight: bold; text-align: center;">
-                                <?= h($Row['voucher_date']??'') ?>
-                            </td>
+                    <?php if (!empty($Row['JdId'])): ?>
+                        <?php if ((int)$VcrIdSW !== (int)$Row['voucher_id']): ?>
+                            <?php (int)$VcrIdSW = (int)$Row['voucher_id']; ?>
+                                <td  style="font-weight: bold; text-align: center;">
+                                    <?= h($Row['voucher_id']) ?>
+                                </td>
+                                <td style="font-weight: bold; text-align: center;">
+                                    <?= h($Row['voucher_date']??'') ?>
+                                </td>
+                        <?php else: ?>
+                                <td></td>
+                                <td></td>
+                        <?php endif; ?>
+                                <td  style="font-weight: bold; text-align: center;">
+                                    <?= h($DebitName) ?>
+                                </td>
+                                <td  style="font-weight: bold; text-align: right;">
+                                    <?= h($DebitAmount) ?>
+                                </td>
+                                <td  style="font-weight: bold; text-align: right;">
+                                    <?= h($CreditAmount) ?>
+                                </td>
+                                <td  style="font-weight: bold; text-align: center;">
+                                    <?= h($CreditName) ?>
+                                </td>
+                                <td  style="font-weight: bold; text-align: center;">
+                                    <?= h($Row['summary']??'') ?>
+                                </td>
+                                <td  style="font-weight: bold; text-align: center;">
+                                    <?= h($Row['total_debit']??'') ?>
+                                </td>
                     <?php else: ?>
-                            <td></td>
-                            <td></td>
+                                <td></td>
+                                <td></td>
+                                <td style="font-weight: bold; text-align: center;">
+                                    合計</td>
+                                <td style="font-weight: bold; text-align: right;">
+                                    <?= h($Row['debit_total']??'') ?>
+                                </td>
+                                <td style="font-weight: bold; text-align: right;">
+                                    <?= h($Row['credit_total']??'') ?>
+                                </td>
+                                <td></td>
+                                <td style="font-weight: bold; text-align: right;">
+                                    ステータス
+                                </td>
+                                <td style="color: #ff0073; font-weight: bold; text-align: center;">
+                                    <?= h($Row['credit_total']??'') === h($Row['debit_total']??'') ? ' ': '貸借不一致' ?>
+                                </td>
                     <?php endif; ?>
-                            <td  style="font-weight: bold; text-align: center;">
-                                <?= h($DebitName) ?>
-                            </td>
-                            <td  style="font-weight: bold; text-align: right;">
-                                <?= h($DebitAmount) ?>
-                            </td>
-                            <td  style="font-weight: bold; text-align: right;">
-                                <?= h($CreditAmount) ?>
-                            </td>
-                            <td  style="font-weight: bold; text-align: center;">
-                                <?= h($CreditName) ?>
-                            </td>
-                            <td  style="font-weight: bold; text-align: center;">
-                                <?= h($Row['summary']??'') ?>
-                            </td>
-                            <td  style="font-weight: bold; text-align: center;">
-                                <?= h($Row['total_debit']??'') ?>
-                            </td>
-                <?php else: ?>
-                            <td></td>
-                            <td></td>
-                            <td style="font-weight: bold; text-align: center;">
-                                合計</td>
-                            <td style="font-weight: bold; text-align: right;">
-                                <?= h($Row['debit_total']??'') ?>
-                            </td>
-                            <td style="font-weight: bold; text-align: right;">
-                                <?= h($Row['credit_total']??'') ?>
-                            </td>
-                            <td></td>
-                            <td style="font-weight: bold; text-align: right;">
-                                ステータス
-                            </td>
-                            <td style="color: #ff0073; font-weight: bold; text-align: center;">
-                                <?= h($Row['credit_total']??'') === h($Row['debit_total']??'') ? ' ': '貸借不一致' ?>
-                            </td>
-                <?php endif; ?>
-                        </tr>
+                            </tr>
                 <?php endforeach; ?>
             </table>
         </form>

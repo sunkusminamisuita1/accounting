@@ -77,11 +77,20 @@ class VoucherController
 //        $TokenKey  = generateCsrfToken();               //CSRFトークンの生成    //list.phpのフォームで使用   //Renderに移動
         if ($_SERVER['REQUEST_METHOD'] === 'POST'){
             requireCsrf();                              //CSRFトークンの検証
+            $this->Dto->List(); //DTOのListメソッドで検索条件をセット 未入力の場合はセッションから検索条件をセットするため、POSTされた検索条件をDTOにセットする前にList()メソッドを呼び出す必要があります。
+
             if (isset($_POST['SimpleSearch'])) {        //修正データ一覧作成
                 $this->Service->VcrSimpleSearch($this->Dto , $this->Repo, $this->Validator);
             }
             if (isset($_POST['VcrUpdateNo'])) {         //修正対象データ　編集用データ作成
                 $this->Service->VcrUpdNo($this->Dto, $this->Repo, $this->Validator);
+            }
+            //前回の行追加、行削除の処理は、修正対象データの編集用データ作成の後に行う必要があり、
+            //行追加、行削除の処理は、編集用データを基に行う必要があるためです。
+            //もし、行追加、行削除の処理を先に行ってしまうと、
+            //編集用データがまだ作成されていない状態で行追加、行削除の処理が行われてしまい、正しく処理できなくなってしまいます。
+            if( isset($_POST['VcrAddDebit'])  || isset($_POST['VcrAddCredit'])  || isset($_POST['VcrDetailLineDel'])) {
+                $this->Service->VcrSearchedDataRemake($this->Dto , $this->Repo, $this->Validator);
             }
             if( isset($_POST['VcrAddDebit'])) {         //行追加ボタン（借方）を押したときの処理
                 $this->Service->VcrAddDebit($this->Dto, $this->Repo, $this->Validator);
@@ -143,6 +152,7 @@ class VoucherController
         exit;
     }
     private function Render($RenderType): int{
+        $VcrListResult = $Dto->VcrListResult ?? [];
         $Accounts = $this->Repo->getAccounts();
         if($RenderType === 'Create'){
             $TokenKey  = generateCsrfToken();
