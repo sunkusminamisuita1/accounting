@@ -147,8 +147,8 @@
                             </tr>
                     <?php endif; ?>
                     <tr>
-                    <?php if ($VcrIdSW != $Row['voucher_id']): ?>
-                        <?php $VcrIdSW   = $Row['voucher_id']; ?>
+                    <?php if ($VcrIdSW  != $Row['voucher_id']): ?>
+                        <?php $VcrIdSW   = (int)$Row['voucher_id']; ?>
                             <td  style="font-weight: bold; text-align: center;">
                                 <?= h($Row['voucher_id']) ?>
                             </td>
@@ -161,7 +161,7 @@
                     <?php endif; ?>
                             <td>
                                 <?php if($Row['side'] === 'debit'): ?>
-                                    <select  style=" width: 95%;"  name="account_id[<?= $VcrRowNo ?>][account_id]" required >
+                                    <select  style=" width: 95%;"  name="VcrUpdDt[<?= $VcrRowNo ?>][account_id]" required >
                                         <option value="">選択してください</option>
                                             <?php foreach($this->Dto->AccountTbl as $a): ?>
                                                 <option value="<?= h($a['id']) ?>" 
@@ -170,21 +170,22 @@
                                                 </option>
                                             <?php endforeach; ?>
                                     </select>
+                                    <input type="hidden" name="VcrUpdDt[<?= $VcrRowNo ?>][DebitName]" value="<?= h($DebitName ?? '') ?>">
                                 <?php endif; ?>
                             </td>
                             <td  style="font-weight: bold; text-align: right;">
                                 <?php if($Row['side'] === 'debit'): ?>
-                                    <input style="width : 95%;" type="text" name="amount[<?= $VcrRowNo ?>][amount]" value="<?= h($Row['amount']) ?? '' ?>">
+                                    <input style="width : 95%;" type="text" name="VcrUpdDt[<?= $VcrRowNo ?>][amount]" value="<?= h($Row['amount']) ?? '' ?>">
                                 <?php endif; ?>
                             </td>
                             <td  style="font-weight: bold; text-align: right;">
                                 <?php if($Row['side'] === 'credit'): ?>
-                                    <input style="width : 95%;" type="text" name="amount[<?= $VcrRowNo ?>][amount]" value="<?= h($Row['amount']) ?? '' ?>">
+                                    <input style="width : 95%;" type="text" name="VcrUpdDt[<?= $VcrRowNo ?>][amount]" value="<?= h($Row['amount']) ?? '' ?>">
                                 <?php endif; ?>
                             </td>
                             <td>
                                  <?php if($Row['side'] === 'credit'): ?>
-                                    <select style=" width: 95%;" name="account_id[<?= $VcrRowNo ?>][account_id]" required >
+                                    <select style=" width: 95%;" name="VcrUpdDt[<?= $VcrRowNo ?>][account_id]" required >
                                         <option value="">選択してください</option>
                                             <?php foreach($this->Dto->AccountTbl as $a): ?>
                                                 <option value="<?= h($a['id']) ?>" 
@@ -193,6 +194,7 @@
                                                 </option>
                                             <?php endforeach; ?>
                                     </select>
+                                    <input type="hidden" name="VcrUpdDt[<?= $VcrRowNo ?>][CreditName]" value="<?= h($CreditName ?? '') ?>">
                                 <?php endif; ?>                           
                             </td>
                             <td  style="font-weight: bold; text-align: center;">
@@ -200,9 +202,10 @@
                             </td>
                             <td>
                               <div class="button-container">
-                                <input type="hidden" name="JdId" value="<?= h($Row['JdId'] ?? 0) ?>">
-                                <input type="hidden" name="id" value="<?= h($Row['id'] ?? '') ?>">
-                                <input type="hidden" name="voucher_id" value="<?= h($Row['voucher_id'] ?? '') ?>">
+                                <input type="hidden" name="VcrUpdDt[<?= $VcrRowNo ?>][JdId]" value="<?= h($Row['JdId'] ?? 0) ?>">
+                                <input type="hidden" name="VcrUpdDt[<?= $VcrRowNo ?>][id]" value="<?= h($Row['id'] ?? '') ?>">
+                                <input type="hidden" name="VcrUpdDt[<?= $VcrRowNo ?>][voucher_id]" value="<?= h($Row['voucher_id'] ?? '') ?>">
+                                <input type="hidden" name="VcrUpdDt[<?= $VcrRowNo ?>][side]" value="<?= h($Row['side'] ?? '') ?>">
                                 <button name="VcrAddDebit" type="submit" value="<?= h($VcrRowNo ?? '') ?>">借方行追加</button>
                                 <button name="VcrAddCredit" type="submit" value="<?= h($VcrRowNo ?? '') ?>">貸方行追加</button>
                                 <button name="VcrDetailLineDel" type="submit" value="<?= h($VcrRowNo ?? '') ?>">行削除</button>
@@ -284,7 +287,7 @@
                                     <?= h($Row['total_debit']??'') ?>
                                 </td>
                     <?php else: ?>
-                                <td></td>
+<!--                                <td></td>
                                 <td></td>
                                 <td style="font-weight: bold; text-align: center;">
                                     合計</td>
@@ -300,7 +303,7 @@
                                 </td>
                                 <td style="color: #ff0073; font-weight: bold; text-align: center;">
                                     <?= h($Row['credit_total']??'') === h($Row['debit_total']??'') ? ' ': '貸借不一致' ?>
-                                </td>
+-->                                </td>
                     <?php endif; ?>
                             </tr>
                 <?php endforeach; ?>

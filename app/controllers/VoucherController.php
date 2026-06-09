@@ -68,13 +68,11 @@ class VoucherController
 
     // 修正、削除データ検索
     public function list() {
+        echo "<pre>"; var_dump($_POST); echo "</pre><br><br><br>";
         $accounts = $this->Service->getAccounts();
         $AccountTbl = $this->Repo->getAccounts();
         $this->Dto->AccountTbl = $AccountTbl;
-        //$this->Dto = new VoucherDTO($_POST['details'] ?? []);
-//        $this->Dto->VcrSearchedData = $this->Dto->InitVcrSearchedData ;
         $this->Dto->List(); //DTOのListメソッドで検索条件をセット
-//        $TokenKey  = generateCsrfToken();               //CSRFトークンの生成    //list.phpのフォームで使用   //Renderに移動
         if ($_SERVER['REQUEST_METHOD'] === 'POST'){
             requireCsrf();                              //CSRFトークンの検証
             $this->Dto->List(); //DTOのListメソッドで検索条件をセット 未入力の場合はセッションから検索条件をセットするため、POSTされた検索条件をDTOにセットする前にList()メソッドを呼び出す必要があります。
@@ -89,9 +87,9 @@ class VoucherController
             //行追加、行削除の処理は、編集用データを基に行う必要があるためです。
             //もし、行追加、行削除の処理を先に行ってしまうと、
             //編集用データがまだ作成されていない状態で行追加、行削除の処理が行われてしまい、正しく処理できなくなってしまいます。
-            if( isset($_POST['VcrAddDebit'])  || isset($_POST['VcrAddCredit'])  || isset($_POST['VcrDetailLineDel'])) {
-                $this->Service->VcrSearchedDataRemake($this->Dto , $this->Repo, $this->Validator);
-            }
+            //if( isset($_POST['VcrAddDebit'])  || isset($_POST['VcrAddCredit'])  || isset($_POST['VcrDetailLineDel'])) {
+            //    $this->Service->VcrSearchedDataRemake($this->Dto , $this->Repo, $this->Validator);
+            //}
             if( isset($_POST['VcrAddDebit'])) {         //行追加ボタン（借方）を押したときの処理
                 $this->Service->VcrAddDebit($this->Dto, $this->Repo, $this->Validator);
             }
@@ -160,6 +158,8 @@ class VoucherController
             return 1;
         }
         if($RenderType === 'List'){
+            //if($_SESSION['VcrListResult['])
+            //echo "<pre>"; var_dump($_SESSION['VcrSearchedData']??[]);  echo "</pre><br><br><br>";
             $TokenKey  = generateCsrfToken();
             require ROOT_PATH.'/views/voucher/list.php';
             return 1;

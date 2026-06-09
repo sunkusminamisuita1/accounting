@@ -20,6 +20,7 @@ class VoucherDTO
     public array $VcrUpdRow = [];
     public $VcrUpdNo = 0;
     public $VcrDeleteNo = 0;//vcrlistで伝票削除行の行番号を格納する変数(voucher_id)
+    public array $VcrInputData = []; //vcrlistで検索条件を格納する配列
 
 
     public function __construct(array $Details)
@@ -31,6 +32,22 @@ class VoucherDTO
         $this->VcrUpdNo =  0; //vcrlistで修正対象行の伝票番号を格納する変数
         $this->DtoDetails      =  [];
         $this->VcrSearchedData = [];
+//###########         journal_vouchersのカラム         ##############
+//| id         | int(11)                | NO   | PRI | NULL    | auto_increment |
+//| voucher_date | date                   | NO   |     | NULL    |                |
+//| summary     | varchar(255)           | NO   |     | NULL    |
+//| user_id     | int(11)                | NO   | MUL | NULL    |                |
+//| created_at  | datetime               | NO   |     | NULL    |
+    
+
+//###########         journal_detailsのカラム         ##############
+//| id         | int(11)                | NO   | PRI | NULL    | auto_increment |
+//| voucher_id | int(11)                | NO   | MUL | NULL    |                |
+//| line_no    | int(11)                | YES  |     | NULL    |                |
+//| account_id | int(11)                | NO   |     | NULL    |                |
+//| side       | enum('debit','credit') | NO   |     | NULL    |                |
+//| amount     | int(11)                | NO   |     | NULL    |                |
+
     }
 
     public function InitDetailsDto()
