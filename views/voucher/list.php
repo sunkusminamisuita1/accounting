@@ -137,7 +137,10 @@
                                 <th style=" width: 13%;">貸方科目</th>
                                 <th style=" width: 15%;">摘要</th>
                                 <th style=" width: 22%;">
-                                    <button name="VcrUpdate" type="submit" value="<?= h('VcrUpdate') ?>">修正実行</button>
+                                    <button name="VcrUpdate" type="submit"
+                                        onclick="return confirm('伝票修正欄の内容をデータベースに登録します。元に戻せません。\n本当に変更してもよろしいですか？');" 
+                                        class="btn btn-danger"
+                                        value="<?= h('VcrUpdate') ?>">修正実行
                                     <button name="VcrDelete" type="submit" 
                                         onclick="return confirm('この伝票を削除すると、紐づく明細データもすべて削除されます。\n本当に削除してもよろしいですか？');" 
                                         class="btn btn-danger"
@@ -163,7 +166,7 @@
                                 <?php if($Row['side'] === 'debit'): ?>
                                     <select  style=" width: 95%;"  name="VcrUpdDt[<?= $VcrRowNo ?>][account_id]" required >
                                         <option value="">選択してください</option>
-                                            <?php foreach($this->Dto->AccountTbl as $a): ?>
+                                            <?php foreach($this->Dto->Accounts as $a): ?>
                                                 <option value="<?= h($a['id']) ?>" 
                                                     <?= (isset($Row['account_id']) && $Row['account_id'] == $a['id']) ? 'selected' : '' ?>>
                                                     <?= h($a['name']) ?>
@@ -187,7 +190,7 @@
                                  <?php if($Row['side'] === 'credit'): ?>
                                     <select style=" width: 95%;" name="VcrUpdDt[<?= $VcrRowNo ?>][account_id]" required >
                                         <option value="">選択してください</option>
-                                            <?php foreach($this->Dto->AccountTbl as $a): ?>
+                                            <?php foreach($this->Dto->Accounts as $a): ?>
                                                 <option value="<?= h($a['id']) ?>" 
                                                     <?= (isset($Row['account_id']) && $Row['account_id'] == $a['id']) ? 'selected' : '' ?>>
                                                     <?= h($a['name']) ?>

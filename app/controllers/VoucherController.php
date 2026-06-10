@@ -20,13 +20,13 @@ class VoucherController
         $this->Repo = new VoucherRepository();
         $this->Validator = new VoucherValidator();
         $this->ErrMsgPopUp = new ErrMsgPopUp();
+        $this->Dto->Accounts = $this->Service->getAccounts();
     }
     public function create(): void    {
         file_put_contents('/var/www/html/test6/public/debug.log', "メソッド通ったよ！\n", FILE_APPEND);
         $this->Dto->VcrCreData();                           //DTOにPOSTされた明細行を渡す
         $details = $this->Dto->DtoDetails;                  //DTOから明細行を取得
-        $Accounts = $this->Repo->getAccounts();
-        $this->Dto->Accounts = $Accounts;
+        $Accounts = $this->Dto->Accounts;
         if ($_SERVER['REQUEST_METHOD'] === 'POST'){
             requireCsrf();
             $this->Service->VcrCreate($this->Dto);
@@ -68,10 +68,7 @@ class VoucherController
 
     // 修正、削除データ検索
     public function list() {
-        echo "<pre>"; var_dump($_POST); echo "</pre><br><br><br>";
-        $accounts = $this->Service->getAccounts();
-        $AccountTbl = $this->Repo->getAccounts();
-        $this->Dto->AccountTbl = $AccountTbl;
+        //echo "<pre>"; var_dump($_POST); echo "</pre><br><br><br>";
         $this->Dto->List(); //DTOのListメソッドで検索条件をセット
         if ($_SERVER['REQUEST_METHOD'] === 'POST'){
             requireCsrf();                              //CSRFトークンの検証
@@ -151,7 +148,7 @@ class VoucherController
     }
     private function Render($RenderType): int{
         $VcrListResult = $Dto->VcrListResult ?? [];
-        $Accounts = $this->Repo->getAccounts();
+        $Accounts = $this->Dto->Accounts ?? [];
         if($RenderType === 'Create'){
             $TokenKey  = generateCsrfToken();
             require ROOT_PATH . '/views/voucher/create.php';
