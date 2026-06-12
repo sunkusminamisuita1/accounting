@@ -100,4 +100,29 @@ Model	データ構造
 
 mysqlでdelete insert create 操作を行った後、成功したかどうかを確認する方法は、PDOの場合はexecute()の返り値を確認するか、rowCount()メソッドを使用して影響を受けた行数を確認することが一般的です。
                             行数が入る
-          mysql rowCount()                          
+          mysql rowCount()   
+          
+          
+
+javascript Alert確認メッセージ
+
+		echo "	<script>
+    			    alert('セッションの有効期限が切れたか、不正な操作が行われました。\\n再度ログインしてください。');
+        			window.location.href = 'index.php?route=login';
+    			</script>
+		";
+      exit;
+
+      
+       <script>
+            alert('伝票が正常に削除されました。');
+      </script>
+
+
+ｓｑｌ
+   ALTER TABLE journal_details MODIFY id INT NOT NULL AUTO_INCREMENT ;
+
+   alter table journal_details add line_no int after voucher_id;
+   ALTER TABLE journal_details ADD jd_summary VARCHAR(255) AFTER voucher_id;
+
+

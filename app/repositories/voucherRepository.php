@@ -171,6 +171,7 @@ class VoucherRepository{
                 a.id as account_id,
                 a.name,
                 a.type,
+                jd.jd_summary,
                 jd.side,
                 jd.amount,
                 jd.voucher_id

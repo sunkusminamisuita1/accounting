@@ -135,7 +135,11 @@
                                 <th style=" width: 10%;">借方金額</th>
                                 <th style=" width: 10%;">貸方金額</th>
                                 <th style=" width: 13%;">貸方科目</th>
-                                <th style=" width: 15%;">摘要</th>
+                                <th style=" width: 15%;">摘要<br>
+                                    <input style="width : 95%;" type="text" name="VcrUpdDt[<?= $VcrRowNo ?>][summary]" 
+                                        value="<?= h($Row['summary']) ?? '' ?>"
+                                    >                                    
+                                </th>
                                 <th style=" width: 22%;">
                                     <button name="VcrUpdate" type="submit"
                                         onclick="return confirm('伝票修正欄の内容をデータベースに登録します。元に戻せません。\n本当に変更してもよろしいですか？');" 
@@ -201,7 +205,15 @@
                                 <?php endif; ?>                           
                             </td>
                             <td  style="font-weight: bold; text-align: center;">
-                                <?= h($Row['summary']??'') ?>
+
+
+
+                                    <input style="width : 95%;" type="text" name="VcrUpdDt[<?= $VcrRowNo ?>][summary]" 
+                                        value="<?= h($Row['summary']) ?? '' ?>"
+                                    >                                    
+
+
+                                <!-- <?php //echo  h($Row['summary']??'') ?> -->
                             </td>
                             <td>
                               <div class="button-container">
@@ -249,7 +261,9 @@
                                 <th>借方金額</th>
                                 <th>貸方金額</th>
                                 <th>貸方科目</th>
-                                <th>摘要</th>
+                                <th>摘要<br>
+                                    <?= h($Row['summary'] )?>                                    
+                                </th>
                                 <th>
                                     <?php if($this->Dto->VcrListResult[$VcrId]['voucher_id'] !== '999999999999'): ?>
                                          <button name="VcrUpdateNo" type="submit" value="<?= h($Row['voucher_id']) ?>">修正</button>

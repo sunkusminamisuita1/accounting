@@ -39,12 +39,15 @@ function verifyCsrfToken(string $FmTknKey): void
 		http_response_code(403);
 		$trace = debug_backtrace();
     	$caller = $trace[1];
-		echo "	<script>
-    			    alert('セッションの有効期限が切れたか、不正な操作が行われました。\\n再度ログインしてください。');
-        			window.location.href = 'index.php?route=login';
-    			</script>
-		";
+		$_SESSION['flash_message'] = "セッションの有効期限が切れたか、不正な操作が行われました。再度ログインしてください。";
+		header('Location: index.php?route=login');
 		exit;
+//		echo "	<script>
+//    			    alert('セッションの有効期限が切れたか、不正な操作が行われました。\\n再度ログインしてください。');
+//        			window.location.href = 'index.php?route=login';
+//    			</script>
+//		";
+//		exit;
 	}
 	// ワンタイムなので削除
 	unset($_SESSION['csrfTokens'][$FmTknKey]);

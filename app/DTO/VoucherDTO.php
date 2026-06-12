@@ -48,6 +48,19 @@ class VoucherDTO
 //| side       | enum('debit','credit') | NO   |     | NULL    |                |
 //| amount     | int(11)                | NO   |     | NULL    |                |
 
+//###########         配列VcrListResultのカラム         ##############
+
+  //["id"]            =>  int(17)
+  //["JdId"]          =>  int(2)
+  //["voucher_date"]  =>  string(10) "2025-12-31"
+  //["summary"]       =>  string(0) ""
+  //["account_id"]    =>  int(1)
+  //["name"]          =>  string(6) "現金"
+  //["type"]          =>  string(6) "資産"
+  //["side"]          =>  string(6) "credit"
+  //["amount"]        =>  int(5500)
+  //["voucher_id"]    =>  int(17)
+
     }
 
     public function InitDetailsDto()
