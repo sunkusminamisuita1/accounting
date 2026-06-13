@@ -268,7 +268,7 @@ class VoucherService{
         //requireCsrf();　　　　　//CSRFトークンの検証はコントローラーで行う
         $Dto->VcrUpdNo  =   $_SESSION['VcrUpdNo'] ?? 0;      //セッションにVcrUpdNoをDtoに保存
         $voucherId      =   $_SESSION['VcrUpdNo'] ?? 0;       //セッションから伝票番号を取得
-        $Repo->delete($voucherId);
+        $Repo->JvJdDelete($voucherId);/////////////1
 
         return true;
     }

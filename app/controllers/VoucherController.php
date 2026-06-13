@@ -109,6 +109,7 @@ class VoucherController
             }
 
             if( isset($_POST['VcrUpdate'])) {           //1仕分け伝票DB更新
+                //echo "mmmmmmmm";exit;
                 $Success = $this->Service->VcrDelete($this->Dto, $this->Repo, $this->Validator);
                 if ($Success) {
                 //    file_put_contents('/var/www/html/test6/public/debug.log', "Success2 = {$Success}！\n", FILE_APPEND);
@@ -120,6 +121,7 @@ class VoucherController
                 //    // 4. そのまま一覧画面（または新規作成画面）へ一発リダイレクト！
                     header('Location: index.php?route=voucher.list'); //リダイレクトしてPOSTデータの再送信を防止
                     exit;
+                }
             }
         }
         $this->Render('List');
