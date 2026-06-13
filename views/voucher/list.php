@@ -191,7 +191,7 @@
                                 <?php endif; ?>
                             </td>
                             <td>
-                                 <?php if($Row['side'] === 'credit'): ?>
+                                <?php if($Row['side'] === 'credit'): ?>
                                     <select style=" width: 95%;" name="VcrUpdDt[<?= $VcrRowNo ?>][account_id]" required >
                                         <option value="">選択してください</option>
                                             <?php foreach($this->Dto->Accounts as $a): ?>
@@ -208,8 +208,8 @@
 
 
 
-                                    <input style="width : 95%;" type="text" name="VcrUpdDt[<?= $VcrRowNo ?>][summary]" 
-                                        value="<?= h($Row['summary']) ?? '' ?>"
+                                    <input style="width : 95%;" type="text" name="VcrUpdDt[<?= $VcrRowNo ?>][jd_summary]" 
+                                        value="<?= h($Row['jd_summary']) ?? '' ?>"
                                     >                                    
 
 

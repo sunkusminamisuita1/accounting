@@ -205,15 +205,16 @@ class VoucherService{
             'side'          =>  (string)$Side,
             'amount'        =>  (int)'0',
             'voucher_id'    => $NewId,
-            'LineNo'        => "0"
+            'LineNo'        => "0",
+            'jd_summary'   =>  (string)""
         ];
+        $_SESSION['VcrSearchedData'] =  $Dto->VcrSearchedData ?? []; //行追加のデータをセッションに保存
 
         // -------------------------------------------------------------
         // 【仕様対応：左側】VcrSearchedData（修正対象1件）の指定位置に行を挿入
         // -------------------------------------------------------------
         array_splice($Dto->VcrSearchedData, $NewVcrRowAddr, 0, [$NewRow]); //行挿入
         $Dto->VcrSearchedData = array_values($Dto->VcrSearchedData); 
-        //echo "<br><pre> searcheddata=" ; var_dump($Dto->VcrSearchedData) ; echo "</pre> ";
         $_SESSION['VcrSearchedData'] = $Dto->VcrSearchedData; // 左側を保存
  
     }
@@ -223,10 +224,8 @@ class VoucherService{
 
         $NewCount = count($_SESSION['VcrSearchedData'] ?? []) - 1 ; //行追加、行削除の前の行数をカウント　
         $Accounts  =      empty($Dto->Accounts) ? [] : $Dto->Accounts; //AccountsがDTOにセットされていない場合は、Repoから取得して$Accountsにセット　行追加・行削除の前の行数をカウント
-        //echo "<br><pre> account=" ; var_dump($Accounts) ; echo "</pre> ";
         $Dto->VcrSearchedData = $_SESSION['VcrSearchedData']; //行追加・行削除の処理を行う前に、$Dto->VcrSearchedDataを初期化  VcrUpdDt
         for($idx = 0; $idx <= $NewCount; ) {
-            echo "ccccccccccccccccccccccccc";
             foreach ($Accounts as $a) {
                 if((int)$a['id'] === (int)($_POST['VcrUpdDt'][$idx]['account_id'] ?? '0')) {
                     $AccountId  =   $a['id'];
@@ -235,12 +234,6 @@ class VoucherService{
                     break;
                 }
             }
-            //if(isset($_POST['VcrAddDebit'])){
-            //    (int)$idx = (int)$_POST['VcrAddDebit']??0;
-            //}else{
-            //    (int)$idx = (int)$_POST['VcrAddCredit']??0;
-            //}
-            //(int)$idx = (int)$NewVcrRowInsAddr;
             $Dto->VcrSearchedData[$idx]['id']           = (string)$_SESSION['VcrSearchedData'][$idx]['id']?? '';
             $Dto->VcrSearchedData[$idx]['Jdid']         = (int)$_POST['VcrUpdDt'][$idx]['voucher_id'] ?? '0';     
             $Dto->VcrSearchedData[$idx]['voucher_date'] = (string)$_SESSION['VcrSearchedData'][0]['voucher_date']?? '';
@@ -252,10 +245,12 @@ class VoucherService{
             $Dto->VcrSearchedData[$idx]['amount']       = (int)$_POST['VcrUpdDt'][$idx]['amount'] ?? '';
             $Dto->VcrSearchedData[$idx]['voucher_id']   = (int)$_POST['VcrUpdDt'][$idx]['voucher_id'] ?? '0';
             $Dto->VcrSearchedData[$idx]['LineNo']       = (int)$idx;
+            $Dto->VcrSearchedData[$idx]['jd_summary']  = (string)$_POST['VcrUpdDt'][$idx]['jd_summary']??"";
             $idx++;
         }
+        $_SESSION['VcrSearchedData'] = $Dto->VcrSearchedData; // 左側を保存
 
-        $_SESSION['VcrSearchedData'] =  $Dto->VcrSearchedData ?? []; //行追加のデータをセッションに保存
+        echo "<br><pre> searcheddata=" ; var_dump($Dto->VcrSearchedData) ; echo "</pre> ";
     }
 
     private function VcrRowAddCommon(VoucherDTO $Dto, VoucherRepository $Repo, VoucherValidator $Validator): void {
