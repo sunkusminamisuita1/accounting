@@ -245,8 +245,8 @@ class VoucherService{
     }
 
     public function VcrDelete(VoucherDTO $Dto ,VoucherRepository $Repo): bool {
-        echo "<br><pre>0"; var_dump($_SESSION['VcrSearchedData']);echo "</pr><br>";
-        $Dto->VcrsearchedData = $_SESSION['VcrSearchedData'];
+        //echo "<br><pre>0"; var_dump($_SESSION['VcrSearchedData']); echo "</pre><br>";
+        $Dto->VcrSearchedData = $_SESSION['VcrSearchedData'];
 
         //requireCsrf();　　　　　//CSRFトークンの検証はコントローラーで行う
         $Dto->VcrUpdNo  =   $_SESSION['VcrUpdNo'] ?? 0;      //セッションにVcrUpdNoをDtoに保存
