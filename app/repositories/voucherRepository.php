@@ -62,6 +62,32 @@ class VoucherRepository{
             return $stmtDetails->rowCount();
         }
     }
+        //VcrSearchedData['voucher_id']
+        public function JvJdDelete() {
+            echo "delete来た";exit;
+        try{
+            $pdo = getPDO();
+            $pdo->beginTransaction();
+
+            // 伝票に紐づく明細を削除
+             $stmtDetails = $pdo->prepare("DELETE FROM journal_details WHERE voucher_id = ?");
+             $stmtDetails->execute([$id]);
+
+            // 伝票を削除
+            $stmtVoucher = $pdo->prepare("DELETE FROM journal_vouchers WHERE id = ?");
+            $stmtVoucher->execute([$id]);
+
+            $pdo->commit();
+        } catch (Exception $e) {
+            $pdo->rollBack();
+            throw $e;
+        }
+        if ($stmtVoucher->rowCount() > $stmtDetails->rowCount()) {
+            return $stmtVoucher->rowCount();
+        } else {
+            return $stmtDetails->rowCount();
+        }
+    }
 
     public function getAccounts()  {
         $pdo = getPDO();
@@ -140,28 +166,9 @@ class VoucherRepository{
             $from   =   '1970-01-01';
             $to     =   '2099-12-31';
         }
-        //  var_dump($from);var_dump($to);
 
         $UserId = getLoginUserId();
         $pdo = getPDO();
-//        $sql = "SELECT 
-//                jv.id,
-//                jd.id as JdId,
-//                jv.voucher_date,
-//                jv.summary,
-//                a.id as account_id,
-//                a.name,
-//                a.type,
-//                jd.side,
-//                jd.amount,
-//                jd.voucher_id,
-//                sum(case jd.side when 'debit' then jd.amount else 0 end) AS debit_total,
-//                sum(case jd.side when 'credit' then jd.amount else 0 end) AS credit_total
-//            FROM journal_vouchers jv
-//            JOIN journal_details jd ON jv.id            = jd.voucher_id
-//            JOIN accounts a         ON jd.account_id    = a.id
-//            WHERE jv.user_id = :user_id
-//              AND jv.voucher_date BETWEEN :from AND :to";
 
          $sql = "SELECT 
                 jv.id,
@@ -182,14 +189,12 @@ class VoucherRepository{
               AND jv.voucher_date BETWEEN :from AND :to";             
 
         // 条件がある場合だけ絞り込むロジック
-
         if (!empty($VcrDto->ListVcrNum)) {
             $sql .= " AND jv.id = :vchrnumber ";
         }
         if (!empty($VcrDto->Summary)) {
             $sql .= " AND jv.summary LIKE :vchrsummary ";
         }
-//        $sql .= " GROUP BY jd.voucher_id,jd.id WITH ROLLUP";
         $sql .= " GROUP BY jd.voucher_id,jd.id";
 
         $stmt = $pdo->prepare($sql);    

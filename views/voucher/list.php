@@ -126,7 +126,6 @@
                         $DebitName = $Row['name']??'';
                     }
                     ?>
-                    <?=  "<br> {$VcrIdSW} xxx {$Row['voucher_id']}"  ?>
                     <?php if ($VcrIdSW != $Row['voucher_id']): ?>
                             <tr style="background-color: #e0e0e1; font-weight: bold; text-align: center;">
                                 <th style=" width: 5%;" >伝票No</th>
@@ -209,7 +208,7 @@
 
 
                                     <input style="width : 95%;" type="text" name="VcrUpdDt[<?= $VcrRowNo ?>][jd_summary]" 
-                                        value="<?= h($Row['jd_summary']) ?? '' ?>"
+                                        value="<?= h($Row['jd_summary'] ?? '') ?>"
                                     >                                    
 
 

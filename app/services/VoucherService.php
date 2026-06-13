@@ -187,8 +187,6 @@ class VoucherService{
         // 1. セッションからデータを復元
         $Dto->VcrListResult = $_SESSION['VcrListResult'] ?? []; 
         $Dto->VcrSearchedData = $_SESSION['VcrSearchedData'] ?? []; 
-        //echo "xxxxxxxxxxxxxxxxxxxxxxxxxxxxx{$NewVcrRowAddr}xxxxxxxxxxxxxxxxxxxxxxxxxxxx<br><br><br>";
-
 
         // -------------------------------------------------------------
         // 【仕様対応】新しく挿入する「空の箱（明細行）」を作成
@@ -234,18 +232,19 @@ class VoucherService{
                     break;
                 }
             }
-            $Dto->VcrSearchedData[$idx]['id']           = (string)$_SESSION['VcrSearchedData'][$idx]['id']?? '';
-            $Dto->VcrSearchedData[$idx]['Jdid']         = (int)$_POST['VcrUpdDt'][$idx]['voucher_id'] ?? '0';     
-            $Dto->VcrSearchedData[$idx]['voucher_date'] = (string)$_SESSION['VcrSearchedData'][0]['voucher_date']?? '';
-            $Dto->VcrSearchedData[$idx]['summary']      = (string)$_SESSION['VcrSearchedData'][0]['summary']?? '';        
-            $Dto->VcrSearchedData[$idx]['account_id']   = (int)$_POST['VcrUpdDt'][$idx]['account_id'] ?? '0';
+            $Dto->VcrSearchedData[$idx]['id']           = isset($_SESSION['VcrSearchedData'][$idx]['id']) ? (string)$_SESSION['VcrSearchedData'][$idx]['id'] : '';
+            $Dto->VcrSearchedData[$idx]['Jdid']         = isset($_POST['VcrUpdDt'][$idx]['voucher_id']) ? (int)$_POST['VcrUpdDt'][$idx]['voucher_id'] : 0;
+            $Dto->VcrSearchedData[$idx]['voucher_date'] = isset($_SESSION['VcrSearchedData'][0]['voucher_date']) ? (string)$_SESSION['VcrSearchedData'][0]['voucher_date'] : '';
+            // summary: check nested key presence to avoid undefined index warning
+            $Dto->VcrSearchedData[$idx]['summary']      = isset($_POST['VcrUpdDt'][$idx]['summary']) ? (string)$_POST['VcrUpdDt'][$idx]['summary'] : '';
+            $Dto->VcrSearchedData[$idx]['account_id']   = isset($_POST['VcrUpdDt'][$idx]['account_id']) ? (int)$_POST['VcrUpdDt'][$idx]['account_id'] : 0;
             $Dto->VcrSearchedData[$idx]['name']         = $Name ?? '';
             $Dto->VcrSearchedData[$idx]['type']         = $Type;
-            $Dto->VcrSearchedData[$idx]['side']         = (string)$_POST['VcrUpdDt'][$idx]['side'] ?? '';
-            $Dto->VcrSearchedData[$idx]['amount']       = (int)$_POST['VcrUpdDt'][$idx]['amount'] ?? '';
-            $Dto->VcrSearchedData[$idx]['voucher_id']   = (int)$_POST['VcrUpdDt'][$idx]['voucher_id'] ?? '0';
+            $Dto->VcrSearchedData[$idx]['side']         = isset($_POST['VcrUpdDt'][$idx]['side']) ? (string)$_POST['VcrUpdDt'][$idx]['side'] : '';
+            $Dto->VcrSearchedData[$idx]['amount']       = isset($_POST['VcrUpdDt'][$idx]['amount']) ? (int)$_POST['VcrUpdDt'][$idx]['amount'] : '';
+            $Dto->VcrSearchedData[$idx]['voucher_id']   = isset($_POST['VcrUpdDt'][$idx]['voucher_id']) ? (int)$_POST['VcrUpdDt'][$idx]['voucher_id'] : 0;
             $Dto->VcrSearchedData[$idx]['LineNo']       = (int)$idx;
-            $Dto->VcrSearchedData[$idx]['jd_summary']  = (string)$_POST['VcrUpdDt'][$idx]['jd_summary']??"";
+            $Dto->VcrSearchedData[$idx]['jd_summary']   = isset($_POST['VcrUpdDt'][$idx]['jd_summary']) ? (string)$_POST['VcrUpdDt'][$idx]['jd_summary'] : '';
             $idx++;
         }
         $_SESSION['VcrSearchedData'] = $Dto->VcrSearchedData; // 左側を保存
