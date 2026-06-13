@@ -98,26 +98,6 @@ class VoucherService{
             }
     }
 
-//行追加・行削除ボタンを押したときの処理
-//    public function VcrAddDebit(VoucherDTO $Dto, VoucherRepository $Repo, VoucherValidator $Validator): void {
-//       $NewVcrRowAddr = (int)$_POST['VcrAddDebit']  + 1;
-
-//       $Dto->VcrSearchedData = $_SESSION['VcrSearchedData'] ?? []; //行追加前のデータをセッションから復元
-
-//        $this->VcrSearchedDataRemake($Dto , $Repo, $Validator, $NewVcrRowAddr);
-
-//        $_SESSION['UnsavedData'] = true; //追加行を作成した場合は、保存されるまで、次回の行追加・行削除をできないようにするフラグ
-                                         //このフラグは保存処理の最後でfalseにする
-//        $_SESSION['NewVcrRowAddr'] = $NewVcrRowAddr; //行追加後の行番号をDtoに保存　行追加後の行番号は、行追加前の行番号+1
-
-//        $NewId = $_SESSION['VcrSearchedData'][0]['voucher_id'] ?? '';
-
-//        $Side = 'debit';
-
-//        $this->VcrAddRowIns( $Dto, $NewVcrRowAddr, $NewId, $Side);
-
-//        $this->VcrTmpDataSave($Dto, $Repo, $Validator, $NewVcrRowAddr);
-//    }
 
 //行追加・行削除ボタンを押したときの処理
     public function VcrAddDebit(VoucherDTO $Dto, VoucherRepository $Repo, VoucherValidator $Validator): void {
@@ -268,7 +248,7 @@ class VoucherService{
         //requireCsrf();　　　　　//CSRFトークンの検証はコントローラーで行う
         $Dto->VcrUpdNo  =   $_SESSION['VcrUpdNo'] ?? 0;      //セッションにVcrUpdNoをDtoに保存
         $voucherId      =   $_SESSION['VcrUpdNo'] ?? 0;       //セッションから伝票番号を取得
-        $Repo->JvJdDelete($voucherId);/////////////1
+        $Repo->JvJdDelete($Dto,);/////////////1
 
         return true;
     }

@@ -4,24 +4,21 @@ require_once ROOT_PATH . '/app/DTO/VoucherDTO.php';
 require_once ROOT_PATH . '/lib/helpers.php';
 require_once ROOT_PATH . '/app/controllers/lib/auth.php';
 require_once ROOT_PATH . '/app/Validators/VoucherValidator.php';
-require_once ROOT_PATH . '/app/repositories/voucherRepository.php';
 
 class VoucherRepository{
     
     private VoucherService $Service;
     private VoucherDTO $Dto;
     private VoucherValidator $Validator;
-    private VoucherRepository $Repo;
-    private ErrMsgPopUp $ErrMsgPopUp;
+    //private ErrMsgPopUp $ErrMsgPopUp;
     private string $RenderType;
 
     public function __construct()  {
-        $this->Dto = new VoucherDTO([]);
-        $this->Service = new VoucherService();
-        $this->Repo = new VoucherRepository();
-        $this->Validator = new VoucherValidator();
-        $this->ErrMsgPopUp = new ErrMsgPopUp();
-        $this->Dto->Accounts = $this->Service->getAccounts();
+        //$this->Dto = $Dto;
+        //$this->Service = $Service;
+        //$this->Validator = $Validator;
+        //$this->ErrMsgPopUp = new ErrMsgPopUp();
+        //$this->Dto->Accounts = $Dto->Accounts;
     }
 
     public function findAllByUser(int $userId): array {
@@ -87,9 +84,9 @@ class VoucherRepository{
     }
         //VcrSearchedData['voucher_id']
 
-    public function JvJdDelete() {
+    public function JvJdDelete($Dto) {
             echo "delete来た";
-            $VoucherId  =   $Dto->VcrSearchedData[0]['voucher_id'];
+            $VoucherId  =   $Dto->VcrSearchedData['1']['voucher_id'];
             echo "voucher_id = {$VoucherId}";exit;
         try{
             $pdo = getPDO();
