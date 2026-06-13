@@ -244,11 +244,14 @@ class VoucherService{
         $_SESSION['VcrSearchedData'] = $Dto->VcrSearchedData;//行追加・行削除後のデータをセッションに保存
     }
 
-    public function VcrDelete(VoucherDTO $Dto, VoucherRepository $Repo, VoucherValidator $Validator): bool {
+    public function VcrDelete(VoucherDTO $Dto ,VoucherRepository $Repo): bool {
+        echo "<br><pre>0"; var_dump($_SESSION['VcrSearchedData']);echo "</pr><br>";
+        $Dto->VcrsearchedData = $_SESSION['VcrSearchedData'];
+
         //requireCsrf();　　　　　//CSRFトークンの検証はコントローラーで行う
         $Dto->VcrUpdNo  =   $_SESSION['VcrUpdNo'] ?? 0;      //セッションにVcrUpdNoをDtoに保存
         $voucherId      =   $_SESSION['VcrUpdNo'] ?? 0;       //セッションから伝票番号を取得
-        $Repo->JvJdDelete($Dto,);/////////////1
+        $Repo->JvJdDelete($Dto);/////////////1
 
         return true;
     }

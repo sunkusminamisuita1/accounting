@@ -86,7 +86,8 @@ class VoucherRepository{
 
     public function JvJdDelete($Dto) {
             echo "delete来た";
-            $VoucherId  =   $Dto->VcrSearchedData['1']['voucher_id'];
+            echo "<br><pre>1"; var_dump($Dto->VcrSearchedData);echo "</pr><br>";
+            $VoucherId  =   $Dto->VcrSearchedData[0]['voucher_id'];
             echo "voucher_id = {$VoucherId}";exit;
         try{
             $pdo = getPDO();
