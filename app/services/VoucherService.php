@@ -244,6 +244,35 @@ class VoucherService{
         $_SESSION['VcrSearchedData'] = $Dto->VcrSearchedData;//行追加・行削除後のデータをセッションに保存
     }
 
+    public function VcrUpdate(VoucherDTO $Dto ,VoucherRepository $Repo): bool {
+       
+        //$Success = $this->VcrDelete($this->Dto, $this->Repo, $this->Validator);
+        $Dto->VcrListResult     =   $_SESSION['VcrListResult'] ?? "";
+        $Dto->VcrSearchedData   =   $_SESSION['VcrSearchedData'] ?? "";
+        //var_dump($Dto->VcrListResult);exit;
+
+        //requireCsrf();　　　　　//CSRFトークンの検証はコントローラーで行う
+        $Dto->VcrUpdNo  =   $_SESSION['VcrUpdNo'] ?? 0;      //セッションにVcrUpdNoをDtoに保存
+        $voucherId      =   $_SESSION['VcrUpdNo'] ?? 0;       //セッションから伝票番号を取得
+
+        $Dto->Date   =   $Dto->VcrListResult[0]['voucher_date'];
+        $Dto->Summary   =   $_POST['VcrUpdDt'][0]['summary'];
+
+        $Dto->DtoDetails   =   [];
+        foreach($Dto->VcrSearchedData as $Key => $Row){
+            $Dto->DtoDetails[$Key]['account_id']  =   $Row['account_id'];
+            $Dto->DtoDetails[$Key]['side']        =   $Row['side'];
+            $Dto->DtoDetails[$Key]['amount']        =   $Row['amount'];
+        }
+        //echo "<br><pre>" . var_dump($Dto->DtoDetails) . "</pre>";exit;
+        $Repo->insertVoucher($Dto);/////////////1
+        
+        $this->VcrSimpleSearch($Dto);     //削除後、最新の検索データを読み直す
+        $Dto->VcrSearchedData = [];       //削除後、編集エリアをクリア
+
+        return true;
+    }
+
     public function VcrDelete(VoucherDTO $Dto ,VoucherRepository $Repo): bool {
         //echo "<br><pre>0"; var_dump($_SESSION['VcrSearchedData']); echo "</pre><br>";
         $Dto->VcrSearchedData = $_SESSION['VcrSearchedData'];
@@ -252,9 +281,12 @@ class VoucherService{
         $Dto->VcrUpdNo  =   $_SESSION['VcrUpdNo'] ?? 0;      //セッションにVcrUpdNoをDtoに保存
         $voucherId      =   $_SESSION['VcrUpdNo'] ?? 0;       //セッションから伝票番号を取得
         $Repo->JvJdDelete($Dto);/////////////1
+        $this->VcrSimpleSearch($Dto);     //削除後、最新の検索データを読み直す
+        $Dto->VcrSearchedData = [];       //削除後、編集エリアをクリア
 
         return true;
     }
+
     public function VcrRowAdd($VcrDTO){
         $details = $_POST['details'] ?? [];
         $AddKey = (int)$_POST['add_row'] + 1; //追加する行の位置

@@ -88,7 +88,7 @@ class VoucherRepository{
             echo "delete来た";
             echo "<br><pre>1"; var_dump($Dto->VcrSearchedData);echo "</pr><br>";
             $VoucherId  =   $Dto->VcrSearchedData[0]['voucher_id'];
-            echo "voucher_id = {$VoucherId}";exit;
+            //echo "voucher_id = {$VoucherId}";exit;
         try{
             $pdo = getPDO();
             $pdo->beginTransaction();
@@ -147,6 +147,21 @@ class VoucherRepository{
                     VALUES (?,?,?,?)
             ");
             $voucherId = $pdo->lastInsertId();
+            if( isset($_POST['VcrUpdate'])) {
+                $voucherId  =   $Dto->VcrSearchedData[0]['id'];
+            }
+
+            foreach ($Dto->DtoDetails as $RecNo => $Row){
+                if($Row['side'] === 'debit') {
+                    
+                    echo "voucherId=  {$voucherId} accountId= {$Row['account_id']}  side = {$Row['side']}  amount = {$Row['amount']}";
+                } else {
+                    echo "voucherId=  {$voucherId} accountId= {$Row['account_id']}  side = {$Row['side']}  amount = {$Row['amount']}";
+                }
+            }
+            exit;
+
+
             foreach ($Dto->DtoDetails as $RecNo => $Row){
                 if($Row['side'] === 'debit') {
                     $stmtDetail->execute([
