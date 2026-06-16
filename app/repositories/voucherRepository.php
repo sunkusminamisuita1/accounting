@@ -127,14 +127,21 @@ class VoucherRepository{
         $IndexCount = count($Dto->DtoDetails);
         $pdo = getPDO();
         $pdo->beginTransaction();
+
+        $voucherId = (int)$pdo->lastInsertId();
+        if( isset($_POST['VcrUpdate'])) {
+            $voucherId  =   (int)$Dto->VcrSearchedData[0]['id'];
+        }
+
         try {
             
             $stmt = $pdo->prepare("
                 INSERT INTO journal_vouchers
-                    (voucher_date, summary, user_id, created_at)
-                    VALUES (?,?,?,?)
+                    (id, voucher_date, summary, user_id, created_at)
+                    VALUES (?,?,?,?,?)
             ");
             $stmt->execute([
+                $voucherId,
                 $Dto->Date,
                 $Dto->Summary  ,
                 $_SESSION['user']['id'],
@@ -146,20 +153,16 @@ class VoucherRepository{
                     (voucher_id, account_id, side, amount)
                     VALUES (?,?,?,?)
             ");
-            $voucherId = $pdo->lastInsertId();
-            if( isset($_POST['VcrUpdate'])) {
-                $voucherId  =   $Dto->VcrSearchedData[0]['id'];
-            }
 
-            foreach ($Dto->DtoDetails as $RecNo => $Row){
-                if($Row['side'] === 'debit') {
+            //foreach ($Dto->DtoDetails as $RecNo => $Row){
+            //    if($Row['side'] === 'debit') {
                     
-                    echo "voucherId=  {$voucherId} accountId= {$Row['account_id']}  side = {$Row['side']}  amount = {$Row['amount']}";
-                } else {
-                    echo "voucherId=  {$voucherId} accountId= {$Row['account_id']}  side = {$Row['side']}  amount = {$Row['amount']}";
-                }
-            }
-            exit;
+            //        echo "voucherId=  {$voucherId} accountId= {$Row['account_id']}  side = {$Row['side']}  amount = {$Row['amount']}";
+            //    } else {
+            //        echo "voucherId=  {$voucherId} accountId= {$Row['account_id']}  side = {$Row['side']}  amount = {$Row['amount']}";
+            //    }
+            //}
+            //exit;
 
 
             foreach ($Dto->DtoDetails as $RecNo => $Row){

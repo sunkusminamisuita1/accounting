@@ -139,6 +139,15 @@ class VoucherService{
         $this->VcrTmpDataSave($Dto, $Repo, $Validator, $NewVcrRowAddr);
     }
 
+
+#0 /var/www/html/test6/app/repositories/voucherRepository.php(167): PDOStatement->execute()
+#1 /var/www/html/test6/app/services/VoucherService.php(268): VoucherRepository->insertVoucher()
+#2 /var/www/html/test6/app/controllers/VoucherController.php(113): VoucherService->VcrUpdate()
+#3 /var/www/html/test6/public/index.php(90): VoucherController->list()
+
+
+
+
     public function VcrDetailLineDel(VoucherDTO $Dto, VoucherRepository $Repo, VoucherValidator $Validator): void {
         $Dto->VcrListResult = $_SESSION['VcrListResult'] ?? []; //検索結果をセッションから復元 simplesearch(右側)エリア表示用
         $Dto->VcrSearchedData = $_SESSION['VcrSearchedData'] ; //行追加前のデータをセッションから復元
@@ -198,7 +207,7 @@ class VoucherService{
     }
 
     public function VcrSearchedDataRemake(VoucherDTO $Dto , 
-                    VoucherRepository $Repo, VoucherValidator $Validator, $NewVcrRowInsAddr): void {
+                    VoucherRepository $Repo, VoucherValidator $Validator): void {
 
         $NewCount = count($_SESSION['VcrSearchedData'] ?? []) - 1 ; //行追加、行削除の前の行数をカウント　
         $Accounts  =      empty($Dto->Accounts) ? [] : $Dto->Accounts; //AccountsがDTOにセットされていない場合は、Repoから取得して$Accountsにセット　行追加・行削除の前の行数をカウント
@@ -229,7 +238,7 @@ class VoucherService{
         }
         $_SESSION['VcrSearchedData'] = $Dto->VcrSearchedData; // 左側を保存
 
-        echo "<br><pre> searcheddata=" ; var_dump($Dto->VcrSearchedData) ; echo "</pre> ";
+        //echo "<br><pre> searcheddata=" ; var_dump($Dto->VcrSearchedData) ; echo "</pre> ";
     }
 
     private function VcrRowAddCommon(VoucherDTO $Dto, VoucherRepository $Repo, VoucherValidator $Validator): void {
@@ -246,7 +255,7 @@ class VoucherService{
 
     public function VcrUpdate(VoucherDTO $Dto ,VoucherRepository $Repo): bool {
        
-        //$Success = $this->VcrDelete($this->Dto, $this->Repo, $this->Validator);
+        $Success = $this->VcrDelete($Dto, $Repo);
         $Dto->VcrListResult     =   $_SESSION['VcrListResult'] ?? "";
         $Dto->VcrSearchedData   =   $_SESSION['VcrSearchedData'] ?? "";
         //var_dump($Dto->VcrListResult);exit;
