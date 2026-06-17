@@ -92,7 +92,7 @@ class VoucherService{
                     //}
                 }
             }
-            $Success    =   $this->Validataor->ChkTotalBalance($Dto->VcrSearchedData);
+            $Success    =   $this->Validator->ChkTotalBalance( $Dto, $Dto->VcrSearchedData);
             $_SESSION['VcrSearchedData'] = $Dto->VcrSearchedData;//修正用データをセッションに保存
             //if( $CreditTotal !== $DebitTotal ){
             //    $Dto->ErrData['VoucherService'] = "貸方合計　¥{$CreditTotal}　借方合計　¥{$DebitTotal}　不一致です。";
@@ -258,7 +258,13 @@ class VoucherService{
     public function VcrUpdate(VoucherDTO $Dto ,VoucherRepository $Repo): bool {
 
         // 貸方、借方　バランスチェック
-       
+
+        $Success    =   $this->Validator->ChkTotalBalance( $Dto, $_SESSION['VcrSearchedData'] ?? "");
+        if( ! $Success){
+            return;
+
+        }
+
         $Success = $this->VcrDelete($Dto, $Repo);
         $Dto->VcrListResult     =   $_SESSION['VcrListResult'] ?? "";
         $Dto->VcrSearchedData   =   $_SESSION['VcrSearchedData'] ?? "";
