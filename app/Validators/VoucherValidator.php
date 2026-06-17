@@ -80,4 +80,27 @@ class VoucherValidator
             }
         }
     }
+
+
+//貸方、借方バランスチェック 引数の配列フォーマットは連想キー'amount'が含まれていたらどんなフォーマットでもOK
+    public function $ChkTotalBalance($ChkTbl)){
+            foreach ($ChkTbl as $no0 => $value0) {
+                
+                    if($value0['side'] === 'credit'){
+                        $CreditTotal += (int)$value0['amount'];
+                    }else{
+                        $DebitTotal  += (int)$value0['amount'];
+                    }
+            }
+            $_SESSION['VcrSearchedData'] = $Dto->VcrSearchedData;//修正用データをセッションに保存
+            if( $CreditTotal !== $DebitTotal ){
+                $Dto->ErrData['VoucherService'] = "貸方合計　¥{$CreditTotal}　借方合計　¥{$DebitTotal}　不一致です。";
+                return(0); //false 貸し借り不一致
+            }else{
+                return(1); //true 貸し借り一致
+            }
+
+    }
+
+
 }

@@ -85,17 +85,18 @@ class VoucherService{
                     isset($value0['JdId']))   {   //修正対象伝票のデータだけを$VoucherDto->VcrSearchedDataに格納
                     $Dto->VcrSearchedData[$LineNo] = $value0;
                     $LineNo++;                          //編集用データ$VoucherDto->VcrSearchedDataの行番号を0から振り直すための変数
-                    if($value0['side'] === 'credit'){
-                        $CreditTotal += (int)$value0['amount'];
-                    }else{
-                        $DebitTotal  += (int)$value0['amount'];
-                    }
+                    //if($value0['side'] === 'credit'){
+                    //    $CreditTotal += (int)$value0['amount'];
+                    //}else{
+                    //    $DebitTotal  += (int)$value0['amount'];
+                    //}
                 }
             }
+            $Success    =   $this->Validataor->ChkTotalBalance($Dto->VcrSearchedData);
             $_SESSION['VcrSearchedData'] = $Dto->VcrSearchedData;//修正用データをセッションに保存
-            if( $CreditTotal !== $DebitTotal ){
-                $Dto->ErrData['VoucherService'] = "貸方合計　¥{$CreditTotal}　借方合計　¥{$DebitTotal}　不一致です。";
-            }
+            //if( $CreditTotal !== $DebitTotal ){
+            //    $Dto->ErrData['VoucherService'] = "貸方合計　¥{$CreditTotal}　借方合計　¥{$DebitTotal}　不一致です。";
+            //}
     }
 
 
@@ -253,7 +254,10 @@ class VoucherService{
         $_SESSION['VcrSearchedData'] = $Dto->VcrSearchedData;//行追加・行削除後のデータをセッションに保存
     }
 
+//修正実行ボタンを押した時、実行
     public function VcrUpdate(VoucherDTO $Dto ,VoucherRepository $Repo): bool {
+
+        // 貸方、借方　バランスチェック
        
         $Success = $this->VcrDelete($Dto, $Repo);
         $Dto->VcrListResult     =   $_SESSION['VcrListResult'] ?? "";
