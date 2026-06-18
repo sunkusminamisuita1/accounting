@@ -66,7 +66,6 @@ class VoucherService{
                     //    }
                     }  
                 }
-                //echo "<br><pre>"; var_dump($VcrListResult[17]); echo "<br>";
                 $Dto->VcrListResult         = empty($VcrListResult) ? [] : $VcrListResult;
                 $_SESSION['VcrListResult']  = empty($VcrListResult) ? [] : $VcrListResult; //変数名上に合わしたほうがベター
             }        
@@ -120,7 +119,6 @@ class VoucherService{
 
 
         $this->VcrTmpDataSave($Dto, $Repo, $Validator, $NewVcrRowAddr);
-        //echo "<br><pre> searcheddata=" ; var_dump($Dto->VcrSearchedData) ; echo "</pre> ";
 
     }
 
@@ -139,15 +137,6 @@ class VoucherService{
         $this->VcrAddRowIns( $Dto, $NewVcrRowAddr, $NewId, $Side);
         $this->VcrTmpDataSave($Dto, $Repo, $Validator, $NewVcrRowAddr);
     }
-
-
-#0 /var/www/html/test6/app/repositories/voucherRepository.php(167): PDOStatement->execute()
-#1 /var/www/html/test6/app/services/VoucherService.php(268): VoucherRepository->insertVoucher()
-#2 /var/www/html/test6/app/controllers/VoucherController.php(113): VoucherService->VcrUpdate()
-#3 /var/www/html/test6/public/index.php(90): VoucherController->list()
-
-
-
 
     public function VcrDetailLineDel(VoucherDTO $Dto, VoucherRepository $Repo, VoucherValidator $Validator): void {
         $Dto->VcrListResult = $_SESSION['VcrListResult'] ?? []; //検索結果をセッションから復元 simplesearch(右側)エリア表示用
@@ -239,7 +228,6 @@ class VoucherService{
         }
         $_SESSION['VcrSearchedData'] = $Dto->VcrSearchedData; // 左側を保存
 
-        //echo "<br><pre> searcheddata=" ; var_dump($Dto->VcrSearchedData) ; echo "</pre> ";
     }
 
     private function VcrRowAddCommon(VoucherDTO $Dto, VoucherRepository $Repo, VoucherValidator $Validator): void {
@@ -272,7 +260,6 @@ class VoucherService{
         $Success = $this->VcrDelete($Dto, $Repo);
         $Dto->VcrListResult     =   $_SESSION['VcrListResult'] ?? "";
         $Dto->VcrSearchedData   =   $_SESSION['VcrSearchedData'] ?? "";
-        //var_dump($Dto->VcrListResult);exit;
 
         //requireCsrf();　　　　　//CSRFトークンの検証はコントローラーで行う
         $Dto->VcrUpdNo  =   $_SESSION['VcrUpdNo'] ?? 0;      //セッションにVcrUpdNoをDtoに保存
@@ -287,7 +274,6 @@ class VoucherService{
             $Dto->DtoDetails[$Key]['side']        =   $Row['side'];
             $Dto->DtoDetails[$Key]['amount']        =   $Row['amount'];
         }
-        //echo "<br><pre>" . var_dump($Dto->DtoDetails) . "</pre>";exit;
         $Repo->insertVoucher($Dto);/////////////1
         
         $this->VcrSimpleSearch($Dto);     //削除後、最新の検索データを読み直す
@@ -297,7 +283,6 @@ class VoucherService{
     }
 
     public function VcrDelete(VoucherDTO $Dto ,VoucherRepository $Repo): bool {
-        //echo "<br><pre>0"; var_dump($_SESSION['VcrSearchedData']); echo "</pre><br>";
         $Dto->VcrSearchedData = $_SESSION['VcrSearchedData'];
 
         //requireCsrf();　　　　　//CSRFトークンの検証はコントローラーで行う

@@ -68,7 +68,6 @@ class VoucherController
 
     // 修正、削除データ検索
     public function list() {
-        //echo "<pre>"; var_dump($_POST); echo "</pre><br><br><br>";
         $this->Dto->List(); //DTOのListメソッドで検索条件をセット
         if ($_SERVER['REQUEST_METHOD'] === 'POST'){
             requireCsrf();                              //CSRFトークンの検証
@@ -109,24 +108,10 @@ class VoucherController
             }
 
             if( isset($_POST['VcrUpdate'])) {           //1仕分け伝票データ　DB更新
-                //echo "mmmmmmmm";exit;
                 $Success = $this->Service->VcrUpdate($this->Dto, $this->Repo, $this->Validator);
-                
-//                if ($Success) {
-                //    file_put_contents('/var/www/html/test6/public/debug.log', "Success2 = {$Success}！\n", FILE_APPEND);
-                //    unset($_SESSION['VcrListResult']); //セッションの検索結果をクリア
-                //    unset($_SESSION['VcrSearchedData']); //セッションの修正用デ
-                //    // 3. ユーザーへの完了通知メッセージだけをセッションに仕込む
-//                    $_SESSION['flash_message'] = "伝票を正常に削除しました。";
-        
-                //    // 4. そのまま一覧画面（または新規作成画面）へ一発リダイレクト！
-                //    header('Location: index.php?route=voucher.list'); //リダイレクトしてPOSTデータの再送信を防止
-                //    exit;
-//                }
             }
         }
         $this->Render('List');
-        //require ROOT_PATH.'/views/voucher/list.php';
 
     }
 
@@ -158,20 +143,10 @@ class VoucherController
             return 1;
         }
         if($RenderType === 'List'){
-            //if($_SESSION['VcrListResult['])
-            //echo "<pre>"; var_dump($_SESSION['VcrSearchedData']??[]);  echo "</pre><br><br><br>";
             $TokenKey  = generateCsrfToken();
             require ROOT_PATH.'/views/voucher/list.php';
             return 1;
         }
     }
 
-    // 削除
-//    public function delete(){
-//        $id = (int)($_GET['id'] ?? 0);
-//        $this->Service->delete($id);
-//        header('Location: index.php?route=voucher.index');
-//        exit;
-//    }
-//削除はlist()の中で行うため、delete()メソッドは不要になりました。
 }

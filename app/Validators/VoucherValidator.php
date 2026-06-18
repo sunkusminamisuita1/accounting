@@ -55,7 +55,6 @@ class VoucherValidator
         $End    = $dto->VcrListDatePeriod['検索終了日付'] ?? '';
         $Date   = $dto->Date??'';   //###########################
         $_SESSION['ListInputData'] = ['検索日付' => $Date , '検索開始日付'=> $Start , '検索終了日付' => $End ] ; //############################
-        //var_dump($_SESSION['ListInputData']);
 
     //    if (empty($dto->SearchType)) {
     //         $dto->ErrData[$OwnUrl] = '検索条件を選択してください';
@@ -83,7 +82,6 @@ class VoucherValidator
 //貸方、借方バランスチェック 引数の配列フォーマットは連想キー'amount','side'が含まれていたらどんなフォーマットでもOK
     public function ChkTotalBalance($Dto, $ChkTbl){
         $CreditTotal = 0; $DebitTotal = 0;
-echo "xxxxxxxxxxxxxxxxxxxxxxxxxxx";  var_dump($ChkTbl); echo "xxxxxxxxxxxxxxxxxxxxxxxxxx";
         foreach ($ChkTbl as $no0 => $value0) {
                 
                 if($value0['side'] === 'credit'){
@@ -92,7 +90,6 @@ echo "xxxxxxxxxxxxxxxxxxxxxxxxxxx";  var_dump($ChkTbl); echo "xxxxxxxxxxxxxxxxxx
                     $DebitTotal  += (int)$value0['amount'];
                 }
         }
-        echo "<br>credit={$CreditTotal};;;;debit{$DebitTotal}<br>";
         if( $CreditTotal !== $DebitTotal ){
             $Dto->ErrData['VoucherService'] = "貸方合計　¥{$CreditTotal}　借方合計　¥{$DebitTotal}　不一致です。";
             return(0); //false 貸し借り不一致

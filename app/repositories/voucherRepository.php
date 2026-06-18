@@ -14,11 +14,7 @@ class VoucherRepository{
     private string $RenderType;
 
     public function __construct()  {
-        //$this->Dto = $Dto;
-        //$this->Service = $Service;
-        //$this->Validator = $Validator;
-        //$this->ErrMsgPopUp = new ErrMsgPopUp();
-        //$this->Dto->Accounts = $Dto->Accounts;
+
     }
 
     public function findAllByUser(int $userId): array {
@@ -82,13 +78,9 @@ class VoucherRepository{
             return $stmtDetails->rowCount();
         }
     }
-        //VcrSearchedData['voucher_id']
 
     public function JvJdDelete($Dto) {
-            echo "delete来た";
-            echo "<br><pre>1"; var_dump($Dto->VcrSearchedData);echo "</pr><br>";
             $VoucherId  =   $Dto->VcrSearchedData[0]['voucher_id'];
-            //echo "voucher_id = {$VoucherId}";exit;
         try{
             $pdo = getPDO();
             $pdo->beginTransaction();
@@ -243,15 +235,3 @@ class VoucherRepository{
     }
 }
 
-
-
-
-            //foreach ($Dto->DtoDetails as $RecNo => $Row){
-            //    if($Row['side'] === 'debit') {
-                    
-            //        echo "voucherId=  {$voucherId} accountId= {$Row['account_id']}  side = {$Row['side']}  amount = {$Row['amount']}";
-            //    } else {
-            //        echo "voucherId=  {$voucherId} accountId= {$Row['account_id']}  side = {$Row['side']}  amount = {$Row['amount']}";
-            //    }
-            //}
-            //exit;
