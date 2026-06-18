@@ -261,7 +261,11 @@ class VoucherService{
 
         $Success    =   $this->Validator->ChkTotalBalance( $Dto, $_SESSION['VcrSearchedData'] ?? "");
         if( ! $Success){
-            return;
+
+            $Dto->VcrListResult     =   $_SESSION['VcrListResult'] ?? "";
+            $Dto->VcrSearchedData   =   $_SESSION['VcrSearchedData'] ?? "";
+
+            return false;
 
         }
 
@@ -309,7 +313,7 @@ class VoucherService{
     public function VcrRowAdd($VcrDTO){
         $details = $_POST['details'] ?? [];
         $AddKey = (int)$_POST['add_row'] + 1; //追加する行の位置
-        $AddRow = [['account_id' => '', 'amount' => '', 'side' => 'debit']]; //初期値は借方
+        $AddRow = [['account_id' => '', 'jd_summary' => "", 'amount' => '', 'side' => 'debit']]; //初期値は借方
         array_splice($details, $AddKey, 0, $AddRow);
         $VcrDTO->DtoDetails = array_values($details); // インデックスを並べ直す     saveVoucher(array $data)
     }

@@ -128,7 +128,6 @@ class VoucherRepository{
         $pdo = getPDO();
         $pdo->beginTransaction();
 
-        $voucherId = (int)$pdo->lastInsertId();
         if( isset($_POST['VcrUpdate'])) {
             $voucherId  =   (int)$Dto->VcrSearchedData[0]['id'];
         }
@@ -137,38 +136,29 @@ class VoucherRepository{
             
             $stmt = $pdo->prepare("
                 INSERT INTO journal_vouchers
-                    (id, voucher_date, summary, user_id, created_at)
-                    VALUES (?,?,?,?,?)
+                    (voucher_date, summary, user_id, created_at)
+                    VALUES (?,?,?,?)
             ");
             $stmt->execute([
-                $voucherId,
                 $Dto->Date,
                 $Dto->Summary  ,
                 $_SESSION['user']['id'],
                 date('Y-m-d H:i:s')
             ]);
-            
+
+            $voucherId = (int)$pdo->lastInsertId();
+           
             $stmtDetail = $pdo->prepare("
                 INSERT INTO journal_details
-                    (voucher_id, account_id, side, amount)
-                    VALUES (?,?,?,?)
+                    (voucher_id, jd_summary, account_id, side, amount)
+                    VALUES (?,?,?,?,?)
             ");
-
-            //foreach ($Dto->DtoDetails as $RecNo => $Row){
-            //    if($Row['side'] === 'debit') {
-                    
-            //        echo "voucherId=  {$voucherId} accountId= {$Row['account_id']}  side = {$Row['side']}  amount = {$Row['amount']}";
-            //    } else {
-            //        echo "voucherId=  {$voucherId} accountId= {$Row['account_id']}  side = {$Row['side']}  amount = {$Row['amount']}";
-            //    }
-            //}
-            //exit;
-
 
             foreach ($Dto->DtoDetails as $RecNo => $Row){
                 if($Row['side'] === 'debit') {
                     $stmtDetail->execute([
                         $voucherId,
+                        $Row['jd_summary'] ?? "" ,
                         $Row['account_id'],
                         'debit',
                         $Row['amount']
@@ -176,6 +166,7 @@ class VoucherRepository{
                 } else {
                      $stmtDetail->execute([
                         $voucherId,
+                        $Row['jd_summary'],
                         $Row['account_id'],
                         'credit',
                         $Row['amount']
@@ -251,3 +242,16 @@ class VoucherRepository{
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }
+
+
+
+
+            //foreach ($Dto->DtoDetails as $RecNo => $Row){
+            //    if($Row['side'] === 'debit') {
+                    
+            //        echo "voucherId=  {$voucherId} accountId= {$Row['account_id']}  side = {$Row['side']}  amount = {$Row['amount']}";
+            //    } else {
+            //        echo "voucherId=  {$voucherId} accountId= {$Row['account_id']}  side = {$Row['side']}  amount = {$Row['amount']}";
+            //    }
+            //}
+            //exit;

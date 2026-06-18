@@ -40,11 +40,9 @@ class VoucherValidator
                 $credit += $row['amount'];
             }
         }
+        $this->ChkTotalBalance($dto,$dto->DtoDetails ); //貸し借り不一致チェック
 
-        if ($debit !== $credit) {
-            $dto->ErrData[$OwnUrl] = '借方と貸方が一致しません';
-            return;
-        }
+
     }
 
     public function List(VoucherDTO $dto): void
@@ -82,7 +80,7 @@ class VoucherValidator
     }
 
 
-//貸方、借方バランスチェック 引数の配列フォーマットは連想キー'amount'が含まれていたらどんなフォーマットでもOK
+//貸方、借方バランスチェック 引数の配列フォーマットは連想キー'amount','side'が含まれていたらどんなフォーマットでもOK
     public function ChkTotalBalance($Dto, $ChkTbl){
         $CreditTotal = 0; $DebitTotal = 0;
 echo "xxxxxxxxxxxxxxxxxxxxxxxxxxx";  var_dump($ChkTbl); echo "xxxxxxxxxxxxxxxxxxxxxxxxxx";

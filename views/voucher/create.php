@@ -22,6 +22,7 @@ $details = $this->Dto->DtoDetails;
         <tr>
             <th>科目</th>
             <th>金額</th>
+            <th>明細適用</th>
             <th>区分</th>
             <th>操作</th>
         </tr>
@@ -40,6 +41,10 @@ $details = $this->Dto->DtoDetails;
 
             <td>
                 <input type="number" name="details[<?= $i ?>][amount]" value="<?= h($details[$i]['amount'] ?? '') ?>" required>
+            </td>
+
+            <td>
+                <input type="text" name="details[<?= $i ?>][jd_summary]" value="<?= h($details[$i]['jd_summary'] ?? '') ?>" required>
             </td>
 
             <td>
