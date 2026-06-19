@@ -14,6 +14,8 @@ class VoucherController
     private VoucherRepository $Repo;
     private ErrMsgPopUp $ErrMsgPopUp;
     private string $RenderType;
+    private $TokenKey;
+
     public function __construct()  {
         $this->Dto = new VoucherDTO([]);
         $this->Service = new VoucherService();
@@ -30,6 +32,9 @@ class VoucherController
         if ($_SERVER['REQUEST_METHOD'] === 'POST'){
             requireCsrf();
             $this->Service->VcrCreate($this->Dto);
+            $this->TokenKey = $_POST['csrfTokenKey'];
+        }else{
+            $this->TokenKey  = generateCsrfToken();          
         }
         $this->Render('Create');
     }
@@ -106,10 +111,13 @@ class VoucherController
                     //exit;
                 }
             }
-
             if( isset($_POST['VcrUpdate'])) {           //1仕分け伝票データ　DB更新
                 $Success = $this->Service->VcrUpdate($this->Dto, $this->Repo, $this->Validator);
             }
+
+            $this->TokenKey = $_POST['csrfTokenKey'];
+        }else{
+            $this->TokenKey  = generateCsrfToken();
         }
         $this->Render('List');
 
@@ -137,13 +145,13 @@ class VoucherController
     private function Render($RenderType): int{
         $VcrListResult = $Dto->VcrListResult ?? [];
         $Accounts = $this->Dto->Accounts ?? [];
+        $TokenKey = $this->TokenKey;
         if($RenderType === 'Create'){
-            $TokenKey  = generateCsrfToken();
+
             require ROOT_PATH . '/views/voucher/create.php';
             return 1;
         }
         if($RenderType === 'List'){
-            $TokenKey  = generateCsrfToken();
             require ROOT_PATH.'/views/voucher/list.php';
             return 1;
         }

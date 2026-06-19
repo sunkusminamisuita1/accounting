@@ -26,8 +26,10 @@ class HomeController{
             $to = $HmSvcInstance->to;
             $zenki_from = $HmSvcInstance->zenki_from;
             $zenki_to = $HmSvcInstance->zenki_to;
+            $TokenKey = $_POST['csrfTokenKey'];
+        }else{
+            $TokenKey  = generateCsrfToken();
         }
-        $TokenKey  = generateCsrfToken();
     //    $TokenTime = $_SESSION['csrfTokens'][$TokenKey] ?? '';
         require_once ROOT_PATH . '/views/home/HomeView.php';
     }

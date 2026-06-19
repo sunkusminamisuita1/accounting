@@ -297,7 +297,7 @@
                                     <?= h($CreditName) ?>
                                 </td>
                                 <td  style="font-weight: bold; text-align: center;">
-                                    <?= h($Row['summary']??'') ?>
+                                    <?= h($Row['jd_summary']??'') ?>
                                 </td>
                                 <td  style="font-weight: bold; text-align: center;">
                                     <?= h($Row['total_debit']??'') ?>

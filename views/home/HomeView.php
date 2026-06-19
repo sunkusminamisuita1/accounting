@@ -16,6 +16,17 @@ require_once ROOT_PATH . '/app/DTO/Constants.php';
                 </style>
             </head>
                 <body>
+
+
+
+                    <?php if (!empty($_SESSION['flash_message'])): ?>
+                        <script>
+                            alert(<?= json_encode($_SESSION['flash_message']) ?>);
+                        </script>
+                    <?php unset($_SESSION['flash_message']); endif; ?>
+
+
+
                     <h1>ホーム画面</h1>
                         <p>ようこそ <?= htmlspecialchars($_SESSION['user']['username'] ?? 'ゲスト') ?></p>
 

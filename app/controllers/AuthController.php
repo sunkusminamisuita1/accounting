@@ -33,8 +33,10 @@ class AuthController{
             catch (Exception $e) {
                 $message = $e->getMessage();
             }
+            $TokenKey = $_POST['csrfTokenKey'];
+        }else{
+            $TokenKey = generateCsrfToken();
         }
-        $TokenKey = generateCsrfToken();
         require ROOT_PATH.'/views/auth/login.php';
     }
     public function register()

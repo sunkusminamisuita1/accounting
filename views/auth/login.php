@@ -6,6 +6,13 @@
 </head>
 <body>
 <h1>ログイン</h1>
+
+<?php if (!empty($_SESSION['flash_message'])): ?>
+    <script>
+        alert(<?= json_encode($_SESSION['flash_message']) ?>);
+    </script>
+<?php unset($_SESSION['flash_message']); endif; ?>
+
 <form method="post" action="index.php?route=login">
 <!--    <input type="hidden" name="csrfTokenTime" value="<?php //echo h($TokenTime); ?>"> -->
     <input type="hidden" name="csrfTokenKey" value="<?= h($TokenKey) ?>">

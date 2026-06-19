@@ -12,7 +12,7 @@ function generateCsrfToken(): string
 {
 	    // 古いトークン削除（2時間以上）
     foreach ($_SESSION['csrfTokens'] ?? [] as $t => $time) {
-        if (time() - $time > 7200) {
+        if (time() - $time > 5) {
             unset($_SESSION['csrfTokens'][$t]);
         }
     }
@@ -32,8 +32,9 @@ function verifyCsrfToken(string $FmTknKey): void
 		exit('Invalid CSRF token-X');
 	}
 	$created = ($_SESSION['csrfTokens'][$FmTknKey])??"";
+	echo "<br><pre>" . var_dump($_SESSION['csrfTokens']) . "</pre><br>";
 	// 600秒 = 10分
-	if (time() - $created > 600) {
+	if (time() - $created > 5) {
 		// ワンタイムなので削除
 		unset($_SESSION['csrfTokens'][$FmTknKey]);
 		http_response_code(403);
@@ -41,7 +42,7 @@ function verifyCsrfToken(string $FmTknKey): void
     	$caller = $trace[1];
 		$_SESSION['flash_message'] = "セッションの有効期限が切れたか、不正な操作が行われました。再度ログインしてください。";
 		header('Location: index.php?route=login');
-		exit;
+		exit ();
 //		echo "	<script>
 //    			    alert('セッションの有効期限が切れたか、不正な操作が行われました。\\n再度ログインしてください。');
 //        			window.location.href = 'index.php?route=login';

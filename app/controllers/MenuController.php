@@ -22,8 +22,10 @@ class MenuController{
 			} else {
 				$message = "メールアドレスまたはパスワードが間違っています。";
 			}
+			$TokenKey = $_POST['csrfTokenKey'];
+		}else{
+			$TokenKey  = generateCsrfToken();
 		}
-		$TokenKey  = generateCsrfToken();
 		require ROOT_PATH.'/views/auth/login.php';
 	}
 }
