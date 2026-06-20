@@ -5,6 +5,7 @@ function getLoginUserId(): int
     	// 1. エラーメッセージをセッションに保存（移動先で表示するため）
     	$_SESSION['flash_message'] = "再度ログインしてください。";
 	}
+	//echo $_SESSION['user']['id'];
 	return (int)$_SESSION['user']['id'];
 }
 
@@ -12,7 +13,7 @@ function generateCsrfToken(): string
 {
 	    // 古いトークン削除（2時間以上）
     foreach ($_SESSION['csrfTokens'] ?? [] as $t => $time) {
-        if (time() - $time > 5) {
+        if (time() - $time > 3600) {
             unset($_SESSION['csrfTokens'][$t]);
         }
     }
@@ -34,7 +35,7 @@ function verifyCsrfToken(string $FmTknKey): void
 	$created = ($_SESSION['csrfTokens'][$FmTknKey])??"";
 	echo "<br><pre>" . var_dump($_SESSION['csrfTokens']) . "</pre><br>";
 	// 600秒 = 10分
-	if (time() - $created > 5) {
+	if (time() - $created > 3600) {
 		// ワンタイムなので削除
 		unset($_SESSION['csrfTokens'][$FmTknKey]);
 		http_response_code(403);

@@ -125,6 +125,10 @@ javascript Alert確認メッセージ
    alter table journal_details add line_no int after voucher_id;
    ALTER TABLE journal_details ADD jd_summary VARCHAR(255) AFTER voucher_id;
 
+   テーブル行　全件にカラムに同じデータを設定する
+      update accounts set user_id='sunkusminamisuita1@gmail.com';
+
+
 
 
 ToDo 2026/06/19
@@ -173,4 +177,6 @@ ToDo 2026/06/19
 
 　減価償却　償却台帳 
 
+useridの取得
+   $userId = getLoginUserId();
 

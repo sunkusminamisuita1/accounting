@@ -59,11 +59,12 @@ $routes =   [
                         'method' => 'create',
                         'auth' => true
                 ],
-//               'voucher.add' => [
-//                       'controller' => VoucherController::class,
-//                       'method' => 'add',
-//                       'auth' => true
-//                ],
+                //勘定科目　追加
+                'accounts.edit' => [
+                       'controller' => AccountsController::class,
+                       'method' => 'add',
+                       'auth' => true
+                ],
                 'voucher.store' => [
                         'controller' => VoucherController::class,
                         'method' => 'store',
