@@ -15,25 +15,17 @@
 <td style="width: 50%; vertical-align: top;">
     <h1>勘定科目　追加　修正</h1>
 
-    
-
-
-
-
-<?php if (!empty($_SESSION['flash_message'])): ?>
+    <?php if (!empty($_SESSION['flash_message'])): ?>
     <script>
       alert(<?= json_encode($_SESSION['flash_message']) ?>);
     </script>
 <?php unset($_SESSION['flash_message']); endif; ?>
-
-
-
-
-
     <?php
         require_once ROOT_PATH . '/views/lib/ProcSlct.php';
         $details = $this->Dto->DtoDetails;
     ?>
+
+    <!-- ##############     エラーメッセージ表示    ################ -->
     <?php if (!empty($this->Dto->ErrData)): ?>
         <ul style="color: red;">
             <?php foreach ($this->Dto->ErrData as $mod => $err): ?>
@@ -42,8 +34,10 @@
         </ul>
     <?php endif; ?>
 
-    <!-- ##############     エラーメッセージ表示    ################ -->
+    <!-- #############     エラーメッセージ POPUP    ############### -->
+
     <?=  $this->ErrMsgPopUp->Show($this->Dto);  ?>
+    
     <br><hr>
     <h3>単独検索(伝票No，取引日付，取引金額，摘要欄あいまい検索)は、<br>
     １つ以上の検索条件を入力して検索ボタンを押してください。

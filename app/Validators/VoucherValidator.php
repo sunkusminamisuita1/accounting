@@ -81,6 +81,7 @@ class VoucherValidator
 
 //貸方、借方バランスチェック 引数の配列フォーマットは連想キー'amount','side'が含まれていたらどんなフォーマットでもOK
     public function ChkTotalBalance($Dto, $ChkTbl){
+        //var_dump($ChkTbl);
         $CreditTotal = 0; $DebitTotal = 0;
         foreach ($ChkTbl as $no0 => $value0) {
                 

@@ -244,10 +244,13 @@ class VoucherService{
 
 //修正実行ボタンを押した時、実行
     public function VcrUpdate(VoucherDTO $Dto ,VoucherRepository $Repo): bool {
-
+        $this->VcrSearchedDataRemake($Dto,$Repo,$this->Validator);
         // 貸方、借方　バランスチェック
+        //var_dump($Dto->VcrSearchedData);
 
-        $Success    =   $this->Validator->ChkTotalBalance( $Dto, $_SESSION['VcrSearchedData'] ?? "");
+//        $Success    =   $this->Validator->ChkTotalBalance( $Dto, $_SESSION['VcrSearchedData'] ?? "");
+        $Success    =   $this->Validator->ChkTotalBalance( $Dto, $Dto->VcrSearchedData ?? "");
+
         if( ! $Success){
 
             $Dto->VcrListResult     =   $_SESSION['VcrListResult'] ?? "";
@@ -273,6 +276,7 @@ class VoucherService{
             $Dto->DtoDetails[$Key]['account_id']  =   $Row['account_id'];
             $Dto->DtoDetails[$Key]['side']        =   $Row['side'];
             $Dto->DtoDetails[$Key]['amount']        =   $Row['amount'];
+            $Dto->DtoDetails[$Key]['jd_summary']    =   $Row['jd_summary'];
         }
         $Repo->insertVoucher($Dto);/////////////1
         

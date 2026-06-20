@@ -5,7 +5,7 @@ require_once ROOT_PATH.'/app/repositories/UserRepository.php';
 class AccountsService
 {
     private $repo;
-    private $dto
+    private $dto;
 
     public function __construct()
     {
