@@ -32,7 +32,8 @@ class VoucherController
         if ($_SERVER['REQUEST_METHOD'] === 'POST'){
             requireCsrf();
             $this->Service->VcrCreate($this->Dto);
-            $this->TokenKey = $_POST['csrfTokenKey'];
+            // POST を処理した後は再描画用に新しいトークンを発行する
+            $this->TokenKey = generateCsrfToken();
         }else{
             $this->TokenKey  = generateCsrfToken();          
         }
@@ -115,7 +116,8 @@ class VoucherController
                 $Success = $this->Service->VcrUpdate($this->Dto, $this->Repo, $this->Validator);
             }
 
-            $this->TokenKey = $_POST['csrfTokenKey'];
+            // POST を処理した後は再描画用に新しいトークンを発行する
+            $this->TokenKey = generateCsrfToken();
         }else{
             $this->TokenKey  = generateCsrfToken();
         }
