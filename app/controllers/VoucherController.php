@@ -25,7 +25,7 @@ class VoucherController
         $this->Dto->Accounts = $this->Service->getAccounts();
     }
     public function create(): void    {
-        file_put_contents('/var/www/html/test6/public/debug.log', "メソッド通ったよ！\n", FILE_APPEND);
+        //file_put_contents('/var/www/html/test6/public/debug.log', "メソッド通ったよ！\n", FILE_APPEND);
         $this->Dto->VcrCreData();                           //DTOにPOSTされた明細行を渡す
         $details = $this->Dto->DtoDetails;                  //DTOから明細行を取得
         $Accounts = $this->Dto->Accounts;
@@ -104,7 +104,7 @@ class VoucherController
             if( isset($_POST['VcrDelete'])) {           //1仕分け伝票削除
                 $Success = $this->Service->VcrDelete($this->Dto, $this->Repo, $this->Validator);
                 if ($Success) {
-                    file_put_contents('/var/www/html/test6/public/debug.log', "Success2 = {$Success}！\n", FILE_APPEND);
+                    //file_put_contents('/var/www/html/test6/public/debug.log', "Success2 = {$Success}！\n", FILE_APPEND);
                     // 3. ユーザーへの完了通知メッセージだけをセッションに仕込む
                     $_SESSION['flash_message'] = "伝票を正常に削除しました。";        
                     // 4. そのまま一覧画面（または新規作成画面）へ一発リダイレクト！

@@ -3,7 +3,7 @@
 
 class AccountsDTO
 {
-    public string Accounts;
+    public string $Accounts;
     public string $password;
     private $VoucherRepository;
 
