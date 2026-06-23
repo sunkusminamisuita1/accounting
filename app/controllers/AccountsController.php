@@ -1,37 +1,34 @@
 <?php
+
+//                $_SESSION['user'] = [
+//                    'id' => (int)$user['id'],
+//                    'username' => $user['username'],
+//                    'email' => $user['email'],
+//                    'fiscalMonth' => $user['fiscal_month'],
+//                    'fiscalDay' => $user['fiscal_day']
+//                ];
+require_once ROOT_PATH . '/app/services/AccountsService.php';
+require_once ROOT_PATH . '/app/DTO/AccountsDTO.php';
 require_once ROOT_PATH . '/lib/helpers.php';
-
-//class AccountsController {
-//    public function add()
-//    {
-//        // 簡易なプレースホルダ実装。後で本実装へ置き換えてください。
-//        $message = '';
-//        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-//            requireCsrf();
-//            // TODO: アカウント追加処理をここに実装
-//            $message = 'アカウント追加（ダミー）：処理は未実装です。';
-//        }
-//        $TokenKey = generateCsrfToken();
-        // 最小ビューを表示
-//        require ROOT_PATH . '/views/accounts/add.php';
-//    }
-//}
-
-?>
-<?php
-require_once ROOT_PATH.'/app/services/AccountsService.php';
-require_once ROOT_PATH.'/app/DTO/LoginDTO.php';
+require_once ROOT_PATH . '/app/Validators/AccountsValidator.php';
+require_once ROOT_PATH . '/app/repositories/AccountsRepository.php';
 
 class AccountsController {
-    private $Service;
+    private AccountsService     $Service;
+    private AccountsDTO         $Dto;
+    private AccountsValidator   $Validator;
+    private AccountsRepository  $Repo;
     public function __construct()
     {
-        $this->Service = new AccountsService();
-        $this->Dto = new AccountsDto();
+        $this->Service      = new AccountsService();
+        $this->Dto          = new AccountsDto();
+        $this->Validator    = new AccountsValidator();
+        $this->Repo         = new AccountsRepository();
+
     }
     public function add()
     {
-        $this->Service->GetAccounts;
+        $this->Service->GetAccounts();
         $message = '';
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             requireCsrf();
@@ -55,10 +52,8 @@ class AccountsController {
             catch (Exception $e) {
                 $message = $e->getMessage();
             }
-            $TokenKey = $_POST['csrfTokenKey'];
-        }else{
-            $TokenKey = generateCsrfToken();
         }
+            $TokenKey = generateCsrfToken();
         require ROOT_PATH.'/views/Accounts/AccountsView.php';
     }
 }
@@ -66,11 +61,5 @@ class AccountsController {
 
 
 
-//                $_SESSION['user'] = [
-//                    'id' => (int)$user['id'],
-//                    'username' => $user['username'],
-//                    'email' => $user['email'],
-//                    'fiscalMonth' => $user['fiscal_month'],
-//                    'fiscalDay' => $user['fiscal_day']
-//                ];
+
 ?>
