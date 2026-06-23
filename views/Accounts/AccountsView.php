@@ -1,5 +1,5 @@
 <?php
-    $Accounts   =   $Dto->Accounts;
+    $Accounts   =   $this->Dto->Accounts;
 ?>
 <style>
     .ProcSlct, .ProcSlct td { border: none !important; }

@@ -7,28 +7,23 @@
 //                    'fiscalMonth' => $user['fiscal_month'],
 //                    'fiscalDay' => $user['fiscal_day']
 //                ];
-require_once ROOT_PATH . '/app/services/AccountsService.php';
 require_once ROOT_PATH . '/app/DTO/AccountsDTO.php';
 require_once ROOT_PATH . '/lib/helpers.php';
+require_once ROOT_PATH . '/app/services/AccountsService.php';
 require_once ROOT_PATH . '/app/Validators/AccountsValidator.php';
 require_once ROOT_PATH . '/app/repositories/AccountsRepository.php';
 
 class AccountsController {
-    private AccountsService     $Service;
-    private AccountsDTO         $Dto;
-    private AccountsValidator   $Validator;
-    private AccountsRepository  $Repo;
+    Public AccountsDTO         $Dto;
+
     public function __construct()
     {
-        $this->Service      = new AccountsService();
         $this->Dto          = new AccountsDto();
-        $this->Validator    = new AccountsValidator();
-        $this->Repo         = new AccountsRepository();
-
+        $this->Dto->Dto     = $this->Dto;
     }
     public function add()
     {
-        $this->Service->GetAccounts();
+        $this->Dto->Service->GetAccounts();
         $message = '';
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             requireCsrf();

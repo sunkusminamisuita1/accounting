@@ -1,8 +1,8 @@
 <?php
-// app/services/AuthService.php
-//require_once ROOT_PATH.'/app/repositories/UserRepository.php';
-//require_once ROOT_PATH.'/app/repositories/voucherRepository.php';
-//require_once ROOT_PATH.'/app/DTO/AccountsDTO.php';
+app/services/AuthService.php
+require_once ROOT_PATH.'/app/repositories/UserRepository.php';
+require_once ROOT_PATH.'/app/repositories/voucherRepository.php';
+require_once ROOT_PATH.'/app/DTO/AccountsDTO.php';
 
 class AccountsRepository
 {

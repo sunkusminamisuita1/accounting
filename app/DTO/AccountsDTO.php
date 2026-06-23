@@ -1,5 +1,8 @@
 <?php
 // app/DTO/AccountsDTO.php
+require_once ROOT_PATH . '/app/services/AccountsService.php';
+require_once ROOT_PATH . '/app/Validators/AccountsValidator.php';
+require_once ROOT_PATH . '/app/repositories/AccountsRepository.php';
 
 class AccountsDTO{
 //                $_SESSION['user'] = [
@@ -12,19 +15,27 @@ class AccountsDTO{
     public int $id;
     public string $username;
     public string $email;
-    public string $Accounts;
+    public array $Accounts;
     public string $password;
-    public AccountsValidator $Validator;
-    public VoucherRepository $VoucherRepository;
+    public AccountsDTO          $Dto;
+    public AccountsService      $Service;
+    public AccountsValidator    $Validator;
+    public AccountsRepository   $Repository;
+    public VoucherRepository    $VoucherRepository;
+
 
     public function __construct()    {
-        $this->VoucherRepository = new VoucherRepository();
-        $this->Validator = new AccountsValidator();
-        $this->id          =   $_SESSION['user']['id'];  //UserId
-        $this->username    =   $_SESSION['user']['username'];  //UserId
-        $this->email       =   $_SESSION['user']['email'];  //UserId
+        $this->id          =   $_SESSION['user']['id']??'0';  //UserId
+        $this->username    =   $_SESSION['user']['username']??'';  //UserId
+        $this->email       =   $_SESSION['user']['email']??'';  //UserId
     }
 
+    public function InstnsSet($Dto)    {
+        $this->Dto                  = $Dto;
+        $this->Service              = new AccountsService($Dto);        
+        $this->Validator            = new AccountsValidator($Dto);
+        $this->Repo                 = new AccountsRepository($Dto);
+        $this->VoucherRepository    = new VoucherRepository($Dto);
+    }
 }
-
 ?>
