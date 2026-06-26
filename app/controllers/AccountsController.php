@@ -7,48 +7,59 @@
 //                    'fiscalMonth' => $user['fiscal_month'],
 //                    'fiscalDay' => $user['fiscal_day']
 //                ];
-require_once ROOT_PATH . '/app/DTO/AccountsDTO.php';
-require_once ROOT_PATH . '/lib/helpers.php';
 require_once ROOT_PATH . '/app/services/AccountsService.php';
-require_once ROOT_PATH . '/app/Validators/AccountsValidator.php';
-require_once ROOT_PATH . '/app/repositories/AccountsRepository.php';
+require_once ROOT_PATH . '/app/DTO/AccountsDto.php';
+require_once ROOT_PATH . '/lib/helpers.php';
+
+
 
 class AccountsController {
-    Public AccountsDTO         $Dto;
+    Public        $CtrSvc;
+    public        $CtrDto;
+    public        $CtrErrMsgPopUp;
 
     public function __construct()
     {
-        $this->Dto          = new AccountsDto();
-        $this->Dto->Dto     = $this->Dto;
+        $this->CtrDto   =   new AccountsDto();
+        $this->CtrSvc   =   new AccountsService($this->CtrDto);
+        $this->CtrErrMsgPopUp = new ErrMsgPopUp($this->CtrDto);
     }
-    public function add()
+
+    public function index()
     {
-        $this->Dto->Service->GetAccounts();
+        $this->CtrSvc->GetAccounts($this->CtrDto);
         $message = '';
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             requireCsrf();
-            try {
-                $dto = new LoginDTO(
-                                    trim($_POST['email']),
-                                    $_POST['password']
-                                    );
-                $user = $this->service->login($dto);
-                session_regenerate_id(true);
-                $_SESSION['user'] = [
-                    'id' => (int)$user['id'],
-                    'username' => $user['username'],
-                    'email' => $user['email'],
-                    'fiscalMonth' => $user['fiscal_month'],
-                    'fiscalDay' => $user['fiscal_day']
-                ];
-                header('Location: index.php?route=home');
-                exit;
-            } 
-            catch (Exception $e) {
-                $message = $e->getMessage();
+            if($_POST['delete']){
+                $this->CtrSvc->AccountsDlt($this->CtrDto);
             }
+        //    try {
+        //        $CtrDto = new LoginDTO(
+        //                            trim($_POST['email']),
+        //                            $_POST['password']
+        //                            );
+        //        $user = $this->CtrSvc->login($dto);
+        //        session_regenerate_id(true);
+        //        $_SESSION['user'] = [
+        //            'id' => (int)$user['id'],
+        //            'username' => $user['username'],
+        //            'email' => $user['email'],
+        //            'fiscalMonth' => $user['fiscal_month'],
+        //            'fiscalDay' => $user['fiscal_day']
+        //        ];
+        //        header('Location: index.php?route=home');
+        //        exit;
+        //    } 
+        //    catch (Exception $e) {
+        //        $message = $e->getMessage();
+        //    }
+        //    if($_POST['delete']){
+        //        $this->CtrSvc->AccountsDlt;
+        //    }
         }
             $TokenKey = generateCsrfToken();
+            $Accounts   =   $this->CtrDto->Accounts;
         require ROOT_PATH.'/views/Accounts/AccountsView.php';
     }
 }

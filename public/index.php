@@ -62,7 +62,7 @@ $routes =   [
                 //勘定科目　追加
                 'accounts.edit' => [
                        'controller' => AccountsController::class,
-                       'method' => 'add',
+                       'method' => 'index',
                        'auth' => true
                 ],
                 'voucher.store' => [

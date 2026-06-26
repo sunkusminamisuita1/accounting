@@ -106,12 +106,16 @@ class VoucherRepository{
     }
 
     public function getAccounts()  {
-        $pdo = getPDO();
-        $stmt = $pdo->query("
-            SELECT id, name, type
-            FROM accounts
-            ORDER BY id
-        ");
+        try{
+            $pdo = getPDO();
+            $stmt = $pdo->query("
+                SELECT id, name, type
+                FROM accounts
+                ORDER BY id
+            ");
+        } catch (Exception $e){
+            throw $e;
+        }
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     
