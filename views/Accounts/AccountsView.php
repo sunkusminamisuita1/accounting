@@ -53,7 +53,7 @@
     <form method="POST" action="index.php?route=accounts.edit">
         <div style="text-align: center;" >
             <input type="hidden" name="csrfTokenKey" value="<?= h($TokenKey) ?>">
-            <button name="AcctPfm" type="submit" value=<?= h('修正実行') ?> >修正実行</button>
+            <button name="AcctPfm" type="submit" value="<?= h('修正実行') ?>" >修正実行</button>
         </div>
     </form>
 
@@ -82,10 +82,10 @@
                                 <th>勘定科目</th>
                                 <th>貸借種別</th>
                                 <th>
-                                    <button name="AcctPfm" type="submit" value=<?= h('追加') ?> >行追加</button>
+                                    <button name="AcctPfm" type="submit" value="<?= h('追加') ?>" >行追加</button>
                                 </th>
                                 <th>
-                                    <button name="AcctPfm" type="submit" value=<?= h('削除') ?> >削除実行</button>
+                                    <button name="AcctPfm" type="submit" value="<?= h('削除') ?>" >削除実行</button>
                                 </th>
                             </tr>
                             <?php foreach ($Accounts as $Key => $Row): ?>
