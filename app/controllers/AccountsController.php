@@ -31,15 +31,20 @@ class AccountsController {
         $message = '';
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             requireCsrf();
-            var_dump( $_POST['AcctPfm']);
             if($_POST['AcctPfm'] === "追加"){
+                echo "【AccountsAdd実行開始】";
                 $this->CtrSvc->AccountsAdd($this->CtrDto);
+                echo "【AccountsAdd実行終了】";
             }
             if($_POST['AcctPfm'] === "削除"){
+                echo "【AccountsDlt実行開始】";
                 $this->CtrSvc->AccountsDlt($this->CtrDto);
+                echo "【AccountsDlt実行終了】";
             }
             if($_POST['AcctPfm'] === "修正実行"){
+                echo "【AccountsAlt実行開始】";
                 $this->CtrSvc->AccountsAlt($this->CtrDto);
+                echo "【AccountsAlt実行終了】";
             }
         //    try {
         //        $CtrDto = new LoginDTO(
