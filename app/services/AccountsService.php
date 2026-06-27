@@ -16,15 +16,12 @@ class AccountsService{
     }
 
     public function GetAccounts(){
+
         $this->CtrDto->Accounts  =   $this->SvcRepo->getAccounts();
         //修正用科目テーブル作成
         $this->CtrDto->AcctAltTbl = $this->CtrDto->Accounts;
-        foreach($this->CtrDto->Accounts as $key=>$Row){
-            //echo "key={$key} = {$Row['id']}{$Row['name']} {$Row['type']}<br>";
+
         }
-        //echo "xxxxx={$this->CtrDto->Accounts[1]['name']} <br>";
-        //exit;
-    }
 
     public function AccountsDlt(){
 
@@ -55,17 +52,17 @@ class AccountsService{
     }
 
     public function AccountsAdd(){
+
         if($_SESSION['Accounts'] ?? ""){    //すでに修正データがある場合、編集データにコピー
             $this->CtrDto->AcctAltTbl = $_SESSION['Accounts'];
             unset($_SESSION['Accounts']);
         }
-        array_unshift($this->CtrDto->AcctAltTbl,[user_id=>1,name=>1,type=>1]);
-        //foreach($this->CtrDto->AcctAltTbl as $key=>$Row){
-        //    var_dump($Row); echo "Add <br>";
-        //}
+
+        $UserId = $_SESSION['user']['id'];
+        array_unshift($this->CtrDto->AcctAltTbl,['id'=> null,'user_id'=>(int)$UserId,'name'=>'売上','type'=>'収益']);
         $this->CtrDto->Accounts = array_values($this->CtrDto->AcctAltTbl); 
         $_SESSION['Accounts']   = $this->CtrDto->Accounts;
-        echo "【ループ終了】";
+
     }
 
     public function AccountsAlt(){
