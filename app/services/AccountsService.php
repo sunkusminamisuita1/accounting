@@ -19,16 +19,31 @@ class AccountsService{
     {
         $this->CtrDto->Accounts  =   $this->SvcRepo->getAccounts();
         foreach($this->CtrDto->Accounts as $key=>$Row){
-            echo "key={$key} = {$Row['id']}{$Row['name']} {$Row['type']}<br>";
+            //echo "key={$key} = {$Row['id']}{$Row['name']} {$Row['type']}<br>";
         }
-        echo "xxxxx={$this->CtrDto->Accounts[1]['name']} <br>";
+        //echo "xxxxx={$this->CtrDto->Accounts[1]['name']} <br>";
         //exit;
     }
 
     public function AccountsDlt()
     {
-        foreach($CtrDto->AcctDltTbl as $Row){
-            var_dump($Row); echo "br";
+        foreach($this->CtrDto->AcctDltTbl as $key=>$Row){
+            var_dump($Row); echo "Dlt<br>";
         }
     }
+
+        public function AccountsAdd()
+    {
+        foreach($this->CtrDto->AcctDltTbl as $key=>$Row){
+            var_dump($Row); echo "Add <br>";
+        }
+    }
+
+        public function AccountsAlt()
+    {
+        foreach($this->CtrDto->AcctDltTbl as $key=>$Row){
+            var_dump($Row); echo "Alt <br>";
+        }
+    }
+
 }

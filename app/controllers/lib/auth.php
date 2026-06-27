@@ -23,8 +23,8 @@ function generateCsrfToken(): string
 
 function verifyCsrfToken(string $FmTknKey): void
 {
-	echo "<br><pre> {$FmTknKey}  </pre><br>";
-	echo "<br><pre> {$_SESSION['csrfTokens'][$FmTknKey] } </pre><br>";
+	//echo "<br><pre> {$FmTknKey}  </pre><br>";
+	//echo "<br><pre> {$_SESSION['csrfTokens'][$FmTknKey] } </pre><br>";
 	if (empty($FmTknKey) || empty($_SESSION['csrfTokens'][$FmTknKey]) ) {
 		// 詳細ログ（デバッグ用）
 		//error_log("[CSRF] verify failed. Posted token=" . var_export($FmTknKey, true));

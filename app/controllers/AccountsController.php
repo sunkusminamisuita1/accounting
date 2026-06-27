@@ -31,8 +31,15 @@ class AccountsController {
         $message = '';
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             requireCsrf();
-            if($_POST['delete']){
+            var_dump( $_POST['AcctPfm']);
+            if($_POST['AcctPfm'] === "追加"){
+                $this->CtrSvc->AccountsAdd($this->CtrDto);
+            }
+            if($_POST['AcctPfm'] === "削除"){
                 $this->CtrSvc->AccountsDlt($this->CtrDto);
+            }
+            if($_POST['AcctPfm'] === "修正実行"){
+                $this->CtrSvc->AccountsAlt($this->CtrDto);
             }
         //    try {
         //        $CtrDto = new LoginDTO(
