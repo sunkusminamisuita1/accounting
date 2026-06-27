@@ -13,7 +13,7 @@ class AccountsDto{
     public string $email;
     public array $Accounts;
     public string $password;
-    public array $AcctDltTbl = [];
+    public array $AcctAltTbl = [];
 
 
     public function __construct()    {

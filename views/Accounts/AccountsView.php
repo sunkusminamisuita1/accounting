@@ -106,11 +106,11 @@
                                     </td>
                                     <td></td>
                                     <td>
-                                        <input type="checkbox" name="<?= 'delline' . $Row['id'] ?>" value="del">
+                                        <input type="checkbox" name="AcctUpdDt[<?= $Key ?>][del]" value="On">
                                     </td>
                                     <?php
-                                        $this->CtrDto->AcctDltTbl = $Row;
-                                        $this->CtrDto->AcctDltTbl['delete'] = '1';
+                                        $this->CtrDto->AcctAltTbl = $Row;
+                                        $this->CtrDto->AcctAltTbl['delete'] = '1';
                                     ?>
                                 </tr>
                             <?php endforeach; ?>
