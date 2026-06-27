@@ -30,50 +30,41 @@ class AccountsService{
 
         if($_SESSION['Accounts'] ?? ""){    //すでに修正データがある場合、編集データにコピー
             $this->CtrDto->AcctAltTbl = $_SESSION['Accounts'];
+            unset($_SESSION['Accounts']);
         }
-
-
-
-
-foreach( $_POST['AcctUpdDt'] as $Key=>$Row){ //array_Spliceでキー順序が更新されるため、削除idを保存
-    echo "<br>key={$Key}  row="; var_dump($Row);
-}
-//exit;
-
-
 
         $DelKeys = [];
-        foreach( $_POST['AcctUpdDt'] as $Key=>$Row){ //array_Spliceでキー順序が更新されるため、削除idを保存
+        foreach( $_POST['AcctUpdDt'] as $Key=>$Row){ //array_Spliceでキー順序が更新されるため、削除は降順で実行
             if($Row['del'] ?? ''){
-                $DelKeys[] =  $Row['id'];
+                $DelKeys[] =  $Key;
             }            
         }
-echo "<br>"; var_dump($DelKeys);
-//exit;
+        rsort($DelKeys);
 
-        foreach($this->CtrDto->AcctAltTbl as $Key=>$Row){
-
-            foreach($DelKeys as $Idx => $DltId){
-echo "<br>xxdltid={$DltId}   row={$Row['id']}";
-                if($DltId === $Row['id']){
-echo "<br>dltid={$DltId}   row={$Row['id']}";
-                    array_splice($this->CtrDto->AcctAltTbl,$DltId,1);
-                    break;
+        foreach($DelKeys as $Delkey){
+            foreach($this->CtrDto->AcctAltTbl as $Key=>$Row){
+                if((int)$Delkey === (int)$Key){
+                    array_splice($this->CtrDto->AcctAltTbl,(int)$Key,1);
                 }
-
-                
-            }            
-        
+            }
         }
+        
         $this->CtrDto->Accounts = array_values($this->CtrDto->AcctAltTbl); 
         $_SESSION['Accounts']   = $this->CtrDto->Accounts;
 
     }
 
     public function AccountsAdd(){
-        foreach($this->CtrDto->AcctAltTbl as $key=>$Row){
-            var_dump($Row); echo "Add <br>";
+        if($_SESSION['Accounts'] ?? ""){    //すでに修正データがある場合、編集データにコピー
+            $this->CtrDto->AcctAltTbl = $_SESSION['Accounts'];
+            unset($_SESSION['Accounts']);
         }
+        array_unshift($this->CtrDto->AcctAltTbl,[user_id=>1,name=>1,type=>1]);
+        //foreach($this->CtrDto->AcctAltTbl as $key=>$Row){
+        //    var_dump($Row); echo "Add <br>";
+        //}
+        $this->CtrDto->Accounts = array_values($this->CtrDto->AcctAltTbl); 
+        $_SESSION['Accounts']   = $this->CtrDto->Accounts;
         echo "【ループ終了】";
     }
 
