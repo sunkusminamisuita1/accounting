@@ -21,8 +21,9 @@ class AccountsService{
         $Dto->AcctAltTbl = $Dto->Accounts;         //修正用科目テーブル作成
 
         foreach($Dto->AcctAltTbl as $key=>$Row){   //errmsgカラム追加,初期化
-            $Dto->AcctAltTbl[$key]['errmsg'] = '';
+            $Dto->AcctAltTbl[$key]['errmsg'] = 'xxxx';
         }
+        unset($Row);
         echo "<br><pre>" .var_dump($Dto->AcctAltTbl) . "</pre>";
     }
 

@@ -11,7 +11,7 @@ class AccountsDto{
     public int $id;
     public string $username;
     public string $email;
-    public array $Accounts;
+    public array $Accounts = [];
     public string $password;
     public array $AcctAltTbl = [];
 

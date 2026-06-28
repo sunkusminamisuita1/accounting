@@ -1,6 +1,11 @@
 <?php
 ?>
 <style>
+    .TxtBoxLineDel{
+    /*テキストボックス枠線なし*/outline: none;
+    border: none;
+    background: #e7edf8;
+}
     .ProcSlct, .ProcSlct td { border: none !important; }
     .UpdTbl { border-collapse: collapse; width: 100%; table-layout: fixed; border: 1px solid #000000; } /* 幅は中身に合わせるのが一般的 */
     .ProcSlct button { cursor: pointer; padding: 5px 15px; }
@@ -45,10 +50,9 @@
 
     <!-- ##############     エラーメッセージ表示    ################ -->
     <?=  $this->CtrErrMsgPopUp->Show($this->CtrDto);  ?>
-    <br><hr>
+    <hr>
     <h3>下表の勘定科目を追加・修正・削除<br><br>
     <div style="text-align: center;">表の修正完了後、修正実行ボタンを押してください。</div>
-    <br>
     </h3>
     <form method="POST" action="index.php?route=accounts.edit">
         <div style="text-align: center;" >
@@ -66,14 +70,64 @@
         </div>
     </form>
 
-<table class="UpdTbl">
+<table class="UpdTbl" >
 
     <tbody>
         <tr>
             <td style="width: 50%; vertical-align: top;">
                 <div>これは左側です。</div>
 
+                <form method="POST" action="index.php?route=accounts.edit">
+                    <input type="hidden" name="csrfTokenKey" value="<?= h($TokenKey) ?>">
+                    <table class="UpdTbl">
+                        <tbody>
+                            <tr style="background-color: #e0e0e1; font-weight: bold; text-align: center;">
+                                <th style="width: 5%;" >ID</th>
+                                <th style="width: 8%;" >ユーザーID</th>
+                                <th style="width: 13%;" > 勘定科目</th>
+                                <th style="width: 8%;" >貸借種別</th>
+                                <th style="width: 25%;" >
 
+                                                <button name="AcctPfm" type="submit" value="<?= h('追加') ?>" >行追加</button>
+                                                <br><hr>
+                                                エラーメッセージ
+                                </th>
+                                <th style="width: 6%;" >
+                                    <button name="AcctPfm" type="submit" value="<?= h('削除') ?>" >削除</button>
+                                </th>
+                            </tr>
+                            <?php foreach ($Accounts as $Key => $Row): ?>
+                                <tr style="background-color: #ffffff; font-weight: bold; text-align: center;">
+                                    <td>
+                                        <input class="TxtBoxLineDel" style="width: 90%; text-align: center;" type="text" name="AcctUpdDt[<?= $Key ?>][id]"
+                                               value="<?= h($Row['id']) ?? '' ?>" readonly>
+                                    </td>
+                                    <td style="text-align: left;">
+                                        <input class="TxtBoxLineDel" style="width: 90%; text-align: center;" type="text" name="AcctUpdDt[<?= $Key ?>][user_id]"
+                                               value="<?= h($Row['user_id']) ?? '' ?>" readonly>
+                                    </td>
+                                    <td style="text-align: left;">
+                                        <input class="TxtBoxLineDel" style="width: 90%;" type="text" name="AcctUpdDt[<?= $Key ?>][name]" value="<?= h($Row['name']) ?? '' ?>">
+                                    </td>
+                                    <td>
+                                        <input class="TxtBoxLineDel" style="width: 90%; text-align: center;" type="text" name="AcctUpdDt[<?= $Key ?>][type]" value="<?= h($Row['type']) ?? '' ?>">
+                                    </td>
+                                    <td style="font-color: #ff0000;">
+                                        <input class="TxtBoxLineDel" style="width: 90%;" type="text" name="AcctUpdDt[<?= $Key ?>][errmsg]"
+                                            value="<?= h($Row['errmsg'] ?? '')  ?>" readonly>
+                                    </td>
+                                    <td>
+                                        <input class="TxtBoxLineDel" style="width: 90%;" type="checkbox" name="AcctUpdDt[<?= $Key ?>][del]" value="On">
+                                    </td>
+                                    <?php
+                                        //$this->CtrDto->AcctAltTbl = $Row;
+                                        //$this->CtrDto->AcctAltTbl['delete'] = '1';
+                                    ?>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </form>
 
 
 
@@ -81,54 +135,10 @@
 
             <td style="width: 50%; vertical-align: top;">
                 <div>これは右側です。</div>
-                <form method="POST" action="index.php?route=accounts.edit">
-                    <input type="hidden" name="csrfTokenKey" value="<?= h($TokenKey) ?>">
-                    <table style="width: 100%;">
-                        <tbody>
-                            <tr style="background-color: #e0e0e1; font-weight: bold; text-align: center;">
-                                <th>ID</th>
-                                <th>ユーザーID</th>
-                                <th>勘定科目</th>
-                                <th>貸借種別</th>
-                                <th>
-                                    <button name="AcctPfm" type="submit" value="<?= h('追加') ?>" >行追加</button>
-                                </th>
-                                <th>
-                                    <button name="AcctPfm" type="submit" value="<?= h('削除') ?>" >削除実行</button>
-                                </th>
-                            </tr>
-                            <?php foreach ($Accounts as $Key => $Row): ?>
-                                <tr style="background-color: #ffffff; font-weight: bold; text-align: center;">
-                                    <td>
-                                        <input style="width: 25%;" type="text" name="AcctUpdDt[<?= $Key ?>][id]"
-                                               value="<?= h($Row['id']) ?? '' ?>" readonly>
-                                    </td>
-                                    <td style="text-align: left;">
-                                        <input style="width: 25%;" type="text" name="AcctUpdDt[<?= $Key ?>][user_id]"
-                                               value="<?= h($Row['user_id']) ?? '' ?>" readonly>
-                                    </td>
-                                    <td style="text-align: left;">
-                                        <input style="width: 25%;" type="text" name="AcctUpdDt[<?= $Key ?>][name]" value="<?= h($Row['name']) ?? '' ?>">
-                                    </td>
-                                    <td>
-                                        <input style="width: 25%;" type="text" name="AcctUpdDt[<?= $Key ?>][type]" value="<?= h($Row['type']) ?? '' ?>">
-                                    </td>
-                                    <td style="font-color: #ff0000;">
-                                        <input style="width: 25%;" type="text" name="AcctUpdDt[<?= $Key ?>][errmsg]"
-                                            value=<?= h($Row['errmsg']) ?? '' ?> readonly>
-                                    </td>
-                                    <td>
-                                        <input type="checkbox" name="AcctUpdDt[<?= $Key ?>][del]" value="On">
-                                    </td>
-                                    <?php
-                                        $this->CtrDto->AcctAltTbl = $Row;
-                                        $this->CtrDto->AcctAltTbl['delete'] = '1';
-                                    ?>
-                                </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
-                </form>
+
+
+
+
             </td>
         </tr>
     </tbody>
