@@ -16,7 +16,7 @@ class AccountsService{
 
     public function GetAccounts( AccountsDto $Dto){
 
-        $Dto->Accounts  =   $this->SvcRepo->getAccounts();
+        $Dto->Accounts  =   $this->SvcRepo->getAccounts($Dto);
         
         $Dto->AcctAltTbl = $Dto->Accounts;         //修正用科目テーブル作成
 

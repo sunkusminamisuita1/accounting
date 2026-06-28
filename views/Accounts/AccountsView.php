@@ -98,31 +98,52 @@
                             </tr>
                             <?php foreach ($Accounts as $Key => $Row): ?>
                                 <tr style="background-color: #ffffff; font-weight: bold; text-align: center;">
-                                    <td>
-                                        <input class="TxtBoxLineDel" style="width: 90%; text-align: center;" type="text" name="AcctUpdDt[<?= $Key ?>][id]"
-                                               value="<?= h($Row['id']) ?? '' ?>" readonly>
+                                    <td>                           <!--   行番号　pri-key   -->
+                                        <input class="TxtBoxLineDel" style="width: 90%; text-align: center;" 
+                                            type="text" name="AcctUpdDt[<?= $Key ?>][id]"
+                                            value="<?= h($Row['id']) ?? '' ?>" readonly>
                                     </td>
-                                    <td style="text-align: left;">
-                                        <input class="TxtBoxLineDel" style="width: 90%; text-align: center;" type="text" name="AcctUpdDt[<?= $Key ?>][user_id]"
-                                               value="<?= h($Row['user_id']) ?? '' ?>" readonly>
+                                    <td style="text-align: left;">  <!--   ユーザーID   -->
+                                        <input class="TxtBoxLineDel" style="width: 90%; text-align: center;" 
+                                            type="text" name="AcctUpdDt[<?= $Key ?>][user_id]"
+                                            value="<?= h($Row['user_id']) ?? '' ?>" readonly>
                                     </td>
-                                    <td style="text-align: left;">
-                                        <input class="TxtBoxLineDel" style="width: 90%;" type="text" name="AcctUpdDt[<?= $Key ?>][name]" value="<?= h($Row['name']) ?? '' ?>">
+                                    <td style="text-align: left;">  <!--   勘定科目名   -->
+                                        <input class="TxtBoxLineDel" style="width: 90%;" 
+                                            type="text" name="AcctUpdDt[<?= $Key ?>][name]" 
+                                            value="<?= h($Row['name']) ?? '' ?>">
                                     </td>
-                                    <td>
-                                        <input class="TxtBoxLineDel" style="width: 90%; text-align: center;" type="text" name="AcctUpdDt[<?= $Key ?>][type]" value="<?= h($Row['type']) ?? '' ?>">
+                                    <td>                            <!--   勘定科目種別   -->
+
+
+
+                                        <select  style=" width: 95%;"  name="AcctUpdDt[<?= $Key ?>][type]" required >
+                                            <option value="">選択してください</option>
+                                                <?php foreach($this->CtrDto->AccountsType as $i=>$a): ?>
+                                                    <option value="<?= h($a['name']) ?>" 
+                                                        <?= (isset($Row['id']) && $Row['id'] == $a['id']) ?
+                                                             'selected' : '' ?>>
+                                                        <?= h($a['name']) ?>
+                                                    </option>
+                                                <?php endforeach; ?>
+                                        </select>
+
+
+
+                                        <input class="TxtBoxLineDel" style="width: 90%; text-align: center;" 
+                                            type="text" name="AcctUpdDt[<?= $Key ?>][type]" 
+                                            value="<?= h($Row['type']) ?? '' ?>">
                                     </td>
-                                    <td style="font-color: #ff0000;">
-                                        <input class="TxtBoxLineDel" style="width: 90%;" type="text" name="AcctUpdDt[<?= $Key ?>][errmsg]"
+                                    <td style="font-color: #ff0000;">    <!--   エラーメッセージ   -->
+                                        <input class="TxtBoxLineDel" style="width: 90%;" type="text" 
+                                            name="AcctUpdDt[<?= $Key ?>][errmsg]"
                                             value="<?= h($Row['errmsg'] ?? '')  ?>" readonly>
                                     </td>
                                     <td>
-                                        <input class="TxtBoxLineDel" style="width: 90%;" type="checkbox" name="AcctUpdDt[<?= $Key ?>][del]" value="On">
+                                        <input class="TxtBoxLineDel" style="width: 90%;" type="checkbox" 
+                                            name="AcctUpdDt[<?= $Key ?>][del]" value="On">
                                     </td>
-                                    <?php
-                                        //$this->CtrDto->AcctAltTbl = $Row;
-                                        //$this->CtrDto->AcctAltTbl['delete'] = '1';
-                                    ?>
+
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
@@ -143,3 +164,18 @@
         </tr>
     </tbody>
 </table>
+
+
+
+
+
+
+                                    <select  style=" width: 95%;"  name="VcrUpdDt[<?= $VcrRowNo ?>][account_id]" required >
+                                        <option value="">選択してください</option>
+                                            <?php foreach($this->Dto->Accounts as $a): ?>
+                                                <option value="<?= h($a['id']) ?>" 
+                                                    <?= (isset($Row['account_id']) && $Row['account_id'] == $a['id']) ? 'selected' : '' ?>>
+                                                    <?= h($a['name']) ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                    </select>
