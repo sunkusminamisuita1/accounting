@@ -53,7 +53,16 @@
     <form method="POST" action="index.php?route=accounts.edit">
         <div style="text-align: center;" >
             <input type="hidden" name="csrfTokenKey" value="<?= h($TokenKey) ?>">
-            <button name="AcctPfm" type="submit" value="<?= h('修正実行') ?>" >修正実行</button>
+            <button name="AcctPfm" type="submit"
+                onclick="return confirm
+                    ('勘定科目 修正欄の内容をデータベースに登録します。\n本当に変更してもよろしいですか？');"  
+                    value="<?= h('修正実行') ?>" >修正実行
+            </button>
+            <button name="AcctPfm" type="submit"
+                onclick="return confirm
+                    ('勘定科目 修正欄の内容を、もとに戻します。\nよろしいですか？');"  
+                    value="<?= h('キャンセル') ?>" >キャンセル
+            </button>
         </div>
     </form>
 

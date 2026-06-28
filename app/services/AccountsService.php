@@ -74,18 +74,26 @@ class AccountsService{
 
     }
 
+    public function AccountsCancel(AccountsDto $Dto){    //修正データをもとに戻す
+
+        $Dto->AcctAltTbl = $Dto->Accounts;
+
+    }
+
     private function AccountsDtChk(AccountsDto $Dto){    //すでに修正データがある場合、編集データにコピー
 
         if($_SESSION['Accounts'] ?? ""){    
             $Dto->AcctAltTbl = $_SESSION['Accounts'];
             unset($_SESSION['Accounts']);
-        }
+        }  
+
     }
 
     private function AccountsNextDt(AccountsDto $Dto){    //次セッション、renderデータ準備
 
-        $Dto->Accounts = array_values($Dto->AcctAltTbl); 
-        $_SESSION['Accounts']   = $Dto->Accounts;
+        $Dto->AcctAltTbl = array_values($Dto->AcctAltTbl); 
+        //$Dto->Accounts = array_values($Dto->AcctAltTbl); 
+        $_SESSION['Accounts']   = $Dto->AcctAltTbl;
  
     }
 

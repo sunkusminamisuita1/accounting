@@ -43,10 +43,14 @@ class AccountsController {
             if($_POST['AcctPfm'] === "修正実行"){
                 $this->CtrSvc->AccountsAlt($this->CtrDto);
             }
+            if($_POST['AcctPfm'] === "キャンセル"){
+                $this->CtrSvc->AccountsCancel($this->CtrDto);
+            }
 
         }
             $TokenKey = generateCsrfToken();
-            $Accounts   =   $this->CtrDto->Accounts;
+            //$Accounts   =   $this->CtrDto->Accounts;
+            $Accounts   =   $this->CtrDto->AcctAltTbl;
         require ROOT_PATH.'/views/Accounts/AccountsView.php';
     }
 }
