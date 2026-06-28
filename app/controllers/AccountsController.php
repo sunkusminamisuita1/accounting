@@ -48,8 +48,9 @@ class AccountsController {
                 case 'キャンセル':
                     $this->CtrSvc->AccountsCancel($this->CtrDto);
                     break;
-                    
+
             }
+            
         }
 
             $TokenKey = generateCsrfToken();
@@ -67,7 +68,7 @@ class AccountsController {
     }
 
     private function PrepareNextRequest(AccountsDto $Dto){    //次セッション、renderデータ準備
-
+        echo "<br><pre>" .var_dump($Dto->AcctAltTbl) . "</pre>";
         $Dto->AcctAltTbl = array_values($Dto->AcctAltTbl); 
         $_SESSION['Accounts']   = $Dto->AcctAltTbl;
  

@@ -17,13 +17,17 @@ class AccountsService{
     public function GetAccounts( AccountsDto $Dto){
 
         $Dto->Accounts  =   $this->SvcRepo->getAccounts();
-        //修正用科目テーブル作成
-        $Dto->AcctAltTbl = $Dto->Accounts;
+        
+        $Dto->AcctAltTbl = $Dto->Accounts;         //修正用科目テーブル作成
 
+        foreach($Dto->AcctAltTbl as $key=>$Row){   //errmsgカラム追加,初期化
+            $Dto->AcctAltTbl[$key]['errmsg'] = '';
         }
+        echo "<br><pre>" .var_dump($Dto->AcctAltTbl) . "</pre>";
+    }
 
     public function AccountsDlt(AccountsDto $Dto){
-        echo "<br><pre>" .var_dump($Dto->AcctAltTbl) . "</pre>";
+        //echo "<br><pre>" .var_dump($Dto->AcctAltTbl) . "</pre>";
 
 
         $DelKeys = [];
@@ -43,7 +47,7 @@ class AccountsService{
     public function AccountsAdd(AccountsDto $Dto){
 
         $UserId = $Dto->id;
-        array_unshift($Dto->AcctAltTbl,['id'=> null,'user_id'=>(int)$UserId,'name'=>'売上','type'=>'収益']);
+        array_unshift($Dto->AcctAltTbl,['id'=> null,'user_id'=>(int)$UserId,'name'=>'','type'=>'', 'errmsg'=>'']);
 
     }
 
@@ -52,6 +56,7 @@ class AccountsService{
         foreach($Dto->AcctAltTbl as $key=>$Row){
             var_dump($Row); echo "Alt <br>";
         }
+        $this->SvcVali->AccountsVali($this->CtrDto);
 
     }
 

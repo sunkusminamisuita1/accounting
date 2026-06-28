@@ -113,7 +113,10 @@
                                     <td>
                                         <input style="width: 25%;" type="text" name="AcctUpdDt[<?= $Key ?>][type]" value="<?= h($Row['type']) ?? '' ?>">
                                     </td>
-                                    <td></td>
+                                    <td style="font-color: #ff0000;">
+                                        <input style="width: 25%;" type="text" name="AcctUpdDt[<?= $Key ?>][errmsg]"
+                                            value=<?= h($Row['errmsg']) ?? '' ?> readonly>
+                                    </td>
                                     <td>
                                         <input type="checkbox" name="AcctUpdDt[<?= $Key ?>][del]" value="On">
                                     </td>
