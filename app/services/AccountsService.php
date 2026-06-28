@@ -10,25 +10,25 @@ class AccountsService{
     public AccountsRepository   $SvcRepo;
     public AccountsDto          $CtrDto;
 
-    public function __construct(AccountsDto $CtrDto)    {
-        $this->CtrDto   = $CtrDto;
-        $this->SvcRepo =   new AccountsRepository($this->CtrDto);
+    public function __construct(AccountsDto $Dto)    {
+        $this->SvcRepo =   new AccountsRepository($Dto);
     }
 
-    public function GetAccounts(){
+    public function GetAccounts( AccountsDto $Dto){
 
-        $this->CtrDto->Accounts  =   $this->SvcRepo->getAccounts();
+        $Dto->Accounts  =   $this->SvcRepo->getAccounts();
         //修正用科目テーブル作成
-        $this->CtrDto->AcctAltTbl = $this->CtrDto->Accounts;
+        $Dto->AcctAltTbl = $Dto->Accounts;
 
         }
 
-    public function AccountsDlt(){
+    public function AccountsDlt(AccountsDto $Dto){
 
-        if($_SESSION['Accounts'] ?? ""){    //すでに修正データがある場合、編集データにコピー
-            $this->CtrDto->AcctAltTbl = $_SESSION['Accounts'];
-            unset($_SESSION['Accounts']);
-        }
+        //if($_SESSION['Accounts'] ?? ""){    //すでに修正データがある場合、編集データにコピー
+        //    $Dto->AcctAltTbl = $_SESSION['Accounts'];
+        //    unset($_SESSION['Accounts']);
+        //}
+        $this->AccountsDtChk($Dto);
 
         $DelKeys = [];
         foreach( $_POST['AcctUpdDt'] as $Key=>$Row){ //array_Spliceでキー順序が更新されるため、削除は降順で実行
@@ -38,38 +38,55 @@ class AccountsService{
         }
         rsort($DelKeys);
 
-        foreach($DelKeys as $Delkey){
-            foreach($this->CtrDto->AcctAltTbl as $Key=>$Row){
-                if((int)$Delkey === (int)$Key){
-                    array_splice($this->CtrDto->AcctAltTbl,(int)$Key,1);
-                }
-            }
+        foreach($DelKeys as $DelKey){
+            array_splice($Dto->AcctAltTbl,(int)$DelKey,1);
         }
         
-        $this->CtrDto->Accounts = array_values($this->CtrDto->AcctAltTbl); 
-        $_SESSION['Accounts']   = $this->CtrDto->Accounts;
+        //$Dto->Accounts = array_values($Dto->AcctAltTbl); 
+        //$_SESSION['Accounts']   = $Dto->Accounts;
+        $this->AccountsNextDt($Dto);
 
     }
 
-    public function AccountsAdd(){
+    public function AccountsAdd(AccountsDto $Dto){
 
-        if($_SESSION['Accounts'] ?? ""){    //すでに修正データがある場合、編集データにコピー
-            $this->CtrDto->AcctAltTbl = $_SESSION['Accounts'];
-            unset($_SESSION['Accounts']);
-        }
+        //if($_SESSION['Accounts'] ?? ""){    //すでに修正データがある場合、編集データにコピー
+        //    $Dto->AcctAltTbl = $_SESSION['Accounts'];
+        //    unset($_SESSION['Accounts']);
+        //}
+        $this->AccountsDtChk($Dto);
 
-        $UserId = $_SESSION['user']['id'];
-        array_unshift($this->CtrDto->AcctAltTbl,['id'=> null,'user_id'=>(int)$UserId,'name'=>'売上','type'=>'収益']);
-        $this->CtrDto->Accounts = array_values($this->CtrDto->AcctAltTbl); 
-        $_SESSION['Accounts']   = $this->CtrDto->Accounts;
+        $UserId = $Dto->id;
+        array_unshift($Dto->AcctAltTbl,['id'=> null,'user_id'=>(int)$UserId,'name'=>'売上','type'=>'収益']);
+        //$Dto->Accounts = array_values($Dto->AcctAltTbl); 
+        //$_SESSION['Accounts']   = $Dto->Accounts;
+        $this->AccountsNextDt($Dto);
 
     }
 
-    public function AccountsAlt(){
-        foreach($this->CtrDto->AcctAltTbl as $key=>$Row){
+    public function AccountsAlt(AccountsDto $Dto){
+
+        $this->AccountsDtChk($Dto);
+        foreach($Dto->AcctAltTbl as $key=>$Row){
             var_dump($Row); echo "Alt <br>";
         }
+        $this->AccountsNextDt($Dto);
 
+    }
+
+    private function AccountsDtChk(AccountsDto $Dto){    //すでに修正データがある場合、編集データにコピー
+
+        if($_SESSION['Accounts'] ?? ""){    
+            $Dto->AcctAltTbl = $_SESSION['Accounts'];
+            unset($_SESSION['Accounts']);
+        }
+    }
+
+    private function AccountsNextDt(AccountsDto $Dto){    //次セッション、renderデータ準備
+
+        $Dto->Accounts = array_values($Dto->AcctAltTbl); 
+        $_SESSION['Accounts']   = $Dto->Accounts;
+ 
     }
 
 }
