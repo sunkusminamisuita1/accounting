@@ -1,17 +1,8 @@
 <?php
 
-//                $_SESSION['user'] = [
-//                    'id' => (int)$user['id'],
-//                    'username' => $user['username'],
-//                    'email' => $user['email'],
-//                    'fiscalMonth' => $user['fiscal_month'],
-//                    'fiscalDay' => $user['fiscal_day']
-//                ];
 require_once ROOT_PATH . '/app/services/AccountsService.php';
 require_once ROOT_PATH . '/app/DTO/AccountsDto.php';
 require_once ROOT_PATH . '/lib/helpers.php';
-
-
 
 class AccountsController {
     Public        $CtrSvc;
@@ -30,29 +21,58 @@ class AccountsController {
         if( ! $this->CtrDto->Accounts){
             $this->CtrSvc->GetAccounts($this->CtrDto);
         }
-        
+
         $message = '';
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             requireCsrf();
-            if($_POST['AcctPfm'] === "追加"){
-                $this->CtrSvc->AccountsAdd($this->CtrDto);
-            }
-            if($_POST['AcctPfm'] === "削除"){
-                $this->CtrSvc->AccountsDlt($this->CtrDto);
-            }
-            if($_POST['AcctPfm'] === "修正実行"){
-                $this->CtrSvc->AccountsAlt($this->CtrDto);
-            }
-            if($_POST['AcctPfm'] === "キャンセル"){
-                $this->CtrSvc->AccountsCancel($this->CtrDto);
-            }
+            switch($_POST['AcctPfm']){
 
+                case '追加':
+                    $this->RestoreEditingData($this->CtrDto);
+                    $this->CtrSvc->AccountsAdd($this->CtrDto);
+                    $this->PrepareNextRequest($this->CtrDto);
+                    break;
+
+                case '削除':
+                    $this->RestoreEditingData($this->CtrDto);
+                    $this->CtrSvc->AccountsDlt($this->CtrDto);
+                    $this->PrepareNextRequest($this->CtrDto);
+                    break;
+
+                case '修正実行':
+                    $this->RestoreEditingData($this->CtrDto);
+                    $this->CtrSvc->AccountsAlt($this->CtrDto);
+                    $this->PrepareNextRequest($this->CtrDto);
+                    break;
+
+                case 'キャンセル':
+                    $this->CtrSvc->AccountsCancel($this->CtrDto);
+                    break;
+                    
+            }
         }
+
             $TokenKey = generateCsrfToken();
-            //$Accounts   =   $this->CtrDto->Accounts;
             $Accounts   =   $this->CtrDto->AcctAltTbl;
         require ROOT_PATH.'/views/Accounts/AccountsView.php';
     }
+
+    private function RestoreEditingData(AccountsDto $Dto){    //すでに修正データがある場合、編集データにコピー
+
+        if($_SESSION['Accounts'] ?? ""){    
+            $Dto->AcctAltTbl = $_SESSION['Accounts'];
+            unset($_SESSION['Accounts']);
+        }  
+
+    }
+
+    private function PrepareNextRequest(AccountsDto $Dto){    //次セッション、renderデータ準備
+
+        $Dto->AcctAltTbl = array_values($Dto->AcctAltTbl); 
+        $_SESSION['Accounts']   = $Dto->AcctAltTbl;
+ 
+    }
+
 }
 
 
