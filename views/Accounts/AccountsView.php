@@ -114,24 +114,17 @@
                                             value="<?= h($Row['name']) ?? '' ?>">
                                     </td>
                                     <td>                            <!--   勘定科目種別   -->
-
-
-
-                                        <select  style=" width: 95%;"  name="AcctUpdDt[<?= $Key ?>][type]" required >
+                                        <select style="width: 95%;" name="AcctUpdDt[<?= $Key ?>][type]" required>
                                             <option value="">選択してください</option>
-                                                <?php foreach($this->CtrDto->AccountsType as $i=>$a): ?>
-                                                    <option value="<?= h($a['name']) ?>" 
-                                                        <?= (isset($Row['id']) && $Row['id'] == $a['id']) ?
-                                                             'selected' : '' ?>>
-                                                        <?= h($a['name']) ?>
-                                                    </option>
-                                                <?php endforeach; ?>
+    
+                                            <?php foreach($this->CtrDto->AccountsType as $i => $a): ?>
+                                                <option value="<?= h($a) ?>" 
+                                                    <?= (isset($Row['type']) && $Row['type'] == $a) ? 'selected' : '' ?>>
+                                                <?= h($a) ?> </option>
+                                            <?php endforeach; ?>
                                         </select>
-
-
-
                                         <input class="TxtBoxLineDel" style="width: 90%; text-align: center;" 
-                                            type="text" name="AcctUpdDt[<?= $Key ?>][type]" 
+                                            type="hidden" name="AcctUpdDt[<?= $Key ?>][type]" 
                                             value="<?= h($Row['type']) ?? '' ?>">
                                     </td>
                                     <td style="font-color: #ff0000;">    <!--   エラーメッセージ   -->
@@ -164,18 +157,3 @@
         </tr>
     </tbody>
 </table>
-
-
-
-
-
-
-                                    <select  style=" width: 95%;"  name="VcrUpdDt[<?= $VcrRowNo ?>][account_id]" required >
-                                        <option value="">選択してください</option>
-                                            <?php foreach($this->Dto->Accounts as $a): ?>
-                                                <option value="<?= h($a['id']) ?>" 
-                                                    <?= (isset($Row['account_id']) && $Row['account_id'] == $a['id']) ? 'selected' : '' ?>>
-                                                    <?= h($a['name']) ?>
-                                                </option>
-                                            <?php endforeach; ?>
-                                    </select>
