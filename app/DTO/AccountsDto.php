@@ -16,6 +16,8 @@ class AccountsDto{
     public array $AcctAltTbl = [];
     public array $ErrData = []; //エラー行の配列 ['ModName' => 'エラーメッセージ']
     public array $AccountsType = [];
+    public array $EditedRow = [];
+    public array $PostDt = [];
 
 
     public function __construct()    {
@@ -27,8 +29,7 @@ class AccountsDto{
                                 '費用',
                                 '資産',
                                 '負債',
-                                '資本',
-                                '収益'
+                                '資本'
                                 ];
 
     }

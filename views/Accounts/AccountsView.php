@@ -68,92 +68,97 @@
                     value="<?= h('キャンセル') ?>" >キャンセル
             </button>
         </div>
-    </form>
+        <!--</form>$$$$$$$$$$$$$$$$$$$$$$$-->
 
-<table class="UpdTbl" >
+        <table class="UpdTbl" >
 
-    <tbody>
-        <tr>
-            <td style="width: 50%; vertical-align: top;">
-                <div>これは左側です。</div>
+            <tbody>
+                <tr>
+                    <td style="width: 50%; vertical-align: top;">
+                        <div>これは左側です。</div>
 
-                <form method="POST" action="index.php?route=accounts.edit">
-                    <input type="hidden" name="csrfTokenKey" value="<?= h($TokenKey) ?>">
-                    <table class="UpdTbl">
-                        <tbody>
-                            <tr style="background-color: #e0e0e1; font-weight: bold; text-align: center;">
-                                <th style="width: 5%;" >ID</th>
-                                <th style="width: 8%;" >ユーザーID</th>
-                                <th style="width: 13%;" > 勘定科目</th>
-                                <th style="width: 8%;" >貸借種別</th>
-                                <th style="width: 25%;" >
+                        <!--<form method="POST" action="index.php?route=accounts.edit">$$$$$$$$$$$$$$$$$$$$$$-->
+                            <!--<input type="hidden" name="csrfTokenKey" value="<?= h($TokenKey) ?>">-->
+                            <table class="UpdTbl">
+                                <tbody>
+                                    <tr style="background-color: #e0e0e1; font-weight: bold; text-align: center;">
+                                        <th style="width: 5%;" >ID</th>
+                                        <th style="width: 8%;" >ユーザーID</th>
+                                        <th style="width: 13%;" > 勘定科目</th>
+                                        <th style="width: 8%;" >貸借種別</th>
+                                        <th style="width: 25%;" >
 
                                                 <button name="AcctPfm" type="submit" value="<?= h('追加') ?>" >行追加</button>
                                                 <br><hr>
                                                 エラーメッセージ
-                                </th>
-                                <th style="width: 6%;" >
-                                    <button name="AcctPfm" type="submit" value="<?= h('削除') ?>" >削除</button>
-                                </th>
-                            </tr>
-                            <?php foreach ($Accounts as $Key => $Row): ?>
-                                <tr style="background-color: #ffffff; font-weight: bold; text-align: center;">
-                                    <td>                           <!--   行番号　pri-key   -->
-                                        <input class="TxtBoxLineDel" style="width: 90%; text-align: center;" 
-                                            type="text" name="AcctUpdDt[<?= $Key ?>][id]"
-                                            value="<?= h($Row['id']) ?? '' ?>" readonly>
-                                    </td>
-                                    <td style="text-align: left;">  <!--   ユーザーID   -->
-                                        <input class="TxtBoxLineDel" style="width: 90%; text-align: center;" 
-                                            type="text" name="AcctUpdDt[<?= $Key ?>][user_id]"
-                                            value="<?= h($Row['user_id']) ?? '' ?>" readonly>
-                                    </td>
-                                    <td style="text-align: left;">  <!--   勘定科目名   -->
-                                        <input class="TxtBoxLineDel" style="width: 90%;" 
-                                            type="text" name="AcctUpdDt[<?= $Key ?>][name]" 
-                                            value="<?= h($Row['name']) ?? '' ?>">
-                                    </td>
-                                    <td>                            <!--   勘定科目種別   -->
-                                        <select style="width: 95%;" name="AcctUpdDt[<?= $Key ?>][type]" required>
-                                            <option value="">選択してください</option>
+                                        </th>
+                                        <th style="width: 6%;" >
+                                            <button name="AcctPfm" type="submit" value="<?= h('削除') ?>" >削除</button>
+                                        </th>
+                                    </tr>
+                                    <?php foreach ($Accounts as $Key => $Row): ?>
+                                        <tr style="background-color: #ffffff; font-weight: bold; text-align: center;">
+                                            <td>                           <!--   行番号　pri-key   -->
+                                                <input class="TxtBoxLineDel" style="width: 90%; text-align: center;" 
+                                                    type="text" name="AcctUpdDt[<?= $Key ?>][id]"
+                                                    value="<?= h($Row['id']) ?? '' ?>" readonly>
+                                            </td>
+                                            <td style="text-align: left;">  <!--   ユーザーID   -->
+                                                <input class="TxtBoxLineDel" style="width: 90%; text-align: center;" 
+                                                    type="text" name="AcctUpdDt[<?= $Key ?>][user_id]"
+                                                    value="<?= h($Row['user_id']) ?? '' ?>" readonly>
+                                            </td>
+                                            <td style="text-align: left;">  <!--   勘定科目名   -->
+                                                <input class="TxtBoxLineDel" style="width: 90%;" 
+                                                    type="text" name="AcctUpdDt[<?= $Key ?>][name]" 
+                                                    value="<?= h($Row['name']) ?? '' ?>">
+                                            </td>
+                                            <td>                            <!--   勘定科目種別   -->
+                                                <select style="width: 95%;" name="AcctUpdDt[<?= $Key ?>][type]" required>
+                                                    <option value="">選択してください</option>
     
-                                            <?php foreach($this->CtrDto->AccountsType as $i => $a): ?>
-                                                <option value="<?= h($a) ?>" 
-                                                    <?= (isset($Row['type']) && $Row['type'] == $a) ? 'selected' : '' ?>>
-                                                <?= h($a) ?> </option>
-                                            <?php endforeach; ?>
-                                        </select>
-                                        <input class="TxtBoxLineDel" style="width: 90%; text-align: center;" 
-                                            type="hidden" name="AcctUpdDt[<?= $Key ?>][type]" 
-                                            value="<?= h($Row['type']) ?? '' ?>">
-                                    </td>
-                                    <td style="font-color: #ff0000;">    <!--   エラーメッセージ   -->
-                                        <input class="TxtBoxLineDel" style="width: 90%;" type="text" 
-                                            name="AcctUpdDt[<?= $Key ?>][errmsg]"
-                                            value="<?= h($Row['errmsg'] ?? '')  ?>" readonly>
-                                    </td>
-                                    <td>
-                                        <input class="TxtBoxLineDel" style="width: 90%;" type="checkbox" 
-                                            name="AcctUpdDt[<?= $Key ?>][del]" value="On">
-                                    </td>
+                                                    <?php foreach($this->CtrDto->AccountsType as $i => $a): ?>
+                                                        <option value="<?= h($a) ?>" 
+                                                            <?= (isset($Row['type']) && $Row['type'] == $a) ? 'selected' : '' ?>>
+                                                        <?= h($a) ?> </option>
+                                                    <?php endforeach; ?>
+                                                </select>
+                                                <input class="TxtBoxLineDel" style="width: 90%; text-align: center;" 
+                                                    type="hidden" name="AcctUpdDt[<?= $Key ?>][type]" 
+                                                    value="<?= h($Row['type']) ?? '' ?>">
+                                            </td>
+                                            <td style="font-color: #ff0000;">    <!--   エラーメッセージ   -->
+                                                <input class="TxtBoxLineDel" style="width: 90%;" type="text" 
+                                                    name="AcctUpdDt[<?= $Key ?>][errmsg]"
+                                                    value="<?= h($Row['errmsg'] ?? '')  ?>" readonly>
+                                            </td>
+                                            <td>
+                                                <input class="TxtBoxLineDel" style="width: 90%;" type="checkbox" 
+                                                    name="AcctUpdDt[<?= $Key ?>][del]" value="On">
+                                            </td>
 
-                                </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
-                </form>
-
-
-
-            </td>
-
-            <td style="width: 50%; vertical-align: top;">
-                <div>これは右側です。</div>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
 
 
 
+                    </td>
 
-            </td>
-        </tr>
-    </tbody>
-</table>
+                    <td style="width: 50%; vertical-align: top;">
+                        <div>これは右側です。</div>
+
+
+
+                        ここには修正した勘定科目が損益計算書、貸借対象表のどの位置に追加修正されたか確認できるようにする
+
+
+
+
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </form>  <!--###############################################-->
+

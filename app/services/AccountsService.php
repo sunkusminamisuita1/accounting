@@ -8,10 +8,11 @@ class AccountsService{
 
     public AccountsValidator    $SvcVali;
     public AccountsRepository   $SvcRepo;
-    public AccountsDto          $CtrDto;
+    //public AccountsDto          $CtrDto;
 
     public function __construct(AccountsDto $Dto)    {
         $this->SvcRepo =   new AccountsRepository($Dto);
+        $this->Svcvali =   new AccountsValidator($Dto);
     }
 
     public function GetAccounts( AccountsDto $Dto){
@@ -24,23 +25,19 @@ class AccountsService{
             $Dto->AcctAltTbl[$key]['errmsg'] = 'xxxx';
         }
         unset($Row);
-        echo "<br><pre>" .var_dump($Dto->AcctAltTbl) . "</pre>";
     }
 
-    public function AccountsDlt(AccountsDto $Dto){
+    public function AccountsEdit(AccountsDto $Dto){
         //echo "<br><pre>" .var_dump($Dto->AcctAltTbl) . "</pre>";
 
-
         $DelKeys = [];
-        foreach( $_POST['AcctUpdDt'] as $Key=>$Row){ //array_Spliceでキー順序が更新されるため、削除は降順で実行
+        foreach( $Dto->PostDt['AcctUpdDt'] as $Key=>$Row){ //array_Spliceでキー順序が更新されるため、削除は降順で実行
             if($Row['del'] ?? ''){
-                $DelKeys[] =  $Key;
+                $Dto->AcctAltTbl[$Key]['edittype'] = '削除';
+            }else{
+                $Dto->AcctAltTbl[$Key] = $Row;
+                $Dto->AcctAltTbl[$Key]['edittype'] = '更新';
             }            
-        }
-        rsort($DelKeys);
-
-        foreach($DelKeys as $DelKey){
-            array_splice($Dto->AcctAltTbl,(int)$DelKey,1);
         }
         
     }
@@ -48,17 +45,27 @@ class AccountsService{
     public function AccountsAdd(AccountsDto $Dto){
 
         $UserId = $Dto->id;
-        array_unshift($Dto->AcctAltTbl,['id'=> null,'user_id'=>(int)$UserId,'name'=>'','type'=>'', 'errmsg'=>'']);
+        array_unshift($Dto->AcctAltTbl,['id'=> null,'user_id'=>(int)$UserId,'name'=>'','type'=>'', 'errmsg'=>'', 'edittype'=>'追加']);
 
     }
 
     public function AccountsAlt(AccountsDto $Dto){
 
-        foreach($Dto->AcctAltTbl as $key=>$Row){
-            var_dump($Row); echo "Alt <br>";
-        }
-        $this->SvcVali->AccountsVali($this->CtrDto);
+        $this->SvcVali->AccountsVali($Dto);
 
+        foreach($Dto->AcctAltTbl as $Key=>$Row){
+            switch($Row['edittype']){
+                case '追加':
+                    $Svc->Repo->AcctAdd($Dto,$Key);
+                    break;
+                case '更新':
+                    $Svc->Repo->AcctEdit($Dto,$Key);
+                    break;
+                case '削除':
+                    $Svc->Repo->AccotDlt($Dto,$Key);
+                    break; 
+            }
+        }
     }
 
     public function AccountsCancel(AccountsDto $Dto){    //修正データをもとに戻す
