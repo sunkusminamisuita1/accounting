@@ -17,12 +17,12 @@ class AccountsRepository
             $stmt = $pdo->query("
                 SELECT id, user_id, name, type
                 FROM accounts
-                ORDER BY type,name
                 WHERE is_deleted = 0
+                ORDER BY type,name
             ");
         } catch(Exception $e) {
-            echo $message;
             $message = $e->getMessage();
+            echo $message;
             throw $e;
         }
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -105,6 +105,7 @@ class AccountsRepository
             $stmt = $pdo->prepare("
                 UPDATE accounts
                     SET is_deleted = ?
+                    WHERE id = $Key
             ");
 
             $stmt->execute([

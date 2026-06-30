@@ -41,6 +41,9 @@ class AccountsController {
                     break;
 
                 case '修正実行':
+                    echo "<br><pre>" . var_dump($this->CtrDto->Accounts) . "</pre><br>";
+                    echo "<br><pre>" . var_dump($this->CtrDto->AcctAltTbl) . "</pre><br>";
+                    break;
                     $this->RestoreEditingData($this->CtrDto);
                     $this->CtrSvc->AccountsAlt($this->CtrDto);
                     $this->PrepareNextRequest($this->CtrDto);

@@ -3,6 +3,8 @@
 require_once ROOT_PATH . '/lib/helpers.php';
 require_once ROOT_PATH.'/app/repositories/AccountsRepository.php';
 require_once ROOT_PATH.'/app/DTO/AccountsDto.php';
+require_once ROOT_PATH.'/app/Validators/AccountsValidator.php';
+
 
 class AccountsService{
 
@@ -12,13 +14,14 @@ class AccountsService{
 
     public function __construct(AccountsDto $Dto)    {
         $this->SvcRepo =   new AccountsRepository($Dto);
-        $this->Svcvali =   new AccountsValidator($Dto);
+        $this->SvcVali =   new AccountsValidator($Dto);
     }
 
     public function GetAccounts( AccountsDto $Dto){
 
         $Dto->Accounts  =   $this->SvcRepo->getAccounts($Dto);
-        
+        echo "<br><pre>" . var_dump($Dto->Accounts) . "</pre><br>";
+
         $Dto->AcctAltTbl = $Dto->Accounts;         //修正用科目テーブル作成
 
         foreach($Dto->AcctAltTbl as $key=>$Row){   //errmsgカラム追加,初期化
@@ -54,15 +57,16 @@ class AccountsService{
         $this->SvcVali->AccountsVali($Dto);
 
         foreach($Dto->AcctAltTbl as $Key=>$Row){
+            $KeyId = $Row[id];
             switch($Row['edittype']){
                 case '追加':
-                    $Svc->Repo->AcctAdd($Dto,$Key);
+                    $Svc->Repo->AcctAdd($Dto,$KeyId);
                     break;
                 case '更新':
-                    $Svc->Repo->AcctEdit($Dto,$Key);
+                    $Svc->Repo->AcctEdit($Dto,$KeyId);
                     break;
                 case '削除':
-                    $Svc->Repo->AccotDlt($Dto,$Key);
+                    $Svc->Repo->AccotDlt($Dto,$KeyId);
                     break; 
             }
         }
