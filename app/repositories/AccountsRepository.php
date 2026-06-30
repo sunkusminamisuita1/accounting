@@ -58,9 +58,9 @@ class AccountsRepository
 
             $stmt->execute([
                 null,
-                $Dto->AcctAltDt[$Key]['user_id'] ?? "" ,
-                $Dto->AcctAltDt[$Key]['name'] ?? "",
-                $Dto->AcctAltDt[$Key]['type'] ?? ""
+                $Dto->AcctAltTbl[$Key]['user_id'] ?? "" ,
+                $Dto->AcctAltTbl[$Key]['name'] ?? "",
+                $Dto->AcctAltTbl[$Key]['type'] ?? ""
             ]);
             $pdo->commit();
 
@@ -83,10 +83,10 @@ class AccountsRepository
             ");
 
             $stmt->execute([
-                $Dto->AcctAltDt[$Key]['name'] ?? "",
-                $Dto->AcctAltDt[$Key]['type'] ?? "",
-                $Dto->AcctAltDt[$Key]['id'] ?? "",
-                $Dto->AcctAltDt[$Key]['user_id'] ?? "" 
+                $Dto->AcctAltTbl[$Key]['name'] ?? "",
+                $Dto->AcctAltTbl[$Key]['type'] ?? "",
+                $Dto->AcctAltTbl[$Key]['id'] ?? "",
+                $Dto->AcctAltTbl[$Key]['user_id'] ?? "" 
             ]);
             $pdo->commit();
 
@@ -104,16 +104,11 @@ class AccountsRepository
             
             $stmt = $pdo->prepare("
                 UPDATE accounts
-                    SET name = ?, type = ?, is_deleted = ?
-                    WHERE id = ? AND user_id = ?
+                    SET is_deleted = ?
             ");
 
             $stmt->execute([
-                $Dto->AcctAltDt[$Key]['name'] ?? "",
-                $Dto->AcctAltDt[$Key]['type'] ?? "",
-                1,
-                $Dto->AcctAltDt[$Key]['id'] ?? "",
-                $Dto->AcctAltDt[$Key]['user_id'] ?? ""
+                1
             ]);
             $pdo->commit();
 

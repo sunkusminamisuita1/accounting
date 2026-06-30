@@ -19,7 +19,26 @@ class AccountsValidator
             } else {
                 $Dto->AcctAltTbl[$key]['errmsg'] = "貸借種別は'収益'か'費用'か'資産'か'負債'か'資本'以外は入力できません。";
             }
-            XXX
+
+            // 🌟 2. 自分自身も含めて「AcctAltTbl」全体から同じデータを検索する
+            // ※ すでに削除チェック（del == 'On'）がついている行は比較対象から外すとより正確になります
+            if (($Row['edittype'] ?? '') !== '削除') {
+            
+                $sameRows = array_filter($Dto->AcctAltTbl, function($searchRow) use ($Row) {
+                    // 削除予定の行はカウント対象外にする
+                    if (($searchRow['edittype'] ?? '') === '削除') {
+                        return false;
+                    }
+                    // 「名前」と「種別」が一致する行を生き残らせる
+                    return $searchRow['name'] === $Row['name'] && $searchRow['type'] === $Row['type'];
+                });
+
+                // 🌟 3. count() で生存した件数を取得し、2件以上なら重複エラー！
+                if (count($sameRows) >= 2) {
+                    $Dto->AcctAltTbl[$key]['errmsg'] = "このデータはすでに登録（重複）されています。";
+                }
+            }
+            //XXX
         }
 
     }
