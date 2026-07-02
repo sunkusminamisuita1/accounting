@@ -71,7 +71,8 @@ class AccountsService{
         $this->SvcVali->AccountsVali($Dto);
 
         foreach($Dto->AcctAltTbl as $Key=>$Row){
-            $KeyId = $Row['id']??'';
+            //$KeyId = $Row['id']??'';
+            $KeyId = $Key;
             switch($Row['edittype']){
                 case '追加':
                     $this->SvcRepo->AcctAdd($Dto,$KeyId);

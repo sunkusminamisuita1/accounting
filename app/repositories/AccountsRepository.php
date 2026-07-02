@@ -73,7 +73,8 @@ class AccountsRepository
 
     public function AcctEdit(AccountsDto $Dto , $Key) {
         $pdo = getPDO();
-        echo "<br>repo-edit key=".$Key . "<br>";
+        echo "<br>repo-edit name=".$Dto->AcctAltTbl[$Key]['name'].   " type=".$Dto->AcctAltTbl[$Key]['type']. 
+              "id=".$Dto->AcctAltTbl[$Key]['id']. "user_id=".$Dto->AcctAltTbl[$Key]['user_id']. "<br>";
         $pdo->beginTransaction();
         try {
             
@@ -106,11 +107,12 @@ class AccountsRepository
             $stmt = $pdo->prepare("
                 UPDATE accounts
                     SET is_deleted = ?
-                    WHERE id = $Key
+                    WHERE id = ? AND user_id = ?
             ");
 
             $stmt->execute([
-                1
+                1,
+                $Dto->AcctAltTbl[$Key]['user_id'] ?? ""
             ]);
             $pdo->commit();
 
