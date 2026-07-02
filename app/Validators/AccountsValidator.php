@@ -9,7 +9,7 @@ class AccountsValidator
 
     }
 
-    public function AccountsVali(AccuntsDTO $Dto): void
+    public function AccountsVali(AccountsDTO $Dto): void
     {
 
         foreach ($Dto->AcctAltTbl as $key => $Row) {

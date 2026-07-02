@@ -97,6 +97,7 @@
                                         </th>
                                     </tr>
                                     <?php foreach ($Accounts as $Key => $Row): ?>
+                                        <input type="hidden" name="ViewEditKey" value="<?= h($Key) ?>">
                                         <tr style="background-color: #ffffff; font-weight: bold; text-align: center;">
                                             <td>                           <!--   行番号　pri-key   -->
                                                 <input class="TxtBoxLineDel" style="width: 90%; text-align: center;" 

@@ -26,6 +26,7 @@ class AccountsController {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             requireCsrf();
             $this->CtrDto->PostDt = $_POST;
+            $ViewEditKey = $_POST['ViewEditKey'] ?? null;
             switch($_POST['AcctPfm']){
 
                 case '追加':
@@ -36,22 +37,25 @@ class AccountsController {
 
                 case '削除':
                     $this->RestoreEditingData($this->CtrDto);
-                    $this->CtrSvc->AccountsEdit($this->CtrDto);
+                    $this->CtrSvc->AccountsEdit($this->CtrDto,$ViewEditKey);
                     $this->PrepareNextRequest($this->CtrDto);
                     break;
 
-                case '修正実行':
-                    echo "<br><pre>" . var_dump($this->CtrDto->Accounts) . "</pre><br>";
-                    echo "<br><pre>" . var_dump($this->CtrDto->AcctAltTbl) . "</pre><br>";
-                    break;
+                case '修正実行':                    
                     $this->RestoreEditingData($this->CtrDto);
-                    $this->CtrSvc->AccountsAlt($this->CtrDto);
+                    $this->CtrSvc->RepoDataMake($this->CtrDto);
+                    echo "<br><pre>" . var_dump($this->CtrDto->Accounts) . "</pre><br><br>";
+                    echo "<br><pre>" . var_dump($this->CtrDto->AcctAltTbl) . "</pre><br><br>";
+                    //exit;
+                    //break;
+                    $this->CtrSvc->AccountsAlt($this->CtrDto,$ViewEditKey);
                     $this->PrepareNextRequest($this->CtrDto);
                     break;
 
                 case 'キャンセル':
                     $this->CtrSvc->AccountsCancel($this->CtrDto);
                     break;
+
 
             }
             

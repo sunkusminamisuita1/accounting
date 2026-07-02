@@ -26,6 +26,7 @@ class AccountsService{
 
         foreach($Dto->AcctAltTbl as $key=>$Row){   //errmsgカラム追加,初期化
             $Dto->AcctAltTbl[$key]['errmsg'] = 'xxxx';
+            $Dto->AcctAltTbl[$key]['edittype'] = '更新';//初期値セット
         }
         unset($Row);
     }
@@ -37,8 +38,9 @@ class AccountsService{
         foreach( $Dto->PostDt['AcctUpdDt'] as $Key=>$Row){ //array_Spliceでキー順序が更新されるため、削除は降順で実行
             if($Row['del'] ?? ''){
                 $Dto->AcctAltTbl[$Key]['edittype'] = '削除';
+                $Dto->AcctAltTbl[$Key]['errmsg'] = '削除済み';
             }else{
-                $Dto->AcctAltTbl[$Key] = $Row;
+                //$Dto->AcctAltTbl[$Key] = $Row;
                 $Dto->AcctAltTbl[$Key]['edittype'] = '更新';
             }            
         }
@@ -52,22 +54,38 @@ class AccountsService{
 
     }
 
+    public function RepoDataMake(AccountsDto $Dto){
+
+        foreach($Dto->PostDt['AcctUpdDt'] as $Key=>$Row){ //array_Spliceでキー順序が更新されるため、削除は降順で実行
+                $Dto->AcctAltTbl[$Key]['id']        = $Dto->PostDt['AcctUpdDt'][$Key]['id'];
+                $Dto->AcctAltTbl[$Key]['user_id']   = $Dto->PostDt['AcctUpdDt'][$Key]['user_id'];
+                $Dto->AcctAltTbl[$Key]['name']      = $Dto->PostDt['AcctUpdDt'][$Key]['name'];
+                $Dto->AcctAltTbl[$Key]['type']      = $Dto->PostDt['AcctUpdDt'][$Key]['type'];
+                //$Dto->AcctAltTbl[$Key]['edittype']  = $Dto->PostDt['AcctUpdDt'][$Key]['edittype'] ?? '';
+        }
+
+    }
+
     public function AccountsAlt(AccountsDto $Dto){
 
         $this->SvcVali->AccountsVali($Dto);
 
         foreach($Dto->AcctAltTbl as $Key=>$Row){
-            $KeyId = $Row[id];
+            $KeyId = $Row['id']??'';
             switch($Row['edittype']){
                 case '追加':
-                    $Svc->Repo->AcctAdd($Dto,$KeyId);
+                    $this->SvcRepo->AcctAdd($Dto,$KeyId);
                     break;
                 case '更新':
-                    $Svc->Repo->AcctEdit($Dto,$KeyId);
+                    $this->SvcRepo->AcctEdit($Dto,$KeyId);
                     break;
                 case '削除':
-                    $Svc->Repo->AccotDlt($Dto,$KeyId);
-                    break; 
+                    $this->SvcRepo->AcctDlt($Dto,$KeyId);
+                    break;
+                default:
+                    echo "system error: edittype is not set.";
+                    exit;
+                    break;
             }
         }
     }
