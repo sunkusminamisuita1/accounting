@@ -112,6 +112,7 @@ class AccountsRepository
 
             $stmt->execute([
                 1,
+                $Dto->AcctAltTbl[$Key]['id'] ?? "",
                 $Dto->AcctAltTbl[$Key]['user_id'] ?? ""
             ]);
             $pdo->commit();

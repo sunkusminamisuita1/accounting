@@ -121,12 +121,15 @@
                                                     <?php foreach($this->CtrDto->AccountsType as $i => $a): ?>
                                                         <option value="<?= h($a) ?>" 
                                                             <?= (isset($Row['type']) && $Row['type'] == $a) ? 'selected' : '' ?>>
-                                                        <?= h($a) ?> </option>
+                                                            <?= h($a) ?> 
+                                                        </option>
                                                     <?php endforeach; ?>
+
                                                 </select>
-                                                <input class="TxtBoxLineDel" style="width: 90%; text-align: center;" 
-                                                    type="hidden" name="AcctUpdDt[<?= $Key ?>][type]" 
-                                                    value="<?= h($Row['type']) ?? '' ?>">
+                                                <!-- <input class="TxtBoxLineDel" style="width: 90%; text-align: center;" 
+                                                    type="hidden" name="AcctUpdDt[<?php //echo $Key ?>][type]" 
+                                                    value="<?//php echo h($Row['type']) ?? '' ?>"
+                                                > -->
                                             </td>
                                             <td style="font-color: #ff0000;">    <!--   エラーメッセージ   -->
                                                 <input class="TxtBoxLineDel" style="width: 90%;" type="text" 

@@ -71,17 +71,16 @@ class AccountsService{
         $this->SvcVali->AccountsVali($Dto);
 
         foreach($Dto->AcctAltTbl as $Key=>$Row){
-            //$KeyId = $Row['id']??'';
-            $KeyId = $Key;
+
             switch($Row['edittype']){
                 case '追加':
-                    $this->SvcRepo->AcctAdd($Dto,$KeyId);
+                    $this->SvcRepo->AcctAdd($Dto,$Key);
                     break;
                 case '更新':
-                    $this->SvcRepo->AcctEdit($Dto,$KeyId);
+                    $this->SvcRepo->AcctEdit($Dto,$Key);
                     break;
                 case '削除':
-                    $this->SvcRepo->AcctDlt($Dto,$KeyId);
+                    $this->SvcRepo->AcctDlt($Dto,$Key);
                     break;
                 default:
                     echo "system error: edittype is not set.";
