@@ -136,9 +136,12 @@
                                                     name="AcctUpdDt[<?= $Key ?>][errmsg]"
                                                     value="<?= h($Row['errmsg'] ?? '')  ?>" readonly>
                                             </td>
-                                            <td>
+                                            <td>                            <!--   削除チェックボックス   -->
                                                 <input class="TxtBoxLineDel" style="width: 90%;" type="checkbox" 
-                                                    name="AcctUpdDt[<?= $Key ?>][del]" value="On">
+                                                    name="AcctUpdDt[<?= $Key ?>][del]" value="On"
+                                                    <?php if (isset($Row['edittype']) && $Row['edittype'] === '削除') { 
+                                                        echo 'checked'; } ?>
+                                                >
                                             </td>
 
                                         </tr>

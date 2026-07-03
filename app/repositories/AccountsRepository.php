@@ -11,20 +11,42 @@ class AccountsRepository
     public function __construct(AccountsDto $Dto)    {
     }
 
-    public function getAccounts(AccountsDto $Dto)  {
+    public function getAccounts(AccountsDto $Dto, bool $includeDeleted = false)  {
         try{
+            //$pdo = getPDO();
+            //$stmt = $pdo->query("
+            //    SELECT id, user_id, name, type
+            //    FROM accounts
+            //    WHERE is_deleted = 0
+            //    ORDER BY type,name
+            //");
+
+            $Where = $includeDeleted ? "" : "WHERE is_deleted = 0";
             $pdo = getPDO();
             $stmt = $pdo->query("
                 SELECT id, user_id, name, type
                 FROM accounts
-                WHERE is_deleted = 0
+                $Where
                 ORDER BY type,name
             ");
+
+            //$pdo = getPDO();
+            //$stmt = $pdo->prepare("
+            //    SELECT id, user_id, name, type
+            //    FROM accounts
+            //    WHERE is_deleted = ?
+            //    ORDER BY type,name
+            //");
+            //$stmt->execute([
+            //    $_GET['route'] === 'accounts.edit' ? 1 : 0
+            //]);
+
         } catch(Exception $e) {
             $message = $e->getMessage();
             echo $message;
             throw $e;
         }
+
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 

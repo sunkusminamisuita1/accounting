@@ -44,8 +44,8 @@ class AccountsController {
                 case '修正実行':                    
                     $this->RestoreEditingData($this->CtrDto);
                     $this->CtrSvc->RepoDataMake($this->CtrDto);
-                    echo "<br><pre>" . var_dump($this->CtrDto->Accounts) . "</pre><br><br>";
-                    echo "<br><pre>" . var_dump($this->CtrDto->AcctAltTbl) . "</pre><br><br>";
+                    //echo "<br><pre>" . var_dump($this->CtrDto->Accounts) . "</pre><br><br>";
+                    //echo "<br><pre>" . var_dump($this->CtrDto->AcctAltTbl) . "</pre><br><br>";
                     //exit;
                     //break;
                     $this->CtrSvc->AccountsAlt($this->CtrDto,$ViewEditKey);
