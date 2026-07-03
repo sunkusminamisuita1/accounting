@@ -35,13 +35,13 @@ class AccountsController {
                     $this->PrepareNextRequest($this->CtrDto);
                     break;
 
-                case '削除':
+                case '削除':  //削除ボタンは、削除フラグのon offを切り替え,AcctAltTblのis_deleted,errmsg,edittypeを更新
                     $this->RestoreEditingData($this->CtrDto);
                     $this->CtrSvc->AccountsEdit($this->CtrDto,$ViewEditKey);
                     $this->PrepareNextRequest($this->CtrDto);
                     break;
 
-                case '修正実行':                    
+                case '修正実行':  //AcctAltTblの内容をDBに反映する。                  
                     $this->RestoreEditingData($this->CtrDto);
                     $this->CtrSvc->RepoDataMake($this->CtrDto);
                     //echo "<br><pre>" . var_dump($this->CtrDto->Accounts) . "</pre><br><br>";

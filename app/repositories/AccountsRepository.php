@@ -24,7 +24,7 @@ class AccountsRepository
             $Where = $includeDeleted ? "" : "WHERE is_deleted = 0";
             $pdo = getPDO();
             $stmt = $pdo->query("
-                SELECT id, user_id, name, type
+                SELECT id, user_id, name, type, is_deleted
                 FROM accounts
                 $Where
                 ORDER BY type,name
@@ -102,13 +102,14 @@ class AccountsRepository
             
             $stmt = $pdo->prepare("
                 UPDATE accounts
-                    SET name = ?, type = ?
-                    WHERE id = ? AND user_id = ?
+                    SET name = ?, type = ?, is_deleted = ?
+                    WHERE id = ? AND user_id = ? 
             ");
 
             $stmt->execute([
                 $Dto->AcctAltTbl[$Key]['name'] ?? "",
                 $Dto->AcctAltTbl[$Key]['type'] ?? "",
+                $Dto->AcctAltTbl[$Key]['is_deleted'] ?? 0,
                 $Dto->AcctAltTbl[$Key]['id'] ?? "",
                 $Dto->AcctAltTbl[$Key]['user_id'] ?? "" 
             ]);

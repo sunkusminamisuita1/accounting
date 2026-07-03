@@ -19,6 +19,13 @@ class AccountsValidator
             } else {
                 $Dto->AcctAltTbl[$key]['errmsg'] = "貸借種別は'収益'か'費用'か'資産'か'負債'か'資本'以外は入力できません。";
             }
+            if(isset($Row['is_deleted']) && $Row['is_deleted'] ?? 0) {
+                $Dto->AcctAltTbl[$key]['errmsg'] = "このデータは削除済みです。";
+                $Dto->AcctAltTbl[$key]['edittype'] = "削除";
+            }
+            if (empty($Row['name'])) {
+                $Dto->AcctAltTbl[$key]['errmsg'] = "勘定科目名は必須です。";
+            }
 
             // 🌟 2. 自分自身も含めて「AcctAltTbl」全体から同じデータを検索する
             // ※ すでに削除チェック（del == 'On'）がついている行は比較対象から外すとより正確になります

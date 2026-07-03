@@ -20,29 +20,38 @@ class AccountsService{
     public function GetAccounts( AccountsDto $Dto){
 
         $Dto->Accounts  =   $this->SvcRepo->getAccounts($Dto,true);
-        //echo "<br><pre>" . var_dump($Dto->Accounts) . "</pre><br>";
+        echo "<br><pre>" . var_dump($Dto->Accounts) . "</pre><br>";
 
         $Dto->AcctAltTbl = $Dto->Accounts;         //修正用科目テーブル作成
 
         foreach($Dto->AcctAltTbl as $key=>$Row){   //errmsgカラム追加,初期化
             $Dto->AcctAltTbl[$key]['errmsg'] = 'xxxx';
             $Dto->AcctAltTbl[$key]['edittype'] = '更新';//初期値セット
+            if(isset($Row['is_deleted']) && $Row['is_deleted'] ?? 0) {
+                $Dto->AcctAltTbl[$key]['errmsg'] = "この勘定科目は削除済みです。";
+                $Dto->AcctAltTbl[$key]['edittype'] = "削除";
+            }
+         
         }
+        echo "<br>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx<br><pre>" .var_dump($Dto->Accounts) . "</pre>yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy<br>";
+
         unset($Row);
     }
 
     public function AccountsEdit(AccountsDto $Dto){
         //echo "<br><pre>" .var_dump($Dto->AcctAltTbl) . "</pre>";
-        echo "<br>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx<br><pre>" .var_dump($Dto->Accounts) . "</pre>yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy<br>";
         $DelKeys = [];
         foreach( $Dto->PostDt['AcctUpdDt'] as $Key=>$Row){ //array_Spliceでキー順序が更新されるため、削除は降順で実行
             if($Row['del'] ?? ''){
                 $Dto->AcctAltTbl[$Key]['edittype'] = '削除';
                 $Dto->AcctAltTbl[$Key]['errmsg'] = '削除済み';
+                $Dto->AcctAltTbl[$Key]['is_deleted'] = 1;
             }else{
                 //$Dto->AcctAltTbl[$Key] = $Row;
                 $Dto->AcctAltTbl[$Key]['edittype'] = '更新';
-            }            
+                $Dto->AcctAltTbl[$Key]['errmsg'] = 'XXX';
+                $Dto->AcctAltTbl[$Key]['is_deleted'] = 0;
+            }
         }
         
     }
@@ -61,6 +70,13 @@ class AccountsService{
                 $Dto->AcctAltTbl[$Key]['user_id']   = $Dto->PostDt['AcctUpdDt'][$Key]['user_id'];
                 $Dto->AcctAltTbl[$Key]['name']      = $Dto->PostDt['AcctUpdDt'][$Key]['name'];
                 $Dto->AcctAltTbl[$Key]['type']      = $Dto->PostDt['AcctUpdDt'][$Key]['type'];
+                //$Dto->AcctAltTbl[$key]['errmsg']    = "このデータは削除済みです。";
+                //$Dto->AcctAltTbl[$key]['edittype']  = "削除";
+
+                //if(!isset($Row['is_deleted']) && $Row['is_deleted'] ?? 0) {
+                //    $Dto->AcctAltTbl[$key]['errmsg'] = "このデータは削除済みです。";
+                //    $Dto->AcctAltTbl[$key]['edittype'] = "削除";
+                //}
                 //$Dto->PostDt['AcctUpdDt'][$Key]['del']= "on";
                 //$Dto->AcctAltTbl[$Key]['edittype']  = $Dto->PostDt['AcctUpdDt'][$Key]['edittype'] ?? '';
         }
