@@ -20,7 +20,7 @@ class AccountsService{
     public function GetAccounts( AccountsDto $Dto){
 
         $Dto->Accounts  =   $this->SvcRepo->getAccounts($Dto,true);
-        echo "<br><pre>" . var_dump($Dto->Accounts) . "</pre><br>";
+        //echo "<br><pre>" . var_dump($Dto->Accounts) . "</pre><br>";
 
         $Dto->AcctAltTbl = $Dto->Accounts;         //修正用科目テーブル作成
 
@@ -33,7 +33,7 @@ class AccountsService{
             }
          
         }
-        echo "<br>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx<br><pre>" .var_dump($Dto->Accounts) . "</pre>yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy<br>";
+        //echo "<br>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx<br><pre>" .var_dump($Dto->Accounts) . "</pre>yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy<br>";
 
         unset($Row);
     }
