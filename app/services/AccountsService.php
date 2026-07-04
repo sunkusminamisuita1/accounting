@@ -25,7 +25,7 @@ class AccountsService{
         $Dto->AcctAltTbl = $Dto->Accounts;         //修正用科目テーブル作成
 
         foreach($Dto->AcctAltTbl as $key=>$Row){   //errmsgカラム追加,初期化
-            $Dto->AcctAltTbl[$key]['errmsg'] = 'xxxx';
+            $Dto->AcctAltTbl[$key]['errmsg'] = '';
             $Dto->AcctAltTbl[$key]['edittype'] = '更新';//初期値セット
             if(isset($Row['is_deleted']) && $Row['is_deleted'] ?? 0) {
                 $Dto->AcctAltTbl[$key]['errmsg'] = "この勘定科目は削除済みです。";
@@ -41,7 +41,7 @@ class AccountsService{
     public function AccountsEdit(AccountsDto $Dto){
         //echo "<br><pre>" .var_dump($Dto->AcctAltTbl) . "</pre>";
         $DelKeys = [];
-        foreach( $Dto->PostDt['AcctUpdDt'] as $Key=>$Row){ //array_Spliceでキー順序が更新されるため、削除は降順で実行
+        foreach( $Dto->PostDt['AcctUpdDt'] as $Key=>$Row){
             if($Row['del'] ?? ''){
                 $Dto->AcctAltTbl[$Key]['edittype'] = '削除';
                 $Dto->AcctAltTbl[$Key]['errmsg'] = '削除済み';
@@ -49,7 +49,7 @@ class AccountsService{
             }else{
                 //$Dto->AcctAltTbl[$Key] = $Row;
                 $Dto->AcctAltTbl[$Key]['edittype'] = '更新';
-                $Dto->AcctAltTbl[$Key]['errmsg'] = 'XXX';
+                $Dto->AcctAltTbl[$Key]['errmsg'] = '';
                 $Dto->AcctAltTbl[$Key]['is_deleted'] = 0;
             }
         }
@@ -85,7 +85,10 @@ class AccountsService{
 
     public function AccountsAlt(AccountsDto $Dto){
 
-        $this->SvcVali->AccountsVali($Dto);
+        $Err = $this->SvcVali->AccountsVali($Dto);
+        if($Err > 0){
+            return;
+        }
 
         foreach($Dto->AcctAltTbl as $Key=>$Row){
 
