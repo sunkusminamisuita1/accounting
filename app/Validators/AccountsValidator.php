@@ -54,6 +54,27 @@ class AccountsValidator
         if($ErrFlg > 0){
             $Dto->ErrData[0] = "登録エラーが存在します。エラーを修正してください。";
         }
+
+        
+
+
+
+        
+if($ErrFlg > 0){
+    echo "<br>【エラーフラグ】ErrFlg=" . $ErrFlg;
+    echo "<br>【ErrData設定前】";
+    var_dump($Dto->ErrData);
+    $Dto->ErrData[0] = ['AccountsVali' => "登録エラーが存在します。エラーを修正してください。"];
+    echo "<br>【ErrData設定後】";
+    var_dump($Dto->ErrData);
+} else {
+    echo "<br>【エラーなし】ErrFlg=" . $ErrFlg;
+}
+
+
+
+
+
         return $ErrFlg;
     }
 }
