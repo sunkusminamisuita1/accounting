@@ -9,7 +9,7 @@ class AccountsValidator
 
     }
 
-    public function AccountsVali(AccountsDTO $Dto): void
+    public function AccountsVali(AccountsDTO $Dto): int
     {
         $ErrFlg = 0;
         foreach ($Dto->AcctAltTbl as $key => $Row) 
@@ -52,7 +52,7 @@ class AccountsValidator
             }
         }
         if($ErrFlg > 0){
-            $Dto->ErrData[0] = ['AccountsVali' => "登録エラーが存在します。エラーを修正してください。"];
+            $Dto->ErrData[0] = "登録エラーが存在します。エラーを修正してください。";
         }
         return $ErrFlg;
     }
