@@ -32,17 +32,50 @@ class AccountsValidator
                 break;
             }
 
+
+
+
+
+
+echo "<br>【バイナリ比較】";
+echo "<br>入力name(hex): " . bin2hex($Dto->PostDt['AcctUpdDt'][$key]['name']);
+echo "<br>現在name(hex): " . bin2hex($Row['name']);
+echo "<br>入力type(hex): " . bin2hex($Dto->PostDt['AcctUpdDt'][$key]['type']);
+echo "<br>現在type(hex): " . bin2hex($Row['type']);
+echo "<br>delの値(hex): " . bin2hex($Dto->PostDt['AcctUpdDt'][$key]['del'] ?? '');
+
+
+
+
+
+
             if($Dto->PostDt['AcctUpdDt'][$key]['del'] ?? ''  && 
-              (
-               $Dto->PostDt['AcctUpdDt'][$key]['name'] !== $Row['name']       ||
-               $Dto->PostDt['AcctUpdDt'][$key]['type'] !== $Row['type'])
+                (
+                    (string)$Dto->PostDt['AcctUpdDt'][$key]['name'] !== (string)$Row['name']       ||
+                    (string)$Dto->PostDt['AcctUpdDt'][$key]['type'] !== (string)$Row['type']
+                )
               )
             {
-                    echo "<br>【削除済みデータの修正】";
-                    echo "<br>入力name: " . $Dto->PostDt['AcctUpdDt'][$key]['name'];
-                    echo "<br>現在name: " . $Row['name'];
-                    echo "<br>入力type: " . $Dto->PostDt['AcctUpdDt'][$key]['type'];
-                    echo "<br>現在type: " . $Row['type'];
+
+
+            echo "<br>【delの値】";
+            var_dump($Dto->PostDt['AcctUpdDt'][$key]['del'] ?? '');
+            echo "<br>【比較結果（型キャストあり）】";
+            var_dump((string)$Dto->PostDt['AcctUpdDt'][$key]['name'] !== (string)$Row['name']);
+            var_dump((string)$Dto->PostDt['AcctUpdDt'][$key]['type'] !== (string)$Row['type']);
+            echo "<br>【OR結果】";
+            var_dump(
+              ((string)$Dto->PostDt['AcctUpdDt'][$key]['name'] !== (string)$Row['name']) ||
+              ((string)$Dto->PostDt['AcctUpdDt'][$key]['type'] !== (string)$Row['type'])
+            );
+            echo "<br>【全体条件】";
+            var_dump(
+              ($Dto->PostDt['AcctUpdDt'][$key]['del'] ?? '') && 
+              (
+                ((string)$Dto->PostDt['AcctUpdDt'][$key]['name'] !== (string)$Row['name']) ||
+                ((string)$Dto->PostDt['AcctUpdDt'][$key]['type'] !== (string)$Row['type'])
+              )
+            );
 
                     $Dto->AcctAltTbl[$key]['errmsg'] = "削除済みの勘定科目、種別は修正できません。";
                     $ErrFlg++ ;
