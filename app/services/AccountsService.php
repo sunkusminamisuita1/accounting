@@ -14,7 +14,7 @@ class AccountsService{
 
     public function __construct(AccountsDto $Dto)    {
         $this->SvcRepo =   new AccountsRepository($Dto);
-        $this->SvcVali =   new AccountsValidator($Dto);
+        $this->SvcVali =   new AccountsValidator('true');
     }
 
     public function GetAccounts( AccountsDto $Dto){
