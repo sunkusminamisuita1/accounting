@@ -7,6 +7,7 @@ test6/
 │   │     VoucherController.php
 │   │
 │   ├── services/           ← 業務ロジック
+｜   ｜     AccountsService.php
 │   │     AuthService.php
 │   │     VoucherService.php
 │   │     LedgerService.php
@@ -38,22 +39,25 @@ test6/
 │     index.php
 │
 ├── views/                  ← HTML
-│     layout/
-│         header.php
-│         footer.php
-│
-│     auth/
-│         login.php
-│         register.php
-│
-│     voucher/
-│         create.php
-│
-│     reports/
-│         ledger.php
-│         trial_balance.php
-│         profit_loss.php
-│         balance_sheet.php
+│     ├  layout/
+│     ｜    header.php
+│     ｜    footer.php
+│     ｜  
+｜     ├  Accounts/
+│     ｜    AccountsView.php
+｜     ｜
+│     ├  auth/
+│     ｜    login.php
+│     ｜    register.php
+│     ｜
+│     ├  voucher/
+│     ｜      create.php
+│     ｜
+│     ├  reports/
+│               ledger.php
+│               trial_balance.php
+│               profit_loss.php
+│               balance_sheet.php
 │
 └── storage/
       backup/
