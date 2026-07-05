@@ -1,30 +1,54 @@
 test6/
 │
 ├── app/
+｜   ├── Validators/          ← バリデーション
+│   │     AccountsValidator.php
+｜   ｜     AuthValidator.php
+│   │     VoucherValidator.php
 │   │
 │   ├── controllers/        ← HTTP処理
-│   │     AuthController.php
-│   │     VoucherController.php
+｜   ｜       └lib
+｜   ｜           auth.php
+｜   │       AccountsController.php
+│   │       AuthController.php
+│   │       VoucherController.php
+｜   │       HomeController.php
+｜   │       LogoutController.php
+｜   │       MenuController.php
 │   │
 │   ├── services/           ← 業務ロジック
-｜   ｜     AccountsService.php
-│   │     AuthService.php
-│   │     VoucherService.php
-│   │     LedgerService.php
-│   │     TrialBalanceService.php
-│   │     ProfitLossService.php
-│   │     BalanceSheetService.php
+｜   ｜         └lib
+｜   ｜             HomeLib.php
+｜   ｜       AccountsService.php
+│   │       AuthService.php
+｜   │       HomeService.php
+│   │       VoucherService.php
+│   │       ReportService.php
 │   │
 │   ├── repositories/       ← DB操作
-│   │     UserRepository.php
-│   │     VoucherRepository.php
-│   │     AccountRepository.php
+│   │       UserRepository.php
+│   │       voucherRepository.php
+│   │       AccountRepository.php
+｜   ｜       HomeRepository.php
+｜   │       ReportRepository.php
+│   │       
+│   │       
+│   │       
+｜   ├── DTO/                ← データ構造
+│   │       AccountsDto.php
+｜   ｜       VoucherDto.php
+｜   ｜       Constants.php
+｜   ｜       HmSvcDTO.php
+｜   ｜       LoginDTO.php
+｜   ｜       PdoDTO.php
+｜   ｜       RegisterDTO.php
+｜   ｜     
 │   │
 │   └── models/             ← データ構造
-│         User.php
-│         Voucher.php
-│         VoucherDetail.php
-│         Account.php
+│           User.php
+│           Voucher.php
+│           VoucherDetail.php
+│           Account.php
 │
 ├── config/
 │     bootstrap.php
@@ -33,27 +57,35 @@ test6/
 │
 ├── lib/
 │     helpers.php
-│     security.php
 │
 ├── public/                 ← DocumentRoot
 │     index.php
 │
-├── views/                  ← HTML
-│     ├  layout/
-│     ｜    header.php
-│     ｜    footer.php
+├── views/   
+｜     ├  accounts/
+｜     ｜     add.php
+｜     ｜
+│     ├  home/
+│     ｜     HomeView.php
+│     ｜     index.php
+│     ｜  
+｜     ├  lib/
+｜     ｜     ProcSlct.php
 │     ｜  
 ｜     ├  Accounts/
-│     ｜    AccountsView.php
+│     ｜     AccountsView.php
 ｜     ｜
 │     ├  auth/
-│     ｜    login.php
-│     ｜    register.php
+│     ｜     login.php
+│     ｜     register.php
 │     ｜
 │     ├  voucher/
 │     ｜      create.php
+│     ｜      edit.php
+│     ｜      index.php
+│     ｜      list.php
 │     ｜
-│     ├  reports/
+│     └  reports/
 │               ledger.php
 │               trial_balance.php
 │               profit_loss.php
@@ -234,3 +266,15 @@ array_filter countを使用したロジック
                 $ErrFlg++;
                 continue;
             }
+
+
+未検討事項
+    ◯店舗連結決算をユーザーid内で複数店舗を管理するか？　１ユーザーid１店舗で、ユーザーidを複数作成するか？　どちらが良いか検討する必要あり。
+
+
+今後の課題
+    ◯全コードで未使用変数、未使用メソッドの削除、デバッグコードの削除
+    ◯デバッグモード機能を組み込む
+    ◯初期作成コードがMVC構造を逸脱している箇所が多いので、MVC構造に沿ったコードに修正する必要あり。
+    ◯決算書、貸借対照表、消費税計算書、各勘定元帳、減価償却償却台帳の出力を作成する必要あり。
+
