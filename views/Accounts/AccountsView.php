@@ -28,7 +28,6 @@
 
 <!-- #############     エラーメッセージ POPUP    ############### -->
 
-    <?=  $this->CtrErrMsgPopUp->Show($this->CtrDto);  ?>
 <h1>勘定科目ー定義　編集・削除</h1>
 
 <?php if (!empty($_SESSION['flash_message'])): ?>

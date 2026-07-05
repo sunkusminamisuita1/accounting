@@ -216,3 +216,17 @@ array_filter countを使用したロジック
             }
             //XXX
         }
+
+日本語文字数をチェックするロジック
+            $trimmedName = trim(mb_convert_kana($Row['name'] ?? '', "s", "UTF-8"));//全角スペースを半角に変換してトリム
+            if ($trimmedName === '') {
+                $Dto->AcctAltTbl[$key]['errmsg'] = "勘定科目名は必須です。";
+                $ErrFlg++;
+                continue;
+            }
+
+            if (mb_strlen($trimmedName, 'UTF-8') > 50) {                          //文字数チェック　半角も全角も1文字としてカウントする
+                $Dto->AcctAltTbl[$key]['errmsg'] = "勘定科目名は50文字以内で入力してください。";
+                $ErrFlg++;
+                continue;
+            }

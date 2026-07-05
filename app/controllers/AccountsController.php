@@ -76,7 +76,7 @@ class AccountsController {
     }
 
     private function PrepareNextRequest(AccountsDto $Dto){    //次セッション、renderデータ準備
-        $Dto->AcctAltTbl = array_values($Dto->AcctAltTbl); 
+        //$Dto->AcctAltTbl = array_values($Dto->AcctAltTbl); 
         $_SESSION['Accounts']   = $Dto->AcctAltTbl;
  
     }
