@@ -18,7 +18,10 @@ class AuthController{
                                     trim($_POST['email']),
                                     $_POST['password']
                                     );
-                $user = $this->service->login($dto);
+                echo "dddddddddd";
+                $dto->User = $this->service->login($dto);
+                echo "<br><pre>" . var_dump($dto->User) . "</pre><br>";
+                //exit;
 
                 $this->service->getShopsData($dto);
 
@@ -34,6 +37,7 @@ class AuthController{
         }
         require ROOT_PATH.'/views/auth/login.php';
     }
+
     public function register()
     {
         $message = '';

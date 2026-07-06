@@ -14,7 +14,7 @@ class AuthService
     public function login(LoginDTO $dto): array
     {
         $user = $this->repo->findByEmail($dto->email);
-        $dto->loginUserData = $user;
+        $dto->User = $user;
         if (!$user || !password_verify($dto->password, $user['password_hash'])) {
             throw new Exception('ログイン失敗');
         }

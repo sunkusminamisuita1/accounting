@@ -8,7 +8,7 @@ class UserRepository
         $stmt = $pdo->prepare("
             SELECT  id, username, email, password_hash,
                     fiscal_month, 
-                    fiscal_day,
+                    fiscal_day
             FROM users
             WHERE email = ?
         ");
@@ -51,7 +51,7 @@ class UserRepository
         ");
 
         try {
-            $stmt->execute([$Dto->id]);
+            $stmt->execute([$Dto->User['id'] ?? ""]);  // Use null coalescing operator to handle undefined index
         } catch(Exception $e) {
             $message = $e->getMessage();
             echo $message;
