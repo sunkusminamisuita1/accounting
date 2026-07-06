@@ -19,14 +19,9 @@ class AuthController{
                                     $_POST['password']
                                     );
                 $user = $this->service->login($dto);
-                session_regenerate_id(true);
-                $_SESSION['user'] = [
-                    'id' => (int)$user['id'],
-                    'username' => $user['username'],
-                    'email' => $user['email'],
-                    'fiscalMonth' => $user['fiscal_month'],
-                    'fiscalDay' => $user['fiscal_day']
-                ];
+
+                $this->service->getShopsData($dto);
+
                 header('Location: index.php?route=home');
                 exit;
             } 

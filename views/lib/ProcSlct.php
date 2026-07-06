@@ -58,5 +58,27 @@ foreach ($all_routes as $key => $label) {
                 </a>
 
             </td>
+
+
+
+
+            <td>
+                <div class="shop-selector-container">
+                    <label for="active_shop">現在の操作店舗：</label>
+                    <select name="active_shop" id="active_shop" onchange="location.href='index.php?route=shop.switch&shop_id=' + this.value;">
+                        <?php foreach ($_SESSION['user_shops'] as $shop): ?>
+                            <option value="<?php echo $shop['id']; ?>" <?php echo ($shop['id'] == $_SESSION['current_shop_id']) ? 'selected' : ''; ?>>
+                                <?php echo htmlspecialchars($shop['shop_name'], ENT_QUOTES, 'UTF-8'); ?>
+                            </option>
+                        <?php endforeach; ?>
+                            <option value="all" <?php echo ($_SESSION['current_shop_id'] === 'all') ? 'selected' : ''; ?>>【全店合算（連結決算）】</option>
+                    </select>
+                </div>
+
+            </td>
+
+
+
+
     </tr>
 </table>

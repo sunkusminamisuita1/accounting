@@ -6,8 +6,9 @@ class UserRepository
         $pdo = getPDO();
 
         $stmt = $pdo->prepare("
-            SELECT id, username, email, password_hash,
-                   fiscal_month, fiscal_day
+            SELECT  id, username, email, password_hash,
+                    fiscal_month, 
+                    fiscal_day,
             FROM users
             WHERE email = ?
         ");
@@ -36,6 +37,27 @@ class UserRepository
             $dto->fiscalMonth,
             $dto->fiscalDay
         ]);
+    }
+
+    public function getShopsByUserId(LoginDTO $Dto): array
+    {
+        $pdo = getPDO();
+
+
+
+        $stmt = $pdo->prepare("
+            SELECT id, shop_code, shop_name 
+                FROM shops WHERE user_id = ?
+        ");
+
+        try {
+            $stmt->execute([$Dto->id]);
+        } catch(Exception $e) {
+            $message = $e->getMessage();
+            echo $message;
+            throw $e;
+        }
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }
 ?>
