@@ -9,8 +9,8 @@ class shopController{
 	public function __construct()
     {
         $this->Dto   			=   new ShopsDto();
-		$this->Dto->User		=	$_SESSION['user'];
-		$this->Dto->ShopList	= 	$_SESSION['shoplist'];
+		$this->Dto->User		=	$_SESSION['user']??"";
+		$this->Dto->ShopList	= 	$_SESSION['shoplist']??"";
         $this->Service   		=   new shopsService($this->ctrDto);
         $this->ctrErrMsgPopUp 	= 	new ErrMsgPopUp($this->ctrDto);
     }
