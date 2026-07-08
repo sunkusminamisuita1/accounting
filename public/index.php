@@ -6,6 +6,7 @@ error_reporting(E_ALL);
 require_once __DIR__.'/../config/bootstrap.php';
 $route = $_GET['route'] ?? 'login';
 $routes =   [
+                //login処理　shopsテーブルも読み込む
                 'login' => [
                         'controller' => AuthController::class,
                         'method' => 'login',
@@ -75,7 +76,18 @@ $routes =   [
                         'method' => 'index',
                         'auth' => true
                 ],
-
+                // 店舗情報切替
+                'shop.switch' => [
+                        'controller' => shopController::class,
+                        'method' => 'switch',
+                        'auth' => true
+                ],
+                // 店舗情報編集
+                'shop.edit' => [
+                       'controller' => shopController::class,
+                       'method' => 'edit',
+                       'auth' => true
+                ],
 ];
 if (!isset($routes[$route])) {
     http_response_code(404);

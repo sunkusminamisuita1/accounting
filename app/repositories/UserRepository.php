@@ -39,11 +39,9 @@ class UserRepository
         ]);
     }
 
-    public function getShopsByUserId(LoginDTO $Dto): array
+    public function getShopsByUserId($Dto): array
     {
         $pdo = getPDO();
-
-
 
         $stmt = $pdo->prepare("
             SELECT id, shop_code, shop_name 

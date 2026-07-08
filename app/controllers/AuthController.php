@@ -1,11 +1,14 @@
 <?php
 require_once ROOT_PATH.'/app/services/AuthService.php';
+require_once ROOT_PATH.'/app/services/shopsService.php';
 require_once ROOT_PATH.'/lib/helpers.php';
 class AuthController{
     private $service;
+    private $shopsSvc;
     public function __construct()
     {
-        $this->service = new AuthService();
+        $this->service  = new AuthService();
+        $this->shopsSvc = new shopsService();
     }
     public function login()
     {
@@ -18,13 +21,9 @@ class AuthController{
                                     trim($_POST['email']),
                                     $_POST['password']
                                     );
-                echo "dddddddddd";
                 $dto->User = $this->service->login($dto);
-                echo "<br><pre>" . var_dump($dto->User) . "</pre><br>";
-                //exit;
-
-                $this->service->getShopsData($dto);
-
+                //var_dump($dto->User);exit;
+                $_SESSION['user_shops']  = $this->shopsSvc->getShopsData($dto);
                 header('Location: index.php?route=home');
                 exit;
             } 

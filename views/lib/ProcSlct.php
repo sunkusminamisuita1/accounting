@@ -2,7 +2,8 @@
 // 1. ルート設定をデータとして定義（保守が楽）
 
 $RtnRoute = $_SERVER['HTTP_REFERER']??'route=home'; //呼び出し元URLを取得
-$RtnRoute = ltrim(strchr($RtnRoute,'route='), 'route='); //'='前を削除
+$RtnRoute = ltrim(strchr($RtnRoute,'route='), 'route='); //'='
+//使用方法　http://test5.local/index.php?route=<?= h($RtnRoute) 
 
 $all_routes = [
     'home'           => 'ホーム',
@@ -40,6 +41,23 @@ foreach ($all_routes as $key => $label) {
     .ProcSlct { border-collapse: collapse; width: auto; } /* 幅は中身に合わせるのが一般的 */
     .ProcSlct button { cursor: pointer; padding: 5px 15px; }
 </style>
+
+<?php
+// 1. プロトコル（http:// または https://）の判定
+$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https://" : "http://";
+
+// 2. ドメイン名（例: localhost や example.com）の取得
+$host = $_SERVER['HTTP_HOST'];
+
+// 3. パスとクエリ文字列（例: /index.php?id=5）の取得
+$requestUri = $_SERVER['REQUEST_URI'];
+
+$requestRoute = $_GET['route'] ?? 'home'; // すべてを結合して現在のURLを完成
+
+// すべてを結合して現在のURLを完成
+$_SESSION['current_route'] = $requestRoute;
+
+?>
 
 <table class="ProcSlct">
     <tr>
