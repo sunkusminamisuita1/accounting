@@ -1,9 +1,9 @@
 <?php
-require_once ROOT_PATH . '/app/DTO/ShosDto.php';
+require_once ROOT_PATH . '/app/DTO/ShopsDto.php';
 class shopController{
 
 	Public        $Service;
-    //public        $ctrDto;
+    public        $Dto;
     public        $ctrErrMsgPopUp;
 
 	public function __construct()
@@ -11,8 +11,9 @@ class shopController{
         $this->Dto   			=   new ShopsDto();
 		$this->Dto->User		=	$_SESSION['user']??"";
 		$this->Dto->ShopList	= 	$_SESSION['shoplist']??"";
-        $this->Service   		=   new shopsService($this->ctrDto);
+        $this->Service   		=   new ShopsService($this->ctrDto);
         $this->ctrErrMsgPopUp 	= 	new ErrMsgPopUp($this->ctrDto);
+		$this->Repo				=	new ShopsRepository();
     }
 
     public function switch()
@@ -44,11 +45,14 @@ class shopController{
 	//shopデータ登録、更新
     public function edit()
     {
-		if( ! $this->ctrDto->shopList??""){
-			$dto->shopList = $this->repo->getShopsByUserId($dto);
+		//ProcSlct.phpでShopCodeが変更できるため、最新のShopCodeをサービスに設定
+		$this->Service->RenewTartgetShopCode($Dto)
+
+		if( ! $this->Dto->ShopList??""){
+			$Dto->ShopList = $this->Repo->getShopsByUserId($Dto);
 			$this->Service->GetShops($this->ctrDto);
 		}
-        if( ! $this->ctrDto->Accounts){
+        if( ! $this->Dto->Accounts){
             $this->Service->GetAccounts($this->ctrDto);
         }
 
