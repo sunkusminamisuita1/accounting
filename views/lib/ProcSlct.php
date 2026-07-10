@@ -13,6 +13,7 @@ $all_routes = [
     'voucher.delete' => '仕分削除',
     'voucher.index'  => '仕分一覧',
     'logout'         => 'ログアウト',
+    'shop.edit'      => '店舗情報編集'
 //    $url             => '戻る', //呼び出し元に戻るボタンを追加  
 ];
 
@@ -52,14 +53,62 @@ $host = $_SERVER['HTTP_HOST'];
 // 3. パスとクエリ文字列（例: /index.php?id=5）の取得
 $requestUri = $_SERVER['REQUEST_URI'];
 
-$requestRoute = $_GET['route'] ?? 'home'; // すべてを結合して現在のURLを完成
+$requestRoute = $_GET['route'] ?? 'home'; 
 
-// すべてを結合して現在のURLを完成
 $_SESSION['current_route'] = $requestRoute;
 
 ?>
 
 <table class="ProcSlct">
+
+    <tr>
+
+
+
+        <td colspan="<?= count($display_buttons) + 1; ?>" style="text-align: center; padding-bottom: 15px;">
+
+            <div class="shop-selector-container" style="display: inline-block; text-align: left;">
+                <label for="active_shop">現在の操作店舗：</label>
+                <!-- フォームを配置し、methodをpostにする -->
+                <form action="index.php?route=shop.switch" method="POST" id="shop_selector_form" style="display: inline;">
+                    <select name="active_shop" id="active_shop" onchange="document.getElementById('shop_selector_form').submit();">
+                        <?php foreach ($_SESSION['user_shops'] as $shop): ?>
+                            <option value="<?php echo $shop['id']; ?>" <?php echo ($shop['id'] == $_SESSION['current_shop_id']) ? 'selected' : ''; ?>>
+                                <?php echo htmlspecialchars($shop['shop_name'], ENT_QUOTES, 'UTF-8'); ?>
+                            </option>
+                        <?php endforeach; ?>
+                        <option value="all" <?php echo ($_SESSION['current_shop_id'] === 'all') ? 'selected' : ''; ?>>【全店合算（連結決算）】</option>
+                    </select>
+                </form>
+            </div>
+
+        </td>
+
+
+<?php  /*
+        <td colspan="<?= count($display_buttons) + 1; ?>" style="text-align: center; padding-bottom: 15px;">
+
+                <div class="shop-selector-container">
+                    <label for="active_shop">現在の操作店舗：</label>
+                    <!-- フォームを配置し、methodをpostにする -->
+                    <form action="index.php?route=shop.switch" method="POST" id="shop_selector_form">
+                        <select name="active_shop" id="active_shop" onchange="document.getElementById('shop_selector_form').submit();">
+                            <?php foreach ($_SESSION['user_shops'] as $shop): ?>
+                                <option value="<?php echo $shop['id']; ?>" <?php echo ($shop['id'] == $_SESSION['current_shop_id']) ? 'selected' : ''; ?>>
+                                    <?php echo htmlspecialchars($shop['shop_name'], ENT_QUOTES, 'UTF-8'); ?>
+                                </option>
+                            <?php endforeach; ?>
+                            <option value="all" <?php echo ($_SESSION['current_shop_id'] === 'all') ? 'selected' : ''; ?>>【全店合算（連結決算）】</option>
+                        </select>
+                    </form>
+                </div>
+
+        </td>
+*/ ?>
+
+
+    </tr>
+
     <tr>
         <?php foreach  ($display_buttons as $key => $label): ?>
             <td>
@@ -74,29 +123,6 @@ $_SESSION['current_route'] = $requestRoute;
                     <button type="button"><?= h('戻る') ?>
                     </button>
                 </a>
-
             </td>
-
-
-
-
-            <td>
-                <div class="shop-selector-container">
-                    <label for="active_shop">現在の操作店舗：</label>
-                    <select name="active_shop" id="active_shop" onchange="location.href='index.php?route=shop.switch&shop_id=' + this.value;">
-                        <?php foreach ($_SESSION['user_shops'] as $shop): ?>
-                            <option value="<?php echo $shop['id']; ?>" <?php echo ($shop['id'] == $_SESSION['current_shop_id']) ? 'selected' : ''; ?>>
-                                <?php echo htmlspecialchars($shop['shop_name'], ENT_QUOTES, 'UTF-8'); ?>
-                            </option>
-                        <?php endforeach; ?>
-                            <option value="all" <?php echo ($_SESSION['current_shop_id'] === 'all') ? 'selected' : ''; ?>>【全店合算（連結決算）】</option>
-                    </select>
-                </div>
-
-            </td>
-
-
-
-
     </tr>
 </table>

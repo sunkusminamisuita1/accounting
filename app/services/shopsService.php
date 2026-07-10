@@ -2,6 +2,7 @@
 //　repositoryは Userrepository.phpを使用する。
 
 require_once ROOT_PATH.'/app/repositories/UserRepository.php';
+require_once ROOT_PATH.'/app/repositories/ShopsRepository.php';
 
 class shopsService{
     public      $ctrErrMsgPopUp;
@@ -14,7 +15,8 @@ class shopsService{
 
     public function RenewTargetShopCode( $dto): array
     {
-        $Dto->GetShopCode = $_GET['shop_id']??"";
+        //Dto->GetShopCode = $_GET['shop_id']??"";
+        $Dto->GetShopCode = $_POST['active_shop']??"all";
 
 		if($Dto->GetShopCode !== $Dto->ShopList['shop_code']??""){
 

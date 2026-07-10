@@ -5,9 +5,10 @@ class ShopsDTO
     public string   $Email;
     public string   $Password;
     public array    $User;
-    public array    $ShopList;
+    public array    $ShopList;      //ユーザーが所有する全shopテーブルのレコード
     public int      $GetShopCode; //$_GET['shop_id'] ProcSlict.phpでセットされたものをコントローラーでセットする。
     public array    $TargetShop;  //処理用店情報
+    public array    $ErrData = []; //エラー行の配列 ['ModName' => 'エラーメッセージ']
 
     //public function __construct(string $email, string $password)
     public function __construct()
