@@ -46,11 +46,11 @@ class shopsService{
         $_SESSION['shoplist'] = $dto->shopList;
         // 初期選択店舗として、リストの先頭にある店舗のIDを「現在の操作店舗」としてセット
         if (!empty($dto->shopList)) {
-            $_SESSION['current_shop_id'] = $dto->shopList[0]['id']; 
+            $_SESSION['current_shop_code'] = $dto->shopList[0]['shop_code']; 
             $_SESSION['current_shop_name'] = $dto->shopList[0]['shop_name'];
         } else {
         // 店舗が未登録の場合のフォールバック
-            $_SESSION['current_shop_id'] = 0;
+            $_SESSION['current_shop_code'] = 0;
             $_SESSION['current_shop_name'] = "店舗未登録";
         }
         return $dto->shopList;

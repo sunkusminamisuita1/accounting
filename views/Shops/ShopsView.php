@@ -130,7 +130,14 @@
                                                         echo 'checked'; } ?>
                                                 >
                                             </td>
-                                            
+
+                                              <td>                            <!--   閉店日   -->
+                                                <input class="TxtBoxLineDel" style="width: 90%;" type="checkbox" 
+                                                    type="text" name="shopsUpdDt[<?= $Key ?>][open_date]" 
+                                                    value="<?= h($Row['closed_date']) ?? '' ?>">
+                                                >
+                                            </td>                                          
+
                                             <td style="font-color: #ff0000;">    <!--   エラーメッセージ   -->
                                                 <input class="TxtBoxLineDel" style="width: 90%;" type="text" 
                                                     name="ShopsUpdDt[<?= $Key ?>][errmsg]"

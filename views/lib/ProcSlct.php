@@ -73,11 +73,11 @@ $_SESSION['current_route'] = $requestRoute;
                 <form action="index.php?route=shop.switch" method="POST" id="shop_selector_form" style="display: inline;">
                     <select name="active_shop" id="active_shop" onchange="document.getElementById('shop_selector_form').submit();">
                         <?php foreach ($_SESSION['user_shops'] as $shop): ?>
-                            <option value="<?php echo $shop['id']; ?>" <?php echo ($shop['id'] == $_SESSION['current_shop_id']) ? 'selected' : ''; ?>>
+                            <option value="<?php echo $shop['shop_code']; ?>" <?php echo ($shop['shop_code'] == $_SESSION['current_shop_code']) ? 'selected' : ''; ?>>
                                 <?php echo htmlspecialchars($shop['shop_name'], ENT_QUOTES, 'UTF-8'); ?>
                             </option>
                         <?php endforeach; ?>
-                        <option value="all" <?php echo ($_SESSION['current_shop_id'] === 'all') ? 'selected' : ''; ?>>【全店合算（連結決算）】</option>
+                        <option value="all" <?php echo ($_SESSION['current_shop_code'] === 'all') ? 'selected' : ''; ?>>【全店合算（連結決算）】</option>
                     </select>
                 </form>
             </div>
@@ -94,11 +94,11 @@ $_SESSION['current_route'] = $requestRoute;
                     <form action="index.php?route=shop.switch" method="POST" id="shop_selector_form">
                         <select name="active_shop" id="active_shop" onchange="document.getElementById('shop_selector_form').submit();">
                             <?php foreach ($_SESSION['user_shops'] as $shop): ?>
-                                <option value="<?php echo $shop['id']; ?>" <?php echo ($shop['id'] == $_SESSION['current_shop_id']) ? 'selected' : ''; ?>>
+                                <option value="<?php echo $shop['id']; ?>" <?php echo ($shop['id'] == $_SESSION['current_shop_code']) ? 'selected' : ''; ?>>
                                     <?php echo htmlspecialchars($shop['shop_name'], ENT_QUOTES, 'UTF-8'); ?>
                                 </option>
                             <?php endforeach; ?>
-                            <option value="all" <?php echo ($_SESSION['current_shop_id'] === 'all') ? 'selected' : ''; ?>>【全店合算（連結決算）】</option>
+                            <option value="all" <?php echo ($_SESSION['current_shop_code'] === 'all') ? 'selected' : ''; ?>>【全店合算（連結決算）】</option>
                         </select>
                     </form>
                 </div>

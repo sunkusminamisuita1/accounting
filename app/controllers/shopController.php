@@ -28,18 +28,20 @@ class shopController{
 			$validShop = false;
 			if ($targetShopId === 'all') {
 				$validShop = true;
-				$_SESSION['current_shop_id'] = 'all';
+				$_SESSION['current_shop_code'] = 'all';
 				$_SESSION['current_shop_name'] = '全店合算';
 			} else {
+				var_dump((int)$_SESSION['user_shops']);
+				echo "<br>targetShopId=";var_dump((int)$targetShopId);
 				foreach ($_SESSION['user_shops'] as $i=>$shop) {
-					if ($shop['id'] == $targetShopId) {
-						$_SESSION['current_shop_id'] = $shop['id'];
+					if ((int)$shop['shop_code'] === (int)$targetShopId) {
+						$_SESSION['current_shop_code'] = $shop['shop_code'];
 						$_SESSION['current_shop_name'] = $shop['shop_name'];
 						$validShop = true;
 						break;
 					}
 				}
-				echo "err shopcontoroller.switch 入力shop_idがありません";exit;
+				echo "<br>err shopcontoroller.switch 入力shop_idがありません";exit;
 			}
 			// 元のページ（またはホーム）に戻す
 			$returnRoute = $_SESSION['current_route'] ?? 'home';
