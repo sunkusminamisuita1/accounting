@@ -53,7 +53,7 @@
     <h3>下表の店舗情報を追加・修正・削除<br><br>
     <div style="text-align: center;">表の修正完了後、修正実行ボタンを押してください。</div>
     </h3>
-    <form method="POST" action="index.php?route=shops.edit">
+    <form method="POST" action="index.php?route=shop.edit">
         <div style="text-align: center;" >
             <input type="hidden" name="csrfTokenKey" value="<?= h($TokenKey) ?>">
             <button name="ShopsPfm" type="submit"
@@ -78,10 +78,10 @@
                             <table class="UpdTbl">
                                 <tbody>
                                     <tr style="background-color: #e0e0e1; font-weight: bold; text-align: center;">
-                                        <th style="width: 5%;" >店舗番号</th>
+                                        <th style="width: 8%;" >店舗番号</th>
                                         <th style="width: 8%;" >店舗名</th>
-                                        <th style="width: 13%;" >開業日</th>
-                                        <th style="width: 8%;" >備考</th>
+                                        <th style="width: 8%;" >開業日</th>
+                                        <th style="width: 13%;" >備考</th>
                                         <th style="width: 8%;" >閉店</th>
                                         <th style="width: 8%;" >閉店日</th>
                                         <th style="width: 25%;" >
@@ -90,9 +90,12 @@
                                                 <br><hr>
                                                 エラーメッセージ
                                         </th>
+
+                                        <?php /*
                                         <th style="width: 6%;" >
                                             <button name="ShopsPfm" type="submit" value="<?= h('削除') ?>" >削除</button>
                                         </th>
+                                        */?>
                                     </tr>
                                     <?php foreach ($ShopList as $Key => $Row): ?>
                                         <input type="hidden" name="ViewEditKey" value="<?= h($Key) ?>">
@@ -100,14 +103,19 @@
 
                                             <td>                           <!--   店舗番号　pri-key   -->
                                                 <input class="TxtBoxLineDel" style="width: 90%; text-align: center;" 
+                                                    maxlength="6" 
+                                                    inputmode="numeric" 
+                                                    pattern="[0-9]{6}" 
+                                                    placeholder="例: 000001" 
+                                                    required
                                                     type="text" name="ShopsUpdDt[<?= $Key ?>][shop_code]"
-                                                    value="<?= h($Row['shop_code']) ?? '' ?>" readonly>
+                                                    value="<?= h($Row['shop_code']) ?? '' ?>" >
                                             </td>
 
                                             <td style="text-align: left;">  <!--   店舗名称   -->
                                                 <input class="TxtBoxLineDel" style="width: 90%; text-align: center;" 
                                                     type="text" name="ShopsUpdDt[<?= $Key ?>][shop_name]"
-                                                    value="<?= h($Row['shop_name']) ?? '' ?>" readonly>
+                                                    value="<?= h($Row['shop_name']) ?? '' ?>">
                                             </td>
 
                                             <td style="text-align: left;">  <!--   開業日   -->
@@ -118,7 +126,7 @@
 
                                             <td style="text-align: left;">  <!--   摘要   -->
                                                 <input class="TxtBoxLineDel" style="width: 90%;" 
-                                                    type="text" name="shopsUpdDt[<?= $Key ?>][summry]" 
+                                                    type="text" name="shopsUpdDt[<?= $Key ?>][summary]" 
                                                     value="<?= h($Row['summary']) ?? '' ?>">
 
                                             </td>
@@ -132,9 +140,9 @@
                                             </td>
 
                                               <td>                            <!--   閉店日   -->
-                                                <input class="TxtBoxLineDel" style="width: 90%;" type="checkbox" 
-                                                    type="text" name="shopsUpdDt[<?= $Key ?>][open_date]" 
-                                                    value="<?= h($Row['closed_date']) ?? '' ?>">
+                                                <input class="TxtBoxLineDel" style="width: 90%;" type="text" 
+                                                    name="shopsUpdDt[<?= $Key ?>][open_date]" 
+                                                    value="<?= h($Row['closed_date']) ?? '' ?>"
                                                 >
                                             </td>                                          
 

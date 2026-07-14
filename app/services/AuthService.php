@@ -1,6 +1,7 @@
 <?php
 // app/services/AuthService.php
 require_once ROOT_PATH.'/app/repositories/UserRepository.php';
+require_once ROOT_PATH.'/app/services/shopsService.php';
 
 class AuthService
 {
@@ -11,34 +12,25 @@ class AuthService
         $this->repo = new UserRepository();
     }
 
-    public function login(LoginDTO $dto): array
+    public function login(LoginDTO $Dto): array
     {
-        $user = $this->repo->findByEmail($dto->email);
-        $dto->User = $user;
-        if (!$user || !password_verify($dto->password, $user['password_hash'])) {
+        $user = $this->repo->findByEmail($Dto->email);
+        $Dto->User = $user;
+        if (!$user || !password_verify($Dto->password, $user['password_hash'])) {
             throw new Exception('ログイン失敗');
         }
-        session_regenerate_id(true);
-        $_SESSION['user'] = 
-            [
-                'id' => (int)$user['id'],
-                'username' => $user['username'],
-                'email' => $user['email'],
-                'fiscalMonth' => $user['fiscal_month'],
-                'fiscalDay' => $user['fiscal_day']
-            ];       
         return $user;
     }
-    public function register(RegisterDTO $dto): void
+    public function register(RegisterDTO $Dto): void
     {
         // バリデーション
-        if (empty($dto->email) || empty($dto->password)) {
+        if (empty($Dto->email) || empty($Dto->password)) {
             throw new Exception('必須項目が未入力です');
         }
 
-        $dto->password = password_hash($dto->password, PASSWORD_DEFAULT);
+        $Dto->password = password_hash($Dto->password, PASSWORD_DEFAULT);
 
-        $this->repo->insert($dto);
+        $this->repo->insert($Dto);
     }
 
 }

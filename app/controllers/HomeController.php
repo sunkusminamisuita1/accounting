@@ -6,7 +6,7 @@ class HomeController{
         require_once ROOT_PATH . '/app/controllers/lib/auth.php';
         $messege = "";
         $ViewResult = [];
-        // POST > SESSION > デフォルト の優先順位で確定させる
+        // POST > SESSION > デフォルト の優先順位で確定させる           shopsデータが入っている。$_SESSION['user_shops']
         $ReportType = $_POST['ReportType'] ?? $_SESSION['ReportType'] ?? '月次試算表';
         // 次回のためにセッションを更新しておく
         $_SESSION['ReportType'] = $ReportType;

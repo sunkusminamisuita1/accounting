@@ -72,7 +72,7 @@ $_SESSION['current_route'] = $requestRoute;
                 <!-- フォームを配置し、methodをpostにする -->
                 <form action="index.php?route=shop.switch" method="POST" id="shop_selector_form" style="display: inline;">
                     <select name="active_shop" id="active_shop" onchange="document.getElementById('shop_selector_form').submit();">
-                        <?php foreach ($_SESSION['user_shops'] as $shop): ?>
+                        <?php foreach ($_SESSION['UserShops'] as $shop): ?>
                             <option value="<?php echo $shop['shop_code']; ?>" <?php echo ($shop['shop_code'] == $_SESSION['current_shop_code']) ? 'selected' : ''; ?>>
                                 <?php echo htmlspecialchars($shop['shop_name'], ENT_QUOTES, 'UTF-8'); ?>
                             </option>

@@ -5,7 +5,8 @@ class LoginDTO
     public string $email;
     public string $password;
     public array  $User;
-    public array  $shopList;
+    //public array  $shopList;
+    public array  $UserShops;
 
     public function __construct(string $email, string $password)
     {
@@ -15,7 +16,7 @@ class LoginDTO
                             //    fiscal_month, 
                             //    fiscal_day,
                             // WHERE email = ?
-        $this->shopList = [];       //SELECT id, shop_code, shop_name
+        $this->UserShops = [];       //SELECT id, shop_code, shop_name
                                     // FROM shops WHERE user_id = ?
 
     }

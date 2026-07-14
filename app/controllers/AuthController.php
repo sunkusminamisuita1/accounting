@@ -1,6 +1,6 @@
 <?php
 require_once ROOT_PATH.'/app/services/AuthService.php';
-require_once ROOT_PATH.'/app/services/shopsService.php';
+
 require_once ROOT_PATH.'/lib/helpers.php';
 class AuthController{
     private $service;
@@ -17,13 +17,17 @@ class AuthController{
             requireCsrf();
             try {
                 require_once ROOT_PATH.'/app/DTO/LoginDTO.php';
-                $dto = new LoginDTO(
+                $Dto = new LoginDTO(
                                     trim($_POST['email']),
                                     $_POST['password']
                                     );
-                $dto->User = $this->service->login($dto);
-                //var_dump($dto->User);exit;
-                $_SESSION['user_shops']  = $this->shopsSvc->getShopsData($dto);
+                $Dto->User      = $this->service->login($Dto);
+                session_regenerate_id(true);
+                $_SESSION['user'] =     $Dto->User; 
+
+                $Dto->UserShops         = $this->shopsSvc->getShopsData($Dto);//
+                $_SESSION['UserShops']  = $this->shopsSvc->getShopsData($Dto);
+
                 header('Location: index.php?route=home');
                 exit;
             } 
@@ -44,14 +48,14 @@ class AuthController{
             requireCsrf();
             try {
                 require_once ROOT_PATH.'/app/DTO/RegisterDTO.php';
-                $dto =  new RegisterDTO(
+                $Dto =  new RegisterDTO(
                                         trim($_POST['username']),
                                         trim($_POST['email']),
                                         $_POST['password'],
                                         (int)$_POST['fiscal_month'],
                                         (int)$_POST['fiscal_day']
                 );
-                $this->service->register($dto);
+                $this->service->register($Dto);
                 header('Location: index.php?route=login');
                 exit;
             } catch (Exception $e) {
