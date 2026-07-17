@@ -1,27 +1,27 @@
 test6/
 │
 ├── app/
-｜   ├── Validators/          ← バリデーション
+│   ├── Validators/          ← バリデーション
 │   │     AccountsValidator.php
-｜   ｜     AuthValidator.php
+│   │     AuthValidator.php
 │   │     VoucherValidator.php
 │   │
 │   ├── controllers/        ← HTTP処理
-｜   ｜       └lib
-｜   ｜           auth.php
-｜   │       AccountsController.php
+│   │       └lib
+│   │           auth.php
+│   │       AccountsController.php
 │   │       AuthController.php
 │   │       VoucherController.php
-｜   │       HomeController.php
-｜   │       LogoutController.php
-｜   │       MenuController.php
+│   │       HomeController.php
+│   │       LogoutController.php
+│   │       MenuController.php
 │   │
 │   ├── services/           ← 業務ロジック
-｜   ｜         └lib
-｜   ｜             HomeLib.php
-｜   ｜       AccountsService.php
+│   │         └lib
+│   │             HomeLib.php
+│   │       AccountsService.php
 │   │       AuthService.php
-｜   │       HomeService.php
+│   │       HomeService.php
 │   │       VoucherService.php
 │   │       ReportService.php
 │   │
@@ -29,20 +29,20 @@ test6/
 │   │       UserRepository.php
 │   │       voucherRepository.php
 │   │       AccountRepository.php
-｜   ｜       HomeRepository.php
-｜   │       ReportRepository.php
+│   │       HomeRepository.php
+│   │       ReportRepository.php
 │   │       
 │   │       
 │   │       
-｜   ├── DTO/                ← データ構造
+│   ├── DTO/                ← データ構造
 │   │       AccountsDto.php
-｜   ｜       VoucherDto.php
-｜   ｜       Constants.php
-｜   ｜       HmSvcDTO.php
-｜   ｜       LoginDTO.php
-｜   ｜       PdoDTO.php
-｜   ｜       RegisterDTO.php
-｜   ｜     
+│   │       VoucherDto.php
+│   │       Constants.php
+│   │       HmSvcDTO.php
+│   │       LoginDTO.php
+│   │       PdoDTO.php
+│   │       RegisterDTO.php
+│   │     
 │   │
 │   └── models/             ← データ構造
 │           User.php
@@ -62,29 +62,29 @@ test6/
 │     index.php
 │
 ├── views/   
-｜     ├  accounts/
-｜     ｜     add.php
-｜     ｜
+│     ├  accounts/
+│     │     add.php
+│     │
 │     ├  home/
-│     ｜     HomeView.php
-│     ｜     index.php
-│     ｜  
-｜     ├  lib/
-｜     ｜     ProcSlct.php
-│     ｜  
-｜     ├  Accounts/
-│     ｜     AccountsView.php
-｜     ｜
+│     │     HomeView.php
+│     │     index.php
+│     │  
+│     ├  lib/
+│     │     ProcSlct.php
+│     │  
+│     ├  Accounts/
+│     │     AccountsView.php
+│     │
 │     ├  auth/
-│     ｜     login.php
-│     ｜     register.php
-│     ｜
+│     │     login.php
+│     │     register.php
+│     │
 │     ├  voucher/
-│     ｜      create.php
-│     ｜      edit.php
-│     ｜      index.php
-│     ｜      list.php
-│     ｜
+│     │      create.php
+│     │      edit.php
+│     │      index.php
+│     │      list.php
+│     │
 │     └  reports/
 │               ledger.php
 │               trial_balance.php
@@ -178,6 +178,14 @@ ToDo 2026/06/19
 　仕分け伝票修正　　一次テスト完了                     
 
 　仕分け伝票行削除　一次テスト完了
+
+　店舗情報　作成　　コーディング完了　テスト中　バグあり
+　
+　店舗情報　修正    コーディング完了　テスト中　バグあり
+
+　店舗情報　削除　　コーディング完了
+
+　店舗情報　閉店処理　コーディング完了
 
 　一連のデータを連結テスト
       作成した仕分け伝票の修正　連結テスト完了
