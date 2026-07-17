@@ -90,6 +90,7 @@
                                                 <br><hr>
                                                 エラーメッセージ
                                         </th>
+                                        <th style="width: 6%;"></th>
 
                                         <?php /*
                                         <th style="width: 6%;" >
@@ -107,7 +108,6 @@
                                                     inputmode="numeric" 
                                                     pattern="[0-9]{6}" 
                                                     placeholder="例: 000001" 
-                                                    required
                                                     type="text" name="ShopsUpdDt[<?= $Key ?>][shop_code]"
                                                     value="<?= h($Row['shop_code']) ?? '' ?>" >
                                             </td>
@@ -120,28 +120,28 @@
 
                                             <td style="text-align: left;">  <!--   開業日   -->
                                                 <input class="TxtBoxLineDel" style="width: 90%;" 
-                                                    type="text" name="shopsUpdDt[<?= $Key ?>][open_date]" 
+                                                    type="text" name="ShopsUpdDt[<?= $Key ?>][open_date]" 
                                                     value="<?= h($Row['open_date']) ?? '' ?>">
                                             </td>
 
                                             <td style="text-align: left;">  <!--   摘要   -->
                                                 <input class="TxtBoxLineDel" style="width: 90%;" 
-                                                    type="text" name="shopsUpdDt[<?= $Key ?>][summary]" 
+                                                    type="text" name="ShopsUpdDt[<?= $Key ?>][summary]" 
                                                     value="<?= h($Row['summary']) ?? '' ?>">
 
                                             </td>
 
                                             <td>                            <!--   閉店チェックボックス   -->
                                                 <input class="TxtBoxLineDel" style="width: 90%;" type="checkbox" 
-                                                    name="ShopsUpdDt[<?= $Key ?>][closed]" value="On"
+                                                    name="ShopsUpdDt[<?= $Key ?>][closed]" value="unchecked"
                                                     <?php if (isset($Row['closed']) && $Row['closed'] === 1 ) { 
                                                         echo 'checked'; } ?>
                                                 >
                                             </td>
 
-                                              <td>                            <!--   閉店日   -->
+                                            <td>                            <!--   閉店日   -->
                                                 <input class="TxtBoxLineDel" style="width: 90%;" type="text" 
-                                                    name="shopsUpdDt[<?= $Key ?>][open_date]" 
+                                                    name="ShopsUpdDt[<?= $Key ?>][closed_date]" 
                                                     value="<?= h($Row['closed_date']) ?? '' ?>"
                                                 >
                                             </td>                                          
@@ -151,7 +151,15 @@
                                                     name="ShopsUpdDt[<?= $Key ?>][errmsg]"
                                                     value="<?= h($Row['errmsg'] ?? '')  ?>" readonly>
                                             </td>
+                            
 
+                                            <td>                            <!--   行削除ボタン   -->                                                      
+                                                <button name="ShopsPfm" type="submit" 
+                                                value="<?= h('行削除') ?>" >
+                                                行削除    
+                                                </button>
+                                            </td>
+                                            <input type="hidden" name="DeleteKey" value="<?= h($Key) ?>">
                                         </tr>
                                     <?php endforeach; ?>
                                 </tbody>

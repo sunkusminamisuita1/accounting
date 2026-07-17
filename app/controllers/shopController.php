@@ -13,20 +13,24 @@ class shopController{
     {
         $this->Dto   			=   new ShopsDto();
 		$this->Dto->User		=	$_SESSION['user']??"";
-		$this->Dto->UserShops	= 	$_SESSION['ShopAltTbl']??[];
+
+		$this->Dto->ShopAltTbl	= 	empty($_SESSION['ShopAltTbl'])
+                                    ? $_SESSION['UserShops']
+                                    : $_SESSION['ShopAltTbl'] ;
+        $_SESSION['ShopAltTbl'] =   $this->Dto->ShopAltTbl;
+
         $this->Service   		=   new ShopsService($this->Dto);
         $this->ctrErrMsgPopUp 	= 	new ErrMsgPopUp($this->Dto);
 		$this->Repo				=	new ShopsRepository();
 		$this->CtrErrMsgPopUp   =   new ErrMsgPopUp($this->Dto);
+        $this->Vali             =   new ShopsValidator($this->Dto);
 		
     }
 
     public function switch()
 	{
 		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-			//$targetShopId = $_GET['shop_id'] ?? '';
 			$targetShopId = $_POST['active_shop'] ?? '';
-			//echo "targetShopId={$targetShopId}";exit;
 
 			// 所有している店舗リストの中に、選択されたIDが存在するか安全チェック
 			$validShop = false;
@@ -36,11 +40,7 @@ class shopController{
 				$_SESSION['current_shop_name'] = '全店合算';
 			} else {
 
-				foreach ($_SESSION['UserShops'] as $i=>$shop) {
-
-					var_dump((int)$shop['shop_code']);
-					echo "<br>targetShopId=";var_dump((int)$targetShopId);
-
+				foreach ($_SESSION['ShopAltTbl'] as $i=>$shop) {
 
 					if ((int)$shop['shop_code'] === (int)$targetShopId) {
 						$_SESSION['current_shop_code'] = $shop['shop_code'];
@@ -56,6 +56,7 @@ class shopController{
 			}
 			// 元のページ（またはホーム）に戻す
 			$returnRoute = $_SESSION['current_route'] ?? 'home';
+            //var_dump($returnRoute);exit;
 			header("Location: index.php?route={$returnRoute}");
 			exit;
 		}
@@ -66,14 +67,6 @@ class shopController{
     {
         $this->Dto->User = $_SESSION['user'] ?? '';
 
-        // 店舗データの初期キャッシュ処理（emptyで安全に判定）
-        if (empty($this->Dto->UserShops)) {
-            $_SESSION['UserShops'] = $this->Service->getShopsData($this->Dto);
-            $this->Dto->UserShops  = $_SESSION['UserShops'];
-        }
-        //$this->RestoreEditingData($this->Dto);
-
-
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 		    requireCsrf();
@@ -82,52 +75,55 @@ class shopController{
 			$this->Service->RenewTargetShopCode($this->Dto);
 
             $this->Dto->PostDt = $_POST ?? '';
+
             $ViewEditKey = $_POST['ViewEditKey'] ?? null; //修正表　行インデックス
 
             $this->RestoreEditingData($this->Dto);
+
             switch($_POST['ShopsPfm']){
 
                 case '追加':
                     $this->Service->ShopsAdd($this->Dto);
                     break;
 
-                case '削除':  //削除ボタンは、削除フラグのon offを切り替え,AcctAltTblのis_deleted,errmsg,edittypeを更新
-                    $this->Service->ShopsEdit($this->Dto,$ViewEditKey);
+                case '行削除':  //削除ボタンは、編集用データ$Dto->ShopAltTlb,$_SESSION['SHopAltTbl']
+                    $this->Service->LineDlt($this->Dto,(int)$_POST['DeleteKey']);
                     break;
 
                 case '修正実行':  //ShopAltTblの内容をDBに反映する。                  
                     $this->Service->RepoDataMake($this->Dto);
+                    $this->Vali->ShopsVali($this->dto);
                     $this->Service->ShopsAlt($this->Dto,$ViewEditKey);
                     break;
 
                 case 'キャンセル':
-                    $this->Service->AccountsCancel($this->Dto);
+                    unset($_SESSION['ShopAltTbl']);
+                    $this->RestoreEditingData($this->Dto);
                     break;
             }
             $this->PrepareNextRequest($this->Dto);
             
         }
+        $this->Render();
+    }
 
-            $TokenKey = generateCsrfToken();
-            if(empty($this->Dto->ShopAltTbl??'[]')){
-                $ShopList   =   $this->Service->getShopsData($this->Dto);
-            }else{
-                $ShopList   =   $this->Dto->ShopAltTbl??'[]';
-            }
+    private function render(){
+        $TokenKey = generateCsrfToken();
+        if(empty($this->Dto->ShopAltTbl??'[]')){
+            $ShopList   =   $this->Service->getShopsData($this->Dto);
+        }else{
+            $ShopList   =   $this->Dto->ShopAltTbl??'[]';
+        }
         require ROOT_PATH.'/views/Shops/ShopsView.php';
     }
 
     private function RestoreEditingData(ShopsDto $Dto){    //すでに修正データがある場合、編集データにコピー
-        if(!empty($Dto->ShopAltTbl)){                      //すでに変更データが存在する時、
-            echo "<br>shopController.edit 論理エラー　処理前に変更データが存在します。";
-            exit;
-        }
 
         $Dto->ShopAltTbl = !empty($_SESSION['ShopAltTbl']) 
             ? $_SESSION['ShopAltTbl']                   //前トランの変更データがある時
             : $Dto->UserShops;                          //変更データが存在しない時、初期読み込みデータを代入
+        $_SESSION['ShopAltTbl'] =   $Dto->ShopAltTbl;
 
-        unset($_SESSION['ShopAltTbl']);
     }
 
     private function PrepareNextRequest(ShopsDto $Dto){    //次セッション、renderデータ準備

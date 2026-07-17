@@ -27,17 +27,37 @@ class ShopsValidator
 
         $this->log("バリデーション開始。対象データ数: " . count($Dto->ShopsAltTbl));
 
-        foreach ($Dto->ShopsAltTbl as $key => $row) 
+        foreach ($Dto->ShopsAltTbl as $key => $Row) 
         {
-            $Dto->ShopsAltTbl[$key]['errmsg'] = "";
+            $ShopCode = trim((string)$Row['shop_code']);
+                //店番を正規表現で'000001'~'999999'でチェック
+            $ShopNoPattern  =   '/^\d{6}$/';
+            if ( ! preg_match($ShopNoPattern , $ShopCode) ) {
+                $Dto->ShopsAltTbl[$key]['errmsg'] = "shopsvali  店番は半角数字６桁で入力してください。";
+                $errFlg++;
+                continue;
+            }
+            if ($shopCode === '000000') {
+                Dto->ShopsAltTbl[$key]['errmsg'] = "shopsvali 000000は無効な店番です（000001以上）。";
+                $errFlg++;
+                continue;
+            }
+            foreach ($Dto->ShopsAltTbl as $key1 => $Row1){
+                if($ShopCode = trim((string)$Row1['shop_code'])){
+                    Dto->ShopsAltTbl[$key]['errmsg'] = "shopsvali 000000は無効な店番です（000001以上）。";
+                    $errFlg++;
+                    continue;
+                }
+
+            } 
+
 
             // 1. 店舗番号チェック
-            //echo "<br>店舗番号=" . var_dump($row['shop_code']) . "<br>";exit;
-            //if ($row['type'], $Dto->ShopsType, true) {
-            //    $Dto->ShopsAltTbl[$key]['errmsg'] = "貸借種別は'収益'か'費用'か'資産'か'負債'か'資本'以外は入力できません。";
-            //    $errFlg++;
-            //    continue;
-            //}
+            if ($row['type'], $Dto->ShopsType, true) {
+                $Dto->ShopsAltTbl[$key]['shop_code'] = "貸借種別は'収益'か'費用'か'資産'か'負債'か'資本'以外は入力できません。";
+                $errFlg++;
+                continue;// 
+            }
 
             // 2. 削除済み状態の反映
             if (!empty($row['is_deleted'])) {
@@ -45,15 +65,15 @@ class ShopsValidator
                 $Dto->ShopsAltTbl[$key]['edittype'] = "削除";
             }
 
-            // 3. 必須・文字数チェック
-            $trimmedName = trim(mb_convert_kana($row['name'] ?? '', "s", "UTF-8"));
-            if ($trimmedName === '') {
-                $Dto->ShopsAltTbl[$key]['errmsg'] = "勘定科目名は必須です。";
+            // 3. 必須・店舗名チェック
+            $ShopName = trim(mb_convert_kana($row['shop_name'] ?? '', "s", "UTF-8"));
+            if ($ShopName === '') {
+                $Dto->ShopsAltTbl[$key]['errmsg'] = "店舗名は必須です。";
                 $errFlg++;
                 continue;
             }
-            if (mb_strlen($trimmedName, 'UTF-8') > 50) {
-                $Dto->ShopsAltTbl[$key]['errmsg'] = "勘定科目名は50文字以内で入力してください。";
+            if (mb_strlen($ShopName, 'UTF-8') > 50) {
+                $Dto->ShopsAltTbl[$key]['errmsg'] = "店舗名は50文字以内で入力してください。";
                 $errFlg++;
                 continue;
             }

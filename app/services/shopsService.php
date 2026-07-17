@@ -22,9 +22,14 @@ class shopsService{
         //}
         $Dto->GetShopCode   =   isset($_POST['active_shop']) ? $_POST['active_shop'] : 1;
 
-        //var_dump($Dto->UserShops);echo "ddddddddddddddddddd";exit;
+        //var_dump($Dto->ShopAltTbl);echo "ddddddddddddddddddd";exit;
 
-        foreach($Dto->UserShops as $Key => $Row   )
+        
+        $Dto->ShopAltTbl    =   empty($Dto->ShopAltTbl) 
+                                    ? $_SESSION['ShopAltTbl'] 
+                                    : $Dto->ShopAltTbl ;
+
+        foreach($Dto->ShopAltTbl as $Key => $Row   )
         {
             //echo "<br>getshopcode=" . (int)$Dto->GetShopCode . "<br>row['shop_code=']" . (int)$Row['shop_code'];
             if((int)$Dto->GetShopCode === (int)$Row['shop_code']??"")
@@ -33,7 +38,7 @@ class shopsService{
                 return $Row;
             }
         }
-        echo "エラー shopsService.php 入力された店名がありません。";
+        echo "エラー shopsService(RenewTargetShopCode) 入力された店名がありません。";
         exit;
 
     }
@@ -70,6 +75,7 @@ class shopsService{
         $UserId = $Dto->User['id'];
         //echo "ShopAdd method";exit;
         //| id | user_id | shop_code | shop_name    | open_date | address | closed | closed_date | summary | created_at          |
+        $this->RepoDataMake($Dto);
 
         array_unshift($Dto->ShopAltTbl,['id'        =>  null,       'user_id'       =>  (int)$UserId, 
                                         'shop_code' =>  '',         'shop_name'     =>  '',
@@ -81,18 +87,30 @@ class shopsService{
                                         
     }
 
-        public function RepoDataMake(ShopsDto $Dto){
-            echo "<br>repodatamake method".var_dump($Dto->PostDt['ShopsUpdDt']); exit;
+    public function LineDlt(ShopsDto $Dto,$DltKey){
+        $this->RepoDataMake($Dto);
+        array_splice($Dto->ShopAltTbl, $DltKey, 1);
+        $_SESSION['ShopAltTbl'] =   $Dto->ShopAltTbl;
+    } 
+
+    public function RepoDataMake(ShopsDto $Dto){
+            //echo "<br>repodatamake method".var_dump($Dto->PostDt['ShopsUpdDt']); exit;
             //echo "hhh";exit;
-            foreach($Dto->PostDt['ShopsUpdDt'] as $Key=>$Row){ //array_Spliceでキー順序が更新されるため、削除は降順で実行
+            foreach($Dto->PostDt['ShopsUpdDt'] as $Key=>$Row){ //
+                $Dto->ShopAltTbl[$Key]['id']            = null;
                 $Dto->ShopAltTbl[$Key]['shop_code']     = $Dto->PostDt['ShopsUpdDt'][$Key]['shop_code'];
                 $Dto->ShopAltTbl[$Key]['shop_name']     = $Dto->PostDt['ShopsUpdDt'][$Key]['shop_name'];
+                $Dto->ShopAltTbl[$Key]['open_date']     = $Dto->PostDt['ShopsUpdDt'][$Key]['open_date'];
                 $Dto->ShopAltTbl[$Key]['summary']       = $Dto->PostDt['ShopsUpdDt'][$Key]['summary'];
-                $Dto->ShopAltTbl[$Key]['closed']        = $Dto->PostDt['ShopsUpdDt'][$Key]['closed'];
+                $Dto->ShopAltTbl[$Key]['closed']        = $Dto->PostDt['ShopsUpdDt'][$Key]['closed']??'';
                 $Dto->ShopAltTbl[$Key]['closed_date']   = $Dto->PostDt['ShopsUpdDt'][$Key]['closed_date'];
+                //$DeleteKey                              = $Dto->ShopAltTbl[$Key]['shop_name'] ? 99999 : $Key;
 
             }
-
+            //if($DeleteKey < 99999){
+            //    echo "<br>deletekey={$DeleteKey}";
+            //    array_splice($Dto->ShopAltTbl, $DeleteKey, 1);
+            //}
     }
 
     public function ShopsAlt(ShopsDto $Dto){
