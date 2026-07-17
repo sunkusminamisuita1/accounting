@@ -38,13 +38,13 @@ class ShopsValidator
                 continue;
             }
             if ($shopCode === '000000') {
-                Dto->ShopsAltTbl[$key]['errmsg'] = "shopsvali 000000は無効な店番です（000001以上）。";
+                $Dto->ShopsAltTbl[$key]['errmsg'] = "shopsvali 000000は無効な店番です（000001以上）。";
                 $errFlg++;
                 continue;
             }
             foreach ($Dto->ShopsAltTbl as $key1 => $Row1){
                 if($ShopCode = trim((string)$Row1['shop_code'])){
-                    Dto->ShopsAltTbl[$key]['errmsg'] = "shopsvali 000000は無効な店番です（000001以上）。";
+                    $Dto->ShopsAltTbl[$key]['errmsg'] = "shopsvali 000000は無効な店番です（000001以上）。";
                     $errFlg++;
                     continue;
                 }
@@ -53,7 +53,7 @@ class ShopsValidator
 
 
             // 1. 店舗番号チェック
-            if ($row['type'], $Dto->ShopsType, true) {
+            if ($row['type']= $Dto->ShopsType) {
                 $Dto->ShopsAltTbl[$key]['shop_code'] = "貸借種別は'収益'か'費用'か'資産'か'負債'か'資本'以外は入力できません。";
                 $errFlg++;
                 continue;// 
