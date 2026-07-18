@@ -4,7 +4,7 @@
     .TxtBoxLineDel{
         /*テキストボックス枠線なし*/outline: none;
         border: none;
-        background: #e7edf8;
+        background: #e7edf8; 
     }
     .ProcSlct, .ProcSlct td { border: none !important; }
     .UpdTbl { border-collapse: collapse; width: 100%; table-layout: fixed; border: 1px solid #000000; } /* 幅は中身に合わせるのが一般的 */
