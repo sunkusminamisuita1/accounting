@@ -28,7 +28,7 @@
 
 <!-- #############     エラーメッセージ POPUP    ############### -->
 
-<h1>勘定科目ー定義　編集・削除</h1>
+<h1>店舗情報　登録・修正・閉店処理</h1>
 
 <?php if (!empty($_SESSION['flash_message'])): ?>
     <script>
@@ -50,30 +50,90 @@
     <!-- ##############     エラーメッセージ表示    ################ -->
     <?=  $this->CtrErrMsgPopUp->Show($this->Dto);  ?>
     <hr>
-    <h3>下表の店舗情報を追加・修正・削除<br><br>
-    <div style="text-align: center;">表の修正完了後、修正実行ボタンを押してください。</div>
-    </h3>
     <form method="POST" action="index.php?route=shop.edit">
-        <div style="text-align: center;" >
-            <input type="hidden" name="csrfTokenKey" value="<?= h($TokenKey) ?>">
-            <button name="ShopsPfm" type="submit"
-                onclick="return confirm
-                    ('店舗情報 修正欄の内容をデータベースに登録します。\n本当に変更してもよろしいですか？');"  
-                    value="<?= h('修正実行') ?>" >修正実行
-            </button>
-            <button name="ShopsPfm" type="submit"
-                onclick="return confirm
-                    ('店舗情報 修正欄の内容を、もとに戻します。\nよろしいですか？');"  
-                    value="<?= h('キャンセル') ?>" >キャンセル
-            </button>
-        </div>
 
         <table class="UpdTbl" >
 
             <tbody>
                 <tr>
                     <td style="width: 50%; vertical-align: top;">
-                        <div>これは左側です。</div>
+                        <h3>店舗情報新規登録</h3>
+                        店舗情報を登録　入力完了後 登録ボタンを押してください。
+                        <div style="text-align: center;" >
+                            <button name="ShopsPfm" type="submit"
+                                onclick="return confirm
+                                ('店舗情報 をデータベースに登録します。\n本当に変更してもよろしいですか？');"  
+                                value="<?= h('登録実行') ?>" >登録実行
+                            </button>
+                        </div>
+                        <br>
+                        <table class="UpdTbl">
+                                <tbody>
+                                    <tr style="background-color: #e0e0e1; font-weight: bold; text-align: center;">
+                                        <th style="width: 8%;" >店舗番号</th>
+                                        <th style="width: 8%;" >店舗名</th>
+                                        <th style="width: 8%;" >開業日</th>
+                                        <th style="width: 13%;" >備考</th>
+                                        <th style="width: 25%;"></th>
+                                    </tr>
+                                    <tr style="background-color: #ffffff; font-weight: bold; text-align: center;">
+
+                                        <td>                           <!--   店舗番号   -->
+                                            <input class="TxtBoxLineDel" style="width: 90%; text-align: center;" 
+                                                maxlength="6" 
+                                                inputmode="numeric" 
+                                                pattern="[0-9]{6}" 
+                                                placeholder="例: 000001" 
+                                                type="text" name="NewShopCode"
+                                                value="<?= h($NewShopsCode ?? '' )?>" >
+                                        </td>
+
+                                        <td style="text-align: left;">  <!--   店舗名称   -->
+                                            <input class="TxtBoxLineDel" style="width: 90%; text-align: center;" 
+                                                type="text" name="NewShopName"
+                                                value="<?= h($NewShopName ?? '' ) ?>">
+                                        </td>
+
+                                        <td style="text-align: left;">  <!--   開業日   -->
+                                            <input class="TxtBoxLineDel" style="width: 90%;" 
+                                                type="text" name="NewOpenDate" 
+                                                value="<?= h($NewOpenDate ?? '' ) ?>">
+                                        </td>
+
+                                        <td style="text-align: left;">  <!--   摘要   -->
+                                            <input class="TxtBoxLineDel" style="width: 90%;" 
+                                                type="text" name="NewSummary" 
+                                                value="<?= h($NewSummary ?? '' ) ?>">
+
+                                        </td>
+
+                                        <td style="font-color: #ff0000;">    <!--   エラーメッセージ   -->
+                                            <input class="TxtBoxLineDel" style="width: 90%;" type="text" 
+                                                name="NewErrmsg"
+                                                value="<?= h($NewErrMsg ?? '' )  ?>" >
+                                        </td>
+                                    </tr>
+                            </tbody>
+                    </table>
+
+                        <br>
+                        <br>
+                        <hr>
+                        <h3>店舗情報を修正・閉店登録(店番,店舗名の修正はできません。)</h3>
+                        <div style="text-align: center;" >
+                            <input type="hidden" name="csrfTokenKey" value="<?= h($TokenKey) ?>">
+                            <button name="ShopsPfm" type="submit"
+                                onclick="return confirm
+                                ('店舗情報 修正欄の内容をデータベースに登録します。\n本当に変更してもよろしいですか？');"  
+                                value="<?= h('修正実行') ?>" >修正実行
+                            </button>
+                            <button name="ShopsPfm" type="submit"
+                                onclick="return confirm
+                                ('店舗情報 修正欄の内容を、もとに戻します。\nよろしいですか？');"  
+                                value="<?= h('キャンセル') ?>" >キャンセル
+                            </button>
+                        </div>
+                        <br>
 
                             <table class="UpdTbl">
                                 <tbody>
@@ -86,11 +146,11 @@
                                         <th style="width: 8%;" >閉店日</th>
                                         <th style="width: 25%;" >
 
-                                                <button name="ShopsPfm" type="submit" value="<?= h('追加') ?>" >行追加</button>
-                                                <br><hr>
+                                                <!-- <button name="ShopsPfm" type="submit" value="<?= h('追加') ?>" >行追加</button>
+                                                <br><hr> -->
                                                 エラーメッセージ
                                         </th>
-                                        <th style="width: 6%;"></th>
+                                        <th style="width: 6%;">行削除</th>
 
                                         <?php /*
                                         <th style="width: 6%;" >
@@ -109,13 +169,13 @@
                                                     pattern="[0-9]{6}" 
                                                     placeholder="例: 000001" 
                                                     type="text" name="ShopsUpdDt[<?= $Key ?>][shop_code]"
-                                                    value="<?= h($Row['shop_code']) ?? '' ?>" >
+                                                    value="<?= h($Row['shop_code']) ?? '' ?>" readonly >
                                             </td>
 
                                             <td style="text-align: left;">  <!--   店舗名称   -->
                                                 <input class="TxtBoxLineDel" style="width: 90%; text-align: center;" 
                                                     type="text" name="ShopsUpdDt[<?= $Key ?>][shop_name]"
-                                                    value="<?= h($Row['shop_name']) ?? '' ?>">
+                                                    value="<?= h($Row['shop_name']) ?? '' ?>" readonly>
                                             </td>
 
                                             <td style="text-align: left;">  <!--   開業日   -->
@@ -153,35 +213,32 @@
                                             </td>
                             
 
-                                            <td>                            <!--   行削除ボタン   -->                                                      
-                                                <button name="ShopsPfm" type="submit" 
-                                                value="<?= h('行削除') ?>" >
-                                                行削除    
-                                                </button>
+                                            <td>                            <!--   行削除チェックボックス   -->     
+                                                 
+                                                <input class="TxtBoxLineDel" style="width: 90%;" type="checkbox" 
+                                                    name="ShopsUpdDt[<?= $Key ?>][delete]" value="unchecked"
+                                                    <?php if (isset($Row['delete']) && $Row['delete'] === 1 ) { 
+                                                        echo 'checked'; } ?>
+                                                >
+
+
+
+
                                             </td>
-                                            <input type="hidden" name="DeleteKey" value="<?= h($Key) ?>">
+                                            
                                         </tr>
                                     <?php endforeach; ?>
                                 </tbody>
                             </table>
-
-
-
                     </td>
 
                     <td style="width: 50%; vertical-align: top;">
                         <div>これは右側です。</div>
 
-
-
-                        ここには修正した勘定科目が損益計算書、貸借対象表のどの位置に追加修正されたか確認できるようにする
-
-
-
+                        ここには　マニュアル　helpを作成
 
                     </td>
                 </tr>
             </tbody>
         </table>
     </form>  <!--###############################################-->
-

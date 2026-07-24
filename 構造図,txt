@@ -261,6 +261,15 @@ array_filter countを使用したロジック
             //XXX
         }
 
+
+// アロー関数(php7.4移行では下記肝略記述が使える。)を使うと use を書かなくても外の変数 $Row を自動で参照できます
+$sameRows = array_filter($Dto->AcctAltTbl, fn($searchRow) => 
+    (($searchRow['edittype'] ?? '') !== '削除') &&
+    ($searchRow['name'] === $Row['name']) &&
+    ($searchRow['type'] === $Row['type'])
+);
+
+
 日本語文字数をチェックするロジック
             $trimmedName = trim(mb_convert_kana($Row['name'] ?? '', "s", "UTF-8"));//全角スペースを半角に変換してトリム
             if ($trimmedName === '') {
@@ -360,3 +369,112 @@ preg_grep() 	配列に対して正規表現による検索を行い、一致し�
 n回の繰り返し 	{n} 	/[0-9]{4}/（4桁の数字が含まれているかどうか）
 グループ化 	() 	(○○○)-(●●●●)-(■■■■)＝
 2-$3
+
+
+
+array_column
+PHPの array_column() は、多次元配列（またはオブジェクトの配列）の中から「特定のかラム（列）の値だけを抜き出したり、特定のキーで配列を再構築したりできる」非常に便利で強力な組み込み関数です。
+
+SQLの SELECT column_name FROM table や、Excelの「特定の列だけをコピペする」操作をイメージすると分かりやすいです。
+💡 基本的な機能（2つの使い方）
+
+    特定の列だけを抽出して1次元配列にする
+
+    特定の列を「キー」にして配列を作り直す（★前回の店舗コード検索で使った手法）
+
+1. 基本構文
+PHP
+
+array_column(array $array, int|string|null $column_key, int|string|null $index_key = null): array
+
+    第1引数（必須）： 対象となる多次元配列
+
+    第2引数（必須/null可）： 抜き出したい列のキー名（PHP 7.0以降は null も指定可能）
+
+    第3引数（任意）： 新しい配列の「キー（インデックス）」にしたい列のキー名
+
+2. 使用例と解説
+
+以下のような「店舗データの配列」を例にして解説します。
+PHP
+
+$shops = [
+    ['id' => 101, 'shop_code' => 'S001', 'shop_name' => '東京店'],
+    ['id' => 102, 'shop_code' => 'S002', 'shop_name' => '大阪店'],
+    ['id' => 103, 'shop_code' => 'S003', 'shop_name' => '名古屋店'],
+];
+
+パターン①：特定の列だけを抜き出す（1次元化）
+
+「店舗名（shop_name）だけのリストが欲しい」という場合です。
+PHP
+
+$shopNames = array_column($shops, 'shop_name');
+
+print_r($shopNames);
+
+【出力結果】
+PHP
+
+Array
+(
+    [0] => 東京店
+    [1] => 大阪店
+    [2] => 名古屋店
+)
+
+    使いどころ：
+    データベースに渡す用のIDリスト（[101, 102, 103]）を作りたい時や、in_array() で存在チェックをしたい時などに foreach を書かずに一発で作成できます。
+
+パターン②：特定の列を「キー」にして配列表を再構築する（★重要！）
+
+第3引数に列名を渡すと、その列の値を配列のインデックス（キー）にできます。
+PHP
+
+$shopCodes = array_column($shops, 'shop_name', 'shop_code');
+
+print_r($shopCodes);
+
+【出力結果】
+PHP
+
+Array
+(
+    [S001] => 東京店
+    [S002] => 大阪店
+    [S003] => 名古屋店
+)
+
+パターン③：全データを保持したまま、特定の列をキーにする（第2引数を null）
+
+第2引数に null を渡し、第3引数にキーにしたい列名を指定すると、データ構造（全項目）を保持したままキーだけを付け替えることができます。
+PHP
+
+// 第2引数を null にすることで、値（1行分のデータ）はそのまま保持される
+$indexedShops = array_column($shops, null, 'shop_code');
+
+print_r($indexedShops);
+
+【出力結果】
+PHP
+
+Array
+(
+    [S001] => Array ( [id] => 101, [shop_code] => S001, [shop_name] => 東京店 )
+    [S002] => Array ( [id] => 102, [shop_code] => S002, [shop_name] => 大阪店 )
+    [S003] => Array ( [id] => 103, [shop_code] => S003, [shop_name] => 名古屋店 )
+)
+
+🌟 なぜパターン③（先ほどのコード）が強力なのか？
+
+通常、多次元配列から「店舗コード S002 のデータ」を探す場合、foreach で先頭から1行ずつ探す（O(N)の計算量）必要があります。
+
+しかし、array_column($shops, null, 'shop_code') を使ってキー化（辞書化）しておくと、以下のように isset() やキー指定だけで一発（一瞬）でデータを取り出せるようになります。
+PHP
+
+// foreachを使わずに、直接指定・検索できる！
+if (isset($indexedShops['S002'])) {
+    echo $indexedShops['S002']['shop_name']; // 「大阪店」が瞬時に取れる
+}
+
+先ほどリファクタリングしたコードで2重ループ（foreach の中の foreach）を消すことができたのは、この array_column による高速な辞書化を利用したためです。

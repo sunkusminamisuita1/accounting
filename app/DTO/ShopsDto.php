@@ -6,7 +6,7 @@ class ShopsDTO
     public string   $Password;
     public array    $User;
     public array    $UserShops;      //ユーザーが所有する全shopテーブルのレコード
-    public int      $GetShopCode; //$_GET['shop_id'] ProcSlict.phpでセットされたものをコントローラーでセットする。
+    public string   $GetShopCode; //$_GET['shop_id'] ProcSlict.phpでセットされたものをコントローラーでセットする。
     public array    $TargetShop;  //処理用店情報
     public array    $ErrData = []; //エラー行の配列 ['ModName' => 'エラーメッセージ']
     public array    $ShopAltTbl =[]; //ショップ　修正用テーブル
