@@ -42,99 +42,101 @@ class ShopsRepository{
         $pdo = getPDO();
         $CreatedAt = date('Y-m-d H:i:s');
 
+        $OpenDate = trim((string)($RowsToInsert['open_date'] ?? ''));
+        $OpenDateValue = $OpenDate === '' ? null : $OpenDate;
+
+        $ClosedDate = trim((string)($RowsToInsert['closed_date'] ?? ''));
+        $ClosedDateValue = $ClosedDate === '' ? null : $ClosedDate;
+
         $RowsToInsert = [];
-        if ($Key !== null && isset($Dto->ShopAltTbl[$Key])) {
-            $RowsToInsert[] = $Dto->ShopAltTbl[$Key];
-        } else {
-            $RowsToInsert = $Dto->ShopAltTbl ?? [];
+        $RowsToInsert = $Dto->ShopAltTbl[$Key];
+        var_dump($RowsToInsert);
+
+        if (($RowsToInsert['edittype'] ?? '') !== '追加') {
+            echo "ShopRepository.ShopsAdd 論理エラー　edittyeが追加でない";
+            exit;
         }
 
-        foreach ($RowsToInsert as $Row) {
-            if (($Row['edittype'] ?? '') !== '追加') {
-                continue;
-            }
+        $sql = "INSERT INTO shops (
+            user_id,
+            shop_code,
+            shop_name,
+            open_date,
+            closed,
+            closed_date,
+            summary,
+            created_at,
+            edittype
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-            $sql = "INSERT INTO shops (
-                user_id,
-                shop_code,
-                shop_name,
-                open_date,
-                closed,
-                closed_date,
-                summary,
-                created_at,
-                edittype
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $stmt = $pdo->prepare($sql);
 
-            $stmt = $pdo->prepare($sql);
-
-            try {
-                $stmt->execute([
-                    $Row['user_id'] ?? $Dto->User['id'] ?? null,
-                    $Row['shop_code'] ?? null,
-                    $Row['shop_name'] ?? null,
-                    $Row['open_date'] ?? null,
-                    (int)($Row['closed'] ?? 0),
-                    $Row['closed_date'] ?? null,
-                    $Row['summary'] ?? null,
-                    $CreatedAt,
-                    null
-                ]);
-            } catch (Exception $e) {
-                $message = $e->getMessage();
-                echo $message;
-                throw $e;
-            }
+        try {
+            $stmt->execute([
+                $RowsToInsert['user_id'] ?? $Dto->User['id'] ?? null,
+                $RowsToInsert['shop_code'] ?? null,
+                $RowsToInsert['shop_name'] ?? null,
+                $OpenDateValue,
+                (int)($RowsToInsert['closed'] ?? 0),
+                $ClosedDateValue,
+                $RowsToInsert['summary'] ?? null,
+                $CreatedAt,
+                null
+            ]);
+        } catch (Exception $e) {
+            $message = $e->getMessage();
+            echo $message;
+            throw $e;
         }
     }
 
     public function ShopsAlt($Dto, ?int $Key = null): void {
         $pdo = getPDO();
+
         $CreatedAt = date('Y-m-d H:i:s');
 
-        $RowsToInsert = [];
-        if ($Key !== null && isset($Dto->ShopAltTbl[$Key])) 
-        {
-            $RowsToInsert[] = $Dto->ShopAltTbl[$Key];
-        } else {
-            $RowsToInsert = $Dto->ShopAltTbl ?? [];
+        $RowsToAlt = [];
+        $RowsToAlt = $Dto->ShopAltTbl[$Key];
+
+        $OpenDate = trim((string)($RowsToAlt['open_date'] ?? ''));
+        $OpenDateValue = $OpenDate === '' ? null : $OpenDate;
+
+        $ClosedDate = trim((string)($RowsToAlt['closed_date'] ?? ''));
+        $ClosedDateValue = $ClosedDate === '' ? null : $ClosedDate;
+
+        $stmt = $pdo->prepare("UPDATE shops SET
+            user_id         = ?,
+            shop_code       = ?,
+            shop_name       = ?,
+            open_date       = ?,
+            closed          = ?,
+            closed_date     = ?,
+            summary         = ?,
+            created_at      = ?,
+            edittype        = ?
+        ");
+
+        if (($RowsToAlt['edittype'] ?? '') !== '更新') {
+            echo "ShopRepository.ShopsAlt 論理エラー EditTypeが不正";
         }
 
-            $stmt = $pdo->prepare("UPDATE shops SET
-                user_id         = ?,
-                shop_code       = ?,
-                shop_name       = ?,
-                open_date       = ?,
-                closed          = ?,
-                closed_date     = ?,
-                summary         = ?,
-                created_at      = ?,
-                edittype        = ?
-            ");
+        try {
+        $stmt->execute([
+            $RowsToAlt['user_id'] ?? $Dto->User['id'] ?? null,
+            $RowsToAlt['shop_code'] ?? null,
+            $RowsToAlt['shop_name'] ?? null,
+            $OpenDate,
+            (int)($RowsToAlt['closed'] ?? 0),
+            $ClosedDateValue,
+            $RowsToAlt['summary'] ?? null,
+            $RowsToAlt['created_at']?? null,
+            null
+        ]);
 
-        foreach ($RowsToInsert as $Row) {
-            if (($Row['edittype'] ?? '') !== '更新') {
-                continue;
-            }
-
-            try {
-            $stmt->execute([
-                $Row['user_id'] ?? $Dto->User['id'] ?? null,
-                $Row['shop_code'] ?? null,
-                $Row['shop_name'] ?? null,
-                $Row['open_date'] ?? null,
-                (int)($Row['closed'] ?? 0),
-                $Row['closed_date'] ?? null,
-                $Row['summary'] ?? null,
-                $Row['created_at']?? null,
-                null
-            ]);
-
-            } catch (Exception $e) {
-                $message = $e->getMessage();
-                echo $message;
-                throw $e;
-            }
+        } catch (Exception $e) {
+            $message = $e->getMessage();
+            echo $message;
+            throw $e;
         }
     }
 

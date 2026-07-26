@@ -107,8 +107,8 @@ class shopsService{
 
         $Dto->ShopAltTbl = []; // 初期化
         //var_dump($Dto->PostDt['ShopsUpdDt']);
-
-        foreach ($Dto->PostDt['ShopsUpdDt'] as $Row) {
+        //追加データは既に処理済みのため読み飛ばす
+        foreach ($Dto->PostDt['ShopsUpdDt'] as $Key => $Row) {
 
             // 1. edittype（編集タイプ）の判定
             if (!empty($Row['delete'])) {
@@ -135,7 +135,7 @@ class shopsService{
             }
 
             // 2. 配列にまとめてセット
-            $Dto->ShopAltTbl[] = [
+            $Dto->ShopAltTbl[$Key] = [
                 'id'          => null,
                 'shop_code'   => $Row['shop_code'] ?? '',
                 'shop_name'   => $Row['shop_name'] ?? '',
@@ -150,13 +150,14 @@ class shopsService{
 
     public function ShopsAlt(ShopsDto $Dto){
 
-        $Err = $this->SvcVali->ShopsVali($Dto);
+        $Err = $this->SvcVali->CommonVali($Dto);
         if($Err > 0){
             return;
         }
 
         foreach($Dto->ShopAltTbl as $Key=>$Row){
-
+            //var_dump($Row);
+            //echo "<br>";
             switch($Row['edittype']){
                 case '追加':
                     //var_dump($_SESSION['UserShops']); exit;
@@ -164,7 +165,7 @@ class shopsService{
                     break;
                 case '更新':
                     //var_dump($_SESSION['UserShops']); exit;
-                    $this->Repo->ShopsEdit($Dto,$Key);
+                    $this->Repo->ShopsAlt($Dto,$Key);
                     break;
                 case '削除':
                     //var_dump($_SESSION['UserShops']); exit;

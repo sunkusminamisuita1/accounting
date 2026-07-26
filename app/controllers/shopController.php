@@ -90,7 +90,8 @@ class shopController{
                 case '登録実行': //新規登録データを編集エリアに追加する
                     //$this->ShopsVali->AddVali($this->Dto);
                     $this->Service->ShopsAdd($this->Dto);
-                    $this->Repo->ShopsAdd($this->Dto);
+                    $this->ShopsVali->CommonVali($this->Dto);
+                    //$this->Repo->ShopsAdd($this->Dto);
                     break;
 
                 case '修正実行':  //ShopAltTblの内容をDBに反映する。                  

@@ -35,12 +35,12 @@ class ShopsValidator
                 //店番を正規表現で'000001'~'999999'でチェック
             $ShopNoPattern  =   '/^\d{6}$/';
             if ( ! preg_match($ShopNoPattern , $ShopCode) ) {
-                $Dto->ShopsAltTbl[$key]['errmsg'] = "shopsvali  店番は半角数字６桁で入力してください。";
+                $Dto->ShopAltTbl[$key]['errmsg'] = "shopsvali  店番は半角数字６桁で入力してください。";
                 $errFlg++;
                 continue;
             }
             if ($ShopCode === '000000') {
-                $Dto->ShopsAltTbl[$key]['errmsg'] = "shopsvali 000000は無効な店番です（000001以上）。";
+                $Dto->ShopAltTbl[$key]['errmsg'] = "shopsvali 000000は無効な店番です（000001以上）。";
                 $errFlg++;
                 continue;
             }
@@ -68,12 +68,12 @@ class ShopsValidator
             $Closed = $Row['closed'] ?? 0;
 
             // 5. 送信データ内での重複チェック
-            if (!$Closed) 
-            {
+            if ($Closed) {
                 if($Row['edittype'] === '追加'){
-                    $Dto->ShopsAltTbl[$key]['errmsg'] = "新規登録で削除は設定できません。";
+                    $Dto->ShopAltTbl[$key]['errmsg'] = "新規登録で削除は設定できません。";
                     $errFlg++;
                 }
+            }
                 //店番重複チェック
                 $sameRows = array_filter($Dto->ShopAltTbl, function($searchRow) use ($Row) {
                     if (($searchRow['edittype'] ?? '') === '削除') {
@@ -83,7 +83,7 @@ class ShopsValidator
                 });
 
                 if (count($sameRows) >= 2) {
-                    $Dto->ShopsAltTbl[$key]['errmsg'] = "この店番はすでに登録（重複）されています。";
+                    $Dto->ShopAltTbl[$key]['errmsg'] = "この店番はすでに登録（重複）されています。";
                     $errFlg++;
                 }
 
@@ -96,10 +96,9 @@ class ShopsValidator
                 });
 
                 if (count($sameRows) >= 2) {
-                    $Dto->ShopsAltTbl[$key]['errmsg'] = "この店名はすでに登録（重複）されています。";
+                    $Dto->ShopAltTbl[$key]['errmsg'] = "この店名はすでに登録（重複）されています。";
                     $errFlg++;
                 }             
-            }
         }
 
         if ($errFlg > 0) {

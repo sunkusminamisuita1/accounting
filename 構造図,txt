@@ -496,3 +496,15 @@ mysql  insert into 構文
                 created_at,
                 edittype
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+
+php true false
+
+    false とみなされる主な値（空の値）
+    PHPでは、ほかのデータ型も自動で true か false に変換されます。次の値はすべて false として扱われます： 
+
+        数字の 0 と -0
+        小数の 0.0 と -0.0
+        空の文字 "" や文字列の "0"
+        中身が空の配列 array()
+        特別な値 null 
