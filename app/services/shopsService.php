@@ -62,7 +62,6 @@ class shopsService{
             $_SESSION['current_shop_code'] = 0;
             $_SESSION['current_shop_name'] = "店舗未登録";
         }
-        //var_dump($_SESSION['current_shop_code']);echo "ddddddddddddddddddd";exit;
 
         return $Dto->UserShops;
     }
@@ -70,9 +69,6 @@ class shopsService{
     public function ShopsAdd(ShopsDto $Dto){
 
         $UserId = $Dto->User['id'];
-        //echo "ShopAdd method";exit;
-        //| id | user_id | shop_code | shop_name    | open_date | address | closed | closed_date | summary | created_at          |
-        //$this->RepoDataMake($Dto);
 
         array_unshift($Dto->ShopAltTbl,['id'        =>  null,                           'user_id'       =>  (int)$UserId, 
                                         'shop_code' =>  $_POST['NewShopCode'],          'shop_name'     =>  $_POST['NewShopName'],
@@ -106,43 +102,6 @@ class shopsService{
 
     public function RepoDataMake(ShopsDto $Dto){
   
-            //foreach($Dto->PostDt['ShopsUpdDt'] as $Key=>$Row){ //
-            //    $Dto->ShopAltTbl[$Key]['id']            = null;
-            //    $Dto->ShopAltTbl[$Key]['shop_code']     = $Row['shop_code'];
-            //    $Dto->ShopAltTbl[$Key]['shop_name']     = $Row['shop_name'];
-            //     $Dto->ShopAltTbl[$Key]['open_date']     = $Row['open_date'];
-            //     $Dto->ShopAltTbl[$Key]['summary']       = $Row['summary'];
-            //     $Dto->ShopAltTbl[$Key]['closed']        = $Row['closed']??'';
-            //     $Dto->ShopAltTbl[$Key]['closed_date']   = $Row['closed_date'];
-            //     $Dto->ShopAltTbl[$Key]['edittype']      = '未設定';                   
-
-            //     if(isset($Row['delete'])){
-            //         $Dto->ShopAltTbl[$Key]['edittype']  = '削除';
-            //     }
-
-            //     if( ! isset($Row['delete']) ?? ""){
-            //         foreach($_SESSION['UserShops'] as $Ukey => $Urow){
-
-            //             if( ($Urow['shop_code'] ===     $Row['shop_code'] )  && 
-            //                 ($Row               !==     $Urow             )  ){
-            //                 $Dto->ShopAltTbl[$Key]['edittype']  = '更新';
-            //             }
-
-            //             if( ($Urow['shop_code'] ===     $Row['shop_code'] )  && 
-            //                 ($Row               ===     $Urow             )  ){
-            //                 $Dto->ShopAltTbl[$Key]['edittype']  = '';
-            //             }
-
-            //         }
-            //     }
-            // }
-            // forreach($Dto->ShopAltTbl as $Key => $Row){
-            //     if($Dto->ShopAltTbl[$Key]['edittype'] === '未設定'){
-            //         $Dto->ShopAltTbl[$Key]['edittype'] =  '追加';
-            //     }
-            // }
-            // array_values($Dto->ShopAltTbl);
-
             // 検索を高速化するため、セッションの店舗一覧を shop_code をキーにした連想配列に変換（準備）
         $existingShops = array_column($_SESSION['UserShops'] ?? [], null, 'shop_code');
 
@@ -167,26 +126,7 @@ class shopsService{
                             || ($Row['summary']       !== $existingRow['summary'])
                             || (($Row['closed']?? null )  !== ($existingRow['closed']??''))
                             || ($Row['closed_date']   !== $existingRow['closed_date']);
-                    //echo "<br><br>";
-                    // var_dump($Row);
-                    // echo "<br><br>";
-                    // var_dump($existingRow);
-                    //if($Row['shop_name']   !== $existingRow['shop_name']){
-                    //    echo "<br>shop_name=" . print_r($Row['shot_name']) . "/" . print_r($existingRow['shop_name']);
-                    //}
-                    // if($Row['open_date']   !== $existingRow['open_date']){
-                    //     echo "<br>open_date" . print_r($Row['open_date']) . "/" . print_r($existingRow['open_date']);
-                    // }
-                    // if($Row['summary']   !== $existingRow['summary']){
-                    //     echo "<br>summary=" . print_r($Row['summary']) . "/" . print_r($existingRow['summary']);
-                    // }
-                    if(($Row['closed']?? null)   !== ($existingRow['closed']?? null)){
-                        echo "<br>closed=" . print_r($Row['closed']) . "/" . print_r($existingRow['closed']);
-                    }
-                    // if($Row['closed_date']   !== $existingRow['closed_date']){
-                    //     echo "<br>closed_date=" . print_r($Row['closed_date']) . "/" . print_r($existingRow['closed_date']);
-                    // }
-                    echo "<br>edittype={$edittype}";
+
                     $edittype = $isChanged ? '更新' : '';
                 } else {
                     // 既存に存在しないコードなら「追加」
@@ -219,15 +159,15 @@ class shopsService{
 
             switch($Row['edittype']){
                 case '追加':
-                    var_dump($_SESSION['UserShops']); exit;
+                    //var_dump($_SESSION['UserShops']); exit;
                     $this->Repo->ShopsAdd($Dto,$Key);
                     break;
                 case '更新':
-                    var_dump($_SESSION['UserShops']); exit;
+                    //var_dump($_SESSION['UserShops']); exit;
                     $this->Repo->ShopsEdit($Dto,$Key);
                     break;
                 case '削除':
-                    var_dump($_SESSION['UserShops']); exit;
+                    //var_dump($_SESSION['UserShops']); exit;
                     $this->Repo->ShopsDlt($Dto,$Key);
                     break;
                 default:

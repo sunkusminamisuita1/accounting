@@ -10,7 +10,7 @@ class shopController{
     public        $ctrErrMsgPopUp;
 	public		  $Repo;
 	public		  $CtrErrMsgPopUp;
-    private       $Vali;
+    private       $ShopsVali;
 
 	public function __construct()
     {
@@ -27,7 +27,7 @@ class shopController{
         $this->ctrErrMsgPopUp 	= 	new ErrMsgPopUp($this->Dto);
 		$this->Repo				=	new ShopsRepository();
 		$this->CtrErrMsgPopUp   =   new ErrMsgPopUp($this->Dto);
-        $this->Vali             =   new ShopsValidator('true');
+        $this->ShopsVali        =   new ShopsValidator('');
 		
     }
 
@@ -87,19 +87,17 @@ class shopController{
 
             switch($_POST['ShopsPfm']){
 
-                case '登録実行':
+                case '登録実行': //新規登録データを編集エリアに追加する
+                    //$this->ShopsVali->AddVali($this->Dto);
                     $this->Service->ShopsAdd($this->Dto);
+                    $this->Repo->ShopsAdd($this->Dto);
                     break;
-
-                //case '行削除':  //削除ボタンは、編集用データ$Dto->ShopAltTlb,$_SESSION['SHopAltTbl']
-                //    $this->Service->LineDlt($this->Dto);
-                //    break;
 
                 case '修正実行':  //ShopAltTblの内容をDBに反映する。                  
                     $this->Service->RepoDataMake($this->Dto);
-                    // echo "<br><br>";
-                    // var_dump($this->Dto->ShopAltTbl);
-                    $this->Vali->ShopsVali($this->Dto);
+                    //echo "<br><br>";
+                    //var_dump($this->Dto->ShopAltTbl);
+                    $this->ShopsVali->CommonVali($this->Dto);
                     $this->Service->ShopsAlt($this->Dto,$ViewEditKey);
                     break;
 

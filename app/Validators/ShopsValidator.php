@@ -20,7 +20,7 @@ class ShopsValidator
         }
     }
 
-    public function ShopsVali(ShopsDTO $Dto): int
+    public function CommonVali(ShopsDTO $Dto): int
     {
         // パスカルケース（大文字始まり）だったローカル変数を、PHPで一般的なキャメルケース（小文字始まり）に統一
         $errFlg = 0;
@@ -44,14 +44,6 @@ class ShopsValidator
                 $errFlg++;
                 continue;
             }
-            //foreach ($Dto->ShopAltTbl as $key1 => $Row1){
-            //    if($ShopCode = trim((string)$Row1['shop_code'])){
-            //        $Dto->ShopAltTbl[$key]['errmsg'] = "shopsvali 同じ店番がすでに登録されています。";
-            //        $errFlg++;
-            //        continue;
-            //    }
-
-            //} 
 
             if ( empty($Row['shop_name'])) {
                 $Dto->ShopAltTbl[$key]['errmsg'] = "shopvali 店舗名は必須入力です。";
@@ -72,27 +64,16 @@ class ShopsValidator
                 continue;
             }
 
-            // 4. 閉店フラグが立っているデータの書き換えチェック
+            // 4. 閉店フラグが立っているデータは新規登録できません。＃＃＃＃＃　　新規のみ　＃＃＃＃＃＃
             $Closed = $Row['closed'] ?? 0;
-            if ($Closed) {
-                $currentId = (int)$Row['id'];
-                $currentName = trim((string)$Row['name']);
-                $currentType = trim((string)$Row['type']);
-
-                foreach ($Dto->UserShops as $OrgKey => $OrgRow) {
-                    if ((int)$OrgRow['id'] === $currentId) {
-                        if (trim((string)$orgRow['name']) !== $currentName || trim((string)$OrgRow['type']) !== $currentType) {
-                            $Dto->ShopAltTbl[$key]['errmsg'] = "削除済みの勘定科目、種別は修正できません。";
-                            $errFlg++;
-                            break;
-                        }
-                    }
-                }
-            }
 
             // 5. 送信データ内での重複チェック
             if (!$Closed) 
             {
+                if($Row['edittype'] === '追加'){
+                    $Dto->ShopsAltTbl[$key]['errmsg'] = "新規登録で削除は設定できません。";
+                    $errFlg++;
+                }
                 //店番重複チェック
                 $sameRows = array_filter($Dto->ShopAltTbl, function($searchRow) use ($Row) {
                     if (($searchRow['edittype'] ?? '') === '削除') {
@@ -128,5 +109,6 @@ class ShopsValidator
         $this->log("バリデーション終了。エラー数: " . $errFlg);
 
         return $errFlg;
-    }    
+    }
+
 }

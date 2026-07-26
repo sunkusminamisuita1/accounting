@@ -478,3 +478,21 @@ if (isset($indexedShops['S002'])) {
 }
 
 先ほどリファクタリングしたコードで2重ループ（foreach の中の foreach）を消すことができたのは、この array_column による高速な辞書化を利用したためです。
+
+
+
+
+
+
+mysql  insert into 構文
+            $sql = "INSERT INTO shops (
+                user_id,
+                shop_code,
+                shop_name,
+                open_date,
+                closed,
+                closed_date,
+                summary,
+                created_at,
+                edittype
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
