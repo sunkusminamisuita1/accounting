@@ -52,10 +52,10 @@ class ShopsRepository{
         $RowsToInsert = $Dto->ShopAltTbl[$Key];
         var_dump($RowsToInsert);
 
-        if (($RowsToInsert['edittype'] ?? '') !== '追加') {
-            echo "ShopRepository.ShopsAdd 論理エラー　edittyeが追加でない";
-            exit;
-        }
+        //if (($RowsToInsert['edittype'] ?? '') !== '追加') {
+        //    echo "ShopRepository.ShopsAdd 論理エラー　edittyeが追加でない";
+        //    exit;
+        //}
 
         $sql = "INSERT INTO shops (
             user_id,
