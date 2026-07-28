@@ -74,7 +74,7 @@ class shopsService{
                                         'shop_code' =>  $_POST['NewShopCode'],          'shop_name'     =>  $_POST['NewShopName'],
                                         'open_date' =>  $_POST['NewOpenDate'],          'adress'        =>  '',
                                         'closed'    =>  0,                              'closed_date'   =>  '', 
-                                        'summary'   =>  $_POST['NewSummary'],           'edittype'      =>'追加'
+                                        'summary'   =>  $_POST['NewSummary'],           'EditType'      =>'追加'
                                         ]                                       
         );
     }
@@ -102,51 +102,79 @@ class shopsService{
 
     public function RepoDataMake(ShopsDto $Dto){
   
-            // 検索を高速化するため、セッションの店舗一覧を shop_code をキーにした連想配列に変換（準備）
-        $existingShops = array_column($_SESSION['UserShops'] ?? [], null, 'shop_code');
+        //     // 検索を高速化するため、セッションの店舗一覧を shop_code をキーにした連想配列に変換（準備）
+        $sessionShopsArray = array_column($_SESSION['UserShops'] ?? [], null, 'shop_code');
 
-        $Dto->ShopAltTbl = []; // 初期化
-        //var_dump($Dto->PostDt['ShopsUpdDt']);
-        //追加データは既に処理済みのため読み飛ばす
-        foreach ($Dto->PostDt['ShopsUpdDt'] as $Key => $Row) {
+         $Dto->ShopAltTbl = []; // 初期化
+                       
+        foreach ($Dto->PostDt['ShopsUpdDt'] as $pKey => $pRow) {
+            $postShopCode    = int(trim($pRow['shop_code'])??0);
+            $postShopNme     = trim($pRow['shop_name']);
+            $postOpenDate    = $this->formatDate($pRow['open_date'??'']);
+            $postSummary     = trim(string($pRow['summary'])??'');
+            $postClosed      = trim(string($pRow['closed'])??'');
+            $postClosedDate  = $this->formatDate($pRow['closed_date']??'');
+            $postDelete      = trim(string($pRow['delete'])??'');
 
-            // 1. edittype（編集タイプ）の判定
-            if (!empty($Row['delete'])) {
-                $edittype = '削除';
-            } else {
-        
-                // 既存データ（$_SESSION）の中に同じ shop_code が存在するか？
-                if (isset($existingShops[$Row['shop_code'] ?? ''])) {
-                    $existingRow = $existingShops[$Row['shop_code'] ?? ''];
+            if(isset($sessionShopArray[$postShopCode])){
+                $sRow   =   $sessionShopArray[$postShopCode];
 
-                    // 既存データと入力データを比較（変更があるか？）
-                    // ※比較用に必要なフィールドだけチェックするか、全フィールドを比較
-                    $isChanged = ($Row['shop_name']   !== $existingRow['shop_name'])
-                            || ($Row['open_date']     !== $existingRow['open_date'])
-                            || ($Row['summary']       !== $existingRow['summary'])
-                            || (($Row['closed']?? null )  !== ($existingRow['closed']??''))
-                            || ($Row['closed_date']   !== $existingRow['closed_date']);
+                $sessionShopCode    = int(trim($sRow['shop_code'])??0);
+                $sessionShopNme     = trim($sRow['shop_name']);
+                $sessionOpenDate    = $this->formatDate($sRow['open_date']??'');            
+                $sessionSummary     = trim(string($sRow['summary'])??'');
+                $sessionClosed      = trim(string($sRow['closed'])??'');
+                $sessionClosedDate  = $this->forMatdate($sRow['closed_date']??'');            
+                $sessionDelete      = trim(string($sRow['delete'])??'');
 
-                    $edittype = $isChanged ? '更新' : '';
-                } else {
-                    // 既存に存在しないコードなら「追加」
-                    $edittype = '追加';
+                if (!empty($Row['delete'])) {
+                    $editType = '削除';
                 }
-            }
 
-            // 2. 配列にまとめてセット
-            $Dto->ShopAltTbl[$Key] = [
-                'id'          => null,
-                'shop_code'   => $Row['shop_code'] ?? '',
-                'shop_name'   => $Row['shop_name'] ?? '',
-                'open_date'   => $Row['open_date'] ?? '',
-                'summary'     => $Row['summary'] ?? '',
-                'closed'      => $Row['closed'] ?? '',
-                'closed_date' => $Row['closed_date'] ?? '',
-                'edittype'    => $edittype,
-            ];
+                $isChanged =   (
+                                $postShopNme       !==  $sessionShopNme       ||
+                                $postOpenDate      !==  $sessionOpenDate      ||
+                                $postSummary       !==  $sessionSummary       ||
+                                $postClosed        !==  $sessionClosed        ||
+                                $postClosedDate    !==  $sessionClosedDate    ||
+                                $postDelete        !==  $sessionDelete
+                               );
+
+                if($ischanged){
+                    $editType = $isChanged ? '更新' : '';
+                    $this->P2R($Dto, $pKey, $pRow);
+                }  
+            }else{
+                $editType = '追加';
+                $this->P2R($Dto, $pKey, $pRow, $editType);
+            }
         }
     }
+
+    private function P2R($Dto, $pKey, $pRow, $editType){
+
+            // 2. 配列にまとめてセット
+            $Dto->ShopAltTbl[$pKey] = [
+                'id'          => null,
+                'shop_code'   => $pRow['shop_code'] ?? '',
+                'shop_name'   => $pRow['shop_name'] ?? '',
+                'open_date'   => $pRow['open_date'] ?? '',
+                'summary'     => $pRow['summary'] ?? '',
+                'closed'      => $pRow['closed'] ?? '',
+                'closed_date' => $pRow['closed_date'] ?? '',
+                'edittype'    => $editType,
+            ];
+    }
+
+    private function formatDate(string $date): string {
+        $date   =   trim($date);
+        if ($date !== '' && strlen($date) === 8 && is_numeric($date)) {
+            return substr($date, 0, 4) . '-' . substr($date, 4, 2) . '-' . substr($date, 6, 2);
+        }
+        return $date;
+    }
+
+    
 
     public function ShopsAlt(ShopsDto $Dto){
 
@@ -158,7 +186,7 @@ class shopsService{
         foreach($Dto->ShopAltTbl as $Key=>$Row){
             //var_dump($Row);
             //echo "<br>";
-            switch($Row['edittype']){
+            switch($Row['EditType']){
                 case '追加':
                     //var_dump($_SESSION['UserShops']); exit;
                     $this->Repo->ShopsAdd($Dto,$Key);
@@ -172,7 +200,7 @@ class shopsService{
                     $this->Repo->ShopsDlt($Dto,$Key);
                     break;
                 default:
-                    echo "system error: edittype is not set.";
+                    echo "system error: EditType is not set.";
                     exit;
                     break;
             }

@@ -25,8 +25,8 @@ class AuthController{
                 session_regenerate_id(true);
                 $_SESSION['user'] =     $Dto->User; 
 
-                $Dto->UserShops         = $this->shopsSvc->getShopsData($Dto);//
-                $_SESSION['UserShops']  = $this->shopsSvc->getShopsData($Dto);
+                $Dto->UserShops         = $this->shopsSvc->getShopsData($Dto);
+                $_SESSION['UserShops']  = $Dto->UserShops;
 
                 header('Location: index.php?route=home');
                 exit;
