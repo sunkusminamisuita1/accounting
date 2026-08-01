@@ -12,12 +12,14 @@ class ShopsDTO
     public array    $ShopAltTbl =[]; //ショップ　修正用テーブル
     public string   $ActiveShopCode = "";
     public array    $PostDt = [];
+    public string   $isLocked; //編集エリアにエラーがなければ　readonly(view編集エリアにセット)エラーがあれば　''をセット修正可能とする。
 
     //public function __construct(string $email, string $password)
     public function __construct()
     {
         //$this->email = $email;
         //$this->password = $password;
+        $this->isLocked = "";
         $this->Email = "";
         $this->Password = "";
         $this->User = [];  //SELECT  id, username, email, password_hash,

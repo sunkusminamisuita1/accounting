@@ -85,25 +85,31 @@ class shopController{
 
             $this->RestoreEditingData($this->Dto);
 
+            $_SESSION['isValidated']    =   '';
+
             switch($_POST['ShopsPfm']){
 
                 case '登録実行': //新規登録データを編集エリアに追加する
-                    //$this->ShopsVali->AddVali($this->Dto);
                     $this->Service->ShopsAdd($this->Dto);
                     $this->ShopsVali->CommonVali($this->Dto);
-                    //$this->Repo->ShopsAdd($this->Dto);
                     break;
 
-                case '修正実行':  //ShopAltTblの内容をDBに反映する。                  
+                case '修正実行':  //ShopAltTblの内容をDBに反映する。     
                     $this->Service->RepoDataMake($this->Dto);
-                    //echo "<br><br>";
-                    //var_dump($this->Dto->ShopAltTbl);
-                    $this->ShopsVali->CommonVali($this->Dto);
-                    $this->Service->ShopsAlt($this->Dto,$ViewEditKey);
+
+                    $isError =   $this->ShopsVali->CommonVali($this->Dto);
+
+                    $_SESSION['ShopAltTbl']   =    $this->Dto->ShopAltTbl;
+                    var_dump($this->Dto->ShopAltTbl);exit;                        
+
+                    if(!$isError){
+                        $this->Service->ShopsAlt($this->Dto,$ViewEditKey);
+                        $_SESSION['ShopAltTbl']   =   [];
+                    }
                     break;
 
                 case 'キャンセル':
-                    unset($_SESSION['ShopAltTbl']);
+
                     $this->RestoreEditingData($this->Dto);
                     break;
             }
@@ -112,8 +118,9 @@ class shopController{
         }
         $this->Render();
     }
-
+//
     private function render(){
+        
         $TokenKey = generateCsrfToken();
         if(empty($this->Dto->ShopAltTbl??'[]')){
             $ShopList   =   $this->Service->getShopsData($this->Dto);

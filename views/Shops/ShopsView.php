@@ -122,6 +122,11 @@
                         <h3>店舗情報を修正・閉店登録(店番,店舗名の修正はできません。)</h3>
                         <div style="text-align: center;" >
                             <input type="hidden" name="csrfTokenKey" value="<?= h($TokenKey) ?>">
+                            <!-- <button name="ShopsPfm" type="submit"
+                                onclick="return confirm
+                                ('店舗情報 修正欄の内容の正当性チェックを行います。\nデータベースの更新は行いません。？');"  
+                                value="<?= h('チェック') ?>" >相関チェック
+                            </button> -->
                             <button name="ShopsPfm" type="submit"
                                 onclick="return confirm
                                 ('店舗情報 修正欄の内容をデータベースに登録します。\n本当に変更してもよろしいですか？');"  
@@ -181,28 +186,29 @@
                                             <td style="text-align: left;">  <!--   開業日   -->
                                                 <input class="TxtBoxLineDel" style="width: 90%;" 
                                                     type="text" name="ShopsUpdDt[<?= $Key ?>][open_date]" 
-                                                    value="<?= h($Row['open_date']) ?? '' ?>">
+                                                    value="<?= h($Row['open_date']) ?? '' ?>" <?= $isLocked??'' ?> 
+                                                >
                                             </td>
 
                                             <td style="text-align: left;">  <!--   摘要   -->
                                                 <input class="TxtBoxLineDel" style="width: 90%;" 
                                                     type="text" name="ShopsUpdDt[<?= $Key ?>][summary]" 
-                                                    value="<?= h($Row['summary']) ?? '' ?>">
+                                                    value="<?= h($Row['summary']) ?? '' ?>"  <?= $isLocked??'' ?> 
+                                                >
 
                                             </td>
 
                                             <td>                            <!--   閉店チェックボックス   -->
                                                 <input class="TxtBoxLineDel" style="width: 90%;" type="checkbox" 
-                                                    name="ShopsUpdDt[<?= $Key ?>][closed]" value="unchecked"
-                                                    <?php if (isset($Row['closed']) && $Row['closed'] === 1 ) { 
-                                                        echo 'checked'; } ?>
+                                                    name="ShopsUpdDt[<?= $Key ?>][closed]" value="1"
+                                                    <?= $isLocked??'' ?> 
                                                 >
                                             </td>
 
                                             <td>                            <!--   閉店日   -->
                                                 <input class="TxtBoxLineDel" style="width: 90%;" type="text" 
                                                     name="ShopsUpdDt[<?= $Key ?>][closed_date]" 
-                                                    value="<?= h($Row['closed_date']) ?? '' ?>"
+                                                    value="<?= h($Row['closed_date']) ?? '' ?>"  <?= $isLocked??'' ?>
                                                 >
                                             </td>                                          
 
@@ -216,9 +222,8 @@
                                             <td>                            <!--   行削除チェックボックス   -->     
                                                  
                                                 <input class="TxtBoxLineDel" style="width: 90%;" type="checkbox" 
-                                                    name="ShopsUpdDt[<?= $Key ?>][delete]" value="unchecked"
-                                                    <?php if (isset($Row['delete']) && $Row['delete'] === 1 ) { 
-                                                        echo 'checked'; } ?>
+                                                    name="ShopsUpdDt[<?= $Key ?>][delete]" value="1"
+                                                   <?= $isLocked??'' ?>
                                                 >
 
 

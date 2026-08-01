@@ -80,23 +80,26 @@ class shopsService{
     }
 
     public function LineDlt(ShopsDto $Dto){
+
+        //$Dto->isLocked  =   "readonly";
         
         foreach($Dto->PostDt['ShopsUpdDt'] as $Key => $Row)
         {
-            echo "<br>llllll= {$Dto->PostDt['ShopsUpdDt'][$Key]['deletekey']}";
+            //echo "<br>llllll= {$Dto->PostDt['ShopsUpdDt'][$Key]['deletekey']}";
             $DltKey     =   ! empty($Row['deletekey'])
                             ? $Row['deletekey']
                             : "";
             if(!empty($DltKey))
             {
+                echo "shopService.LineDlt プログラムエラー　行削除で行番号が指定されていません！";
                  break; 
             }
             
         }
 
-        $this->RepoDataMake($Dto);
-        array_splice($Dto->ShopAltTbl, $DltKey, 1);
-        $_SESSION['ShopAltTbl'] =   $Dto->ShopAltTbl;
+        //$this->RepoDataMake($Dto);
+        //array_splice($Dto->ShopAltTbl, $DltKey, 1);
+        //$_SESSION['ShopAltTbl'] =   $Dto->ShopAltTbl;
 
     } 
 
@@ -104,32 +107,35 @@ class shopsService{
   
         //     // 検索を高速化するため、セッションの店舗一覧を shop_code をキーにした連想配列に変換（準備）
         $sessionShopsArray = array_column($_SESSION['UserShops'] ?? [], null, 'shop_code');
-
-         $Dto->ShopAltTbl = []; // 初期化
-                       
+        //var_dump($sessionShopsArray);
+        //var_dump($sessionShopsArray);exit;
+        $Dto->ShopAltTbl = []; // 初期化
         foreach ($Dto->PostDt['ShopsUpdDt'] as $pKey => $pRow) {
-            $postShopCode    = int(trim($pRow['shop_code'])??0);
-            $postShopNme     = trim($pRow['shop_name']);
-            $postOpenDate    = $this->formatDate($pRow['open_date'??'']);
-            $postSummary     = trim(string($pRow['summary'])??'');
-            $postClosed      = trim(string($pRow['closed'])??'');
+            $postShopCode    = sprintf('%06d',(int)trim($pRow['shop_code']??0));
+            $postShopNme     = trim($pRow['shop_name']??'');
+            $postOpenDate    = $this->formatDate( $pRow['open_date']??'');
+            $postSummary     = trim((string)$pRow['summary']??'');
+            $postClosed      = isset($pRow['closed']) ? trim((string)$pRow['closed']) : '0';
             $postClosedDate  = $this->formatDate($pRow['closed_date']??'');
-            $postDelete      = trim(string($pRow['delete'])??'');
+            $postDelete      = isset($pRow['deleted']) ? trim((string)$pRow['deleted']) : '0';
+            echo "<br>";
+            print_r($pRow['deleted']);
+            echo "<br>";
+            // var_dump($sessionShopsArray[$postShopCode]);
+            // echo "<br>";
+            // var_dump($sessionShopsArray);
+            // echo "<br>";exit;
 
-            if(isset($sessionShopArray[$postShopCode])){
-                $sRow   =   $sessionShopArray[$postShopCode];
-
-                $sessionShopCode    = int(trim($sRow['shop_code'])??0);
+            if(isset($sessionShopsArray[$postShopCode])){
+                $sRow   =   $sessionShopsArray[$postShopCode];
+                //var_dump($sRow);exit;
+                $sessionShopCode    = (int)trim($sRow['shop_code']??0);
                 $sessionShopNme     = trim($sRow['shop_name']);
                 $sessionOpenDate    = $this->formatDate($sRow['open_date']??'');            
-                $sessionSummary     = trim(string($sRow['summary'])??'');
-                $sessionClosed      = trim(string($sRow['closed'])??'');
-                $sessionClosedDate  = $this->forMatdate($sRow['closed_date']??'');            
-                $sessionDelete      = trim(string($sRow['delete'])??'');
-
-                if (!empty($Row['delete'])) {
-                    $editType = '削除';
-                }
+                $sessionSummary     = trim((string)$sRow['summary']??'');
+                $sessionClosed      = isset($sRow['closed']) ? trim((string)$sRow['closed']) : '0';
+                $sessionClosedDate  = $this->formatdate($sRow['closed_date']??'');            
+                $sessionDelete      = isset($sRow['deleted']) ? trim((string)$sRow['deleted']) : '0';
 
                 $isChanged =   (
                                 $postShopNme       !==  $sessionShopNme       ||
@@ -140,15 +146,32 @@ class shopsService{
                                 $postDelete        !==  $sessionDelete
                                );
 
-                if($ischanged){
+
+                if($isChanged){
                     $editType = $isChanged ? '更新' : '';
-                    $this->P2R($Dto, $pKey, $pRow);
-                }  
+                    //$this->P2R($Dto, $pKey, $pRow, $editType);
+                }
+
+                if (!empty($pRow['deleted'])) {
+                    $editType = '削除';
+                }
+
             }else{
                 $editType = '追加';
                 $this->P2R($Dto, $pKey, $pRow, $editType);
             }
+            $this->P2R($Dto, $pKey, $pRow, $editType);
+                echo "<br> postShopNme={$postShopNme}  sessionShopNme={$sessionShopNme}";
+                echo "<br> postOpenDate={$postOpenDate}  sessionOpenDate={$sessionOpenDate}";
+                echo "<br> postSummary={$postSummary}  sessionSummary={$sessionSummary}";
+                echo "<br> postClosed={$postClosed}  sessionClosed={$sessionClosed}";
+                echo "<br> postClosedDate={$postClosedDate}  sessionClosedDate={$sessionClosedDate}";
+                echo "<br> postDelete={$postDelete}  sessionDelete={$sessionDelete}";
+                echo "<br> isChanged={$isChanged}";
         }
+        exit; //デバッグ
+        //var_dump($Dto->PostDt['ShopsUpdDt']);exit;  
+
     }
 
     private function P2R($Dto, $pKey, $pRow, $editType){
@@ -163,7 +186,10 @@ class shopsService{
                 'closed'      => $pRow['closed'] ?? '',
                 'closed_date' => $pRow['closed_date'] ?? '',
                 'edittype'    => $editType,
+                'deleted'     => isset($pRow['deleted']) ? $pRow['deleted'] : '0'
             ];
+            //echo "<br><br>";
+            //var_dump($Dto->ShopAltTbl[$pKey]);
     }
 
     private function formatDate(string $date): string {
@@ -186,7 +212,7 @@ class shopsService{
         foreach($Dto->ShopAltTbl as $Key=>$Row){
             //var_dump($Row);
             //echo "<br>";
-            switch($Row['EditType']){
+            switch($Row['edittype']){
                 case '追加':
                     //var_dump($_SESSION['UserShops']); exit;
                     $this->Repo->ShopsAdd($Dto,$Key);

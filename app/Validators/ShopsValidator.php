@@ -24,6 +24,7 @@ class ShopsValidator
     {
         // パスカルケース（大文字始まり）だったローカル変数を、PHPで一般的なキャメルケース（小文字始まり）に統一
         $errFlg = 0;
+        $Dto->isLocked   = '';
 
         $this->log("バリデーション開始。対象データ数: " . count($Dto->ShopAltTbl));
         //var_dump($Dto->ShopAltTbl);exit;
@@ -102,7 +103,10 @@ class ShopsValidator
         }
 
         if ($errFlg > 0) {
-            $Dto->ErrData[0] = "登録エラーが存在します。エラーを修正してください。";
+            $Dto->ErrData['shopValidator.commonVali'] = "登録エラーが存在します。エラーを修正してください。";
+            $Dto->isLocked   = '';
+        }else{
+            $Dto->isLocked   = 'readonly';
         }
 
         $this->log("バリデーション終了。エラー数: " . $errFlg);

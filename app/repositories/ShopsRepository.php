@@ -47,11 +47,16 @@ class ShopsRepository{
         $RowsToInsert = $Dto->ShopAltTbl[$Key];
 
         // 🛠️ デバッグ用：000002の時だけ通して、000001の時は強制終了して止める
-        if (($RowsToInsert['shop_code'] ?? '') === '000001') {
-            echo "【デバッグ】なぜか古い店舗コード(000001)のデータでShopsAddが呼ばれました！<br>";
-            echo "渡されたキー(Key)は: " . $Key . " です。<br>";
-            echo "トレース情報:<br>";
-            debug_print_backtrace(); // どこから呼び出されたかを逆引き表示
+        // if (($RowsToInsert['shop_code'] ?? '') === '000001') {
+        //     echo "【デバッグ】なぜか古い店舗コード(000001)のデータでShopsAddが呼ばれました！<br>";
+        //     echo "渡されたキー(Key)は: " . $Key . " です。<br>";
+        //     echo "トレース情報:<br>";
+        //     debug_print_backtrace(); // どこから呼び出されたかを逆引き表示
+        //     exit;
+        // }
+        if(  $RowsToInsert['edittype'] ){
+            echo "<br>読み飛ばし{$RowsToInsert['shop_code']}<br>";
+            var_dump($RowsToInsert['edittype']);
             exit;
         }
 
@@ -128,7 +133,7 @@ class ShopsRepository{
 
         $RowsToAlt = [];
         $RowsToAlt = $Dto->ShopAltTbl[$Key];
-        var_dump($RowsToAlt);
+        //var_dump($RowsToAlt);
         $OpenDate = trim((string)($RowsToAlt['open_date'] ?? ''));
         $OpenDateValue = $OpenDate === '' ? null : $OpenDate;
 
