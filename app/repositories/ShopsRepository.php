@@ -99,8 +99,9 @@ class ShopsRepository{
             closed_date,
             summary,
             created_at,
+            deleted,
             edittype
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         $stmt = $pdo->prepare($sql);
 
@@ -114,7 +115,8 @@ class ShopsRepository{
                 $ClosedDateValue,
                 $RowsToInsert['summary'] ?? null,
                 $CreatedAt,
-                null
+                $RowsToInsert['deleted'] ?? 0,
+                $RowsToInsert['edittype'] ?? null
             ]);
             $pdo->commit();
         } catch (Exception $e) {
@@ -149,6 +151,7 @@ class ShopsRepository{
                                     closed_date     = ?,
                                     summary         = ?,
                                     created_at      = ?,
+                                    deleted         = ?,
                                     edittype        = ?
                                 WHERE
                                     shop_code       = ?
@@ -168,7 +171,8 @@ class ShopsRepository{
             $ClosedDateValue,
             $RowsToAlt['summary'] ?? null,
             $RowsToAlt['created_at']?? null,
-            null,
+            $RowsToAlt['deleted'] ?? 0,
+            $RowsToAlt['edittype'] ?? null,
             $RowsToAlt['shop_code'] ?? null
         ]);
         $pdo->commit();

@@ -117,7 +117,7 @@ class shopsService{
             $postSummary     = trim((string)$pRow['summary']??'');
             $postClosed      = isset($pRow['closed']) ? trim((string)$pRow['closed']) : '0';
             $postClosedDate  = $this->formatDate($pRow['closed_date']??'');
-            $postDelete      = isset($pRow['delete']) ? trim((string)$pRow['delete']) : '0';
+            $postDelete      = isset($pRow['deleted']) ? trim((string)$pRow['deleted']) : '0';
             // echo "<br>";
             // print_r($pRow['delete']);
             // echo "<br>";
@@ -135,7 +135,7 @@ class shopsService{
                 $sessionSummary     = trim((string)$sRow['summary']??'');
                 $sessionClosed      = isset($sRow['closed']) ? trim((string)$sRow['closed']) : '0';
                 $sessionClosedDate  = $this->formatdate($sRow['closed_date']??'');            
-                $sessionDelete      = isset($sRow['delete']) ? trim((string)$sRow['delete']) : '0';
+                $sessionDelete      = isset($sRow['deleted']) ? trim((string)$sRow['deleted']) : '0';
 
                 $isChanged =   (
                                 $postShopNme       !==  $sessionShopNme       ||
@@ -152,13 +152,13 @@ class shopsService{
                     //$this->P2R($Dto, $pKey, $pRow, $editType);
                 }
 
-                if (!empty($pRow['deleted'])) {
-                    $editType = '削除';
-                }
+                // if (!empty($pRow['deleted'])) {
+                //     $editType = '削除';
+                // }
 
             }else{
                 $editType = '追加';
-                $this->P2R($Dto, $pKey, $pRow, $editType);
+                //$this->P2R($Dto, $pKey, $pRow, $editType);
             }
             $this->P2R($Dto, $pKey, $pRow, $editType);
                 // echo "<br> postShopNme={$postShopNme}  sessionShopNme={$sessionShopNme}";
@@ -221,10 +221,10 @@ class shopsService{
                     //var_dump($_SESSION['UserShops']); exit;
                     $this->Repo->ShopsAlt($Dto,$Key);
                     break;
-                case '削除':
-                    //var_dump($_SESSION['UserShops']); exit;
-                    $this->Repo->ShopsDlt($Dto,$Key);
-                    break;
+                // case '削除':
+                //     //var_dump($_SESSION['UserShops']); exit;
+                //     $this->Repo->ShopsDlt($Dto,$Key);
+                //     break;
                 case '': // 変更なし
                     //var_dump($_SESSION['UserShops']); exit;
                     break;

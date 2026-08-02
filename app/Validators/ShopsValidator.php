@@ -103,7 +103,6 @@ class ShopsValidator
 
                 // 開店日が入力されている場合、YYYY-MM-DD形式であることをチェック
                 if($Row['open_date'] ?? ''){
-                    echo "<br> open_date={$Row['open_date']}"; // デバッグ用出力
                     if ( ! $this->isValidDate($Row['open_date'] ?? '')) {
                         $Dto->ShopAltTbl[$key]['errmsg'] = "開店日はYYYY-MM-DD形式で入力してください。";
                         $errFlg++;
@@ -112,7 +111,6 @@ class ShopsValidator
 
                 // 閉店日が入力されている場合、YYYY-MM-DD形式であることをチェック
                 if($Row['closed_date'] ?? ''){
-                    echo "<br> closed_date={$Row['closed_date']}"; // デバッグ用出力
                     if ( ! $this->isValidDate($Row['closed_date'] ?? '')) {
                         $Dto->ShopAltTbl[$key]['errmsg'] = "閉店日はYYYY-MM-DD形式で入力してください。";
                         $errFlg++;
@@ -146,7 +144,6 @@ class ShopsValidator
     }
 
     function isValidDate($value): bool {
-        echo "<br> isValidDate value={$value}"; // デバッグ用出力
         if (!is_string($value) || trim($value) === '') {
             return false;
         }
@@ -154,9 +151,15 @@ class ShopsValidator
         $date = DateTime::createFromFormat('!Y-m-d', $value);
         $errors = DateTime::getLastErrors();
 
-        return $date !== false && 
-               $errors['warning_count'] === 0 && 
-               $errors['error_count'] === 0;
+        if ($date === false) {
+            return false;
+        }
+
+        $errors = is_array($errors) ? $errors : [];
+        $warningCount = $errors['warning_count'] ?? 0;
+        $errorCount = $errors['error_count'] ?? 0;
+
+        return $warningCount === 0 && $errorCount === 0;
     }
 
 }
