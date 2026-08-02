@@ -54,11 +54,11 @@ class ShopsRepository{
         //     debug_print_backtrace(); // どこから呼び出されたかを逆引き表示
         //     exit;
         // }
-        if(  $RowsToInsert['edittype'] ){
-            echo "<br>読み飛ばし{$RowsToInsert['shop_code']}<br>";
-            var_dump($RowsToInsert['edittype']);
-            exit;
-        }
+        // if(  $RowsToInsert['edittype'] ){
+        //     echo "<br>読み飛ばし{$RowsToInsert['shop_code']}<br>";
+        //     var_dump($RowsToInsert['edittype']);
+        //     exit;
+        // }
 
         $ClosedDate = trim((string)($RowsToInsert['closed_date'] ?? ''));
         $ClosedDateValue = null;

@@ -99,7 +99,38 @@ class ShopsValidator
                 if (count($sameRows) >= 2) {
                     $Dto->ShopAltTbl[$key]['errmsg'] = "この店名はすでに登録（重複）されています。";
                     $errFlg++;
-                }             
+                }
+
+                // 開店日が入力されている場合、YYYY-MM-DD形式であることをチェック
+                if($Row['open_date'] ?? ''){
+                    echo "<br> open_date={$Row['open_date']}"; // デバッグ用出力
+                    if ( ! $this->isValidDate($Row['open_date'] ?? '')) {
+                        $Dto->ShopAltTbl[$key]['errmsg'] = "開店日はYYYY-MM-DD形式で入力してください。";
+                        $errFlg++;
+                    }
+                }
+
+                // 閉店日が入力されている場合、YYYY-MM-DD形式であることをチェック
+                if($Row['closed_date'] ?? ''){
+                    echo "<br> closed_date={$Row['closed_date']}"; // デバッグ用出力
+                    if ( ! $this->isValidDate($Row['closed_date'] ?? '')) {
+                        $Dto->ShopAltTbl[$key]['errmsg'] = "閉店日はYYYY-MM-DD形式で入力してください。";
+                        $errFlg++;
+                    }
+                }
+
+                //閉店フラグと閉店日の整合性チェック
+                    $Closed = (int)($Row['closed'] ?? 0);
+                    $ClosedDate = trim((string)($Row['closed_date'] ?? ''));
+                    if ( $Closed === 1 && $ClosedDate === '') {
+                            $Dto->ShopAltTbl[$key]['errmsg'] = "閉店フラグが立っている場合、閉店日は必須です。";
+                            $errFlg++;
+                    }
+                    if($Closed === 0 && $ClosedDate !== ''){
+                            $Dto->ShopAltTbl[$key]['errmsg'] = "閉店日が入力されている場合、閉店フラグを立ててください。";
+                            $errFlg++;
+                    }
+                            
         }
 
         if ($errFlg > 0) {
@@ -112,6 +143,20 @@ class ShopsValidator
         $this->log("バリデーション終了。エラー数: " . $errFlg);
 
         return $errFlg;
+    }
+
+    function isValidDate($value): bool {
+        echo "<br> isValidDate value={$value}"; // デバッグ用出力
+        if (!is_string($value) || trim($value) === '') {
+            return false;
+        }
+
+        $date = DateTime::createFromFormat('!Y-m-d', $value);
+        $errors = DateTime::getLastErrors();
+
+        return $date !== false && 
+               $errors['warning_count'] === 0 && 
+               $errors['error_count'] === 0;
     }
 
 }

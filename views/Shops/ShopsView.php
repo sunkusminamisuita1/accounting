@@ -199,8 +199,17 @@
                                             </td>
 
                                             <td>                            <!--   閉店チェックボックス   -->
+                                                <?php
+                                                    $checked = '';
+                                                    if (!empty($Row['closed']) || 
+                                                       (!empty($_POST['ShopsUpdDt'][$Key]['closed']) && 
+                                                       $_POST['ShopsUpdDt'][$Key]['closed'] === '1')) {
+                                                            $checked = 'checked';
+                                                    }
+                                                ?>
                                                 <input class="TxtBoxLineDel" style="width: 90%;" type="checkbox" 
                                                     name="ShopsUpdDt[<?= $Key ?>][closed]" value="1"
+                                                    <?= $checked ?>
                                                     <?= $isLocked??'' ?> 
                                                 >
                                             </td>

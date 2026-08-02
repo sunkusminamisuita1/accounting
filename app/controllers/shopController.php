@@ -100,7 +100,7 @@ class shopController{
                     $isError =   $this->ShopsVali->CommonVali($this->Dto);
 
                     $_SESSION['ShopAltTbl']   =    $this->Dto->ShopAltTbl;
-                    var_dump($this->Dto->ShopAltTbl);exit;                        
+                    //var_dump($this->Dto->ShopAltTbl);exit;                        
 
                     if(!$isError){
                         $this->Service->ShopsAlt($this->Dto,$ViewEditKey);

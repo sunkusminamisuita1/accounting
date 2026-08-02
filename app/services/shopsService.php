@@ -117,15 +117,15 @@ class shopsService{
             $postSummary     = trim((string)$pRow['summary']??'');
             $postClosed      = isset($pRow['closed']) ? trim((string)$pRow['closed']) : '0';
             $postClosedDate  = $this->formatDate($pRow['closed_date']??'');
-            $postDelete      = isset($pRow['deleted']) ? trim((string)$pRow['deleted']) : '0';
-            echo "<br>";
-            print_r($pRow['deleted']);
-            echo "<br>";
+            $postDelete      = isset($pRow['delete']) ? trim((string)$pRow['delete']) : '0';
+            // echo "<br>";
+            // print_r($pRow['delete']);
+            // echo "<br>";
             // var_dump($sessionShopsArray[$postShopCode]);
             // echo "<br>";
             // var_dump($sessionShopsArray);
             // echo "<br>";exit;
-
+            $editType = '';
             if(isset($sessionShopsArray[$postShopCode])){
                 $sRow   =   $sessionShopsArray[$postShopCode];
                 //var_dump($sRow);exit;
@@ -135,7 +135,7 @@ class shopsService{
                 $sessionSummary     = trim((string)$sRow['summary']??'');
                 $sessionClosed      = isset($sRow['closed']) ? trim((string)$sRow['closed']) : '0';
                 $sessionClosedDate  = $this->formatdate($sRow['closed_date']??'');            
-                $sessionDelete      = isset($sRow['deleted']) ? trim((string)$sRow['deleted']) : '0';
+                $sessionDelete      = isset($sRow['delete']) ? trim((string)$sRow['delete']) : '0';
 
                 $isChanged =   (
                                 $postShopNme       !==  $sessionShopNme       ||
@@ -161,15 +161,15 @@ class shopsService{
                 $this->P2R($Dto, $pKey, $pRow, $editType);
             }
             $this->P2R($Dto, $pKey, $pRow, $editType);
-                echo "<br> postShopNme={$postShopNme}  sessionShopNme={$sessionShopNme}";
-                echo "<br> postOpenDate={$postOpenDate}  sessionOpenDate={$sessionOpenDate}";
-                echo "<br> postSummary={$postSummary}  sessionSummary={$sessionSummary}";
-                echo "<br> postClosed={$postClosed}  sessionClosed={$sessionClosed}";
-                echo "<br> postClosedDate={$postClosedDate}  sessionClosedDate={$sessionClosedDate}";
-                echo "<br> postDelete={$postDelete}  sessionDelete={$sessionDelete}";
-                echo "<br> isChanged={$isChanged}";
+                // echo "<br> postShopNme={$postShopNme}  sessionShopNme={$sessionShopNme}";
+                // echo "<br> postOpenDate={$postOpenDate}  sessionOpenDate={$sessionOpenDate}";
+                // echo "<br> postSummary={$postSummary}  sessionSummary={$sessionSummary}";
+                // echo "<br> postClosed={$postClosed}  sessionClosed={$sessionClosed}";
+                // echo "<br> postClosedDate={$postClosedDate}  sessionClosedDate={$sessionClosedDate}";
+                // echo "<br> postDelete={$postDelete}  sessionDelete={$sessionDelete}";
+                // echo "<br> isChanged={$isChanged}";
         }
-        exit; //デバッグ
+        //exit; //デバッグ
         //var_dump($Dto->PostDt['ShopsUpdDt']);exit;  
 
     }
@@ -181,10 +181,10 @@ class shopsService{
                 'id'          => null,
                 'shop_code'   => $pRow['shop_code'] ?? '',
                 'shop_name'   => $pRow['shop_name'] ?? '',
-                'open_date'   => $pRow['open_date'] ?? '',
+                'open_date'   => $this->formatdate($pRow['open_date'] ?? ''),
                 'summary'     => $pRow['summary'] ?? '',
                 'closed'      => $pRow['closed'] ?? '',
-                'closed_date' => $pRow['closed_date'] ?? '',
+                'closed_date' => $this->formatdate($pRow['closed_date'] ?? ''),
                 'edittype'    => $editType,
                 'deleted'     => isset($pRow['deleted']) ? $pRow['deleted'] : '0'
             ];
@@ -224,6 +224,9 @@ class shopsService{
                 case '削除':
                     //var_dump($_SESSION['UserShops']); exit;
                     $this->Repo->ShopsDlt($Dto,$Key);
+                    break;
+                case '': // 変更なし
+                    //var_dump($_SESSION['UserShops']); exit;
                     break;
                 default:
                     echo "system error: EditType is not set.";
