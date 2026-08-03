@@ -21,7 +21,8 @@ class ShopsRepository{
         $pdo = getPDO();
 
         $stmt = $pdo->prepare("
-            SELECT id, shop_code, shop_name , open_date , address , closed , closed_date , summary , edittype
+            SELECT id, user_id, shop_code, shop_name , open_date , address , closed , closed_date ,
+                summary , created_at, deleted, edittype
                 FROM shops WHERE user_id = ? AND (edittype IS NULL OR edittype <> ?)
         ");
 
