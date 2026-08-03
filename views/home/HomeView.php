@@ -1,5 +1,5 @@
 <?php 
-require_once ROOT_PATH . '/app/DTO/Constants.php';
+require_once ROOT_PATH . '/app/Dto/Constants.php';
 ?>
 <!DOCTYPE html>
     <html lang="ja">

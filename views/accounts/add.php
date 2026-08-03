@@ -4,7 +4,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Accounts - 未実装</title>
+    <title>accounts - 未実装</title>
 </head>
 <body>
     <h1>勘定科目編集（未実装）</h1>

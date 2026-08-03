@@ -1,5 +1,5 @@
 <?php
-require_once ROOT_PATH . '/app/DTO/ShopsDto.php';
+require_once ROOT_PATH . '/app/Dto/ShopsDto.php';
 require_once ROOT_PATH . '/lib/helpers.php';
 require_once ROOT_PATH . '/app/Validators/ShopsValidator.php';
 
@@ -7,9 +7,9 @@ class shopController{
 
 	Public        $Service;
     public        $Dto;
-    public        $ctrErrMsgPopUp;
+    public        $ctrerrMsgPopUp;
 	public		  $Repo;
-	public		  $CtrErrMsgPopUp;
+	public		  $ctrerrMsgPopUp;
     private       $ShopsVali;
 
 	public function __construct()
@@ -24,9 +24,9 @@ class shopController{
         $_SESSION['ShopAltTbl'] =   $this->Dto->ShopAltTbl;
 
         $this->Service   		=   new ShopsService($this->Dto);
-        $this->ctrErrMsgPopUp 	= 	new ErrMsgPopUp($this->Dto);
-		$this->Repo				=	new ShopsRepository();
-		$this->CtrErrMsgPopUp   =   new ErrMsgPopUp($this->Dto);
+        $this->ctrerrMsgPopUp 	= 	new errMsgPopUp($this->Dto);
+		$this->Repo				=	new shopsRepository();
+		$this->ctrerrMsgPopUp   =   new errMsgPopUp($this->Dto);
         $this->ShopsVali        =   new ShopsValidator('');
 		
     }
@@ -81,9 +81,9 @@ class shopController{
 
             $this->Dto->PostDt = $_POST ?? '';
 
-            $ViewEditKey = $_POST['ViewEditKey'] ?? null; //修正表　行インデックス
+            $viewEditKey = $_POST['viewEditKey'] ?? null; //修正表　行インデックス
 
-            $this->RestoreEditingData($this->Dto);
+            $this->restoreEditingData($this->Dto);
 
             $_SESSION['isValidated']    =   '';
 
@@ -103,17 +103,17 @@ class shopController{
                     //var_dump($this->Dto->ShopAltTbl);exit;                        
 
                     if(!$isError){
-                        $this->Service->ShopsAlt($this->Dto,$ViewEditKey);
+                        $this->Service->ShopsAlt($this->Dto,$viewEditKey);
                         $_SESSION['ShopAltTbl']   =   [];
                     }
                     break;
 
                 case 'キャンセル':
 
-                    $this->RestoreEditingData($this->Dto);
+                    $this->restoreEditingData($this->Dto);
                     break;
             }
-            $this->PrepareNextRequest($this->Dto);
+            $this->prepareNextRequest($this->Dto);
             
         }
         $this->Render();
@@ -130,7 +130,7 @@ class shopController{
         require ROOT_PATH.'/views/Shops/ShopsView.php';
     }
 
-    private function RestoreEditingData(ShopsDto $Dto){    //すでに修正データがある場合、編集データにコピー
+    private function restoreEditingData(ShopsDto $Dto){    //すでに修正データがある場合、編集データにコピー
 
         $Dto->ShopAltTbl = !empty($_SESSION['ShopAltTbl']) 
                             ? $_SESSION['ShopAltTbl']                   //前トランの変更データがある時
@@ -139,8 +139,8 @@ class shopController{
 
     }
 
-    private function PrepareNextRequest(ShopsDto $Dto){    //次セッション、renderデータ準備
-        //$Dto->AcctAltTbl = array_values($Dto->AcctAltTbl); 
+    private function prepareNextRequest(ShopsDto $Dto){    //次セッション、renderデータ準備
+        //$Dto->acctAltTbl = array_values($Dto->acctAltTbl); 
         $_SESSION['ShopAltTbl']   = $Dto->ShopAltTbl;
  
     }

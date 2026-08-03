@@ -43,7 +43,7 @@
     <?php endif; ?>
 
     <!-- ##############     エラーメッセージ表示    ################ -->
-    <?=  $this->ErrMsgPopUp->Show($this->Dto);  ?>
+    <?=  $this->errMsgPopUp->Show($this->Dto);  ?>
     <br><hr>
     <h3>単独検索(伝票No，取引日付，取引金額，摘要欄あいまい検索)は、<br>
     １つ以上の検索条件を入力して検索ボタンを押してください。
@@ -169,7 +169,7 @@
                                 <?php if($Row['side'] === 'debit'): ?>
                                     <select  style=" width: 95%;"  name="VcrUpdDt[<?= $VcrRowNo ?>][account_id]" required >
                                         <option value="">選択してください</option>
-                                            <?php foreach($this->Dto->Accounts as $a): ?>
+                                            <?php foreach($this->Dto->accounts as $a): ?>
                                                 <option value="<?= h($a['id']) ?>" 
                                                     <?= (isset($Row['account_id']) && $Row['account_id'] == $a['id']) ? 'selected' : '' ?>>
                                                     <?= h($a['name']) ?>
@@ -193,7 +193,7 @@
                                 <?php if($Row['side'] === 'credit'): ?>
                                     <select style=" width: 95%;" name="VcrUpdDt[<?= $VcrRowNo ?>][account_id]" required >
                                         <option value="">選択してください</option>
-                                            <?php foreach($this->Dto->Accounts as $a): ?>
+                                            <?php foreach($this->Dto->accounts as $a): ?>
                                                 <option value="<?= h($a['id']) ?>" 
                                                     <?= (isset($Row['account_id']) && $Row['account_id'] == $a['id']) ? 'selected' : '' ?>>
                                                     <?= h($a['name']) ?>

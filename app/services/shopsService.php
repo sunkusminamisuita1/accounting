@@ -1,17 +1,17 @@
 <?php
 //　repositoryは Userrepository.phpを使用する。
 
-require_once ROOT_PATH.'/app/repositories/UserRepository.php';
-require_once ROOT_PATH.'/app/repositories/ShopsRepository.php';
+require_once ROOT_PATH.'/app/repositories/userRepository.php';
+require_once ROOT_PATH.'/app/repositories/shopsRepository.php';
 
 class shopsService{
-    public      $ctrErrMsgPopUp;
+    public      $ctrerrMsgPopUp;
     public      $Repo;
     public      $SvcVali;
 
 	public function __construct()
     {
-        $this->Repo = new ShopsRepository();
+        $this->Repo = new shopsRepository();
         $this->SvcVali = new ShopsValidator();
     }
 

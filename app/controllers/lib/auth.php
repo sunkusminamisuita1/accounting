@@ -21,33 +21,33 @@ function generateCsrfToken(): string
 	return $tokenKey;
 }
 
-function verifyCsrfToken(string $FmTknKey): void
+function verifyCsrfToken(string $fmTknKey): void
 {
-	//echo "<br><pre> {$FmTknKey}  </pre><br>";
-	//echo "<br><pre> {$_SESSION['csrfTokens'][$FmTknKey] } </pre><br>";
-	if (empty($FmTknKey) || empty($_SESSION['csrfTokens'][$FmTknKey]) ) {
+	//echo "<br><pre> {$fmTknKey}  </pre><br>";
+	//echo "<br><pre> {$_SESSION['csrfTokens'][$fmTknKey] } </pre><br>";
+	if (empty($fmTknKey) || empty($_SESSION['csrfTokens'][$fmTknKey]) ) {
 		// 詳細ログ（デバッグ用）
-		//error_log("[CSRF] verify failed. Posted token=" . var_export($FmTknKey, true));
+		//error_log("[CSRF] verify failed. Posted token=" . var_export($fmTknKey, true));
 		//error_log("[CSRF] session tokens=" . var_export($_SESSION['csrfTokens'] ?? [], true));
 		http_response_code(403);
 		exit('Invalid CSRF token-X');
 	}
 
-	$created = $_SESSION['csrfTokens'][$FmTknKey] ?? 0;
+	$created = $_SESSION['csrfTokens'][$fmTknKey] ?? 0;
 	// トークン有効期間（秒）
 	$ttl = 3600; // 1 hour
 	if (!is_numeric($created) || (time() - (int)$created > $ttl)) {
 		// ワンタイムなので削除
-		unset($_SESSION['csrfTokens'][$FmTknKey]);
+		unset($_SESSION['csrfTokens'][$fmTknKey]);
 		// デバッグログ出力
-		//error_log("[CSRF] token expired. token=" . var_export($FmTknKey, true) . " created_at=" . var_export($created, true));
+		//error_log("[CSRF] token expired. token=" . var_export($fmTknKey, true) . " created_at=" . var_export($created, true));
 		$_SESSION['flash_message'] = "セッションの有効期限が切れたか、不正な操作が行われました。再度ログインしてください。";
 		header('Location: index.php?route=login');
 		exit;
 	}
 
 	// ワンタイムなので削除
-	unset($_SESSION['csrfTokens'][$FmTknKey]);
+	unset($_SESSION['csrfTokens'][$fmTknKey]);
 }
 
 function requireLogin(): void

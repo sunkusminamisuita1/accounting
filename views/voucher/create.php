@@ -1,6 +1,6 @@
 <h1>仕訳入力</h1>
 <!-- ##############     エラーメッセージ表示    ################ -->
-<?=  $this->ErrMsgPopUp->Show($this->Dto);  ?>
+<?=  $this->errMsgPopUp->Show($this->Dto);  ?>
 <?php
 require_once ROOT_PATH . '/views/lib/ProcSlct.php';
 $details = $this->Dto->DtoDetails;
@@ -42,7 +42,7 @@ $details = $this->Dto->DtoDetails;
             <td>
                 <select name="details[<?= $i ?>][account_id]" required >
                     <option value="">選択してください</option>
-                    <?php foreach($Accounts as $a): ?>
+                    <?php foreach($accounts as $a): ?>
                         <option value="<?= h($a['id']) ?>" <?= (isset($row['account_id']) && $row['account_id'] == $a['id']) ? 'selected' : '' ?>>
                             <?= h($a['name']) ?>
                         </option>

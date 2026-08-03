@@ -8,71 +8,71 @@ $route = $_GET['route'] ?? 'login';
 $routes =   [
                 //login処理　shopsテーブルも読み込む
                 'login' => [
-                        'controller' => AuthController::class,
+                        'controller' => authController::class,
                         'method' => 'login',
                         'auth' => false
                 ],
 
                 'register' => [
-                        'controller' => AuthController::class,
+                        'controller' => authController::class,
                         'method' => 'register',
                         'auth' => false
                 ],
 
                 'home' => [
-                        'controller' => HomeController::class,
+                        'controller' => homeController::class,
                         'method' => 'index',
                         'auth' => true
                 ],
                 //仕分け伝票一覧
                 'voucher.index' => [
-                        'controller' => VoucherController::class,
+                        'controller' => voucherController::class,
                         'method' => 'index',
                         'auth' => true
                 ],
                 //仕分け伝票編集
                 'voucher.edit' => [
-                        'controller' => VoucherController::class,
+                        'controller' => voucherController::class,
                         'method' => 'edit',
                         'auth' => true
                 ],
                 //仕分け伝票更新
                 'voucher.update' => [
-                        'controller' => VoucherController::class,
+                        'controller' => voucherController::class,
                         'method' => 'update',
                         'auth' => true
                 ],
 
                 //仕分け伝票修正検索
                 'voucher.list' => [
-                        'controller' => VoucherController::class,
+                        'controller' => voucherController::class,
                         'method' => 'list',
                         'auth' => true
                 ],
 
                 'voucher.delete' => [
-                        'controller' => VoucherController::class,
+                        'controller' => voucherController::class,
                         'method' => 'delete',
                         'auth' => true
                 ],
                 'voucher.create' => [
-                        'controller' => VoucherController::class,
+                        'controller' => voucherController::class,
                         'method' => 'create',
                         'auth' => true
                 ],
                 //勘定科目　追加
                 'accounts.edit' => [
-                       'controller' => AccountsController::class,
+                       'controller' => accountsController::class,
                        'method' => 'index',
                        'auth' => true
                 ],
                 'voucher.store' => [
-                        'controller' => VoucherController::class,
+                        'controller' => voucherController::class,
                         'method' => 'store',
                         'auth' => true
                 ],
                 'logout' => [
-                        'controller' => LogoutController::class,
+                        'controller' => logoutController::class,
                         'method' => 'index',
                         'auth' => true
                 ],

@@ -1,6 +1,6 @@
 <?php
 require_once ROOT_PATH . '/app/services/VoucherService.php';
-require_once ROOT_PATH . '/app/DTO/VoucherDTO.php';
+require_once ROOT_PATH . '/app/Dto/VoucherDto.php';
 require_once ROOT_PATH . '/lib/helpers.php';
 require_once ROOT_PATH . '/app/controllers/lib/auth.php';
 require_once ROOT_PATH . '/app/Validators/VoucherValidator.php';
@@ -8,9 +8,9 @@ require_once ROOT_PATH . '/app/Validators/VoucherValidator.php';
 class VoucherRepository{
     
     private VoucherService $Service;
-    private VoucherDTO $Dto;
+    private VoucherDto $Dto;
     private VoucherValidator $Validator;
-    //private ErrMsgPopUp $ErrMsgPopUp;
+    //private errMsgPopUp $errMsgPopUp;
     private string $RenderType;
 
     public function __construct()  {
