@@ -43,7 +43,7 @@ class accountsController {
 
                 case '修正実行':  //acctAltTblの内容をDBに反映する。                  
                     $this->restoreEditingData($this->ctrDto);
-                    $this->ctrSvc->RepoDataMake($this->ctrDto);
+                    $this->ctrSvc->repoDataMake($this->ctrDto);
                     //echo "<br><pre>" . var_dump($this->ctrDto->accounts) . "</pre><br><br>";
                     //echo "<br><pre>" . var_dump($this->ctrDto->acctAltTbl) . "</pre><br><br>";
                     //exit;

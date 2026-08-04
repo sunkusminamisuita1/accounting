@@ -1,7 +1,7 @@
 <?php
 class accountsValidator
 {
-    // ★クリーンアップ: 未使用だった $errno と $ErrMsg を削除しました。
+    // ★クリーンアップ: 未使用だった $errno と $errMsg を削除しました。
     // ★デバッグ用: 開発中に詳細なログを出したい場合は true にします
     private bool $debugMode = false; 
 
@@ -42,7 +42,7 @@ class accountsValidator
             // 2. 削除済み状態の反映
             if (!empty($row['is_deleted'])) {
                 $dto->acctAltTbl[$key]['errmsg'] = "このデータは削除済みです。";
-                $dto->acctAltTbl[$key]['edittype'] = "削除";
+                $dto->acctAltTbl[$key]['editType'] = "削除";
             }
 
             // 3. 必須・文字数チェック
@@ -79,7 +79,7 @@ class accountsValidator
             // 5. 送信データ内での重複チェック
             if (!$isDeleted) {
                 $sameRows = array_filter($dto->acctAltTbl, function($searchRow) use ($row) {
-                    if (($searchRow['edittype'] ?? '') === '削除') {
+                    if (($searchRow['editType'] ?? '') === '削除') {
                         return false;
                     }
                     return $searchRow['name'] === $row['name'] && $searchRow['type'] === $row['type'];
@@ -93,7 +93,7 @@ class accountsValidator
         }
 
         if ($errFlg > 0) {
-            $dto->ErrData[0] = "登録エラーが存在します。エラーを修正してください。";
+            $dto->errData[0] = "登録エラーが存在します。エラーを修正してください。";
         }
 
         $this->log("バリデーション終了。エラー数: " . $errFlg);

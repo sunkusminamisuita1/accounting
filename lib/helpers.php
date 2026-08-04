@@ -15,17 +15,17 @@ function requirePost(): void
     }
 }
 
-function DispErrorMsg($ErrMsg)
+function DispErrorMsg($errMsg)
 {
     //$dto->ErrData['VoucherDto'] = '借方と貸方が一致しません';
     if(!empty(VoucherDto->ErrData)){
-        //$ErrMsg = $VoucherDto->ErrData['VoucherDto'];
-        $ErrMsg = implode('\n', $ErrMsg->ErrData);
+        //$errMsg = $VoucherDto->ErrData['VoucherDto'];
+        $errMsg = implode('\n', $errMsg->ErrData);
     }
-    $ErrMsg = $ErrMsg ?? '';
-    if (!empty($ErrMsg)) {
+    $errMsg = $errMsg ?? '';
+    if (!empty($errMsg)) {
         echo "<script type='text/javascript'>
-                    alert('". h($ErrMsg) ."');
+                    alert('". h($errMsg) ."');
                     window.location.href = 'index.php?route=login';
                   </script>";
 
@@ -46,24 +46,24 @@ class errMsgPopUp
         file_put_contents('/tmp/debug.log', "メソッド通ったよ！\n", FILE_APPEND);
 
 
-        $ErrMsg = '';
+        $errMsg = '';
 
         if(empty($dto)){
-            $ErrMsg = 'Program Error lib/helpers.php Dtoが空です。';            
+            $errMsg = 'Program Error lib/helpers.php Dtoが空です。';            
         }else{
             if(!empty($dto->ErrData)){
                 foreach($dto->ErrData as $key => $value){
-                    $ErrMsg .= " . $value ";
+                    $errMsg .= " . $value ";
                 }
             }
         }
 
-        if(!empty($ErrMsg)){
+        if(!empty($errMsg)){
             //echo "<script type='text/javascript'>
-            //            alert('". h($ErrMsg) ."');
+            //            alert('". h($errMsg) ."');
             //          </script>";
             return "<script type='text/javascript'>
-                        alert('". addslashes($ErrMsg) ."');
+                        alert('". addslashes($errMsg) ."');
                       </script>";
         }
         return null;

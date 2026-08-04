@@ -9,20 +9,20 @@ class accountsDto{
 //                    'fiscalDay' => $user['fiscal_day']
 //                ];
     public int $id;
-    public string $username;
+    public string $userName;
     public string $email;
     public array $accounts = [];
     public string $password;
     public array $acctAltTbl = [];
-    public array $ErrData = []; //エラー行の配列 ['ModName' => 'エラーメッセージ']
+    public array $errData = []; //エラー行の配列 ['ModName' => 'エラーメッセージ']
     public array $accountsType = [];
-    public array $EditedRow = [];
+    public array $editedRow = [];
     public array $postDt = [];
 
 
     public function __construct()    {
         $this->id          =   $_SESSION['user']['id']??'0';  //UserId
-        $this->username    =   $_SESSION['user']['username']??'';  //UserId
+        $this->userName    =   $_SESSION['user']['username']??'';  //UserId
         $this->email       =   $_SESSION['user']['email']??'';  //UserId
         $this->accounts    =   [];
         $this->accountsType =  ['収益',

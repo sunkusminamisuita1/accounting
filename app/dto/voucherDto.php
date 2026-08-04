@@ -2,36 +2,36 @@
 // app/dto/VoucherDto.php
 class VoucherDto
 {       //##############   Dtoでは$_SESSIONからデータを取得してプロパティにセットする。その後$_SESSIONは初期化する。 ##############
-    public  $Date = '';
-    public  $Summary = '';
+    public  $date = '';
+    public  $summary = '';
     public array $accounts = [];
     public array $dtoDetails = [0 => ['account_id' => '', 'jd_summary' => '', 'amount' => '', 'side' => 'debit']]; //明細行の配列
-    //public array $VcrDetailAddRow = [0 => ['account_id' => '', 'amount' => '', 'side' => 'debit']]; //明細行の配列
-    public array $InitDetails = [0 => ['account_id' => '', 'amount' => '', 'side' => 'debit']]; //明細行の配列
-    public  $SearchType = '';
-    public  $ListVcrNum = '';
-    public array $ErrData = []; //エラー行の配列 ['ModName' => 'エラーメッセージ']
-    public array $VcrListResult =  []; //検索結果の配列
-    public array $VcrSearchedData = [];
-    public array $VcrUpdData = [];//vcrlistで修正対象行のデータを格納する配列
-    public array $InitVcrSearchedData = [];
-    public array $VcrListDatePeriod = []; //検索日付期間    [開始日付=>9999-99-99,終了日付=>9999-99-99]
-    public array $AccountTbl = [];
-    public array $VcrUpdRow = [];
-    public $VcrUpdNo = 0;
-    public $VcrDeleteNo = 0;//vcrlistで伝票削除行の行番号を格納する変数(voucher_id)
-    public array $VcrInputData = []; //vcrlistで検索条件を格納する配列
+    //public array $vcrDetailAddRow = [0 => ['account_id' => '', 'amount' => '', 'side' => 'debit']]; //明細行の配列
+    public array $initDetails = [0 => ['account_id' => '', 'amount' => '', 'side' => 'debit']]; //明細行の配列
+    public  $searchType = '';
+    public  $listVcrNum = '';
+    public array $errData = []; //エラー行の配列 ['ModName' => 'エラーメッセージ']
+    public array $vcrListResult =  []; //検索結果の配列
+    public array $vcrSearchedData = [];
+    public array $vcrUpdData = [];//vcrlistで修正対象行のデータを格納する配列
+    public array $initVcrSearchedData = [];
+    public array $vcrListDatePeriod = []; //検索日付期間    [開始日付=>9999-99-99,終了日付=>9999-99-99]
+    public array $accountTbl = [];
+    public array $vcrUpdRow = [];
+    public $vcrUpdNo = 0;
+    public $vcrDeleteNo = 0;//vcrlistで伝票削除行の行番号を格納する変数(voucher_id)
+    public array $vcrInputData = []; //vcrlistで検索条件を格納する配列
 
 
     public function __construct(array $Details)
     {
-        $this->VcrListResult =  []; //検索結果の配列
-        $this->Date      =  ''; //create.phpのVoucherDate
-        $this->Summary   =  '';      //create.phpのVoucherSummary
-        $this->SearchType =  ''; //search.phpのSearchType
-        $this->VcrUpdNo =  0; //vcrlistで修正対象行の伝票番号を格納する変数
+        $this->vcrListResult =  []; //検索結果の配列
+        $this->date      =  ''; //create.phpのVoucherDate
+        $this->summary   =  '';      //create.phpのVoucherSummary
+        $this->searchType =  ''; //search.phpのSearchType
+        $this->vcrUpdNo =  0; //vcrlistで修正対象行の伝票番号を格納する変数
         $this->dtoDetails      =  [];
-        $this->VcrSearchedData = [];
+        $this->vcrSearchedData = [];
 //###########         journal_vouchersのカラム         ##############
 //| id         | int(11)                | NO   | PRI | NULL    | auto_increment |
 //| voucher_date | date                   | NO   |     | NULL    |                |
@@ -48,7 +48,7 @@ class VoucherDto
 //| side       | enum('debit','credit') | NO   |     | NULL    |                |
 //| amount     | int(11)                | NO   |     | NULL    |                |
 
-//###########         配列VcrListResultのカラム         ##############
+//###########         配列vcrListResultのカラム         ##############
 
   //["id"]            =>  int(17)
   //["JdId"]          =>  int(2)
@@ -65,9 +65,9 @@ class VoucherDto
 
     public function InitDetailsDto()
     {
-        $this->dtoDetails   = $this->InitDetails; //初期値の明細行をDtoにセット
-        $_SESSION['VoucherDetail'] = $this->InitDetails; //セッションに初期値の明細行を保存(Voucher.create)
-//        $this->Summary      = '';
+        $this->dtoDetails   = $this->initDetails; //初期値の明細行をDtoにセット
+        $_SESSION['voucherDetail'] = $this->initDetails; //セッションに初期値の明細行を保存(Voucher.create)
+//        $this->summary      = '';
 //        $this->account_id   = [];
 //        $this->side         = [];
 //        $this->amount       = [];
@@ -75,51 +75,51 @@ class VoucherDto
 
     public function List()
     {
-        $this->dtoDetails   = $this->InitDetails??[]; //初期値の明細行をDtoにセット
-        $_SESSION['VoucherDetail'] = $_SESSION['VoucherDetail']  ?? $this->InitDetails;                 //セッションに初期値の明細行を保存(Voucher.create)
+        $this->dtoDetails   = $this->initDetails??[]; //初期値の明細行をDtoにセット
+        $_SESSION['voucherDetail'] = $_SESSION['voucherDetail']  ?? $this->initDetails;                 //セッションに初期値の明細行を保存(Voucher.create)
 
 
-        $this->Date         = $_POST['ListVcrDate'] ?? $_SESSION['VcrSearchCond']['Date'] ?? '';        //search.phpのListVcrDate
+        $this->date         = $_POST['listVcrDate'] ?? $_SESSION['vcrSearchCond']['date'] ?? '';        //search.phpのListVcrDate
 
 
 
-        $this->Summary      = $_POST['ListVcrSummary'] ?? $_SESSION['VcrSearchCond']['Summary'] ?? '';  //search.phpのListVcrSummary
-        $this->ListVcrNum   = $_POST['ListVcrNum'] ?? $_SESSION['VcrSearchCond']['ListVcrNum'] ?? '';   //search.phpのListVcrNum
-        if(empty($_POST['LstVcrSearchStartDate']) && empty($_POST['LstVcrSearchEndDate']) ) {
-            $this->VcrListDatePeriod   = $_SESSION['VcrSearchCond']['VcrListDatePeriod'] ?? ['検索開始日付' => '' , '検索終了日付' => '']; //search.phpの検索日付期間
+        $this->summary      = $_POST['listVcrSummary'] ?? $_SESSION['vcrSearchCond']['summary'] ?? '';  //search.phpのListVcrSummary
+        $this->listVcrNum   = $_POST['listVcrNum'] ?? $_SESSION['vcrSearchCond']['listVcrNum'] ?? '';   //search.phpのListVcrNum
+        if(empty($_POST['lstVcrSearchStartDate']) && empty($_POST['lstVcrSearchEndDate']) ) {
+            $this->vcrListDatePeriod   = $_SESSION['vcrSearchCond']['vcrListDatePeriod'] ?? ['検索開始日付' => '' , '検索終了日付' => '']; //search.phpの検索日付期間
         }else{
-            $this->VcrListDatePeriod   =   [ '検索開始日付' => $_POST['LstVcrSearchStartDate'] ?? '' , '検索終了日付' => $_POST['LstVcrSearchEndDate'] ?? '' ];
+            $this->vcrListDatePeriod   =   [ '検索開始日付' => $_POST['lstVcrSearchStartDate'] ?? '' , '検索終了日付' => $_POST['lstVcrSearchEndDate'] ?? '' ];
         }
 
-        $_SESSION['VcrSearchCond'] = ['Date'                => $this->Date ,
-                                      'Summary'             => $this->Summary,
-                                      'ListVcrNum'          => $this->ListVcrNum,
-                                      'VcrListDatePeriod'   => $this->VcrListDatePeriod
+        $_SESSION['vcrSearchCond'] = ['date'                => $this->date ,
+                                      'summary'             => $this->summary,
+                                      'listVcrNum'          => $this->listVcrNum,
+                                      'vcrListDatePeriod'   => $this->vcrListDatePeriod
                                      ];
 
-        if (!empty($_POST['SimpleSearch'])) {
-            $this->SearchType = $_POST['SimpleSearch'] ?? '';
-            $this->ListVcrNum = $_POST['ListVcrNum'] ?? '';
-            $this->Date = $_POST['ListVcrDate'] ?? '';
-            $this->Summary = $_POST['ListVcrSummary'] ?? '';
+        if (!empty($_POST['simpleSearch'])) {
+            $this->searchType = $_POST['simpleSearch'] ?? '';
+            $this->listVcrNum = $_POST['listVcrNum'] ?? '';
+            $this->date = $_POST['listVcrDate'] ?? '';
+            $this->summary = $_POST['listVcrSummary'] ?? '';
         }else {
-            $this->SearchType = $_POST['CompoundSearch'] ?? '';
+            $this->searchType = $_POST['compoundSearch'] ?? '';
         }
     }
 
     public function VcrCreData()
     {
-        $this->VcrListResult = $_SESSION['VoucherDetail'] ?? [];         //検索結果の配列
-        unset ($_SESSION['VoucherDetail']);                              //セッションの検索結果を初期化
-        $this->Date      = $_POST['voucher_date'] ?? '';                 //create.phpのVoucherDate
-        $this->Summary   = $_POST['summary'] ?? '';                      //create.phpのVoucherSummary
-        $this->SearchType = $_POST['search_type'] ?? '';                 //search.phpのSearchType
-        $this->VcrUpdNo = $_SESSION['VcrUpdNo'] ?? 0;                    //vcrlistで修正対象行の伝票番号を格納する変数
-        unset($_SESSION['VcrUpdNo']);                               //vcrlistで修正対象行の伝票番号を格納する変数を初期化
-        $this->dtoDetails       = $_POST['details'] ?? [$this->InitDetails[0]]; //create.phpの明細行
-        if(empty($this->VcrSearchedData) && !empty($_SESSION['VcrSearchedData'])){
-            $this->VcrSearchedData = $_SESSION['VcrSearchedData'];
-            unset($_SESSION['VcrSearchedData']);
+        $this->vcrListResult = $_SESSION['voucherDetail'] ?? [];         //検索結果の配列
+        unset ($_SESSION['voucherDetail']);                              //セッションの検索結果を初期化
+        $this->date      = $_POST['voucher_date'] ?? '';                 //create.phpのVoucherDate
+        $this->summary   = $_POST['summary'] ?? '';                      //create.phpのVoucherSummary
+        $this->searchType = $_POST['search_type'] ?? '';                 //search.phpのSearchType
+        $this->vcrUpdNo = $_SESSION['vcrUpdNo'] ?? 0;                    //vcrlistで修正対象行の伝票番号を格納する変数
+        unset($_SESSION['vcrUpdNo']);                               //vcrlistで修正対象行の伝票番号を格納する変数を初期化
+        $this->dtoDetails       = $_POST['details'] ?? [$this->initDetails[0]]; //create.phpの明細行
+        if(empty($this->vcrSearchedData) && !empty($_SESSION['vcrSearchedData'])){
+            $this->vcrSearchedData = $_SESSION['vcrSearchedData'];
+            unset($_SESSION['vcrSearchedData']);
         }
     }
 }

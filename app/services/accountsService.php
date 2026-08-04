@@ -58,8 +58,8 @@ class accountsService{
 
     public function accountsAdd(accountsDto $dto){
 
-        $UserId = $dto->id;
-        array_unshift($dto->acctAltTbl,['id'=> null,'user_id'=>(int)$UserId,'name'=>'','type'=>'', 'errmsg'=>'', 'edittype'=>'追加']);
+        $userId = $dto->id;
+        array_unshift($dto->acctAltTbl,['id'=> null,'user_id'=>(int)$userId,'name'=>'','type'=>'', 'errmsg'=>'', 'edittype'=>'追加']);
 
     }
 
@@ -85,8 +85,8 @@ class accountsService{
 
     public function accountsAlt(accountsDto $dto){
 
-        $Err = $this->SvcVali->accountsVali($dto);
-        if($Err > 0){
+        $err = $this->SvcVali->accountsVali($dto);
+        if($err > 0){
             return;
         }
 

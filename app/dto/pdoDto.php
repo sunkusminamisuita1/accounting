@@ -1,9 +1,9 @@
 <?php
 class PdoDto{
-    public string $InstncPdo;
+    public string $instncPdo;
     
     public function __construct($Pdo){
-            $this->InstncPdo = $Pdo;
+            $this->instncPdo = $Pdo;
     }
 }
 ?>

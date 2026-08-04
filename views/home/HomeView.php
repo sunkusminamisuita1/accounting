@@ -52,7 +52,7 @@ require_once ROOT_PATH . '/app/dto/Constants.php';
                         <button type="submit">切替</button><br><br>
                     </form>
                     <form method="post" action="index.php?route=home">
-<!--                        <input type="hidden" name="csrftokenTime" value="<?php //echo h($TokenTime); ?>">  -->
+<!--                        <input type="hidden" name="csrftokenTime" value="<?php //echo h($tokenTime); ?>">  -->
                         <input type="hidden" name="csrfTokenKey" value="<?= h($tokenKey) ?>">
 <?php
                 $today = new DateTime();

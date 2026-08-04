@@ -7,11 +7,11 @@ require_once ROOT_PATH . '/app/Validators/VoucherValidator.php';
 
 class VoucherRepository{
     
-    private VoucherService $Service;
+    private VoucherService $service;
     private VoucherDto $dto;
     private VoucherValidator $Validator;
     //private errMsgPopUp $errMsgPopUp;
-    private string $RenderType;
+    private string $renderType;
 
     public function __construct()  {
 
@@ -197,7 +197,7 @@ class VoucherRepository{
             $to     =   '2099-12-31';
         }
 
-        $UserId = getLoginUserId();
+        $userId = getLoginUserId();
         $pdo = getPDO();
 
          $sql = "SELECT 
@@ -231,7 +231,7 @@ class VoucherRepository{
         $params = [
             ':from'   => $from,
             ':to'     => $to,
-            ':user_id' => $UserId
+            ':user_id' => $userId
         ];
         if (!empty($VcrDto->ListVcrNum)) $params[':vchrnumber'] = $VcrDto->ListVcrNum;
         if (!empty($VcrDto->Summary))   $params[':vchrsummary'] = '%' . $VcrDto->Summary . '%';

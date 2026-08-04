@@ -237,13 +237,13 @@
         <form method="POST" action="index.php?route=voucher.list">
             <input type="hidden" name="csrfTokenKey" value="<?= h($tokenKey) ?>">
             <table class="UpdTbl">
-                <?php if (empty($this->dto->VcrListResult)): ?>
+                <?php if (empty($this->dto->vcrListResult)): ?>
                     <tr>
                         <td colspan="9">検索条件に一致する伝票が見つかりませんでした。</td>
                     </tr>
                 <?php endif; ?>
-                <?php (int)$VcrIdSW = 0; $VcrListResult = $this->dto->VcrListResult; ?>
-                <?php foreach ($VcrListResult as $VcrId => $Row): $CreditAmount = 0; $DebitAmount = 0; $CreditName = ''; $DebitName = ''; ?>
+                <?php (int)$VcrIdSW = 0; $vcrListResult = $this->dto->vcrListResult; ?>
+                <?php foreach ($vcrListResult as $VcrId => $Row): $CreditAmount = 0; $DebitAmount = 0; $CreditName = ''; $DebitName = ''; ?>
                     <?php if($Row['side'] === 'credit') {
                         $CreditAmount = (int)$Row['amount']??'0';
                         $CreditName = $Row['name']??'';
@@ -264,7 +264,7 @@
                                     <?= h($Row['summary'] )?>                                    
                                 </th>
                                 <th>
-                                    <?php if($this->dto->VcrListResult[$VcrId]['voucher_id'] !== '999999999999'): ?>
+                                    <?php if($this->dto->vcrListResult[$VcrId]['voucher_id'] !== '999999999999'): ?>
                                          <button name="VcrUpdateNo" type="submit" value="<?= h($Row['voucher_id']) ?>">修正</button>
                                     <?php endif; ?>
                                 </th>

@@ -4,9 +4,9 @@ class loginDto
 {
     public string $email;
     public string $password;
-    public array  $User;
+    public array  $user;
     //public array  $shopList;
-    public array  $UserShops;
+    public array  $userShops;
 
     public function __construct(string $email, string $password)
     {

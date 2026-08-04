@@ -28,7 +28,7 @@ class authController{
                 $dto->userShops         = $this->shopsSvc->getShopsData($dto);
                 $_SESSION['UserShops']  = $dto->userShops;
 
-                header('Location: index.php?route=home');
+                header('location: index.php?route=home');
                 exit;
             } 
             catch (Exception $e) {
@@ -56,7 +56,7 @@ class authController{
                                         (int)$_POST['fiscal_day']
                 );
                 $this->service->register($dto);
-                header('Location: index.php?route=login');
+                header('location: index.php?route=login');
                 exit;
             } catch (Exception $e) {
                 $message = $e->getMessage();

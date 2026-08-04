@@ -14,7 +14,7 @@
 <?php unset($_SESSION['flash_message']); endif; ?>
 
 <form method="post" action="index.php?route=login">
-<!--    <input type="hidden" name="csrfTokenTime" value="<?php //echo h($TokenTime); ?>"> -->
+<!--    <input type="hidden" name="csrfTokenTime" value="<?php //echo h($tokenTime); ?>"> -->
     <input type="hidden" name="csrfTokenKey" value="<?= h($tokenKey) ?>">
 <!--	<p>ユーザーID: <input type="text" name="id" required></p>   -->
 	<p>メールアドレス: <input type="email" name="email" required></p>

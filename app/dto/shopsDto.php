@@ -2,15 +2,15 @@
 // app/dto/shopsDto.php
 class shopsDto
 {
-    public string   $Email;
-    public string   $Password;
-    public array    $User;
-    public array    $UserShops;      //ユーザーが所有する全shopテーブルのレコード
-    public string   $GetShopCode; //$_GET['shop_id'] ProcSlict.phpでセットされたものをコントローラーでセットする。
-    public array    $TargetShop;  //処理用店情報
-    public array    $ErrData = []; //エラー行の配列 ['ModName' => 'エラーメッセージ']
-    public array    $ShopAltTbl =[]; //ショップ　修正用テーブル
-    public string   $ActiveShopCode = "";
+    public string   $email;
+    public string   $password;
+    public array    $user;
+    public array    $userShops;      //ユーザーが所有する全shopテーブルのレコード
+    public string   $getShopCode; //$_GET['shop_id'] ProcSlict.phpでセットされたものをコントローラーでセットする。
+    public array    $targetShop;  //処理用店情報
+    public array    $errData = []; //エラー行の配列 ['ModName' => 'エラーメッセージ']
+    public array    $shopAltTbl =[]; //ショップ　修正用テーブル
+    public string   $activeShopCode = "";
     public array    $postDt = [];
     public string   $isLocked; //編集エリアにエラーがなければ　readonly(view編集エリアにセット)エラーがあれば　''をセット修正可能とする。
 
@@ -20,8 +20,8 @@ class shopsDto
         //$this->email = $email;
         //$this->password = $password;
         $this->isLocked = "";
-        $this->Email = "";
-        $this->Password = "";
+        $this->email = "";
+        $this->password = "";
         $this->user = [];  //SELECT  id, username, email, password_hash,
                             //    fiscal_month, 
                             //    fiscal_day,

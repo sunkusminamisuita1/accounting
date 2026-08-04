@@ -5,7 +5,7 @@ class homeController{
         require_once ROOT_PATH . '/app/services/HomeService.php';
         require_once ROOT_PATH . '/app/controllers/lib/auth.php';
         $messege = "";
-        $ViewResult = [];
+        $viewResult = [];
         // POST > SESSION > デフォルト の優先順位で確定させる           shopsデータが入っている。$_SESSION['user_shops']
         $reportType = $_POST['reportType'] ?? $_SESSION['reportType'] ?? '月次試算表';
         // 次回のためにセッションを更新しておく
@@ -20,7 +20,7 @@ class homeController{
             }
             $hmSvcInstance = new homeServiceCls($reportType);
             $hmSvcInstance->HomeService();
-            $ViewResult = $hmSvcInstance->result;
+            $viewResult = $hmSvcInstance->result;
             $reportType = $hmSvcInstance->reportType;
             $from = $hmSvcInstance->from;
             $to = $hmSvcInstance->to;
@@ -31,7 +31,7 @@ class homeController{
             //    $tokenKey  = generateCsrfToken();
         }
         $tokenKey = generateCsrfToken();
-    //    $TokenTime = $_SESSION['csrfTokens'][$tokenKey] ?? '';
+    //    $tokenTime = $_SESSION['csrfTokens'][$tokenKey] ?? '';
         require_once ROOT_PATH . '/views/home/homeView.php';
     }
 }

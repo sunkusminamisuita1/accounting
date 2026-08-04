@@ -45,7 +45,7 @@ class shopsRepository{
         $CreatedAt = date('Y-m-d H:i:s');
 
         $RowsToInsert = [];
-        $RowsToInsert = $dto->ShopAltTbl[$Key];
+        $RowsToInsert = $dto->shopAltTbl[$Key];
 
         // 🛠️ デバッグ用：000002の時だけ通して、000001の時は強制終了して止める
         // if (($RowsToInsert['shop_code'] ?? '') === '000001') {
@@ -55,9 +55,9 @@ class shopsRepository{
         //     debug_print_backtrace(); // どこから呼び出されたかを逆引き表示
         //     exit;
         // }
-        // if(  $RowsToInsert['edittype'] ){
+        // if(  $RowsToInsert['editType'] ){
         //     echo "<br>読み飛ばし{$RowsToInsert['shop_code']}<br>";
-        //     var_dump($RowsToInsert['edittype']);
+        //     var_dump($RowsToInsert['editType']);
         //     exit;
         // }
 
@@ -86,7 +86,7 @@ class shopsRepository{
 
         //var_dump($RowsToInsert);
 
-        if (($RowsToInsert['edittype'] ?? '') !== '追加') {
+        if (($RowsToInsert['editType'] ?? '') !== '追加') {
             echo "ShopRepository.ShopsAdd 論理エラー　edittyeが追加でない";
             exit;
         }
@@ -117,7 +117,7 @@ class shopsRepository{
                 $RowsToInsert['summary'] ?? null,
                 $CreatedAt,
                 $RowsToInsert['deleted'] ?? 0,
-                $RowsToInsert['edittype'] ?? null
+                $RowsToInsert['editType'] ?? null
             ]);
             $pdo->commit();
         } catch (Exception $e) {
@@ -135,7 +135,7 @@ class shopsRepository{
         $CreatedAt = date('Y-m-d H:i:s');
 
         $RowsToAlt = [];
-        $RowsToAlt = $dto->ShopAltTbl[$Key];
+        $RowsToAlt = $dto->shopAltTbl[$Key];
         //var_dump($RowsToAlt);
         $OpenDate = trim((string)($RowsToAlt['open_date'] ?? ''));
         $OpenDateValue = $OpenDate === '' ? null : $OpenDate;
@@ -158,7 +158,7 @@ class shopsRepository{
                                     shop_code       = ?
         ");
 
-        if (($RowsToAlt['edittype'] ?? '') !== '更新') {
+        if (($RowsToAlt['editType'] ?? '') !== '更新') {
             echo "ShopRepository.ShopsAlt 論理エラー EditTypeが不正";
         }
 
@@ -173,7 +173,7 @@ class shopsRepository{
             $RowsToAlt['summary'] ?? null,
             $RowsToAlt['created_at']?? null,
             $RowsToAlt['deleted'] ?? 0,
-            $RowsToAlt['edittype'] ?? null,
+            $RowsToAlt['editType'] ?? null,
             $RowsToAlt['shop_code'] ?? null
         ]);
         $pdo->commit();
