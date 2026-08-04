@@ -16,17 +16,17 @@ class authController{
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             requireCsrf();
             try {
-                require_once ROOT_PATH.'/app/Dto/loginDto.php';
-                $Dto = new loginDto(
+                require_once ROOT_PATH.'/app/dto/loginDto.php';
+                $dto = new loginDto(
                                     trim($_POST['email']),
                                     $_POST['password']
                                     );
-                $Dto->User      = $this->service->login($Dto);
+                $dto->user      = $this->service->login($dto);
                 session_regenerate_id(true);
-                $_SESSION['user'] =     $Dto->User; 
+                $_SESSION['user'] =     $dto->user; 
 
-                $Dto->UserShops         = $this->shopsSvc->getShopsData($Dto);
-                $_SESSION['UserShops']  = $Dto->UserShops;
+                $dto->userShops         = $this->shopsSvc->getShopsData($dto);
+                $_SESSION['UserShops']  = $dto->userShops;
 
                 header('Location: index.php?route=home');
                 exit;
@@ -34,9 +34,9 @@ class authController{
             catch (Exception $e) {
                 $message = $e->getMessage();
             }
-            $TokenKey = $_POST['csrfTokenKey'];
+            $tokenKey = $_POST['csrfTokenKey'];
         }else{
-            $TokenKey = generateCsrfToken();
+            $tokenKey = generateCsrfToken();
         }
         require ROOT_PATH.'/views/auth/login.php';
     }
@@ -47,22 +47,22 @@ class authController{
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             requireCsrf();
             try {
-                require_once ROOT_PATH.'/app/Dto/RegisterDto.php';
-                $Dto =  new RegisterDto(
+                require_once ROOT_PATH.'/app/dto/registerDto.php';
+                $dto =  new RegisterDto(
                                         trim($_POST['username']),
                                         trim($_POST['email']),
                                         $_POST['password'],
                                         (int)$_POST['fiscal_month'],
                                         (int)$_POST['fiscal_day']
                 );
-                $this->service->register($Dto);
+                $this->service->register($dto);
                 header('Location: index.php?route=login');
                 exit;
             } catch (Exception $e) {
                 $message = $e->getMessage();
             }
         }
-        $TokenKey = generateCsrfToken();
+        $tokenKey = generateCsrfToken();
         require ROOT_PATH.'/views/auth/register.php';
     }
 }

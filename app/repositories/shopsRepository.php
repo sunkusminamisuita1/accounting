@@ -1,7 +1,7 @@
 <?php
 class shopsRepository{
 
-    public function getShopsByUserId($Dto): array {
+    public function getShopsByUserId($dto): array {
         // +-------------+--------------+------+-----+---------------------+----------------+
         // | Field       | Type         | Null | Key | Default             | Extra          |
         // +-------------+--------------+------+-----+---------------------+----------------+
@@ -28,7 +28,7 @@ class shopsRepository{
 
         try {
             $stmt->execute([
-                $Dto->User['id'] ?? "",
+                $dto->user['id'] ?? "",
                 '削除'
             ]);
         } catch(Exception $e) {
@@ -39,13 +39,13 @@ class shopsRepository{
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function ShopsAdd($Dto, ?int $Key = null): void {
+    public function ShopsAdd($dto, ?int $Key = null): void {
         $pdo = getPDO();
         $pdo->beginTransaction();
         $CreatedAt = date('Y-m-d H:i:s');
 
         $RowsToInsert = [];
-        $RowsToInsert = $Dto->ShopAltTbl[$Key];
+        $RowsToInsert = $dto->ShopAltTbl[$Key];
 
         // 🛠️ デバッグ用：000002の時だけ通して、000001の時は強制終了して止める
         // if (($RowsToInsert['shop_code'] ?? '') === '000001') {
@@ -108,7 +108,7 @@ class shopsRepository{
 
         try {
             $stmt->execute([
-                $RowsToInsert['user_id'] ?? $Dto->User['id'] ?? null,
+                $RowsToInsert['user_id'] ?? $dto->user['id'] ?? null,
                 $RowsToInsert['shop_code'] ?? null,
                 $RowsToInsert['shop_name'] ?? null,
                 $OpenDateValue,
@@ -128,14 +128,14 @@ class shopsRepository{
         }
     }
 
-    public function ShopsAlt($Dto, ?int $Key = null): void {
+    public function ShopsAlt($dto, ?int $Key = null): void {
         $pdo = getPDO();
         $pdo->beginTransaction();
 
         $CreatedAt = date('Y-m-d H:i:s');
 
         $RowsToAlt = [];
-        $RowsToAlt = $Dto->ShopAltTbl[$Key];
+        $RowsToAlt = $dto->ShopAltTbl[$Key];
         //var_dump($RowsToAlt);
         $OpenDate = trim((string)($RowsToAlt['open_date'] ?? ''));
         $OpenDateValue = $OpenDate === '' ? null : $OpenDate;
@@ -164,7 +164,7 @@ class shopsRepository{
 
         try {
         $stmt->execute([
-            $RowsToAlt['user_id'] ?? $Dto->User['id'] ?? null,
+            $RowsToAlt['user_id'] ?? $dto->user['id'] ?? null,
             $RowsToAlt['shop_code'] ?? null,
             $RowsToAlt['shop_name'] ?? null,
             $OpenDate,

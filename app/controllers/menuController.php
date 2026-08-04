@@ -22,10 +22,25 @@ class MenuController{
 			} else {
 				$message = "メールアドレスまたはパスワードが間違っています。";
 			}
-			$TokenKey = $_POST['csrfTokenKey'];
+			$tokenKey = $_POST['csrfTokenKey'];
 		}else{
-			$TokenKey  = generateCsrfToken();
+			$tokenKey  = generateCsrfToken();
 		}
 		require ROOT_PATH.'/views/auth/login.php';
+	}
+
+	//誤って、削除(いつ削除したかは不明)　以降はvscodeで再実装してもらった。2026-08-4
+	private function loginUser($user)
+	{
+		if (session_status() === PHP_SESSION_NONE) {
+			session_start();
+		}
+
+		session_regenerate_id(true);
+
+		$sessionUser = $user;
+		unset($sessionUser['password_hash']);
+
+		$_SESSION['user'] = $sessionUser;
 	}
 }

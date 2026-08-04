@@ -1,5 +1,5 @@
 <?php
-class HmSvcClsDto{
+class hmSvcClsDto{
     public int $From;
     public int $To;
     public int $PrevFrom;

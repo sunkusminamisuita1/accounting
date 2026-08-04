@@ -1,14 +1,14 @@
 <?php
-class HomeServiceCls{
+class homeServiceCls{
     public $result;
-	public $ReportType;
+	public $reportType;
 	public $from;
 	public $to;
 	public $zenki_from;
 	public $zenki_to;
 
-    public function __construct($ReportType) {
-        $this->ReportType = $ReportType;
+    public function __construct($reportType) {
+        $this->reportType = $reportType;
         $this->result = [];
 		$this->from = "";
 		$this->to = "";
@@ -17,8 +17,8 @@ class HomeServiceCls{
 
 	}
 	public function HomeService(){
-		require_once ROOT_PATH . '/app/Dto/Constants.php';
-		require_once ROOT_PATH . '/app/services/lib/HomeLib.php';
+		require_once ROOT_PATH . '/app/dto/Constants.php';
+		require_once ROOT_PATH . '/app/services/lib/homeLib.php';
 		ini_set('display_errors', 1);
 		ini_set('display_startup_errors', 1);
 		error_reporting(E_ALL);
@@ -32,7 +32,7 @@ class HomeServiceCls{
 		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			$pdo = getPDO();
 // --- 1. 入力値の受け取り  ---
-			$data				=	StartEnd($this->ReportType);
+			$data				=	StartEnd($this->reportType);
 			$this->from			=	$data['cur']['from']??"";
 			$this->to			=	$data['cur']['to']??"";
 			$this->zenki_from	=	$data['prev']['from']??"";
@@ -55,7 +55,7 @@ class HomeServiceCls{
 				array_keys($trial_prev_bs)
 			);
 //----------集計処理-----------
-			switch($this->ReportType){
+			switch($this->reportType){
 				case GetujiSisanhyou:
 				case NenjiSisanhyou:
 				case KikanSisanhyou:

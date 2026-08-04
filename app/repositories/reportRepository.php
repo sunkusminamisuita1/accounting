@@ -1,5 +1,5 @@
 <?php
-class ReportRepository{
+class reportRepository{
     public function getJournalSummary($from,$to,$userId) {
         $pdo = getPDO();
         $stmt = $pdo->prepare(

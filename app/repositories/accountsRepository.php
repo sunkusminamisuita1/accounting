@@ -2,16 +2,16 @@
 require_once ROOT_PATH.'/app/services/authService.php';
 require_once ROOT_PATH.'/app/repositories/userRepository.php';
 require_once ROOT_PATH.'/app/repositories/voucherRepository.php';
-require_once ROOT_PATH.'/app/Dto/accountsDto.php';
+require_once ROOT_PATH.'/app/dto/accountsDto.php';
 
 class accountsRepository
 {
     public accountsDto          $ctrDto;
 
-    public function __construct(accountsDto $Dto)    {
+    public function __construct(accountsDto $dto)    {
     }
 
-    public function getaccounts(accountsDto $Dto, bool $includeDeleted = false)  {
+    public function getaccounts(accountsDto $dto, bool $includeDeleted = false)  {
         try{
             //$pdo = getPDO();
             //$stmt = $pdo->query("
@@ -50,14 +50,14 @@ class accountsRepository
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    //public function AcctDelete(accountsDto $Dto) {
+    //public function AcctDelete(accountsDto $dto) {
     //    try{
     //        $pdo = getPDO();
     //        $pdo->beginTransaction();
 
             // 該当ユーザーIDの勘定科目テーブルを削除
     //        $stmtVoucher = $pdo->prepare("DELETE FROM accounts WHERE user_id = ?");
-    //        $stmtVoucher->execute($Dto->id);
+    //        $stmtVoucher->execute($dto->id);
 
     //        $pdo->commit();
     //    } catch (Exception $e) {
@@ -67,7 +67,7 @@ class accountsRepository
 
     //}
 
-    public function AcctAdd(accountsDto $Dto , $Key) {
+    public function AcctAdd(accountsDto $dto , $Key) {
         $pdo = getPDO();
         $pdo->beginTransaction();
         try {
@@ -80,9 +80,9 @@ class accountsRepository
 
             $stmt->execute([
                 null,
-                $Dto->acctAltTbl[$Key]['user_id'] ?? "" ,
-                $Dto->acctAltTbl[$Key]['name'] ?? "",
-                $Dto->acctAltTbl[$Key]['type'] ?? ""
+                $dto->acctAltTbl[$Key]['user_id'] ?? "" ,
+                $dto->acctAltTbl[$Key]['name'] ?? "",
+                $dto->acctAltTbl[$Key]['type'] ?? ""
             ]);
             $pdo->commit();
 
@@ -93,10 +93,10 @@ class accountsRepository
 
     }
 
-    public function AcctEdit(accountsDto $Dto , $Key) {
+    public function AcctEdit(accountsDto $dto , $Key) {
         $pdo = getPDO();
-        echo "<br>repo-edit name=".$Dto->acctAltTbl[$Key]['name'].   " type=".$Dto->acctAltTbl[$Key]['type']. 
-              "id=".$Dto->acctAltTbl[$Key]['id']. "user_id=".$Dto->acctAltTbl[$Key]['user_id']. "<br>";
+        echo "<br>repo-edit name=".$dto->acctAltTbl[$Key]['name'].   " type=".$dto->acctAltTbl[$Key]['type']. 
+              "id=".$dto->acctAltTbl[$Key]['id']. "user_id=".$dto->acctAltTbl[$Key]['user_id']. "<br>";
         $pdo->beginTransaction();
         try {
             
@@ -107,11 +107,11 @@ class accountsRepository
             ");
 
             $stmt->execute([
-                $Dto->acctAltTbl[$Key]['name'] ?? "",
-                $Dto->acctAltTbl[$Key]['type'] ?? "",
-                $Dto->acctAltTbl[$Key]['is_deleted'] ?? 0,
-                $Dto->acctAltTbl[$Key]['id'] ?? "",
-                $Dto->acctAltTbl[$Key]['user_id'] ?? "" 
+                $dto->acctAltTbl[$Key]['name'] ?? "",
+                $dto->acctAltTbl[$Key]['type'] ?? "",
+                $dto->acctAltTbl[$Key]['is_deleted'] ?? 0,
+                $dto->acctAltTbl[$Key]['id'] ?? "",
+                $dto->acctAltTbl[$Key]['user_id'] ?? "" 
             ]);
             $pdo->commit();
 
@@ -122,7 +122,7 @@ class accountsRepository
 
     }
 
-    public function AcctDlt(accountsDto $Dto , $Key) {
+    public function AcctDlt(accountsDto $dto , $Key) {
         $pdo = getPDO();
         $pdo->beginTransaction();
         try {
@@ -135,8 +135,8 @@ class accountsRepository
 
             $stmt->execute([
                 1,
-                $Dto->acctAltTbl[$Key]['id'] ?? "",
-                $Dto->acctAltTbl[$Key]['user_id'] ?? ""
+                $dto->acctAltTbl[$Key]['id'] ?? "",
+                $dto->acctAltTbl[$Key]['user_id'] ?? ""
             ]);
             $pdo->commit();
 

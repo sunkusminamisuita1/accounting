@@ -18,9 +18,9 @@
     }
 </style>
 <!-- ##############     エラーメッセージ表示    ################ -->
-    <?php if (!empty($this->Dto->ErrData)): ?>
+    <?php if (!empty($this->dto->ErrData)): ?>
         <ul style="color: red;">
-            <?php foreach ($this->Dto->ErrData as $mod => $err): ?>
+            <?php foreach ($this->dto->ErrData as $mod => $err): ?>
                 <li><?= h($mod) . ": " . h($err) ?></li>
             <?php endforeach; ?>
         </ul>
@@ -39,16 +39,16 @@
     <?php
         require_once ROOT_PATH . '/views/lib/ProcSlct.php';
     ?>
-    <?php if (!empty($this->Dto->ErrData)): ?>
+    <?php if (!empty($this->dto->ErrData)): ?>
         <ul style="color: red;">
-            <?php foreach ($this->Dto->ErrData as $mod => $err): ?>
+            <?php foreach ($this->dto->ErrData as $mod => $err): ?>
                 <li><?= h($mod) . ": " . h($err) ?></li>
             <?php endforeach; ?>
         </ul>
     <?php endif; ?>
 
     <!-- ##############     エラーメッセージ表示    ################ -->
-    <?=  $this->ctrerrMsgPopUp->Show($this->Dto);  ?>
+    <?=  $this->ctrerrMsgPopUp->Show($this->dto);  ?>
     <hr>
     <form method="POST" action="index.php?route=shop.edit">
 
@@ -121,7 +121,7 @@
                         <hr>
                         <h3>店舗情報を修正・閉店登録(店番,店舗名の修正はできません。)</h3>
                         <div style="text-align: center;" >
-                            <input type="hidden" name="csrfTokenKey" value="<?= h($TokenKey) ?>">
+                            <input type="hidden" name="csrfTokenKey" value="<?= h($tokenKey) ?>">
                             <!-- <button name="ShopsPfm" type="submit"
                                 onclick="return confirm
                                 ('店舗情報 修正欄の内容の正当性チェックを行います。\nデータベースの更新は行いません。？');"  

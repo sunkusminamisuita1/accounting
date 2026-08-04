@@ -1,7 +1,7 @@
 <?php
 
 require_once ROOT_PATH . '/app/services/accountsService.php';
-require_once ROOT_PATH . '/app/Dto/accountsDto.php';
+require_once ROOT_PATH . '/app/dto/accountsDto.php';
 require_once ROOT_PATH . '/lib/helpers.php';
 
 class accountsController {
@@ -25,7 +25,7 @@ class accountsController {
         $message = '';
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             requireCsrf();
-            $this->ctrDto->PostDt = $_POST;
+            $this->ctrDto->postDt = $_POST;
             $viewEditKey = $_POST['viewEditKey'] ?? null;
             switch($_POST['AcctPfm']){
 
@@ -61,23 +61,23 @@ class accountsController {
             
         }
 
-            $TokenKey = generateCsrfToken();
+            $tokenKey = generateCsrfToken();
             $accounts   =   $this->ctrDto->acctAltTbl;
         require ROOT_PATH.'/views/accounts/accountsView.php';
     }
 
-    private function restoreEditingData(accountsDto $Dto){    //すでに修正データがある場合、編集データにコピー
+    private function restoreEditingData(accountsDto $dto){    //すでに修正データがある場合、編集データにコピー
 
         if($_SESSION['accounts'] ?? ""){    
-            $Dto->acctAltTbl = $_SESSION['accounts'];
+            $dto->acctAltTbl = $_SESSION['accounts'];
             unset($_SESSION['accounts']);
         }  
 
     }
 
-    private function prepareNextRequest(accountsDto $Dto){    //次セッション、renderデータ準備
-        //$Dto->acctAltTbl = array_values($Dto->acctAltTbl); 
-        $_SESSION['accounts']   = $Dto->acctAltTbl;
+    private function prepareNextRequest(accountsDto $dto){    //次セッション、renderデータ準備
+        //$dto->acctAltTbl = array_values($dto->acctAltTbl); 
+        $_SESSION['accounts']   = $dto->acctAltTbl;
  
     }
 

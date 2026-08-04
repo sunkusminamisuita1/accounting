@@ -1,5 +1,5 @@
 <?php
-// app/Dto/accountsDto.php
+// app/dto/accountsDto.php
 class accountsDto{
 //                $_SESSION['user'] = [
 //                    'id' => (int)$user['id'],
@@ -17,7 +17,7 @@ class accountsDto{
     public array $ErrData = []; //エラー行の配列 ['ModName' => 'エラーメッセージ']
     public array $accountsType = [];
     public array $EditedRow = [];
-    public array $PostDt = [];
+    public array $postDt = [];
 
 
     public function __construct()    {

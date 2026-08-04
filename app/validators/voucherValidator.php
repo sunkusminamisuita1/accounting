@@ -23,7 +23,7 @@ class VoucherValidator
         }
         $debit = 0;
         $credit = 0;
-        foreach ($dto->DtoDetails as $idx => $row) {
+        foreach ($dto->dtoDetails as $idx => $row) {
 
             if ($row['amount'] <= 0) {
                 $dto->ErrData[$OwnUrl] = '金額は0より大きくしてください';
@@ -40,7 +40,7 @@ class VoucherValidator
                 $credit += $row['amount'];
             }
         }
-        $this->ChkTotalBalance($dto,$dto->DtoDetails ); //貸し借り不一致チェック
+        $this->ChkTotalBalance($dto,$dto->dtoDetails ); //貸し借り不一致チェック
 
 
     }
@@ -80,7 +80,7 @@ class VoucherValidator
 
 
 //貸方、借方バランスチェック 引数の配列フォーマットは連想キー'amount','side'が含まれていたらどんなフォーマットでもOK
-    public function ChkTotalBalance($Dto, $ChkTbl){
+    public function ChkTotalBalance($dto, $ChkTbl){
         //var_dump($ChkTbl);
         $CreditTotal = 0; $DebitTotal = 0;
         foreach ($ChkTbl as $no0 => $value0) {
@@ -92,7 +92,7 @@ class VoucherValidator
                 }
         }
         if( $CreditTotal !== $DebitTotal ){
-            $Dto->ErrData['VoucherService'] = "貸方合計　¥{$CreditTotal}　借方合計　¥{$DebitTotal}　不一致です。";
+            $dto->ErrData['VoucherService'] = "貸方合計　¥{$CreditTotal}　借方合計　¥{$DebitTotal}　不一致です。";
             return(0); //false 貸し借り不一致
         }else{
             return(1); //true 貸し借り一致

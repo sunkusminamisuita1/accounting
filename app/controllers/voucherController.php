@@ -1,6 +1,6 @@
 <?php
 require_once ROOT_PATH . '/app/services/VoucherService.php';
-require_once ROOT_PATH . '/app/Dto/VoucherDto.php';
+require_once ROOT_PATH . '/app/dto/VoucherDto.php';
 require_once ROOT_PATH . '/lib/helpers.php';
 require_once ROOT_PATH . '/app/controllers/lib/auth.php';
 require_once ROOT_PATH . '/app/Validators/VoucherValidator.php';
@@ -9,29 +9,29 @@ require_once ROOT_PATH . '/app/repositories/voucherRepository.php';
 class voucherController
 {
     private VoucherService $Service;
-    private VoucherDto $Dto;
+    private VoucherDto $dto;
     private VoucherValidator $Validator;
     private VoucherRepository $Repo;
     private errMsgPopUp $errMsgPopUp;
     private string $RenderType;
-    private $TokenKey;
+    private $tokenKey;
 
     public function __construct()  {
-        $this->Dto = new VoucherDto([]);
+        $this->dto = new VoucherDto([]);
         $this->Service = new VoucherService();
         $this->Repo = new VoucherRepository();
         $this->Validator = new VoucherValidator();
         $this->errMsgPopUp = new errMsgPopUp();
-        $this->Dto->accounts = $this->Service->getaccounts();
+        $this->dto->accounts = $this->Service->getaccounts();
     }
     public function create(): void    {
         //file_put_contents('/var/www/html/test6/public/debug.log', "メソッド通ったよ！\n", FILE_APPEND);
-        $this->Dto->VcrCreData();                           //DtoにPOSTされた明細行を渡す
-        $details = $this->Dto->DtoDetails;                  //Dtoから明細行を取得
-        $accounts = $this->Dto->accounts;
+        $this->dto->VcrCreData();                           //dtoにPOSTされた明細行を渡す
+        $details = $this->dto->dtoDetails;                  //dtoから明細行を取得
+        $accounts = $this->dto->accounts;
         if ($_SERVER['REQUEST_METHOD'] === 'POST'){
             requireCsrf();
-            $this->Service->VcrCreate($this->Dto);
+            $this->Service->VcrCreate($this->dto);
             // POST を処理した後は再描画用に新しいトークンを発行する
             $this->TokenKey = generateCsrfToken();
         }else{
@@ -74,35 +74,35 @@ class voucherController
 
     // 修正、削除データ検索
     public function list() {
-        $this->Dto->List(); //DtoのListメソッドで検索条件をセット
+        $this->dto->List(); //dtoのListメソッドで検索条件をセット
         if ($_SERVER['REQUEST_METHOD'] === 'POST'){
             requireCsrf();                              //CSRFトークンの検証
-            $this->Dto->List(); //DtoのListメソッドで検索条件をセット 未入力の場合はセッションから検索条件をセットするため、POSTされた検索条件をDtoにセットする前にList()メソッドを呼び出す必要があります。
+            $this->dto->List(); //dtoのListメソッドで検索条件をセット 未入力の場合はセッションから検索条件をセットするため、POSTされた検索条件をDtoにセットする前にList()メソッドを呼び出す必要があります。
 
             if (isset($_POST['SimpleSearch'])) {        //修正データ一覧作成
-                $this->Service->VcrSimpleSearch($this->Dto , $this->Repo, $this->Validator);
+                $this->Service->VcrSimpleSearch($this->dto , $this->Repo, $this->Validator);
             }
             if (isset($_POST['VcrUpdateNo'])) {         //修正対象データ　編集用データ作成
-                $this->Service->VcrUpdNo($this->Dto, $this->Repo, $this->Validator);
+                $this->Service->VcrUpdNo($this->dto, $this->Repo, $this->Validator);
             }
             //前回の行追加、行削除の処理は、修正対象データの編集用データ作成の後に行う必要があり、
             //行追加、行削除の処理は、編集用データを基に行う必要があるためです。
             //もし、行追加、行削除の処理を先に行ってしまうと、
             //編集用データがまだ作成されていない状態で行追加、行削除の処理が行われてしまい、正しく処理できなくなってしまいます。
             //if( isset($_POST['VcrAddDebit'])  || isset($_POST['VcrAddCredit'])  || isset($_POST['VcrDetailLineDel'])) {
-            //    $this->Service->VcrSearchedDataRemake($this->Dto , $this->Repo, $this->Validator);
+            //    $this->Service->VcrSearchedDataRemake($this->dto , $this->Repo, $this->Validator);
             //}
             if( isset($_POST['VcrAddDebit'])) {         //行追加ボタン（借方）を押したときの処理
-                $this->Service->VcrAddDebit($this->Dto, $this->Repo, $this->Validator);
+                $this->Service->VcrAddDebit($this->dto, $this->Repo, $this->Validator);
             }
             if( isset($_POST['VcrAddCredit'])) {        //行追加ボタン（貸方）を押したときの処理
-                $this->Service->VcrAddCredit($this->Dto, $this->Repo, $this->Validator);
+                $this->Service->VcrAddCredit($this->dto, $this->Repo, $this->Validator);
             }
             if( isset($_POST['VcrDetailLineDel'])) {    //仕分け編集データから　一行削除
-                $this->Service->VcrDetailLineDel($this->Dto, $this->Repo, $this->Validator);
+                $this->Service->VcrDetailLineDel($this->dto, $this->Repo, $this->Validator);
             }
             if( isset($_POST['VcrDelete'])) {           //1仕分け伝票削除
-                $Success = $this->Service->VcrDelete($this->Dto, $this->Repo, $this->Validator);
+                $Success = $this->Service->VcrDelete($this->dto, $this->Repo, $this->Validator);
                 if ($Success) {
                     //file_put_contents('/var/www/html/test6/public/debug.log', "Success2 = {$Success}！\n", FILE_APPEND);
                     // 3. ユーザーへの完了通知メッセージだけをセッションに仕込む
@@ -113,7 +113,7 @@ class voucherController
                 }
             }
             if( isset($_POST['VcrUpdate'])) {           //1仕分け伝票データ　DB更新
-                $Success = $this->Service->VcrUpdate($this->Dto, $this->Repo, $this->Validator);
+                $Success = $this->Service->VcrUpdate($this->dto, $this->Repo, $this->Validator);
             }
 
             // POST を処理した後は再描画用に新しいトークンを発行する
@@ -145,9 +145,9 @@ class voucherController
         exit;
     }
     private function Render($RenderType): int{
-        $VcrListResult = $Dto->VcrListResult ?? [];
-        $accounts = $this->Dto->accounts ?? [];
-        $TokenKey = $this->TokenKey;
+        $VcrListResult = $dto->VcrListResult ?? [];
+        $accounts = $this->dto->accounts ?? [];
+        $tokenKey = $this->TokenKey;
         if($RenderType === 'Create'){
 
             require ROOT_PATH . '/views/voucher/create.php';

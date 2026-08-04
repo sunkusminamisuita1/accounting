@@ -1,6 +1,6 @@
 
 <?php
-// app/Dto/RegisterDto.php
+// app/dto/registerDto.php
 class RegisterDto
 {
     public string $username;

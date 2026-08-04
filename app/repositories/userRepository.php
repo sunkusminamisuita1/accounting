@@ -39,7 +39,7 @@ class userRepository
         ]);
     }
     //shopsRepository.phpに移動
-    //public function getShopsByUserId($Dto): array
+    //public function getShopsByUserId($dto): array
     //{
     //    $pdo = getPDO();
 
@@ -49,7 +49,7 @@ class userRepository
     //    ");
 
     //   try {
-    //        $stmt->execute([$Dto->User['id'] ?? ""]);  // Use null coalescing operator to handle undefined index
+    //        $stmt->execute([$dto->user['id'] ?? ""]);  // Use null coalescing operator to handle undefined index
     //    } catch(Exception $e) {
     //        $message = $e->getMessage();
     //        echo $message;

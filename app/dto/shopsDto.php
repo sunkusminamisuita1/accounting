@@ -1,6 +1,6 @@
 <?php
-// app/Dto/ShopsDto.php
-class ShopsDto
+// app/dto/shopsDto.php
+class shopsDto
 {
     public string   $Email;
     public string   $Password;
@@ -11,7 +11,7 @@ class ShopsDto
     public array    $ErrData = []; //エラー行の配列 ['ModName' => 'エラーメッセージ']
     public array    $ShopAltTbl =[]; //ショップ　修正用テーブル
     public string   $ActiveShopCode = "";
-    public array    $PostDt = [];
+    public array    $postDt = [];
     public string   $isLocked; //編集エリアにエラーがなければ　readonly(view編集エリアにセット)エラーがあれば　''をセット修正可能とする。
 
     //public function __construct(string $email, string $password)
@@ -22,11 +22,11 @@ class ShopsDto
         $this->isLocked = "";
         $this->Email = "";
         $this->Password = "";
-        $this->User = [];  //SELECT  id, username, email, password_hash,
+        $this->user = [];  //SELECT  id, username, email, password_hash,
                             //    fiscal_month, 
                             //    fiscal_day,
                             // WHERE email = ?
-        $this->UserShops = [];       //SELECT id, shop_code, shop_name
+        $this->userShops = [];       //SELECT id, shop_code, shop_name
                                     // FROM shops WHERE user_id = ?
 
     }

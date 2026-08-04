@@ -1,6 +1,6 @@
 <?php
 require_once ROOT_PATH . '/app/services/VoucherService.php';
-require_once ROOT_PATH . '/app/Dto/VoucherDto.php';
+require_once ROOT_PATH . '/app/dto/VoucherDto.php';
 require_once ROOT_PATH . '/lib/helpers.php';
 require_once ROOT_PATH . '/app/controllers/lib/auth.php';
 require_once ROOT_PATH . '/app/Validators/VoucherValidator.php';
@@ -8,7 +8,7 @@ require_once ROOT_PATH . '/app/Validators/VoucherValidator.php';
 class VoucherRepository{
     
     private VoucherService $Service;
-    private VoucherDto $Dto;
+    private VoucherDto $dto;
     private VoucherValidator $Validator;
     //private errMsgPopUp $errMsgPopUp;
     private string $RenderType;
@@ -79,8 +79,8 @@ class VoucherRepository{
         }
     }
 
-    public function JvJdDelete($Dto) {
-            $VoucherId  =   $Dto->VcrSearchedData[0]['voucher_id'];
+    public function JvJdDelete($dto) {
+            $VoucherId  =   $dto->VcrSearchedData[0]['voucher_id'];
         try{
             $pdo = getPDO();
             $pdo->beginTransaction();
@@ -119,13 +119,13 @@ class VoucherRepository{
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     
-    public function insertVoucher($Dto){
-        $IndexCount = count($Dto->DtoDetails);
+    public function insertVoucher($dto){
+        $IndexCount = count($dto->dtoDetails);
         $pdo = getPDO();
         $pdo->beginTransaction();
 
         if( isset($_POST['VcrUpdate'])) {
-            $voucherId  =   (int)$Dto->VcrSearchedData[0]['id'];
+            $voucherId  =   (int)$dto->VcrSearchedData[0]['id'];
         }
 
         try {
@@ -136,8 +136,8 @@ class VoucherRepository{
                     VALUES (?,?,?,?,?)
             ");
             $stmt->execute([
-                $Dto->Date,
-                $Dto->Summary  ,
+                $dto->Date,
+                $dto->Summary  ,
                 $_SESSION['user']['id'],
                 $_SESSION['current_shop_code'] ?? '',
                 date('Y-m-d H:i:s')
@@ -151,7 +151,7 @@ class VoucherRepository{
                     VALUES (?,?,?,?,?)
             ");
 
-            foreach ($Dto->DtoDetails as $RecNo => $Row){
+            foreach ($dto->dtoDetails as $RecNo => $Row){
                 if($Row['side'] === 'debit') {
                     $stmtDetail->execute([
                         $voucherId,

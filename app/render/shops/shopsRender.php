@@ -1,10 +1,10 @@
 <?php 
-    public function render($Dto,$Service){
-        $TokenKey = generateCsrfToken();
-        if(empty($Dto->ShopAltTbl??'[]')){
-            $ShopList   =   $Service->getShopsData($this->Dto);
+    public function render($dto,$Service){
+        $tokenKey = generateCsrfToken();
+        if(empty($dto->ShopAltTbl??'[]')){
+            $ShopList   =   $Service->getShopsData($this->dto);
         }else{
-            $ShopList   =   $Dto->ShopAltTbl??'[]';
+            $ShopList   =   $dto->ShopAltTbl??'[]';
         }
         require ROOT_PATH.'/views/Shops/ShopsView.php';
     }

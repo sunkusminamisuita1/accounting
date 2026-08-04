@@ -18,19 +18,19 @@ test6/
 │   │
 │   ├── services/           ← 業務ロジック
 │   │         └lib
-│   │             HomeLib.php
+│   │             homeLib.php
 │   │       accountsService.php
 │   │       authService.php
 │   │       HomeService.php
 │   │       VoucherService.php
-│   │       ReportService.php
+│   │       reportService.php
 │   │
 │   ├── repositories/       ← DB操作
 │   │       userRepository.php
 │   │       voucherRepository.php
 │   │       AccountRepository.php
 │   │       HomeRepository.php
-│   │       ReportRepository.php
+│   │       reportRepository.php
 │   │       
 │   │       
 │   │       
@@ -38,7 +38,7 @@ test6/
 │   │       accountsDto.php
 │   │       VoucherDto.php
 │   │       Constants.php
-│   │       HmSvcDto.php
+│   │       hmSvcDto.php
 │   │       loginDto.php
 │   │       PdoDto.php
 │   │       RegisterDto.php
@@ -66,7 +66,7 @@ test6/
 │     │     add.php
 │     │
 │     ├  home/
-│     │     HomeView.php
+│     │     homeView.php
 │     │     index.php
 │     │  
 │     ├  lib/
@@ -232,19 +232,19 @@ useridの取得
 
 array_filter countを使用したロジック
 
-        foreach ($Dto->acctAltTbl as $key => $Row) {
+        foreach ($dto->acctAltTbl as $key => $Row) {
             // 配列の中に現在のタイプが含まれているかチェックする
-            if (in_array($Row['type'], $Dto->accountsType, true)) {
-                $Dto->acctAltTbl[$key]['errmsg'] = "OK";
+            if (in_array($Row['type'], $dto->accountsType, true)) {
+                $dto->acctAltTbl[$key]['errmsg'] = "OK";
             } else {
-                $Dto->acctAltTbl[$key]['errmsg'] = "貸借種別は'収益'か'費用'か'資産'か'負債'か'資本'以外は入力できません。";
+                $dto->acctAltTbl[$key]['errmsg'] = "貸借種別は'収益'か'費用'か'資産'か'負債'か'資本'以外は入力できません。";
             }
 
             // 🌟 2. 自分自身も含めて「acctAltTbl」全体から同じデータを検索する
             // ※ すでに削除チェック（del == 'On'）がついている行は比較対象から外すとより正確になります
             if (($Row['edittype'] ?? '') !== '削除') {
             
-                $sameRows = array_filter($Dto->acctAltTbl, function($searchRow) use ($Row) {
+                $sameRows = array_filter($dto->acctAltTbl, function($searchRow) use ($Row) {
                     // 削除予定の行はカウント対象外にする
                     if (($searchRow['edittype'] ?? '') === '削除') {
                         return false;
@@ -255,7 +255,7 @@ array_filter countを使用したロジック
 
                 // 🌟 3. count() で生存した件数を取得し、2件以上なら重複エラー！
                 if (count($sameRows) >= 2) {
-                    $Dto->acctAltTbl[$key]['errmsg'] = "このデータはすでに登録（重複）されています。";
+                    $dto->acctAltTbl[$key]['errmsg'] = "このデータはすでに登録（重複）されています。";
                 }
             }
             //XXX
@@ -263,7 +263,7 @@ array_filter countを使用したロジック
 
 
 // アロー関数(php7.4移行では下記肝略記述が使える。)を使うと use を書かなくても外の変数 $Row を自動で参照できます
-$sameRows = array_filter($Dto->acctAltTbl, fn($searchRow) => 
+$sameRows = array_filter($dto->acctAltTbl, fn($searchRow) => 
     (($searchRow['edittype'] ?? '') !== '削除') &&
     ($searchRow['name'] === $Row['name']) &&
     ($searchRow['type'] === $Row['type'])
@@ -273,13 +273,13 @@ $sameRows = array_filter($Dto->acctAltTbl, fn($searchRow) =>
 日本語文字数をチェックするロジック
             $trimmedName = trim(mb_convert_kana($Row['name'] ?? '', "s", "UTF-8"));//全角スペースを半角に変換してトリム
             if ($trimmedName === '') {
-                $Dto->acctAltTbl[$key]['errmsg'] = "勘定科目名は必須です。";
+                $dto->acctAltTbl[$key]['errmsg'] = "勘定科目名は必須です。";
                 $ErrFlg++;
                 continue;
             }
 
             if (mb_strlen($trimmedName, 'UTF-8') > 50) {                          //文字数チェック　半角も全角も1文字としてカウントする
-                $Dto->acctAltTbl[$key]['errmsg'] = "勘定科目名は50文字以内で入力してください。";
+                $dto->acctAltTbl[$key]['errmsg'] = "勘定科目名は50文字以内で入力してください。";
                 $ErrFlg++;
                 continue;
             }
@@ -512,7 +512,7 @@ php true false
 
 
 shopController.php
-ShopsDto.php
+shopsDto.php
 shopsRepository.php
 shopsService.php
 ShopsValidator.php

@@ -1,11 +1,11 @@
 <?php
-// app/Dto/VoucherDto.php
+// app/dto/VoucherDto.php
 class VoucherDto
 {       //##############   Dtoでは$_SESSIONからデータを取得してプロパティにセットする。その後$_SESSIONは初期化する。 ##############
     public  $Date = '';
     public  $Summary = '';
     public array $accounts = [];
-    public array $DtoDetails = [0 => ['account_id' => '', 'jd_summary' => '', 'amount' => '', 'side' => 'debit']]; //明細行の配列
+    public array $dtoDetails = [0 => ['account_id' => '', 'jd_summary' => '', 'amount' => '', 'side' => 'debit']]; //明細行の配列
     //public array $VcrDetailAddRow = [0 => ['account_id' => '', 'amount' => '', 'side' => 'debit']]; //明細行の配列
     public array $InitDetails = [0 => ['account_id' => '', 'amount' => '', 'side' => 'debit']]; //明細行の配列
     public  $SearchType = '';
@@ -30,7 +30,7 @@ class VoucherDto
         $this->Summary   =  '';      //create.phpのVoucherSummary
         $this->SearchType =  ''; //search.phpのSearchType
         $this->VcrUpdNo =  0; //vcrlistで修正対象行の伝票番号を格納する変数
-        $this->DtoDetails      =  [];
+        $this->dtoDetails      =  [];
         $this->VcrSearchedData = [];
 //###########         journal_vouchersのカラム         ##############
 //| id         | int(11)                | NO   | PRI | NULL    | auto_increment |
@@ -65,7 +65,7 @@ class VoucherDto
 
     public function InitDetailsDto()
     {
-        $this->DtoDetails   = $this->InitDetails; //初期値の明細行をDtoにセット
+        $this->dtoDetails   = $this->InitDetails; //初期値の明細行をDtoにセット
         $_SESSION['VoucherDetail'] = $this->InitDetails; //セッションに初期値の明細行を保存(Voucher.create)
 //        $this->Summary      = '';
 //        $this->account_id   = [];
@@ -75,7 +75,7 @@ class VoucherDto
 
     public function List()
     {
-        $this->DtoDetails   = $this->InitDetails??[]; //初期値の明細行をDtoにセット
+        $this->dtoDetails   = $this->InitDetails??[]; //初期値の明細行をDtoにセット
         $_SESSION['VoucherDetail'] = $_SESSION['VoucherDetail']  ?? $this->InitDetails;                 //セッションに初期値の明細行を保存(Voucher.create)
 
 
@@ -116,7 +116,7 @@ class VoucherDto
         $this->SearchType = $_POST['search_type'] ?? '';                 //search.phpのSearchType
         $this->VcrUpdNo = $_SESSION['VcrUpdNo'] ?? 0;                    //vcrlistで修正対象行の伝票番号を格納する変数
         unset($_SESSION['VcrUpdNo']);                               //vcrlistで修正対象行の伝票番号を格納する変数を初期化
-        $this->DtoDetails       = $_POST['details'] ?? [$this->InitDetails[0]]; //create.phpの明細行
+        $this->dtoDetails       = $_POST['details'] ?? [$this->InitDetails[0]]; //create.phpの明細行
         if(empty($this->VcrSearchedData) && !empty($_SESSION['VcrSearchedData'])){
             $this->VcrSearchedData = $_SESSION['VcrSearchedData'];
             unset($_SESSION['VcrSearchedData']);

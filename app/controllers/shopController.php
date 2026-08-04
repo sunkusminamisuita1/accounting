@@ -1,32 +1,32 @@
 <?php
-require_once ROOT_PATH . '/app/Dto/ShopsDto.php';
+require_once ROOT_PATH . '/app/dto/shopsDto.php';
 require_once ROOT_PATH . '/lib/helpers.php';
-require_once ROOT_PATH . '/app/Validators/ShopsValidator.php';
+require_once ROOT_PATH . '/app/validators/ShopsValidator.php';
 
 class shopController{
 
 	Public        $Service;
-    public        $Dto;
+    public        $dto;
     public        $ctrerrMsgPopUp;
 	public		  $Repo;
-	public		  $ctrerrMsgPopUp;
+	//public		  $ctrerrMsgPopUp;
     private       $ShopsVali;
 
 	public function __construct()
     {
         $DebugMode = 'false';
-        $this->Dto   			=   new ShopsDto();
-		$this->Dto->User		=	$_SESSION['user']??"";
+        $this->dto   			=   new shopsDto();
+		$this->dto->user		=	$_SESSION['user']??"";
 
-		$this->Dto->ShopAltTbl	= 	empty($_SESSION['ShopAltTbl'])
+		$this->dto->ShopAltTbl	= 	empty($_SESSION['ShopAltTbl'])
                                     ? $_SESSION['UserShops']
                                     : $_SESSION['ShopAltTbl'] ;
-        $_SESSION['ShopAltTbl'] =   $this->Dto->ShopAltTbl;
+        $_SESSION['ShopAltTbl'] =   $this->dto->ShopAltTbl;
 
-        $this->Service   		=   new ShopsService($this->Dto);
-        $this->ctrerrMsgPopUp 	= 	new errMsgPopUp($this->Dto);
+        $this->Service   		=   new ShopsService($this->dto);
+        $this->ctrerrMsgPopUp 	= 	new errMsgPopUp($this->dto);
 		$this->Repo				=	new shopsRepository();
-		$this->ctrerrMsgPopUp   =   new errMsgPopUp($this->Dto);
+		$this->ctrerrMsgPopUp   =   new errMsgPopUp($this->dto);
         $this->ShopsVali        =   new ShopsValidator('');
 		
     }
@@ -69,7 +69,7 @@ class shopController{
 	//shopデータ登録、更新、削除
     public function edit()
     {
-        $this->Dto->User = $_SESSION['user'] ?? '';
+        $this->dto->user = $_SESSION['user'] ?? '';
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
@@ -77,43 +77,43 @@ class shopController{
 		    requireCsrf();
 
 			//ProcSlct.phpでShopCodeが変更できるため、最新のShopCodeをサービスに設定
-			$this->Service->RenewTargetShopCode($this->Dto);
+			$this->Service->RenewTargetShopCode($this->dto);
 
-            $this->Dto->PostDt = $_POST ?? '';
+            $this->dto->postDt = $_POST ?? '';
 
             $viewEditKey = $_POST['viewEditKey'] ?? null; //修正表　行インデックス
 
-            $this->restoreEditingData($this->Dto);
+            $this->restoreEditingData($this->dto);
 
             $_SESSION['isValidated']    =   '';
 
             switch($_POST['ShopsPfm']){
 
                 case '登録実行': //新規登録データを編集エリアに追加する
-                    $this->Service->ShopsAdd($this->Dto);
-                    $this->ShopsVali->CommonVali($this->Dto);
+                    $this->Service->ShopsAdd($this->dto);
+                    $this->ShopsVali->CommonVali($this->dto);
                     break;
 
                 case '修正実行':  //ShopAltTblの内容をDBに反映する。     
-                    $this->Service->RepoDataMake($this->Dto);
+                    $this->Service->RepoDataMake($this->dto);
 
-                    $isError =   $this->ShopsVali->CommonVali($this->Dto);
+                    $isError =   $this->ShopsVali->CommonVali($this->dto);
 
-                    $_SESSION['ShopAltTbl']   =    $this->Dto->ShopAltTbl;
-                    //var_dump($this->Dto->ShopAltTbl);exit;                        
+                    $_SESSION['ShopAltTbl']   =    $this->dto->ShopAltTbl;
+                    //var_dump($this->dto->ShopAltTbl);exit;                        
 
                     if(!$isError){
-                        $this->Service->ShopsAlt($this->Dto,$viewEditKey);
+                        $this->Service->ShopsAlt($this->dto,$viewEditKey);
                         $_SESSION['ShopAltTbl']   =   [];
                     }
                     break;
 
                 case 'キャンセル':
 
-                    $this->restoreEditingData($this->Dto);
+                    $this->restoreEditingData($this->dto);
                     break;
             }
-            $this->prepareNextRequest($this->Dto);
+            $this->prepareNextRequest($this->dto);
             
         }
         $this->Render();
@@ -121,27 +121,27 @@ class shopController{
 //
     private function render(){
         
-        $TokenKey = generateCsrfToken();
-        if(empty($this->Dto->ShopAltTbl??'[]')){
-            $ShopList   =   $this->Service->getShopsData($this->Dto);
+        $tokenKey = generateCsrfToken();
+        if(empty($this->dto->ShopAltTbl??'[]')){
+            $ShopList   =   $this->Service->getShopsData($this->dto);
         }else{
-            $ShopList   =   $this->Dto->ShopAltTbl??'[]';
+            $ShopList   =   $this->dto->ShopAltTbl??'[]';
         }
         require ROOT_PATH.'/views/Shops/ShopsView.php';
     }
 
-    private function restoreEditingData(ShopsDto $Dto){    //すでに修正データがある場合、編集データにコピー
+    private function restoreEditingData(shopsDto $dto){    //すでに修正データがある場合、編集データにコピー
 
-        $Dto->ShopAltTbl = !empty($_SESSION['ShopAltTbl']) 
+        $dto->ShopAltTbl = !empty($_SESSION['ShopAltTbl']) 
                             ? $_SESSION['ShopAltTbl']                   //前トランの変更データがある時
-                            : $Dto->UserShops;                          //変更データが存在しない時、初期読み込みデータを代入
-        $_SESSION['ShopAltTbl'] =   $Dto->ShopAltTbl;
+                            : $dto->userShops;                          //変更データが存在しない時、初期読み込みデータを代入
+        $_SESSION['ShopAltTbl'] =   $dto->ShopAltTbl;
 
     }
 
-    private function prepareNextRequest(ShopsDto $Dto){    //次セッション、renderデータ準備
-        //$Dto->acctAltTbl = array_values($Dto->acctAltTbl); 
-        $_SESSION['ShopAltTbl']   = $Dto->ShopAltTbl;
+    private function prepareNextRequest(shopsDto $dto){    //次セッション、renderデータ準備
+        //$dto->acctAltTbl = array_values($dto->acctAltTbl); 
+        $_SESSION['ShopAltTbl']   = $dto->ShopAltTbl;
  
     }
 }	

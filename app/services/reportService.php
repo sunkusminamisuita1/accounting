@@ -1,8 +1,8 @@
 <?php
-class ReportService{
+class reportService{
     private $repo;
     public function __construct() {
-        $this->repo = new ReportRepository();
+        $this->repo = new reportRepository();
     }
     public function getTrialBalance($from,$to)    {
         $rows = $this->repo->getJournalSummary($from,$to);

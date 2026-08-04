@@ -38,9 +38,9 @@ function DispErrorMsg($ErrMsg)
 
 class errMsgPopUp
 {
-    //    public function __construct($Dto)  {
+    //    public function __construct($dto)  {
     //    }
-    public  function Show($Dto)
+    public  function Show($dto)
 
     {
         file_put_contents('/tmp/debug.log', "メソッド通ったよ！\n", FILE_APPEND);
@@ -48,11 +48,11 @@ class errMsgPopUp
 
         $ErrMsg = '';
 
-        if(empty($Dto)){
+        if(empty($dto)){
             $ErrMsg = 'Program Error lib/helpers.php Dtoが空です。';            
         }else{
-            if(!empty($Dto->ErrData)){
-                foreach($Dto->ErrData as $key => $value){
+            if(!empty($dto->ErrData)){
+                foreach($dto->ErrData as $key => $value){
                     $ErrMsg .= " . $value ";
                 }
             }

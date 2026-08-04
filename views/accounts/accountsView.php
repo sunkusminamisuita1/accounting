@@ -18,9 +18,9 @@
     }
 </style>
 <!-- ##############     エラーメッセージ表示    ################ -->
-    <?php if (!empty($this->Dto->ErrData)): ?>
+    <?php if (!empty($this->dto->ErrData)): ?>
         <ul style="color: red;">
-            <?php foreach ($this->Dto->ErrData as $mod => $err): ?>
+            <?php foreach ($this->dto->ErrData as $mod => $err): ?>
                 <li><?= h($mod) . ": " . h($err) ?></li>
             <?php endforeach; ?>
         </ul>
@@ -55,7 +55,7 @@
     </h3>
     <form method="POST" action="index.php?route=accounts.edit">
         <div style="text-align: center;" >
-            <input type="hidden" name="csrfTokenKey" value="<?= h($TokenKey) ?>">
+            <input type="hidden" name="csrfTokenKey" value="<?= h($tokenKey) ?>">
             <button name="AcctPfm" type="submit"
                 onclick="return confirm
                     ('勘定科目 修正欄の内容をデータベースに登録します。\n本当に変更してもよろしいですか？');"  
@@ -77,7 +77,7 @@
                         <div>これは左側です。</div>
 
                         <!--<form method="POST" action="index.php?route=accounts.edit">$$$$$$$$$$$$$$$$$$$$$$-->
-                            <!--<input type="hidden" name="csrfTokenKey" value="<?= h($TokenKey) ?>">-->
+                            <!--<input type="hidden" name="csrfTokenKey" value="<?= h($tokenKey) ?>">-->
                             <table class="UpdTbl">
                                 <tbody>
                                     <tr style="background-color: #e0e0e1; font-weight: bold; text-align: center;">

@@ -12,25 +12,25 @@ class authService
         $this->repo = new userRepository();
     }
 
-    public function login(loginDto $Dto): array
+    public function login(loginDto $dto): array
     {
-        $user = $this->repo->findByEmail($Dto->email);
-        $Dto->User = $user;
-        if (!$user || !password_verify($Dto->password, $user['password_hash'])) {
+        $user = $this->repo->findByEmail($dto->email);
+        $dto->user = $user;
+        if (!$user || !password_verify($dto->password, $user['password_hash'])) {
             throw new Exception('ログイン失敗');
         }
         return $user;
     }
-    public function register(RegisterDto $Dto): void
+    public function register(RegisterDto $dto): void
     {
         // バリデーション
-        if (empty($Dto->email) || empty($Dto->password)) {
+        if (empty($dto->email) || empty($dto->password)) {
             throw new Exception('必須項目が未入力です');
         }
 
-        $Dto->password = password_hash($Dto->password, PASSWORD_DEFAULT);
+        $dto->password = password_hash($dto->password, PASSWORD_DEFAULT);
 
-        $this->repo->insert($Dto);
+        $this->repo->insert($dto);
     }
 
 }

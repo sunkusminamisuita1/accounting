@@ -1,13 +1,13 @@
 <h1>仕訳入力</h1>
 <!-- ##############     エラーメッセージ表示    ################ -->
-<?=  $this->errMsgPopUp->Show($this->Dto);  ?>
+<?=  $this->errMsgPopUp->Show($this->dto);  ?>
 <?php
 require_once ROOT_PATH . '/views/lib/ProcSlct.php';
-$details = $this->Dto->DtoDetails;
+$details = $this->dto->dtoDetails;
 ?>
-<?php if (!empty($this->Dto->ErrData)): ?>
+<?php if (!empty($this->dto->ErrData)): ?>
     <ul style="color: red;">
-        <?php foreach ($this->Dto->ErrData as $mod => $err): ?>
+        <?php foreach ($this->dto->ErrData as $mod => $err): ?>
             <li><?= h($mod) . ": " . h($err) ?></li>
         <?php endforeach; ?>
     </ul>
@@ -28,7 +28,7 @@ $details = $this->Dto->DtoDetails;
     日付 <input type="date" name="voucher_date" value="<?= h($_POST['voucher_date'] ?? '') ?>"><br>
     摘要 <input type="text" name="summary" value="<?= h($_POST['summary'] ?? '') ?>"><br>
     <hr>
-    <input type="hidden" name="csrfTokenKey" value="<?= h($TokenKey) ?>">
+    <input type="hidden" name="csrfTokenKey" value="<?= h($tokenKey) ?>">
     <table border="1">
         <tr>
             <th>科目</th>

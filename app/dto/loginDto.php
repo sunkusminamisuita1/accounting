@@ -1,5 +1,5 @@
 <?php
-// app/Dto/loginDto.php
+// app/dto/loginDto.php
 class loginDto
 {
     public string $email;
@@ -12,11 +12,11 @@ class loginDto
     {
         $this->email = $email;
         $this->password = $password;
-        $this->User = [];  //SELECT  id, username, email, password_hash,
+        $this->user = [];  //SELECT  id, username, email, password_hash,
                             //    fiscal_month, 
                             //    fiscal_day,
                             // WHERE email = ?
-        $this->UserShops = [];       //SELECT id, shop_code, shop_name
+        $this->userShops = [];       //SELECT id, shop_code, shop_name
                                     // FROM shops WHERE user_id = ?
 
     }
