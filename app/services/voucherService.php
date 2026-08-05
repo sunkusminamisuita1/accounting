@@ -1,6 +1,6 @@
 <?php
 require_once ROOT_PATH . '/app/repositories/voucherRepository.php';
-require_once ROOT_PATH . '/app/Validators/voucherValidator.php';
+require_once ROOT_PATH . '/app/validators/voucherValidator.php';
 
 class voucherService{
     private voucherRepository $repo;

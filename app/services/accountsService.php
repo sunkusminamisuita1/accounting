@@ -3,7 +3,7 @@
 require_once ROOT_PATH . '/lib/helpers.php';
 require_once ROOT_PATH.'/app/repositories/accountsRepository.php';
 require_once ROOT_PATH.'/app/dto/accountsDto.php';
-require_once ROOT_PATH.'/app/Validators/accountsValidator.php';
+require_once ROOT_PATH.'/app/validators/accountsValidator.php';
 
 
 class accountsService{

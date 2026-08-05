@@ -2,7 +2,7 @@
 class homeController{
     public function index() {
         require_once ROOT_PATH . '/app/services/lib/homeLib.php';
-        require_once ROOT_PATH . '/app/services/HomeService.php';
+        require_once ROOT_PATH . '/app/services/homeService.php';
         require_once ROOT_PATH . '/app/controllers/lib/auth.php';
         $messege = "";
         $viewResult = [];

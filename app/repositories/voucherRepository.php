@@ -3,7 +3,7 @@ require_once ROOT_PATH . '/app/services/voucherService.php';
 require_once ROOT_PATH . '/app/dto/voucherDto.php';
 require_once ROOT_PATH . '/lib/helpers.php';
 require_once ROOT_PATH . '/app/controllers/lib/auth.php';
-require_once ROOT_PATH . '/app/Validators/voucherValidator.php';
+require_once ROOT_PATH . '/app/validators/voucherValidator.php';
 
 class VoucherRepository{
     
