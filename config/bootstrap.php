@@ -1,6 +1,6 @@
 <?php
 define('ROOT_PATH', dirname(__DIR__));
-require_once ROOT_PATH . '/app/dto/Constants.php';
+require_once ROOT_PATH . '/app/dto/constants.php';
 require_once ROOT_PATH . '/lib/helpers.php';
 require_once ROOT_PATH . '/config/session.php';
 require_once ROOT_PATH . '/config/db.php';
