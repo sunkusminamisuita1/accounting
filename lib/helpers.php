@@ -17,9 +17,9 @@ function requirePost(): void
 
 function DispErrorMsg($errMsg)
 {
-    //$dto->ErrData['VoucherDto'] = '借方と貸方が一致しません';
-    if(!empty(VoucherDto->ErrData)){
-        //$errMsg = $VoucherDto->ErrData['VoucherDto'];
+    //$dto->ErrData['voucherDto'] = '借方と貸方が一致しません';
+    if(!empty(voucherDto->ErrData)){
+        //$errMsg = $voucherDto->ErrData['voucherDto'];
         $errMsg = implode('\n', $errMsg->ErrData);
     }
     $errMsg = $errMsg ?? '';

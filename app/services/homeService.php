@@ -17,7 +17,7 @@ class homeServiceCls{
 
 	}
 	public function HomeService(){
-		require_once ROOT_PATH . '/app/dto/Constants.php';
+		require_once ROOT_PATH . '/app/dto/constants.php';
 		require_once ROOT_PATH . '/app/services/lib/homeLib.php';
 		ini_set('display_errors', 1);
 		ini_set('display_startup_errors', 1);
@@ -32,7 +32,7 @@ class homeServiceCls{
 		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			$pdo = getPDO();
 // --- 1. 入力値の受け取り  ---
-			$data				=	StartEnd($this->reportType);
+			$data				=	startEnd($this->reportType);
 			$this->from			=	$data['cur']['from']??"";
 			$this->to			=	$data['cur']['to']??"";
 			$this->zenki_from	=	$data['prev']['from']??"";
@@ -56,9 +56,9 @@ class homeServiceCls{
 			);
 //----------集計処理-----------
 			switch($this->reportType){
-				case GetujiSisanhyou:
-				case NenjiSisanhyou:
-				case KikanSisanhyou:
+				case getujiSisanhyou:
+				case nenjiSisanhyou:
+				case kikanSisanhyou:
 					$total = [
 						'row_type'	=> 'total',
 						'name'		=> "",
@@ -83,7 +83,7 @@ class homeServiceCls{
 					$this->result[] = $total;
 					break;
 		//累積試算表集計      in_array($type, PL_TYPE, true)
-				case RuisekiSisanhyou:
+				case ruisekiSisanhyou:
 					$logical_rows = buildLogicalRows($trial_cur_bs);
 		// 集計箱
 					$totals = [
@@ -177,11 +177,11 @@ class homeServiceCls{
 							];
 					$cur_rows		=	buildLogicalRows($trial_cur_bs);
 					$prev_rows		=	buildLogicalRows($trial_prev_bs);
-					$Ids			=	array_unique(array_merge(
+					$ids			=	array_unique(array_merge(
 										array_keys($cur_rows),
 										array_keys($prev_rows)
 									));
-					foreach ($Ids as $id) {
+					foreach ($ids as $id) {
 						$cur  = $cur_rows[$id]  ?? $ini;
 						$prev = $prev_rows[$id] ?? $ini;
 						$name = $cur['name'] ?? $prev['name'];

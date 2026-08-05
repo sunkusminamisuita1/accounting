@@ -67,7 +67,7 @@ class accountsRepository
 
     //}
 
-    public function AcctAdd(accountsDto $dto , $Key) {
+    public function acctAdd(accountsDto $dto , $key) {
         $pdo = getPDO();
         $pdo->beginTransaction();
         try {
@@ -80,9 +80,9 @@ class accountsRepository
 
             $stmt->execute([
                 null,
-                $dto->acctAltTbl[$Key]['user_id'] ?? "" ,
-                $dto->acctAltTbl[$Key]['name'] ?? "",
-                $dto->acctAltTbl[$Key]['type'] ?? ""
+                $dto->acctAltTbl[$key]['user_id'] ?? "" ,
+                $dto->acctAltTbl[$key]['name'] ?? "",
+                $dto->acctAltTbl[$key]['type'] ?? ""
             ]);
             $pdo->commit();
 
@@ -93,10 +93,10 @@ class accountsRepository
 
     }
 
-    public function AcctEdit(accountsDto $dto , $Key) {
+    public function acctEdit(accountsDto $dto , $key) {
         $pdo = getPDO();
-        echo "<br>repo-edit name=".$dto->acctAltTbl[$Key]['name'].   " type=".$dto->acctAltTbl[$Key]['type']. 
-              "id=".$dto->acctAltTbl[$Key]['id']. "user_id=".$dto->acctAltTbl[$Key]['user_id']. "<br>";
+        echo "<br>repo-edit name=".$dto->acctAltTbl[$key]['name'].   " type=".$dto->acctAltTbl[$key]['type']. 
+              "id=".$dto->acctAltTbl[$key]['id']. "user_id=".$dto->acctAltTbl[$key]['user_id']. "<br>";
         $pdo->beginTransaction();
         try {
             
@@ -107,11 +107,11 @@ class accountsRepository
             ");
 
             $stmt->execute([
-                $dto->acctAltTbl[$Key]['name'] ?? "",
-                $dto->acctAltTbl[$Key]['type'] ?? "",
-                $dto->acctAltTbl[$Key]['is_deleted'] ?? 0,
-                $dto->acctAltTbl[$Key]['id'] ?? "",
-                $dto->acctAltTbl[$Key]['user_id'] ?? "" 
+                $dto->acctAltTbl[$key]['name'] ?? "",
+                $dto->acctAltTbl[$key]['type'] ?? "",
+                $dto->acctAltTbl[$key]['is_deleted'] ?? 0,
+                $dto->acctAltTbl[$key]['id'] ?? "",
+                $dto->acctAltTbl[$key]['user_id'] ?? "" 
             ]);
             $pdo->commit();
 
@@ -122,7 +122,7 @@ class accountsRepository
 
     }
 
-    public function AcctDlt(accountsDto $dto , $Key) {
+    public function AcctDlt(accountsDto $dto , $key) {
         $pdo = getPDO();
         $pdo->beginTransaction();
         try {
@@ -135,8 +135,8 @@ class accountsRepository
 
             $stmt->execute([
                 1,
-                $dto->acctAltTbl[$Key]['id'] ?? "",
-                $dto->acctAltTbl[$Key]['user_id'] ?? ""
+                $dto->acctAltTbl[$key]['id'] ?? "",
+                $dto->acctAltTbl[$key]['user_id'] ?? ""
             ]);
             $pdo->commit();
 

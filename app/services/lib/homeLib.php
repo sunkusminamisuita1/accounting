@@ -1,30 +1,30 @@
 <?php
-function StartEnd($sisan_syurui) {
+function startEnd($sisan_syurui) {
 	$from = ""; $to =""; $zenki_from=""; $zenki_to=""; $result="";
 	$result =	[	
 				'cur'   => ['from'=>null,'to'=>null],
 				'prev'  => ['from'=>null,'to'=>null]	
 			];
 // --- 1. 年次試算表 $from, $to を再計算 ---
-	if ($sisan_syurui === NenjiSisanhyou && isset($_POST['nenji_nen'])) {
+	if ($sisan_syurui === nenjiSisanhyou && isset($_POST['nenji_nen'])) {
 		$from = $_POST['nenji_nen'] . '-01-01';
 		$to   = $_POST['nenji_nen'] . '-12-31';
 		$result['cur'] = ['from'=>$from, 'to'=>$to];
 	}
 // --- 2. 月次試算表 $from, $to を再計算 ---
-	if ($sisan_syurui === GetujiSisanhyou && isset($_POST['from'])) {
+	if ($sisan_syurui === getujiSisanhyou && isset($_POST['from'])) {
 		$from = substr($_POST['from'],0,7) . '-01';
 		$to   = date('Y-m-t', strtotime($from));
 		$result['cur'] = ['from'=>$from, 'to'=>$to];
 	}
 // --- 3. 累積試算表 $from, $to を再計算 ---ACCOUNT_START
-	if ($sisan_syurui === RuisekiSisanhyou && isset($_POST['to'])) {
+	if ($sisan_syurui === ruisekiSisanhyou && isset($_POST['to'])) {
 		$from = ACCOUNT_START;
 		$to   = $_POST['to'];
 		$result['cur'] = ['from'=>$from, 'to'=>$to];
 	}
 // --- 4. 前期比較試算表 $from, $to を再計算 ---
-	if ($sisan_syurui === ZenkiHikaku && isset($_POST['kijyun_nen'])) {
+	if ($sisan_syurui === zenkiHikaku && isset($_POST['kijyun_nen'])) {
 		$from = $_POST['kijyun_nen'] . '-01-01';
 		$to   = $_POST['kijyun_nen'] . '-12-31';
 		$prev_from = ($_POST['kijyun_nen'] - 1 ) . '-01-01';
@@ -33,7 +33,7 @@ function StartEnd($sisan_syurui) {
 		$result['prev'] = ['from'=>$prev_from, 'to'=>$prev_to];
 	}
 // --- 5. 期間入力 $from, $to を再計算 ---
-	if ($sisan_syurui === KikanSisanhyou && isset($_POST['to'])) {
+	if ($sisan_syurui === kikanSisanhyou && isset($_POST['to'])) {
 		$from = $_POST['from'];
 		$to   = $_POST['to'];
 		$result['cur'] = ['from'=>$from, 'to'=>$to];

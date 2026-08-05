@@ -1,7 +1,8 @@
 <?php
 function getTrial($from,$to){
-    $pdoDto = new PdoDto($pdo);
-    $pdo = $pdoDto->InstncPdo;
+	$pdo = getPDO();
+    $pdoDto = new pdoDto($pdo);
+    $pdo = $pdoDto->instncPdo;
 	if(!$from || !$to){
 		return [];
 	};
@@ -20,7 +21,7 @@ function getTrial($from,$to){
 		GROUP BY a.id, a.name, a.type, jd.side
 		ORDER BY a.id
 		";
-		$userId = $_SETTION['user']['user_id'];
+		$userId = $_SESSION['user']['user_id'];
 		$stmt = $pdo->prepare($sql);
 		$stmt->execute([':from' => $from, ':to' => $to, ':userId' => $userId]);
 		$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);

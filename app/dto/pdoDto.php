@@ -1,5 +1,5 @@
 <?php
-class PdoDto{
+class pdoDto{
     public string $instncPdo;
     
     public function __construct($Pdo){

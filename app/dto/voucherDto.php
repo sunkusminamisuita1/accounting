@@ -1,6 +1,6 @@
 <?php
-// app/dto/VoucherDto.php
-class VoucherDto
+// app/dto/voucherDto.php
+class voucherDto
 {       //##############   Dtoでは$_SESSIONからデータを取得してプロパティにセットする。その後$_SESSIONは初期化する。 ##############
     public  $date = '';
     public  $summary = '';

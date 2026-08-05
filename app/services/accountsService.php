@@ -8,18 +8,18 @@ require_once ROOT_PATH.'/app/Validators/accountsValidator.php';
 
 class accountsService{
 
-    public accountsValidator    $SvcVali;
-    public accountsRepository   $SvcRepo;
+    public accountsValidator    $svcVali;
+    public accountsRepository   $svcRepo;
     //public accountsDto          $ctrDto;
 
     public function __construct(accountsDto $dto)    {
-        $this->SvcRepo =   new accountsRepository($dto);
-        $this->SvcVali =   new accountsValidator('true');
+        $this->svcRepo =   new accountsRepository($dto);
+        $this->svcVali =   new accountsValidator('true');
     }
 
-    public function GetAccounts( accountsDto $dto){
+    public function getAccounts( accountsDto $dto){
 
-        $dto->accounts  =   $this->SvcRepo->getAccounts($dto,true);
+        $dto->accounts  =   $this->svcRepo->getAccounts($dto,true);
         //echo "<br><pre>" . var_dump($dto->accounts) . "</pre><br>";
 
         $dto->acctAltTbl = $dto->accounts;         //修正用科目テーブル作成
@@ -41,16 +41,16 @@ class accountsService{
     public function accountsEdit(accountsDto $dto){
         //echo "<br><pre>" .var_dump($dto->acctAltTbl) . "</pre>";
         $DelKeys = [];
-        foreach( $dto->postDt['AcctUpdDt'] as $Key=>$Row){
+        foreach( $dto->postDt['acctUpdDt'] as $key=>$Row){
             if($Row['del'] ?? ''){
-                $dto->acctAltTbl[$Key]['edittype'] = '削除';
-                $dto->acctAltTbl[$Key]['errmsg'] = '削除済み';
-                $dto->acctAltTbl[$Key]['is_deleted'] = 1;
+                $dto->acctAltTbl[$key]['edittype'] = '削除';
+                $dto->acctAltTbl[$key]['errmsg'] = '削除済み';
+                $dto->acctAltTbl[$key]['is_deleted'] = 1;
             }else{
-                //$dto->acctAltTbl[$Key] = $Row;
-                $dto->acctAltTbl[$Key]['edittype'] = '更新';
-                $dto->acctAltTbl[$Key]['errmsg'] = '';
-                $dto->acctAltTbl[$Key]['is_deleted'] = 0;
+                //$dto->acctAltTbl[$key] = $Row;
+                $dto->acctAltTbl[$key]['edittype'] = '更新';
+                $dto->acctAltTbl[$key]['errmsg'] = '';
+                $dto->acctAltTbl[$key]['is_deleted'] = 0;
             }
         }
         
@@ -65,11 +65,11 @@ class accountsService{
 
     public function RepoDataMake(accountsDto $dto){
 
-        foreach($dto->postDt['AcctUpdDt'] as $Key=>$Row){ //array_Spliceでキー順序が更新されるため、削除は降順で実行
-                $dto->acctAltTbl[$Key]['id']        = $dto->postDt['AcctUpdDt'][$Key]['id'];
-                $dto->acctAltTbl[$Key]['user_id']   = $dto->postDt['AcctUpdDt'][$Key]['user_id'];
-                $dto->acctAltTbl[$Key]['name']      = $dto->postDt['AcctUpdDt'][$Key]['name'];
-                $dto->acctAltTbl[$Key]['type']      = $dto->postDt['AcctUpdDt'][$Key]['type'];
+        foreach($dto->postDt['acctUpdDt'] as $key=>$Row){ //array_Spliceでキー順序が更新されるため、削除は降順で実行
+                $dto->acctAltTbl[$key]['id']        = $dto->postDt['acctUpdDt'][$key]['id'];
+                $dto->acctAltTbl[$key]['user_id']   = $dto->postDt['acctUpdDt'][$key]['user_id'];
+                $dto->acctAltTbl[$key]['name']      = $dto->postDt['acctUpdDt'][$key]['name'];
+                $dto->acctAltTbl[$key]['type']      = $dto->postDt['acctUpdDt'][$key]['type'];
                 //$dto->acctAltTbl[$key]['errmsg']    = "このデータは削除済みです。";
                 //$dto->acctAltTbl[$key]['edittype']  = "削除";
 
@@ -77,30 +77,30 @@ class accountsService{
                 //    $dto->acctAltTbl[$key]['errmsg'] = "このデータは削除済みです。";
                 //    $dto->acctAltTbl[$key]['edittype'] = "削除";
                 //}
-                //$dto->postDt['AcctUpdDt'][$Key]['del']= "on";
-                //$dto->acctAltTbl[$Key]['edittype']  = $dto->postDt['AcctUpdDt'][$Key]['edittype'] ?? '';
+                //$dto->postDt['acctUpdDt'][$key]['del']= "on";
+                //$dto->acctAltTbl[$key]['edittype']  = $dto->postDt['acctUpdDt'][$key]['edittype'] ?? '';
         }
 
     }
 
     public function accountsAlt(accountsDto $dto){
 
-        $err = $this->SvcVali->accountsVali($dto);
+        $err = $this->svcVali->accountsVali($dto);
         if($err > 0){
             return;
         }
 
-        foreach($dto->acctAltTbl as $Key=>$Row){
+        foreach($dto->acctAltTbl as $key=>$Row){
 
             switch($Row['edittype']){
                 case '追加':
-                    $this->SvcRepo->AcctAdd($dto,$Key);
+                    $this->svcRepo->acctAdd($dto,$key);
                     break;
                 case '更新':
-                    $this->SvcRepo->AcctEdit($dto,$Key);
+                    $this->svcRepo->acctEdit($dto,$key);
                     break;
                 case '削除':
-                    $this->SvcRepo->AcctDlt($dto,$Key);
+                    $this->svcRepo->acctDlt($dto,$key);
                     break;
                 default:
                     echo "system error: edittype is not set.";

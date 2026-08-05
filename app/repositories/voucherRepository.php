@@ -1,15 +1,15 @@
 <?php
-require_once ROOT_PATH . '/app/services/VoucherService.php';
-require_once ROOT_PATH . '/app/dto/VoucherDto.php';
+require_once ROOT_PATH . '/app/services/voucherService.php';
+require_once ROOT_PATH . '/app/dto/voucherDto.php';
 require_once ROOT_PATH . '/lib/helpers.php';
 require_once ROOT_PATH . '/app/controllers/lib/auth.php';
-require_once ROOT_PATH . '/app/Validators/VoucherValidator.php';
+require_once ROOT_PATH . '/app/Validators/voucherValidator.php';
 
 class VoucherRepository{
     
-    private VoucherService $service;
-    private VoucherDto $dto;
-    private VoucherValidator $Validator;
+    private voucherService $service;
+    private voucherDto $dto;
+    private voucherValidator $validator;
     //private errMsgPopUp $errMsgPopUp;
     private string $renderType;
 
@@ -79,19 +79,19 @@ class VoucherRepository{
         }
     }
 
-    public function JvJdDelete($dto) {
-            $VoucherId  =   $dto->VcrSearchedData[0]['voucher_id'];
+    public function jvJdDelete($dto) {
+            $voucherId  =   $dto->vcrSearchedData[0]['voucher_id'];
         try{
             $pdo = getPDO();
             $pdo->beginTransaction();
 
             // 伝票に紐づく明細を削除
             $stmtDetails = $pdo->prepare("DELETE FROM journal_details WHERE voucher_id = ?");
-            $stmtDetails->execute([$VoucherId]);
+            $stmtDetails->execute([$voucherId]);
 
             // 伝票を削除
             $stmtVoucher = $pdo->prepare("DELETE FROM journal_vouchers WHERE id = ?");
-            $stmtVoucher->execute([$VoucherId]);
+            $stmtVoucher->execute([$voucherId]);
 
             $pdo->commit();
         } catch (Exception $e) {
@@ -120,12 +120,12 @@ class VoucherRepository{
     }
     
     public function insertVoucher($dto){
-        $IndexCount = count($dto->dtoDetails);
+        $indexCount = count($dto->dtoDetails);
         $pdo = getPDO();
         $pdo->beginTransaction();
 
         if( isset($_POST['VcrUpdate'])) {
-            $voucherId  =   (int)$dto->VcrSearchedData[0]['id'];
+            $voucherId  =   (int)$dto->vcrSearchedData[0]['id'];
         }
 
         try {
@@ -136,8 +136,8 @@ class VoucherRepository{
                     VALUES (?,?,?,?,?)
             ");
             $stmt->execute([
-                $dto->Date,
-                $dto->Summary  ,
+                $dto->date,
+                $dto->summary  ,
                 $_SESSION['user']['id'],
                 $_SESSION['current_shop_code'] ?? '',
                 date('Y-m-d H:i:s')
@@ -151,22 +151,22 @@ class VoucherRepository{
                     VALUES (?,?,?,?,?)
             ");
 
-            foreach ($dto->dtoDetails as $RecNo => $Row){
-                if($Row['side'] === 'debit') {
+            foreach ($dto->dtoDetails as $recNo => $row){
+                if($row['side'] === 'debit') {
                     $stmtDetail->execute([
                         $voucherId,
-                        $Row['jd_summary'] ?? "" ,
-                        $Row['account_id'],
+                        $row['jd_summary'] ?? "" ,
+                        $row['account_id'],
                         'debit',
-                        $Row['amount']
+                        $row['amount']
                     ]);
                 } else {
                      $stmtDetail->execute([
                         $voucherId,
-                        $Row['jd_summary'],
-                        $Row['account_id'],
+                        $row['jd_summary'],
+                        $row['account_id'],
                         'credit',
-                        $Row['amount']
+                        $row['amount']
                     ]);
                 }
             }
@@ -177,19 +177,19 @@ class VoucherRepository{
         }
     }
 
-    public function VcrListSearch($VcrDto) {
+    public function VcrListSearch($vcrDto) {
 
-        if(!empty($VcrDto->Date)){
-            $from = date('Y-m-d', strtotime($VcrDto->Date));
-            $to =   date('Y-m-d', strtotime($VcrDto->Date));
+        if(!empty($vcrDto->date)){
+            $from = date('Y-m-d', strtotime($vcrDto->date));
+            $to =   date('Y-m-d', strtotime($vcrDto->date));
         }
         if(
-            !empty($VcrDto->VcrListDatePeriod['検索開始日付'] )   &&
-            !empty($VcrDto->VcrListDatePeriod['検索終了日付'] )
+            !empty($vcrDto->vcrListDatePeriod['検索開始日付'] )   &&
+            !empty($vcrDto->vcrListDatePeriod['検索終了日付'] )
         )
         {
-            $from = date('Y-m-d', strtotime($VcrDto->VcrListDatePeriod['検索開始日付']));
-            $to   =  date('Y-m-d', strtotime($VcrDto->VcrListDatePeriod['検索終了日付']));
+            $from = date('Y-m-d', strtotime($vcrDto->vcrListDatePeriod['検索開始日付']));
+            $to   =  date('Y-m-d', strtotime($vcrDto->vcrListDatePeriod['検索終了日付']));
         }
 
         if(empty($from) || empty($to)) {
@@ -219,10 +219,10 @@ class VoucherRepository{
               AND jv.voucher_date BETWEEN :from AND :to";             
 
         // 条件がある場合だけ絞り込むロジック
-        if (!empty($VcrDto->ListVcrNum)) {
+        if (!empty($vcrDto->listVcrNum)) {
             $sql .= " AND jv.id = :vchrnumber ";
         }
-        if (!empty($VcrDto->Summary)) {
+        if (!empty($vcrDto->summary)) {
             $sql .= " AND jv.summary LIKE :vchrsummary ";
         }
         $sql .= " GROUP BY jd.voucher_id,jd.id";
@@ -233,8 +233,8 @@ class VoucherRepository{
             ':to'     => $to,
             ':user_id' => $userId
         ];
-        if (!empty($VcrDto->ListVcrNum)) $params[':vchrnumber'] = $VcrDto->ListVcrNum;
-        if (!empty($VcrDto->Summary))   $params[':vchrsummary'] = '%' . $VcrDto->Summary . '%';
+        if (!empty($vcrDto->listVcrNum)) $params[':vchrnumber'] = $vcrDto->listVcrNum;
+        if (!empty($vcrDto->summary))   $params[':vchrsummary'] = '%' . $vcrDto->summary . '%';
         $stmt->execute($params);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }

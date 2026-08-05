@@ -59,7 +59,7 @@ class accountsValidator
             }
 
             // 4. 削除フラグが立っているデータの書き換えチェック
-            $isDeleted = $dto->postDt['AcctUpdDt'][$key]['del'] ?? 0;
+            $isDeleted = $dto->postDt['acctUpdDt'][$key]['del'] ?? 0;
             if ($isDeleted) {
                 $currentId = (int)$row['id'];
                 $currentName = (string)$row['name'];
