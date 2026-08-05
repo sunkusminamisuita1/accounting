@@ -14,12 +14,12 @@ class shopController{
 
 	public function __construct()
     {
-        $DebugMode = 'false';
+        $debugMode = 'false';
         $this->dto   			=   new shopsDto();
 		$this->dto->user		=	$_SESSION['user']??"";
 
 		$this->dto->shopAltTbl	= 	empty($_SESSION['shopAltTbl'])
-                                    ? $_SESSION['UserShops']
+                                    ? $_SESSION['userShops']
                                     : $_SESSION['shopAltTbl'] ;
         $_SESSION['shopAltTbl'] =   $this->dto->shopAltTbl;
 
@@ -76,7 +76,7 @@ class shopController{
 
 		    requireCsrf();
 
-			//ProcSlct.phpでShopCodeが変更できるため、最新のShopCodeをサービスに設定
+			//procSlct.phpでShopCodeが変更できるため、最新のShopCodeをサービスに設定
 			$this->service->renewTargetShopCode($this->dto);
 
             $this->dto->postDt = $_POST ?? '';

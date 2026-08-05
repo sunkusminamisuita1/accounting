@@ -6,9 +6,9 @@
         border: none;
         background: #e7edf8; 
     }
-    .ProcSlct, .ProcSlct td { border: none !important; }
+    .procSlct, .procSlct td { border: none !important; }
     .UpdTbl { border-collapse: collapse; width: 100%; table-layout: fixed; border: 1px solid #000000; } /* 幅は中身に合わせるのが一般的 */
-    .ProcSlct button { cursor: pointer; padding: 5px 15px; }
+    .procSlct button { cursor: pointer; padding: 5px 15px; }
     th,td {  padding: 0.6em; border: 1px solid #000000; }
 
     .button-container {
@@ -18,9 +18,9 @@
     }
 </style>
 <!-- ##############     エラーメッセージ表示    ################ -->
-    <?php if (!empty($this->dto->ErrData)): ?>
+    <?php if (!empty($this->dto->errData)): ?>
         <ul style="color: red;">
-            <?php foreach ($this->dto->ErrData as $mod => $err): ?>
+            <?php foreach ($this->dto->errData as $mod => $err): ?>
                 <li><?= h($mod) . ": " . h($err) ?></li>
             <?php endforeach; ?>
         </ul>
@@ -37,11 +37,11 @@
 <?php unset($_SESSION['flash_message']); endif; ?>
 
     <?php
-        require_once ROOT_PATH . '/views/lib/ProcSlct.php';
+        require_once ROOT_PATH . '/views/lib/procSlct.php';
     ?>
-    <?php if (!empty($this->dto->ErrData)): ?>
+    <?php if (!empty($this->dto->errData)): ?>
         <ul style="color: red;">
-            <?php foreach ($this->dto->ErrData as $mod => $err): ?>
+            <?php foreach ($this->dto->errData as $mod => $err): ?>
                 <li><?= h($mod) . ": " . h($err) ?></li>
             <?php endforeach; ?>
         </ul>
@@ -60,7 +60,7 @@
                         <h3>店舗情報新規登録</h3>
                         店舗情報を登録　入力完了後 登録ボタンを押してください。
                         <div style="text-align: center;" >
-                            <button name="ShopsPfm" type="submit"
+                            <button name="shopsPfm" type="submit"
                                 onclick="return confirm
                                 ('店舗情報 をデータベースに登録します。\n本当に変更してもよろしいですか？');"  
                                 value="<?= h('登録実行') ?>" >登録実行
@@ -85,32 +85,32 @@
                                                 pattern="[0-9]{6}" 
                                                 placeholder="例: 000001" 
                                                 type="text" name="NewShopCode"
-                                                value="<?= h($NewShopsCode ?? '' )?>" >
+                                                value="<?= h($newShopsCode ?? '' )?>" >
                                         </td>
 
                                         <td style="text-align: left;">  <!--   店舗名称   -->
                                             <input class="TxtBoxLineDel" style="width: 90%; text-align: center;" 
                                                 type="text" name="NewShopName"
-                                                value="<?= h($NewShopName ?? '' ) ?>">
+                                                value="<?= h($newShopName ?? '' ) ?>">
                                         </td>
 
                                         <td style="text-align: left;">  <!--   開業日   -->
                                             <input class="TxtBoxLineDel" style="width: 90%;" 
                                                 type="text" name="NewOpenDate" 
-                                                value="<?= h($NewOpenDate ?? '' ) ?>">
+                                                value="<?= h($newOpenDate ?? '' ) ?>">
                                         </td>
 
                                         <td style="text-align: left;">  <!--   摘要   -->
                                             <input class="TxtBoxLineDel" style="width: 90%;" 
                                                 type="text" name="NewSummary" 
-                                                value="<?= h($NewSummary ?? '' ) ?>">
+                                                value="<?= h($newSummary ?? '' ) ?>">
 
                                         </td>
 
                                         <td style="font-color: #ff0000;">    <!--   エラーメッセージ   -->
                                             <input class="TxtBoxLineDel" style="width: 90%;" type="text" 
                                                 name="NewErrmsg"
-                                                value="<?= h($NewErrMsg ?? '' )  ?>" >
+                                                value="<?= h($newErrMsg ?? '' )  ?>" >
                                         </td>
                                     </tr>
                             </tbody>
@@ -122,17 +122,17 @@
                         <h3>店舗情報を修正・閉店登録(店番,店舗名の修正はできません。)</h3>
                         <div style="text-align: center;" >
                             <input type="hidden" name="csrfTokenKey" value="<?= h($tokenKey) ?>">
-                            <!-- <button name="ShopsPfm" type="submit"
+                            <!-- <button name="shopsPfm" type="submit"
                                 onclick="return confirm
                                 ('店舗情報 修正欄の内容の正当性チェックを行います。\nデータベースの更新は行いません。？');"  
                                 value="<?= h('チェック') ?>" >相関チェック
                             </button> -->
-                            <button name="ShopsPfm" type="submit"
+                            <button name="shopsPfm" type="submit"
                                 onclick="return confirm
                                 ('店舗情報 修正欄の内容をデータベースに登録します。\n本当に変更してもよろしいですか？');"  
                                 value="<?= h('修正実行') ?>" >修正実行
                             </button>
-                            <button name="ShopsPfm" type="submit"
+                            <button name="shopsPfm" type="submit"
                                 onclick="return confirm
                                 ('店舗情報 修正欄の内容を、もとに戻します。\nよろしいですか？');"  
                                 value="<?= h('キャンセル') ?>" >キャンセル
@@ -151,7 +151,7 @@
                                         <th style="width: 8%;" >閉店日</th>
                                         <th style="width: 25%;" >
 
-                                                <!-- <button name="ShopsPfm" type="submit" value="<?= h('追加') ?>" >行追加</button>
+                                                <!-- <button name="shopsPfm" type="submit" value="<?= h('追加') ?>" >行追加</button>
                                                 <br><hr> -->
                                                 エラーメッセージ
                                         </th>
@@ -159,11 +159,11 @@
 
                                         <?php /*
                                         <th style="width: 6%;" >
-                                            <button name="ShopsPfm" type="submit" value="<?= h('削除') ?>" >削除</button>
+                                            <button name="shopsPfm" type="submit" value="<?= h('削除') ?>" >削除</button>
                                         </th>
                                         */?>
                                     </tr>
-                                    <?php foreach ($ShopList as $Key => $Row): ?>
+                                    <?php foreach ($ShopList as $Key => $row): ?>
                                         <input type="hidden" name="viewEditKey" value="<?= h($Key) ?>">
                                         <tr style="background-color: #ffffff; font-weight: bold; text-align: center;">
 
@@ -173,27 +173,27 @@
                                                     inputmode="numeric" 
                                                     pattern="[0-9]{6}" 
                                                     placeholder="例: 000001" 
-                                                    type="text" name="ShopsUpdDt[<?= $Key ?>][shop_code]"
-                                                    value="<?= h($Row['shop_code']) ?? '' ?>" readonly >
+                                                    type="text" name="shopsUpdDt[<?= $Key ?>][shop_code]"
+                                                    value="<?= h($row['shop_code']) ?? '' ?>" readonly >
                                             </td>
 
                                             <td style="text-align: left;">  <!--   店舗名称   -->
                                                 <input class="TxtBoxLineDel" style="width: 90%; text-align: center;" 
-                                                    type="text" name="ShopsUpdDt[<?= $Key ?>][shop_name]"
-                                                    value="<?= h($Row['shop_name']) ?? '' ?>" readonly>
+                                                    type="text" name="shopsUpdDt[<?= $Key ?>][shop_name]"
+                                                    value="<?= h($row['shop_name']) ?? '' ?>" readonly>
                                             </td>
 
                                             <td style="text-align: left;">  <!--   開業日   -->
                                                 <input class="TxtBoxLineDel" style="width: 90%;" 
-                                                    type="text" name="ShopsUpdDt[<?= $Key ?>][open_date]" 
-                                                    value="<?= h($Row['open_date']) ?? '' ?>" <?= $isLocked??'' ?> 
+                                                    type="text" name="shopsUpdDt[<?= $Key ?>][open_date]" 
+                                                    value="<?= h($row['open_date']) ?? '' ?>" <?= $isLocked??'' ?> 
                                                 >
                                             </td>
 
                                             <td style="text-align: left;">  <!--   摘要   -->
                                                 <input class="TxtBoxLineDel" style="width: 90%;" 
-                                                    type="text" name="ShopsUpdDt[<?= $Key ?>][summary]" 
-                                                    value="<?= h($Row['summary']) ?? '' ?>"  <?= $isLocked??'' ?> 
+                                                    type="text" name="shopsUpdDt[<?= $Key ?>][summary]" 
+                                                    value="<?= h($row['summary']) ?? '' ?>"  <?= $isLocked??'' ?> 
                                                 >
 
                                             </td>
@@ -201,14 +201,14 @@
                                             <td>                            <!--   閉店チェックボックス   -->
                                                 <?php
                                                     $checked = '';
-                                                    if (!empty($Row['closed']) || 
-                                                       (!empty($_POST['ShopsUpdDt'][$Key]['closed']) && 
-                                                       $_POST['ShopsUpdDt'][$Key]['closed'] === '1')) {
+                                                    if (!empty($row['closed']) || 
+                                                       (!empty($_POST['shopsUpdDt'][$Key]['closed']) && 
+                                                       $_POST['shopsUpdDt'][$Key]['closed'] === '1')) {
                                                             $checked = 'checked';
                                                     }
                                                 ?>
                                                 <input class="TxtBoxLineDel" style="width: 90%;" type="checkbox" 
-                                                    name="ShopsUpdDt[<?= $Key ?>][closed]" value="1"
+                                                    name="shopsUpdDt[<?= $Key ?>][closed]" value="1"
                                                     <?= $checked ?>
                                                     <?= $isLocked??'' ?> 
                                                 >
@@ -216,29 +216,29 @@
 
                                             <td>                            <!--   閉店日   -->
                                                 <input class="TxtBoxLineDel" style="width: 90%;" type="text" 
-                                                    name="ShopsUpdDt[<?= $Key ?>][closed_date]" 
-                                                    value="<?= h($Row['closed_date']) ?? '' ?>"  <?= $isLocked??'' ?>
+                                                    name="shopsUpdDt[<?= $Key ?>][closed_date]" 
+                                                    value="<?= h($row['closed_date']) ?? '' ?>"  <?= $isLocked??'' ?>
                                                 >
                                             </td>                                          
 
                                             <td style="font-color: #ff0000;">    <!--   エラーメッセージ   -->
                                                 <input class="TxtBoxLineDel" style="width: 90%;" type="text" 
-                                                    name="ShopsUpdDt[<?= $Key ?>][errmsg]"
-                                                    value="<?= h($Row['errmsg'] ?? '')  ?>" readonly>
+                                                    name="shopsUpdDt[<?= $Key ?>][errmsg]"
+                                                    value="<?= h($row['errmsg'] ?? '')  ?>" readonly>
                                             </td>
                             
 
                                             <td>                            <!--   行削除チェックボックス   -->     
                                                  <?php
                                                     $checked = '';
-                                                    if (!empty($Row['deleted']) || 
-                                                       (!empty($_POST['ShopsUpdDt'][$Key]['deleted']) && 
-                                                       $_POST['ShopsUpdDt'][$Key]['deleted'] === '1')) {
+                                                    if (!empty($row['deleted']) || 
+                                                       (!empty($_POST['shopsUpdDt'][$Key]['deleted']) && 
+                                                       $_POST['shopsUpdDt'][$Key]['deleted'] === '1')) {
                                                             $checked = 'checked';
                                                     }
                                                 ?>                                                
                                                 <input class="TxtBoxLineDel" style="width: 90%;" type="checkbox" 
-                                                    name="ShopsUpdDt[<?= $Key ?>][deleted]" value="1"
+                                                    name="shopsUpdDt[<?= $Key ?>][deleted]" value="1"
                                                     <?= $checked ?>
                                                    <?= $isLocked??'' ?>
                                                 >

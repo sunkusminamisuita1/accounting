@@ -29,10 +29,10 @@ class shopsValidator
         $this->log("バリデーション開始。対象データ数: " . count($dto->shopAltTbl));
         //var_dump($dto->shopAltTbl);exit;
 
-        foreach ($dto->shopAltTbl as $key => $Row) 
+        foreach ($dto->shopAltTbl as $key => $row) 
         {
             // 1. 店舗番号チェック
-            $ShopCode = trim((string)$Row['shop_code']);
+            $ShopCode = trim((string)$row['shop_code']);
                 //店番を正規表現で'000001'~'999999'でチェック
             $ShopNoPattern  =   '/^\d{6}$/';
             if ( ! preg_match($ShopNoPattern , $ShopCode) ) {
@@ -46,14 +46,14 @@ class shopsValidator
                 continue;
             }
 
-            if ( empty($Row['shop_name'])) {
+            if ( empty($row['shop_name'])) {
                 $dto->shopAltTbl[$key]['errmsg'] = "shopvali 店舗名は必須入力です。";
                 $errFlg++;
                 continue;// 
             }
 
             // 3. 必須・店舗名チェック
-            $ShopName = trim(mb_convert_kana($Row['shop_name'] ?? '', "s", "UTF-8"));
+            $ShopName = trim(mb_convert_kana($row['shop_name'] ?? '', "s", "UTF-8"));
             if ($ShopName === '') {
                 $dto->shopAltTbl[$key]['errmsg'] = "店舗名は必須です。";
                 $errFlg++;
@@ -66,21 +66,21 @@ class shopsValidator
             }
 
             // 4. 閉店フラグが立っているデータは新規登録できません。＃＃＃＃＃　　新規のみ　＃＃＃＃＃＃
-            $Closed = $Row['closed'] ?? 0;
+            $closed = $row['closed'] ?? 0;
 
             // 5. 送信データ内での重複チェック
-            if ($Closed) {
-                if($Row['edittype'] === '追加'){
+            if ($closed) {
+                if($row['edittype'] === '追加'){
                     $dto->shopAltTbl[$key]['errmsg'] = "新規登録で削除は設定できません。";
                     $errFlg++;
                 }
             }
                 //店番重複チェック
-                $sameRows = array_filter($dto->shopAltTbl, function($searchRow) use ($Row) {
+                $sameRows = array_filter($dto->shopAltTbl, function($searchRow) use ($row) {
                     if (($searchRow['edittype'] ?? '') === '削除') {
                         return false;
                     }
-                    return $searchRow['shop_code'] === $Row['shop_code'];
+                    return $searchRow['shop_code'] === $row['shop_code'];
                 });
 
                 if (count($sameRows) >= 2) {
@@ -89,11 +89,11 @@ class shopsValidator
                 }
 
                 //店名重複チェック
-                $sameRows = array_filter($dto->shopAltTbl, function($searchRow) use ($Row) {
+                $sameRows = array_filter($dto->shopAltTbl, function($searchRow) use ($row) {
                     if (($searchRow['edittype'] ?? '') === '削除') {
                         return false;
                     }
-                    return $searchRow['shop_name'] === $Row['shop_name'];
+                    return $searchRow['shop_name'] === $row['shop_name'];
                 });
 
                 if (count($sameRows) >= 2) {
@@ -102,29 +102,29 @@ class shopsValidator
                 }
 
                 // 開店日が入力されている場合、YYYY-MM-DD形式であることをチェック
-                if($Row['open_date'] ?? ''){
-                    if ( ! $this->isValidDate($Row['open_date'] ?? '')) {
+                if($row['open_date'] ?? ''){
+                    if ( ! $this->isValidDate($row['open_date'] ?? '')) {
                         $dto->shopAltTbl[$key]['errmsg'] = "開店日はYYYY-MM-DD形式で入力してください。";
                         $errFlg++;
                     }
                 }
 
                 // 閉店日が入力されている場合、YYYY-MM-DD形式であることをチェック
-                if($Row['closed_date'] ?? ''){
-                    if ( ! $this->isValidDate($Row['closed_date'] ?? '')) {
+                if($row['closed_date'] ?? ''){
+                    if ( ! $this->isValidDate($row['closed_date'] ?? '')) {
                         $dto->shopAltTbl[$key]['errmsg'] = "閉店日はYYYY-MM-DD形式で入力してください。";
                         $errFlg++;
                     }
                 }
 
                 //閉店フラグと閉店日の整合性チェック
-                    $Closed = (int)($Row['closed'] ?? 0);
-                    $ClosedDate = trim((string)($Row['closed_date'] ?? ''));
-                    if ( $Closed === 1 && $ClosedDate === '') {
+                    $closed = (int)($row['closed'] ?? 0);
+                    $closedDate = trim((string)($row['closed_date'] ?? ''));
+                    if ( $closed === 1 && $closedDate === '') {
                             $dto->shopAltTbl[$key]['errmsg'] = "閉店フラグが立っている場合、閉店日は必須です。";
                             $errFlg++;
                     }
-                    if($Closed === 0 && $ClosedDate !== ''){
+                    if($closed === 0 && $closedDate !== ''){
                             $dto->shopAltTbl[$key]['errmsg'] = "閉店日が入力されている場合、閉店フラグを立ててください。";
                             $errFlg++;
                     }
@@ -132,7 +132,7 @@ class shopsValidator
         }
 
         if ($errFlg > 0) {
-            $dto->ErrData['shopValidator.commonVali'] = "登録エラーが存在します。エラーを修正してください。";
+            $dto->errData['shopValidator.commonVali'] = "登録エラーが存在します。エラーを修正してください。";
             $dto->isLocked   = '';
         }else{
             $dto->isLocked   = 'readonly';
@@ -148,8 +148,8 @@ class shopsValidator
             return false;
         }
 
-        $date = DateTime::createFromFormat('!Y-m-d', $value);
-        $errors = DateTime::getLastErrors();
+        $date = dateTime::createFromFormat('!Y-m-d', $value);
+        $errors = dateTime::getLastErrors();
 
         if ($date === false) {
             return false;

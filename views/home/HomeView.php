@@ -32,22 +32,22 @@ require_once ROOT_PATH . '/app/dto/Constants.php';
 
                         <?php
                             //echo "qqqqqqq : {$_GET['route']}";
-                            require_once ROOT_PATH.'/views/lib/ProcSlct.php'; 
+                            require_once ROOT_PATH.'/views/lib/procSlct.php'; 
                         ?>
 
                     <h2>試算表表示：<?= $reportType ?></h2>
                     <form action="index.php?route=home" method="post">試算表<br>
                         <input type="hidden" name="csrfTokenKey" value="<?= h($tokenKey) ?>">
                         <input type="radio" name="reportType"
-                            value=<?= GetujiSisanhyou ?>>月次試算表出力
+                            value=<?= getujiSisanhyou ?>>月次試算表出力
                         <input type="radio" name="reportType"
-                            value=<?= NenjiSisanhyou ?>>年次試算表出力
+                            value=<?= nenjiSisanhyou ?>>年次試算表出力
                         <input type="radio" name="reportType"
-                            value=<?=  RuisekiSisanhyou ?>>累積試算表出力
+                            value=<?=  ruisekiSisanhyou ?>>累積試算表出力
                         <input type="radio" name="reportType"
-                            value=<?=  ZenkiHikaku ?>>前期比較出力
+                            value=<?=  zenkiHikaku ?>>前期比較出力
                         <input type="radio" name="reportType"
-                            value=<?=  KikanSisanhyou ?>>期間入力試算表出力
+                            value=<?=  kikanSisanhyou ?>>期間入力試算表出力
                         <br>
                         <button type="submit">切替</button><br><br>
                     </form>
@@ -55,38 +55,38 @@ require_once ROOT_PATH . '/app/dto/Constants.php';
 <!--                        <input type="hidden" name="csrftokenTime" value="<?php //echo h($tokenTime); ?>">  -->
                         <input type="hidden" name="csrfTokenKey" value="<?= h($tokenKey) ?>">
 <?php
-                $today = new DateTime();
+                $today = new dateTime();
                 $nenji_nen = $nenji_nen ?? "";
                 $lastDate = $today->modify('-1 month');               
                 $from = $from ?? $lastDate->format('Y-m-d');
                 $to = $to ?? date('Y-m-d');
                 $result = [];
                 if ($reportType) {
-                    if($reportType === GetujiSisanhyou){
+                    if($reportType === getujiSisanhyou){
         //                $from = $from ?? $lastDate->format('Y-m');
                         $from = date('Y-m', strtotime($from));
 ?>
                         年月：<input type="month" name="from"
                         value="<?= h($from ) ?>" required>
 <?php               } 
-                    if($reportType === NenjiSisanhyou){
+                    if($reportType === nenjiSisanhyou){
 ?>
                         年：<input type="number" name="nenji_nen" min='1900' max='2100'
                         value="<?= h($nenji_nen) ?>" required placeholder="例: 2025">
 <?php
                         $from = isset($_GET['nenji_nen'])?$_GET['nenji_nen'] . '0101':"";
                     };
-                    if($reportType === RuisekiSisanhyou){
+                    if($reportType === ruisekiSisanhyou){
 ?>
                         試算表期日：<input type="date" name="to" value="<?= h($to) ?>" required>
 <?php               }
-                    if($reportType === ZenkiHikaku){
+                    if($reportType === zenkiHikaku){
 ?>
                         基準年：<input type="number" name="kijyun_nen" min='1900' max='2100'
                         value="" required placeholder="例: 2025">
 <?php                   $from = isset($_GET['kijyun_nen'])?$_GET['kijyun_nen'] . '0101':"";
                     };
-                    if($reportType === KikanSisanhyou){
+                    if($reportType === kikanSisanhyou){
 ?>
                         開始日：<input type="date" name="from" value="<?= h($from) ?>" required>
                         終了日：<input type="date" name="to" value="" required>
@@ -98,7 +98,7 @@ require_once ROOT_PATH . '/app/dto/Constants.php';
 			            <button name="KeisanJikkou" type="submit" value="Exec"> 計算実行</button>
 		            </form>
 <?php
-    if (in_array($reportType, [GetujiSisanhyou, NenjiSisanhyou, KikanSisanhyou])){
+    if (in_array($reportType, [getujiSisanhyou, nenjiSisanhyou, kikanSisanhyou])){
 ?>
         <p>抽出期間： <?= h($from) ?> 〜 <?= h($to) ?></p>
         <table>
@@ -137,7 +137,7 @@ require_once ROOT_PATH . '/app/dto/Constants.php';
         </table>
 <?php
     }
-    if (in_array($reportType,[RuisekiSisanhyou])):
+    if (in_array($reportType,[ruisekiSisanhyou])):
 ?>
         <p>期間： <?= h($from) ?> 〜 <?= h($to) ?></p>
         <table>
@@ -180,7 +180,7 @@ require_once ROOT_PATH . '/app/dto/Constants.php';
     endif;
 ?>
 <?php
-    if (in_array($reportType,[ZenkiHikaku])){
+    if (in_array($reportType,[zenkiHikaku])){
 ?>
         <p>当期期間： <?= h($hmSvcInstance->from) ?> 〜 <?= h($hmSvcInstance->to) ?></p>
         <p>前期期間： <?= h($hmSvcInstance->zenki_from) ?> 〜 <?= h($hmSvcInstance->zenki_to) ?></p>

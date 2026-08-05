@@ -70,7 +70,7 @@ test6/
 │     │     index.php
 │     │  
 │     ├  lib/
-│     │     ProcSlct.php
+│     │     procSlct.php
 │     │  
 │     ├  accounts/
 │     │     accountsView.php
@@ -128,10 +128,10 @@ Model	データ構造
                             file_put_contents(__DIR__ . '/../../debug.log', "メソッド通ったよ！\n", FILE_APPEND);
 
 処理続行、停止確認メッセージ
-                                    <button name="VcrDelete" type="submit" 
+                                    <button name="vcrDelete" type="submit" 
                                         onclick="return confirm('この伝票を削除すると、紐づく明細データもすべて削除されます。\n本当に削除してもよろしいですか？');" 
                                         class="btn btn-danger"
-                                        value="<?= h('VcrDelete') ?>">伝票削除
+                                        value="<?= h('vcrDelete') ?>">伝票削除
                                     </button>
 
 mysqlでdelete insert create 操作を行った後、成功したかどうかを確認する方法は、PDOの場合はexecute()の返り値を確認するか、rowCount()メソッドを使用して影響を受けた行数を確認することが一般的です。
@@ -232,9 +232,9 @@ useridの取得
 
 array_filter countを使用したロジック
 
-        foreach ($dto->acctAltTbl as $key => $Row) {
+        foreach ($dto->acctAltTbl as $key => $row) {
             // 配列の中に現在のタイプが含まれているかチェックする
-            if (in_array($Row['type'], $dto->accountsType, true)) {
+            if (in_array($row['type'], $dto->accountsType, true)) {
                 $dto->acctAltTbl[$key]['errmsg'] = "OK";
             } else {
                 $dto->acctAltTbl[$key]['errmsg'] = "貸借種別は'収益'か'費用'か'資産'か'負債'か'資本'以外は入力できません。";
@@ -242,15 +242,15 @@ array_filter countを使用したロジック
 
             // 🌟 2. 自分自身も含めて「acctAltTbl」全体から同じデータを検索する
             // ※ すでに削除チェック（del == 'On'）がついている行は比較対象から外すとより正確になります
-            if (($Row['edittype'] ?? '') !== '削除') {
+            if (($row['edittype'] ?? '') !== '削除') {
             
-                $sameRows = array_filter($dto->acctAltTbl, function($searchRow) use ($Row) {
+                $sameRows = array_filter($dto->acctAltTbl, function($searchRow) use ($row) {
                     // 削除予定の行はカウント対象外にする
                     if (($searchRow['edittype'] ?? '') === '削除') {
                         return false;
                     }
                     // 「名前」と「種別」が一致する行を生き残らせる
-                    return $searchRow['name'] === $Row['name'] && $searchRow['type'] === $Row['type'];
+                    return $searchRow['name'] === $row['name'] && $searchRow['type'] === $row['type'];
                 });
 
                 // 🌟 3. count() で生存した件数を取得し、2件以上なら重複エラー！
@@ -262,16 +262,16 @@ array_filter countを使用したロジック
         }
 
 
-// アロー関数(php7.4移行では下記肝略記述が使える。)を使うと use を書かなくても外の変数 $Row を自動で参照できます
+// アロー関数(php7.4移行では下記肝略記述が使える。)を使うと use を書かなくても外の変数 $row を自動で参照できます
 $sameRows = array_filter($dto->acctAltTbl, fn($searchRow) => 
     (($searchRow['edittype'] ?? '') !== '削除') &&
-    ($searchRow['name'] === $Row['name']) &&
-    ($searchRow['type'] === $Row['type'])
+    ($searchRow['name'] === $row['name']) &&
+    ($searchRow['type'] === $row['type'])
 );
 
 
 日本語文字数をチェックするロジック
-            $trimmedName = trim(mb_convert_kana($Row['name'] ?? '', "s", "UTF-8"));//全角スペースを半角に変換してトリム
+            $trimmedName = trim(mb_convert_kana($row['name'] ?? '', "s", "UTF-8"));//全角スペースを半角に変換してトリム
             if ($trimmedName === '') {
                 $dto->acctAltTbl[$key]['errmsg'] = "勘定科目名は必須です。";
                 $errFlg++;
@@ -516,5 +516,5 @@ shopsDto.php
 shopsRepository.php
 shopsService.php
 shopsValidator.php
-ProcSlct.php
+procSlct.php
 ShopsView.php

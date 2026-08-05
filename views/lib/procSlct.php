@@ -38,9 +38,9 @@ foreach ($all_routes as $key => $label) {
 ?>
 
 <style>
-/*    .ProcSlct, .ProcSlct td { border: none !important; } */
-    .ProcSlct { border-collapse: collapse; width: auto; } /* 幅は中身に合わせるのが一般的 */
-    .ProcSlct button { cursor: pointer; padding: 5px 15px; }
+/*    .procSlct, .procSlct td { border: none !important; } */
+    .procSlct { border-collapse: collapse; width: auto; } /* 幅は中身に合わせるのが一般的 */
+    .procSlct button { cursor: pointer; padding: 5px 15px; }
 </style>
 
 <?php
@@ -59,7 +59,7 @@ $_SESSION['current_route'] = $requestRoute;
 
 ?>
 
-<table class="ProcSlct">
+<table class="procSlct">
 
     <tr>
 
@@ -72,7 +72,7 @@ $_SESSION['current_route'] = $requestRoute;
                 <!-- フォームを配置し、methodをpostにする -->
                 <form action="index.php?route=shop.switch" method="POST" id="shop_selector_form" style="display: inline;">
                     <select name="active_shop" id="active_shop" onchange="document.getElementById('shop_selector_form').submit();">
-                        <?php foreach ($_SESSION['UserShops'] as $shop): ?>
+                        <?php foreach ($_SESSION['userShops'] as $shop): ?>
                             <option value="<?php echo $shop['shop_code']; ?>" <?php echo ($shop['shop_code'] == $_SESSION['current_shop_code']) ? 'selected' : ''; ?>>
                                 <?php echo htmlspecialchars($shop['shop_name'], ENT_QUOTES, 'UTF-8'); ?>
                             </option>

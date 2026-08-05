@@ -21,7 +21,7 @@ class authService
         }
         return $user;
     }
-    public function register(RegisterDto $dto): void
+    public function register(registerDto $dto): void
     {
         // バリデーション
         if (empty($dto->email) || empty($dto->password)) {

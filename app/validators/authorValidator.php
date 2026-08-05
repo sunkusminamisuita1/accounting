@@ -17,7 +17,7 @@ class AuthValidator
         }
     }
 
-    public function validateRegister(RegisterDto $dto): void
+    public function validateRegister(registerDto $dto): void
     {
         if (empty($dto->username)) {
             throw new Exception('ユーザー名は必須です');

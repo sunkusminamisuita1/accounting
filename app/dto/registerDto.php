@@ -1,7 +1,7 @@
 
 <?php
 // app/dto/registerDto.php
-class RegisterDto
+class registerDto
 {
     public string $userName;
     public string $email;

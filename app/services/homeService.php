@@ -167,7 +167,7 @@ class homeServiceCls{
 						return strcmp($a['name'], $b['name']);
 					});
 					break;
-				case ZenkiHikaku:
+				case zenkiHikaku:
 		//前期比較集計処理   使用データ　ーー＞　$trial_cur_bs $trial_prev_bs	
 					$bs_compare = [];
 					$ini = [

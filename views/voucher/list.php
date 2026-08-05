@@ -1,7 +1,7 @@
 <style>
-    .ProcSlct, .ProcSlct td { border: none !important; }
+    .procSlct, .procSlct td { border: none !important; }
     .UpdTbl { border-collapse: collapse; width: 100%; table-layout: fixed; border: 1px solid #000000; } /* 幅は中身に合わせるのが一般的 */
-    .ProcSlct button { cursor: pointer; padding: 5px 15px; }
+    .procSlct button { cursor: pointer; padding: 5px 15px; }
     th,td {  padding: 0.6em; border: 1px solid #000000; }
 
     .button-container {
@@ -31,12 +31,12 @@
 
 
     <?php
-        require_once ROOT_PATH . '/views/lib/ProcSlct.php';
+        require_once ROOT_PATH . '/views/lib/procSlct.php';
         $details = $this->dto->dtoDetails;
     ?>
-    <?php if (!empty($this->dto->ErrData)): ?>
+    <?php if (!empty($this->dto->errData)): ?>
         <ul style="color: red;">
-            <?php foreach ($this->dto->ErrData as $mod => $err): ?>
+            <?php foreach ($this->dto->errData as $mod => $err): ?>
                 <li><?= h($mod) . ": " . h($err) ?></li>
             <?php endforeach; ?>
         </ul>
@@ -57,7 +57,7 @@
                 </td>
 
                 <td>
-                    <input type="text" name="ListVcrNum" value="<?= h($this->dto->ListVcrNum ?? '') ?>">
+                    <input type="text" name="listVcrNum" value="<?= h($this->dto->listVcrNum ?? '') ?>">
                 </td>
 
             <tr>　
@@ -69,7 +69,7 @@
                 </td>
 
                 <td>
-                    <input type="date" name="ListVcrDate" value="<?= h($this->dto->Date ?? '') ?>">
+                    <input type="date" name="listVcrDate" value="<?= h($this->dto->Date ?? '') ?>">
                 </td>
             </tr>
 
@@ -94,7 +94,7 @@
                 </td>
 
                 <td>
-                    <input type="text" name="ListVcrSummary" value="<?= h($this->dto->Summary ?? '') ?>">
+                    <input type="text" name="listVcrSummary" value="<?= h($this->dto->Summary ?? '') ?>">
                 </td>
             </tr>
         </table>
@@ -114,19 +114,19 @@
             <input type="hidden" name="csrfTokenKey" value="<?= h($tokenKey) ?>">
             <input type="hidden" name="JdId" value="<?= h($tokenKey) ?>">
             <table class="UpdTbl">
-                <?php $VcrIdSW = 0; $VcrSearchedData = $this->dto->VcrSearchedData;
-                        $CreditAmount = 0; $DebitAmount = 0; $CreditName = ''; $DebitName = '';
+                <?php $vcrIdSW = 0; $VcrSearchedData = $this->dto->VcrSearchedData;
+                        $creditAmount = 0; $debitAmount = 0; $creditName = ''; $debitName = '';
                 ?>
-                <?php foreach ($VcrSearchedData as $VcrRowNo => $Row):  ?>
-                    <?php if($Row['side'] === 'credit') {
-                        $CreditAmount = (int)$Row['amount']??'0';
-                        $CreditName = $Row['name']??'';
+                <?php foreach ($VcrSearchedData as $vcrRowNo => $row):  ?>
+                    <?php if($row['side'] === 'credit') {
+                        $creditAmount = (int)$row['amount']??'0';
+                        $creditName = $row['name']??'';
                     } else {
-                        $DebitAmount = (int)$Row['amount']??'0';
-                        $DebitName = $Row['name']??'';
+                        $debitAmount = (int)$row['amount']??'0';
+                        $debitName = $row['name']??'';
                     }
                     ?>
-                    <?php if ($VcrIdSW != $Row['voucher_id']): ?>
+                    <?php if ($vcrIdSW != $row['voucher_id']): ?>
                             <tr style="background-color: #e0e0e1; font-weight: bold; text-align: center;">
                                 <th style=" width: 5%;" >伝票No</th>
                                 <th style=" width: 11%;" >日付</th>
@@ -135,94 +135,94 @@
                                 <th style=" width: 10%;">貸方金額</th>
                                 <th style=" width: 13%;">貸方科目</th>
                                 <th style=" width: 15%;">摘要<br>
-                                    <input style="width : 95%;" type="text" name="VcrUpdDt[<?= $VcrRowNo ?>][summary]" 
-                                        value="<?= h($Row['summary']) ?? '' ?>"
+                                    <input style="width : 95%;" type="text" name="vcrUpdDt[<?= $vcrRowNo ?>][summary]" 
+                                        value="<?= h($row['summary']) ?? '' ?>"
                                     >                                    
                                 </th>
                                 <th style=" width: 22%;">
-                                    <button name="VcrUpdate" type="submit"
+                                    <button name="vcrUpdate" type="submit"
                                         onclick="return confirm('伝票修正欄の内容をデータベースに登録します。元に戻せません。\n本当に変更してもよろしいですか？');" 
                                         class="btn btn-danger"
-                                        value="<?= h('VcrUpdate') ?>">修正実行
-                                    <button name="VcrDelete" type="submit" 
+                                        value="<?= h('vcrUpdate') ?>">修正実行
+                                    <button name="vcrDelete" type="submit" 
                                         onclick="return confirm('この伝票を削除すると、紐づく明細データもすべて削除されます。\n本当に削除してもよろしいですか？');" 
                                         class="btn btn-danger"
-                                        value="<?= h('VcrDelete') ?>">伝票削除
+                                        value="<?= h('vcrDelete') ?>">伝票削除
                                     </button>
                                 </th>
                             </tr>
                     <?php endif; ?>
                     <tr>
-                    <?php if ($VcrIdSW  != $Row['voucher_id']): ?>
-                        <?php $VcrIdSW   = (int)$Row['voucher_id']; ?>
+                    <?php if ($vcrIdSW  != $row['voucher_id']): ?>
+                        <?php $vcrIdSW   = (int)$row['voucher_id']; ?>
                             <td  style="font-weight: bold; text-align: center;">
-                                <?= h($Row['voucher_id']) ?>
+                                <?= h($row['voucher_id']) ?>
                             </td>
                             <td style="font-weight: bold; text-align: center;">
-                                <?= h($Row['voucher_date']??'') ?>
+                                <?= h($row['voucher_date']??'') ?>
                             </td>
                     <?php else: ?>
                             <td></td>
                             <td></td>
                     <?php endif; ?>
                             <td>
-                                <?php if($Row['side'] === 'debit'): ?>
-                                    <select  style=" width: 95%;"  name="VcrUpdDt[<?= $VcrRowNo ?>][account_id]" required >
+                                <?php if($row['side'] === 'debit'): ?>
+                                    <select  style=" width: 95%;"  name="vcrUpdDt[<?= $vcrRowNo ?>][account_id]" required >
                                         <option value="">選択してください</option>
                                             <?php foreach($this->dto->accounts as $a): ?>
                                                 <option value="<?= h($a['id']) ?>" 
-                                                    <?= (isset($Row['account_id']) && $Row['account_id'] == $a['id']) ? 'selected' : '' ?>>
+                                                    <?= (isset($row['account_id']) && $row['account_id'] == $a['id']) ? 'selected' : '' ?>>
                                                     <?= h($a['name']) ?>
                                                 </option>
                                             <?php endforeach; ?>
                                     </select>
-                                    <input type="hidden" name="VcrUpdDt[<?= $VcrRowNo ?>][DebitName]" value="<?= h($DebitName ?? '') ?>">
+                                    <input type="hidden" name="vcrUpdDt[<?= $vcrRowNo ?>][debitName]" value="<?= h($debitName ?? '') ?>">
                                 <?php endif; ?>
                             </td>
                             <td  style="font-weight: bold; text-align: right;">
-                                <?php if($Row['side'] === 'debit'): ?>
-                                    <input style="width : 95%;" type="text" name="VcrUpdDt[<?= $VcrRowNo ?>][amount]" value="<?= h($Row['amount']) ?? '' ?>">
+                                <?php if($row['side'] === 'debit'): ?>
+                                    <input style="width : 95%;" type="text" name="vcrUpdDt[<?= $vcrRowNo ?>][amount]" value="<?= h($row['amount']) ?? '' ?>">
                                 <?php endif; ?>
                             </td>
                             <td  style="font-weight: bold; text-align: right;">
-                                <?php if($Row['side'] === 'credit'): ?>
-                                    <input style="width : 95%;" type="text" name="VcrUpdDt[<?= $VcrRowNo ?>][amount]" value="<?= h($Row['amount']) ?? '' ?>">
+                                <?php if($row['side'] === 'credit'): ?>
+                                    <input style="width : 95%;" type="text" name="vcrUpdDt[<?= $vcrRowNo ?>][amount]" value="<?= h($row['amount']) ?? '' ?>">
                                 <?php endif; ?>
                             </td>
                             <td>
-                                <?php if($Row['side'] === 'credit'): ?>
-                                    <select style=" width: 95%;" name="VcrUpdDt[<?= $VcrRowNo ?>][account_id]" required >
+                                <?php if($row['side'] === 'credit'): ?>
+                                    <select style=" width: 95%;" name="vcrUpdDt[<?= $vcrRowNo ?>][account_id]" required >
                                         <option value="">選択してください</option>
                                             <?php foreach($this->dto->accounts as $a): ?>
                                                 <option value="<?= h($a['id']) ?>" 
-                                                    <?= (isset($Row['account_id']) && $Row['account_id'] == $a['id']) ? 'selected' : '' ?>>
+                                                    <?= (isset($row['account_id']) && $row['account_id'] == $a['id']) ? 'selected' : '' ?>>
                                                     <?= h($a['name']) ?>
                                                 </option>
                                             <?php endforeach; ?>
                                     </select>
-                                    <input type="hidden" name="VcrUpdDt[<?= $VcrRowNo ?>][CreditName]" value="<?= h($CreditName ?? '') ?>">
+                                    <input type="hidden" name="vcrUpdDt[<?= $vcrRowNo ?>][CreditName]" value="<?= h($creditName ?? '') ?>">
                                 <?php endif; ?>                           
                             </td>
                             <td  style="font-weight: bold; text-align: center;">
 
 
 
-                                    <input style="width : 95%;" type="text" name="VcrUpdDt[<?= $VcrRowNo ?>][jd_summary]" 
-                                        value="<?= h($Row['jd_summary'] ?? '') ?>"
+                                    <input style="width : 95%;" type="text" name="vcrUpdDt[<?= $vcrRowNo ?>][jd_summary]" 
+                                        value="<?= h($row['jd_summary'] ?? '') ?>"
                                     >                                    
 
 
-                                <!-- <?php //echo  h($Row['summary']??'') ?> -->
+                                <!-- <?php //echo  h($row['summary']??'') ?> -->
                             </td>
                             <td>
                               <div class="button-container">
-                                <input type="hidden" name="VcrUpdDt[<?= $VcrRowNo ?>][JdId]" value="<?= h($Row['JdId'] ?? 0) ?>">
-                                <input type="hidden" name="VcrUpdDt[<?= $VcrRowNo ?>][id]" value="<?= h($Row['id'] ?? '') ?>">
-                                <input type="hidden" name="VcrUpdDt[<?= $VcrRowNo ?>][voucher_id]" value="<?= h($Row['voucher_id'] ?? '') ?>">
-                                <input type="hidden" name="VcrUpdDt[<?= $VcrRowNo ?>][side]" value="<?= h($Row['side'] ?? '') ?>">
-                                <button name="VcrAddDebit" type="submit" value="<?= h($VcrRowNo ?? '') ?>">借方行追加</button>
-                                <button name="VcrAddCredit" type="submit" value="<?= h($VcrRowNo ?? '') ?>">貸方行追加</button>
-                                <button name="VcrDetailLineDel" type="submit" value="<?= h($VcrRowNo ?? '') ?>">行削除</button>
+                                <input type="hidden" name="vcrUpdDt[<?= $vcrRowNo ?>][JdId]" value="<?= h($row['JdId'] ?? 0) ?>">
+                                <input type="hidden" name="vcrUpdDt[<?= $vcrRowNo ?>][id]" value="<?= h($row['id'] ?? '') ?>">
+                                <input type="hidden" name="vcrUpdDt[<?= $vcrRowNo ?>][voucher_id]" value="<?= h($row['voucher_id'] ?? '') ?>">
+                                <input type="hidden" name="vcrUpdDt[<?= $vcrRowNo ?>][side]" value="<?= h($row['side'] ?? '') ?>">
+                                <button name="VcrAddDebit" type="submit" value="<?= h($vcrRowNo ?? '') ?>">借方行追加</button>
+                                <button name="VcrAddCredit" type="submit" value="<?= h($vcrRowNo ?? '') ?>">貸方行追加</button>
+                                <button name="VcrDetailLineDel" type="submit" value="<?= h($vcrRowNo ?? '') ?>">行削除</button>
                               </div>    
                             </td>
                     </tr>
@@ -242,17 +242,17 @@
                         <td colspan="9">検索条件に一致する伝票が見つかりませんでした。</td>
                     </tr>
                 <?php endif; ?>
-                <?php (int)$VcrIdSW = 0; $vcrListResult = $this->dto->vcrListResult; ?>
-                <?php foreach ($vcrListResult as $VcrId => $Row): $CreditAmount = 0; $DebitAmount = 0; $CreditName = ''; $DebitName = ''; ?>
-                    <?php if($Row['side'] === 'credit') {
-                        $CreditAmount = (int)$Row['amount']??'0';
-                        $CreditName = $Row['name']??'';
+                <?php (int)$vcrIdSW = 0; $vcrListResult = $this->dto->vcrListResult; ?>
+                <?php foreach ($vcrListResult as $vcrId => $row): $creditAmount = 0; $debitAmount = 0; $creditName = ''; $debitName = ''; ?>
+                    <?php if($row['side'] === 'credit') {
+                        $creditAmount = (int)$row['amount']??'0';
+                        $creditName = $row['name']??'';
                     } else {
-                        $DebitAmount = (int)$Row['amount']??'0';
-                        $DebitName = $Row['name']??'';
+                        $debitAmount = (int)$row['amount']??'0';
+                        $debitName = $row['name']??'';
                     }
                     ?>
-                    <?php if ($VcrIdSW !== (int)$Row['voucher_id']): ?>
+                    <?php if ($vcrIdSW !== (int)$row['voucher_id']): ?>
                             <tr style="background-color: #e0e0e1; font-weight: bold; text-align: center;">
                                 <th width 5%>伝票No</th>
                                 <th width 8%>日付</th>
@@ -261,46 +261,46 @@
                                 <th>貸方金額</th>
                                 <th>貸方科目</th>
                                 <th>摘要<br>
-                                    <?= h($Row['summary'] )?>                                    
+                                    <?= h($row['summary'] )?>                                    
                                 </th>
                                 <th>
-                                    <?php if($this->dto->vcrListResult[$VcrId]['voucher_id'] !== '999999999999'): ?>
-                                         <button name="VcrUpdateNo" type="submit" value="<?= h($Row['voucher_id']) ?>">修正</button>
+                                    <?php if($this->dto->vcrListResult[$vcrId]['voucher_id'] !== '999999999999'): ?>
+                                         <button name="vcrUpdateNo" type="submit" value="<?= h($row['voucher_id']) ?>">修正</button>
                                     <?php endif; ?>
                                 </th>
                             </tr>
                     <?php endif; ?>
                         <tr>
-                    <?php if (!empty($Row['JdId'])): ?>
-                        <?php if ((int)$VcrIdSW !== (int)$Row['voucher_id']): ?>
-                            <?php (int)$VcrIdSW = (int)$Row['voucher_id']; ?>
+                    <?php if (!empty($row['JdId'])): ?>
+                        <?php if ((int)$vcrIdSW !== (int)$row['voucher_id']): ?>
+                            <?php (int)$vcrIdSW = (int)$row['voucher_id']; ?>
                                 <td  style="font-weight: bold; text-align: center;">
-                                    <?= h($Row['voucher_id']) ?>
+                                    <?= h($row['voucher_id']) ?>
                                 </td>
                                 <td style="font-weight: bold; text-align: center;">
-                                    <?= h($Row['voucher_date']??'') ?>
+                                    <?= h($row['voucher_date']??'') ?>
                                 </td>
                         <?php else: ?>
                                 <td></td>
                                 <td></td>
                         <?php endif; ?>
                                 <td  style="font-weight: bold; text-align: center;">
-                                    <?= h($DebitName) ?>
+                                    <?= h($debitName) ?>
                                 </td>
                                 <td  style="font-weight: bold; text-align: right;">
-                                    <?= h($DebitAmount) ?>
+                                    <?= h($debitAmount) ?>
                                 </td>
                                 <td  style="font-weight: bold; text-align: right;">
-                                    <?= h($CreditAmount) ?>
+                                    <?= h($creditAmount) ?>
                                 </td>
                                 <td  style="font-weight: bold; text-align: center;">
-                                    <?= h($CreditName) ?>
+                                    <?= h($creditName) ?>
                                 </td>
                                 <td  style="font-weight: bold; text-align: center;">
-                                    <?= h($Row['jd_summary']??'') ?>
+                                    <?= h($row['jd_summary']??'') ?>
                                 </td>
                                 <td  style="font-weight: bold; text-align: center;">
-                                    <?= h($Row['total_debit']??'') ?>
+                                    <?= h($row['total_debit']??'') ?>
                                 </td>
                     <?php else: ?>
 <!--                                <td></td>
@@ -308,17 +308,17 @@
                                 <td style="font-weight: bold; text-align: center;">
                                     合計</td>
                                 <td style="font-weight: bold; text-align: right;">
-                                    <?= h($Row['debit_total']??'') ?>
+                                    <?= h($row['debit_total']??'') ?>
                                 </td>
                                 <td style="font-weight: bold; text-align: right;">
-                                    <?= h($Row['credit_total']??'') ?>
+                                    <?= h($row['credit_total']??'') ?>
                                 </td>
                                 <td></td>
                                 <td style="font-weight: bold; text-align: right;">
                                     ステータス
                                 </td>
                                 <td style="color: #ff0073; font-weight: bold; text-align: center;">
-                                    <?= h($Row['credit_total']??'') === h($Row['debit_total']??'') ? ' ': '貸借不一致' ?>
+                                    <?= h($row['credit_total']??'') === h($row['debit_total']??'') ? ' ': '貸借不一致' ?>
 -->                                </td>
                     <?php endif; ?>
                             </tr>

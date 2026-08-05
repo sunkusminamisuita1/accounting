@@ -42,7 +42,7 @@ class shopsRepository{
     public function ShopsAdd($dto, ?int $key = null): void {
         $pdo = getPDO();
         $pdo->beginTransaction();
-        $CreatedAt = date('Y-m-d H:i:s');
+        $createdAt = date('Y-m-d H:i:s');
 
         $rowsToInsert = [];
         $rowsToInsert = $dto->shopAltTbl[$key];
@@ -115,7 +115,7 @@ class shopsRepository{
                 (int)($rowsToInsert['closed'] ?? 0),
                 $closedDateValue,
                 $rowsToInsert['summary'] ?? null,
-                $CreatedAt,
+                $createdAt,
                 $rowsToInsert['deleted'] ?? 0,
                 $rowsToInsert['editType'] ?? null
             ]);
@@ -132,7 +132,7 @@ class shopsRepository{
         $pdo = getPDO();
         $pdo->beginTransaction();
 
-        $CreatedAt = date('Y-m-d H:i:s');
+        $createdAt = date('Y-m-d H:i:s');
 
         $rowsToAlt = [];
         $rowsToAlt = $dto->shopAltTbl[$key];

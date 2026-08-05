@@ -18,21 +18,21 @@ class shopsService{
     public function renewTargetShopCode( $dto): array
     {
 
-        $dto->GetShopCode   =   isset($_POST['active_shop']) ? $_POST['active_shop'] : '     1';
+        $dto->getShopCode   =   isset($_POST['active_shop']) ? $_POST['active_shop'] : '     1';
 
         $dto->shopAltTbl    =   empty($dto->shopAltTbl) 
                                     ? $_SESSION['shopAltTbl'] 
                                     : $dto->shopAltTbl ;
 
-        foreach($dto->shopAltTbl as $Key => $Row   )
+        foreach($dto->shopAltTbl as $Key => $row   )
         {
-                $test1 = (int)trim($dto->GetShopCode);
-                $test2 = (int)trim($Row['shop_code']);
+                $test1 = (int)trim($dto->getShopCode);
+                $test2 = (int)trim($row['shop_code']);
 
             if( $test1 === $test2 ?? 1)
             {
-                $dto->TargetShop     =   $Row;
-                return $Row;
+                $dto->TargetShop     =   $row;
+                return $row;
             }
         }
         echo "エラー shopsService(renewTargetShopCode) 入力された店名がありません。";
@@ -45,9 +45,9 @@ class shopsService{
 
     public function getShopsData( $dto): array
     {
-        //呼び出し元　使用方法　http://test5.local/index.php?route= h($RtnRoute) 
-        $RtnRoute = $_SERVER['HTTP_REFERER']??'route=home'; //呼び出し元URLを取得
-        $RtnRoute = ltrim(strchr($RtnRoute,'route='), 'route='); //'='
+        //呼び出し元　使用方法　http://test5.local/index.php?route= h($rtnRoute) 
+        $rtnRoute = $_SERVER['HTTP_REFERER']??'route=home'; //呼び出し元URLを取得
+        $rtnRoute = ltrim(strchr($rtnRoute,'route='), 'route='); //'='
 
         $dto->userShops         =   $this->repo->getShopsByUserId($dto);
         
@@ -83,13 +83,13 @@ class shopsService{
 
         //$dto->isLocked  =   "readonly";
         
-        foreach($dto->postDt['ShopsUpdDt'] as $Key => $Row)
+        foreach($dto->postDt['shopsUpdDt'] as $Key => $row)
         {
-            //echo "<br>llllll= {$dto->postDt['ShopsUpdDt'][$Key]['deletekey']}";
-            $DltKey     =   ! empty($Row['deletekey'])
-                            ? $Row['deletekey']
+            //echo "<br>llllll= {$dto->postDt['shopsUpdDt'][$Key]['deletekey']}";
+            $dltKey     =   ! empty($row['deletekey'])
+                            ? $row['deletekey']
                             : "";
-            if(!empty($DltKey))
+            if(!empty($dltKey))
             {
                 echo "shopService.LineDlt プログラムエラー　行削除で行番号が指定されていません！";
                  break; 
@@ -98,7 +98,7 @@ class shopsService{
         }
 
         //$this->repoDataMake($dto);
-        //array_splice($dto->shopAltTbl, $DltKey, 1);
+        //array_splice($dto->shopAltTbl, $dltKey, 1);
         //$_SESSION['shopAltTbl'] =   $dto->shopAltTbl;
 
     } 
@@ -106,11 +106,11 @@ class shopsService{
     public function RepoDataMake(shopsDto $dto){
   
         //     // 検索を高速化するため、セッションの店舗一覧を shop_code をキーにした連想配列に変換（準備）
-        $sessionShopsArray = array_column($_SESSION['UserShops'] ?? [], null, 'shop_code');
+        $sessionShopsArray = array_column($_SESSION['userShops'] ?? [], null, 'shop_code');
         //var_dump($sessionShopsArray);
         //var_dump($sessionShopsArray);exit;
         $dto->shopAltTbl = []; // 初期化
-        foreach ($dto->postDt['ShopsUpdDt'] as $pKey => $pRow) {
+        foreach ($dto->postDt['shopsUpdDt'] as $pKey => $pRow) {
             $postShopCode    = sprintf('%06d',(int)trim($pRow['shop_code']??0));
             $postShopNme     = trim($pRow['shop_name']??'');
             $postOpenDate    = $this->formatDate( $pRow['open_date']??'');
@@ -170,7 +170,7 @@ class shopsService{
                 // echo "<br> isChanged={$isChanged}";
         }
         //exit; //デバッグ
-        //var_dump($dto->postDt['ShopsUpdDt']);exit;  
+        //var_dump($dto->postDt['shopsUpdDt']);exit;  
 
     }
 
@@ -209,24 +209,24 @@ class shopsService{
             return;
         }
 
-        foreach($dto->shopAltTbl as $Key=>$Row){
-            //var_dump($Row);
+        foreach($dto->shopAltTbl as $Key=>$row){
+            //var_dump($row);
             //echo "<br>";
-            switch($Row['edittype']){
+            switch($row['edittype']){
                 case '追加':
-                    //var_dump($_SESSION['UserShops']); exit;
+                    //var_dump($_SESSION['userShops']); exit;
                     $this->repo->ShopsAdd($dto,$Key);
                     break;
                 case '更新':
-                    //var_dump($_SESSION['UserShops']); exit;
+                    //var_dump($_SESSION['userShops']); exit;
                     $this->repo->ShopsAlt($dto,$Key);
                     break;
                 // case '削除':
-                //     //var_dump($_SESSION['UserShops']); exit;
+                //     //var_dump($_SESSION['userShops']); exit;
                 //     $this->repo->ShopsDlt($dto,$Key);
                 //     break;
                 case '': // 変更なし
-                    //var_dump($_SESSION['UserShops']); exit;
+                    //var_dump($_SESSION['userShops']); exit;
                     break;
                 default:
                     echo "system error: EditType is not set.";

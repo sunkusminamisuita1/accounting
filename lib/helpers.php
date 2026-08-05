@@ -15,12 +15,12 @@ function requirePost(): void
     }
 }
 
-function DispErrorMsg($errMsg)
+function dispErrorMsg($errMsg)
 {
-    //$dto->ErrData['voucherDto'] = '借方と貸方が一致しません';
-    if(!empty(voucherDto->ErrData)){
-        //$errMsg = $voucherDto->ErrData['voucherDto'];
-        $errMsg = implode('\n', $errMsg->ErrData);
+    //$dto->errData['voucherDto'] = '借方と貸方が一致しません';
+    if(!empty(voucherDto->errData)){
+        //$errMsg = $voucherDto->errData['voucherDto'];
+        $errMsg = implode('\n', $errMsg->errData);
     }
     $errMsg = $errMsg ?? '';
     if (!empty($errMsg)) {
@@ -40,7 +40,7 @@ class errMsgPopUp
 {
     //    public function __construct($dto)  {
     //    }
-    public  function Show($dto)
+    public  function show($dto)
 
     {
         file_put_contents('/tmp/debug.log', "メソッド通ったよ！\n", FILE_APPEND);
@@ -51,8 +51,8 @@ class errMsgPopUp
         if(empty($dto)){
             $errMsg = 'Program Error lib/helpers.php Dtoが空です。';            
         }else{
-            if(!empty($dto->ErrData)){
-                foreach($dto->ErrData as $key => $value){
+            if(!empty($dto->errData)){
+                foreach($dto->errData as $key => $value){
                     $errMsg .= " . $value ";
                 }
             }

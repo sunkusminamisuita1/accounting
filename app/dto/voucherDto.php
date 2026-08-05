@@ -23,7 +23,7 @@ class voucherDto
     public array $vcrInputData = []; //vcrlistで検索条件を格納する配列
 
 
-    public function __construct(array $Details)
+    public function __construct(array $details)
     {
         $this->vcrListResult =  []; //検索結果の配列
         $this->date      =  ''; //create.phpのVoucherDate
@@ -79,12 +79,12 @@ class voucherDto
         $_SESSION['voucherDetail'] = $_SESSION['voucherDetail']  ?? $this->initDetails;                 //セッションに初期値の明細行を保存(Voucher.create)
 
 
-        $this->date         = $_POST['listVcrDate'] ?? $_SESSION['vcrSearchCond']['date'] ?? '';        //search.phpのListVcrDate
+        $this->date         = $_POST['listVcrDate'] ?? $_SESSION['vcrSearchCond']['date'] ?? '';        //search.phpのlistVcrDate
 
 
 
-        $this->summary      = $_POST['listVcrSummary'] ?? $_SESSION['vcrSearchCond']['summary'] ?? '';  //search.phpのListVcrSummary
-        $this->listVcrNum   = $_POST['listVcrNum'] ?? $_SESSION['vcrSearchCond']['listVcrNum'] ?? '';   //search.phpのListVcrNum
+        $this->summary      = $_POST['listVcrSummary'] ?? $_SESSION['vcrSearchCond']['summary'] ?? '';  //search.phpのlistVcrSummary
+        $this->listVcrNum   = $_POST['listVcrNum'] ?? $_SESSION['vcrSearchCond']['listVcrNum'] ?? '';   //search.phpのlistVcrNum
         if(empty($_POST['lstVcrSearchStartDate']) && empty($_POST['lstVcrSearchEndDate']) ) {
             $this->vcrListDatePeriod   = $_SESSION['vcrSearchCond']['vcrListDatePeriod'] ?? ['検索開始日付' => '' , '検索終了日付' => '']; //search.phpの検索日付期間
         }else{

@@ -5,7 +5,7 @@ require_once ROOT_PATH . '/lib/helpers.php';
 require_once ROOT_PATH . '/app/controllers/lib/auth.php';
 require_once ROOT_PATH . '/app/validators/voucherValidator.php';
 
-class VoucherRepository{
+class voucherRepository{
     
     private voucherService $service;
     private voucherDto $dto;
@@ -124,7 +124,7 @@ class VoucherRepository{
         $pdo = getPDO();
         $pdo->beginTransaction();
 
-        if( isset($_POST['VcrUpdate'])) {
+        if( isset($_POST['vcrUpdate'])) {
             $voucherId  =   (int)$dto->vcrSearchedData[0]['id'];
         }
 

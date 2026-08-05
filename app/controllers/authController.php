@@ -26,7 +26,7 @@ class authController{
                 $_SESSION['user'] =     $dto->user; 
 
                 $dto->userShops         = $this->shopsSvc->getShopsData($dto);
-                $_SESSION['UserShops']  = $dto->userShops;
+                $_SESSION['userShops']  = $dto->userShops;
 
                 header('location: index.php?route=home');
                 exit;
@@ -48,7 +48,7 @@ class authController{
             requireCsrf();
             try {
                 require_once ROOT_PATH.'/app/dto/registerDto.php';
-                $dto =  new RegisterDto(
+                $dto =  new registerDto(
                                         trim($_POST['username']),
                                         trim($_POST['email']),
                                         $_POST['password'],

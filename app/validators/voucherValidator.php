@@ -13,12 +13,12 @@ class VoucherValidator
         $OwnUrl = $_SERVER['REQUEST_URI'];
         $OwnUrl = $protocol . $OwnUrl;
         if (empty($dto->Date)) {
-            $dto->ErrData[$OwnUrl] = '日付は必須です';
+            $dto->errData[$OwnUrl] = '日付は必須です';
             return;
         }
 
         if (empty($dto->Summary)) {
-            $dto->ErrData[$OwnUrl] = '摘要は必須です';
+            $dto->errData[$OwnUrl] = '摘要は必須です';
             return;
         }
         $debit = 0;
@@ -26,11 +26,11 @@ class VoucherValidator
         foreach ($dto->dtoDetails as $idx => $row) {
 
             if ($row['amount'] <= 0) {
-                $dto->ErrData[$OwnUrl] = '金額は0より大きくしてください';
+                $dto->errData[$OwnUrl] = '金額は0より大きくしてください';
             }
 
             if (!in_array($row['side'], ['debit', 'credit'])) {
-                $dto->ErrData[$OwnUrl] = '貸借区分が不正です';
+                $dto->errData[$OwnUrl] = '貸借区分が不正です';
                 return;
             }
 
@@ -50,28 +50,28 @@ class VoucherValidator
         $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https://" : "http://";
         $OwnUrl = $_SERVER['REQUEST_URI'];
         $OwnUrl = $protocol . $OwnUrl;
-        $dto->ErrData = [];
+        $dto->errData = [];
         $Start  = $dto->VcrListDatePeriod['検索開始日付'] ?? '';
         $End    = $dto->VcrListDatePeriod['検索終了日付'] ?? '';
-        $Date   = $dto->Date??'';   //###########################
-        $_SESSION['ListInputData'] = ['検索日付' => $Date , '検索開始日付'=> $Start , '検索終了日付' => $End ] ; //############################
+        $date   = $dto->Date??'';   //###########################
+        $_SESSION['ListInputData'] = ['検索日付' => $date , '検索開始日付'=> $Start , '検索終了日付' => $End ] ; //############################
 
     //    if (empty($dto->SearchType)) {
-    //         $dto->ErrData[$OwnUrl] = '検索条件を選択してください';
+    //         $dto->errData[$OwnUrl] = '検索条件を選択してください';
     //         return;
     //    }
         
         if($dto->SearchType === 'SimpleSearch') {    
 //          日付期間のチェック　未着手
-            //var_dump($Date,$Start,$End);
-            if (!empty($Date) && (!empty($Start) || !empty($End))) {
-                $dto->ErrData[$OwnUrl] = '日付,検索期間は同時入力不可です。';
+            //var_dump($date,$Start,$End);
+            if (!empty($date) && (!empty($Start) || !empty($End))) {
+                $dto->errData[$OwnUrl] = '日付,検索期間は同時入力不可です。';
                 return;
             }
             // 期間検索パラメータが渡されている場合、開始日と終了日の両方を必須とする
             if(!empty($Start) || !empty($End)){
                 if (empty($Start) || empty($End)) {
-                    $dto->ErrData[$OwnUrl] = '期間検索では開始日付・終了日付の両方を入力してください。';
+                    $dto->errData[$OwnUrl] = '期間検索では開始日付・終了日付の両方を入力してください。';
                     return;
                 }
             }
@@ -80,19 +80,19 @@ class VoucherValidator
 
 
 //貸方、借方バランスチェック 引数の配列フォーマットは連想キー'amount','side'が含まれていたらどんなフォーマットでもOK
-    public function ChkTotalBalance($dto, $ChkTbl){
-        //var_dump($ChkTbl);
-        $CreditTotal = 0; $DebitTotal = 0;
-        foreach ($ChkTbl as $no0 => $value0) {
+    public function ChkTotalBalance($dto, $chkTbl){
+        //var_dump($chkTbl);
+        $creditTotal = 0; $debitTotal = 0;
+        foreach ($chkTbl as $no0 => $value0) {
                 
                 if($value0['side'] === 'credit'){
-                    $CreditTotal += (int)$value0['amount'];
+                    $creditTotal += (int)$value0['amount'];
                 }else{
-                    $DebitTotal  += (int)$value0['amount'];
+                    $debitTotal  += (int)$value0['amount'];
                 }
         }
-        if( $CreditTotal !== $DebitTotal ){
-            $dto->ErrData['VoucherService'] = "貸方合計　¥{$CreditTotal}　借方合計　¥{$DebitTotal}　不一致です。";
+        if( $creditTotal !== $debitTotal ){
+            $dto->errData['VoucherService'] = "貸方合計　¥{$creditTotal}　借方合計　¥{$debitTotal}　不一致です。";
             return(0); //false 貸し借り不一致
         }else{
             return(1); //true 貸し借り一致

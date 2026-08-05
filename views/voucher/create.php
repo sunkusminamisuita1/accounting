@@ -2,12 +2,12 @@
 <!-- ##############     エラーメッセージ表示    ################ -->
 <?=  $this->errMsgPopUp->Show($this->dto);  ?>
 <?php
-require_once ROOT_PATH . '/views/lib/ProcSlct.php';
+require_once ROOT_PATH . '/views/lib/procSlct.php';
 $details = $this->dto->dtoDetails;
 ?>
-<?php if (!empty($this->dto->ErrData)): ?>
+<?php if (!empty($this->dto->errData)): ?>
     <ul style="color: red;">
-        <?php foreach ($this->dto->ErrData as $mod => $err): ?>
+        <?php foreach ($this->dto->errData as $mod => $err): ?>
             <li><?= h($mod) . ": " . h($err) ?></li>
         <?php endforeach; ?>
     </ul>

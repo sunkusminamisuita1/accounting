@@ -24,10 +24,10 @@ class accountsService{
 
         $dto->acctAltTbl = $dto->accounts;         //修正用科目テーブル作成
 
-        foreach($dto->acctAltTbl as $key=>$Row){   //errmsgカラム追加,初期化
+        foreach($dto->acctAltTbl as $key=>$row){   //errmsgカラム追加,初期化
             $dto->acctAltTbl[$key]['errmsg'] = '';
             $dto->acctAltTbl[$key]['edittype'] = '更新';//初期値セット
-            if(isset($Row['is_deleted']) && $Row['is_deleted'] ?? 0) {
+            if(isset($row['is_deleted']) && $row['is_deleted'] ?? 0) {
                 $dto->acctAltTbl[$key]['errmsg'] = "この勘定科目は削除済みです。";
                 $dto->acctAltTbl[$key]['edittype'] = "削除";
             }
@@ -35,19 +35,19 @@ class accountsService{
         }
         //echo "<br>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx<br><pre>" .var_dump($dto->accounts) . "</pre>yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy<br>";
 
-        unset($Row);
+        unset($row);
     }
 
     public function accountsEdit(accountsDto $dto){
         //echo "<br><pre>" .var_dump($dto->acctAltTbl) . "</pre>";
-        $DelKeys = [];
-        foreach( $dto->postDt['acctUpdDt'] as $key=>$Row){
-            if($Row['del'] ?? ''){
+        $delKeys = [];
+        foreach( $dto->postDt['acctUpdDt'] as $key=>$row){
+            if($row['del'] ?? ''){
                 $dto->acctAltTbl[$key]['edittype'] = '削除';
                 $dto->acctAltTbl[$key]['errmsg'] = '削除済み';
                 $dto->acctAltTbl[$key]['is_deleted'] = 1;
             }else{
-                //$dto->acctAltTbl[$key] = $Row;
+                //$dto->acctAltTbl[$key] = $row;
                 $dto->acctAltTbl[$key]['edittype'] = '更新';
                 $dto->acctAltTbl[$key]['errmsg'] = '';
                 $dto->acctAltTbl[$key]['is_deleted'] = 0;
@@ -65,7 +65,7 @@ class accountsService{
 
     public function RepoDataMake(accountsDto $dto){
 
-        foreach($dto->postDt['acctUpdDt'] as $key=>$Row){ //array_Spliceでキー順序が更新されるため、削除は降順で実行
+        foreach($dto->postDt['acctUpdDt'] as $key=>$row){ //array_Spliceでキー順序が更新されるため、削除は降順で実行
                 $dto->acctAltTbl[$key]['id']        = $dto->postDt['acctUpdDt'][$key]['id'];
                 $dto->acctAltTbl[$key]['user_id']   = $dto->postDt['acctUpdDt'][$key]['user_id'];
                 $dto->acctAltTbl[$key]['name']      = $dto->postDt['acctUpdDt'][$key]['name'];
@@ -73,7 +73,7 @@ class accountsService{
                 //$dto->acctAltTbl[$key]['errmsg']    = "このデータは削除済みです。";
                 //$dto->acctAltTbl[$key]['edittype']  = "削除";
 
-                //if(!isset($Row['is_deleted']) && $Row['is_deleted'] ?? 0) {
+                //if(!isset($row['is_deleted']) && $row['is_deleted'] ?? 0) {
                 //    $dto->acctAltTbl[$key]['errmsg'] = "このデータは削除済みです。";
                 //    $dto->acctAltTbl[$key]['edittype'] = "削除";
                 //}
@@ -90,9 +90,9 @@ class accountsService{
             return;
         }
 
-        foreach($dto->acctAltTbl as $key=>$Row){
+        foreach($dto->acctAltTbl as $key=>$row){
 
-            switch($Row['edittype']){
+            switch($row['edittype']){
                 case '追加':
                     $this->svcRepo->acctAdd($dto,$key);
                     break;
