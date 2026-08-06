@@ -19,7 +19,7 @@ class homeController{
                 exit;
             }
             $hmSvcInstance = new homeServiceCls($reportType);
-            $hmSvcInstance->HomeService();
+            $hmSvcInstance->homeService();
             $viewResult = $hmSvcInstance->result;
             $reportType = $hmSvcInstance->reportType;
             $from = $hmSvcInstance->from;

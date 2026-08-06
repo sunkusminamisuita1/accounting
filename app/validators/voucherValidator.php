@@ -7,7 +7,7 @@ class VoucherValidator
         $this->errno = 0;
     }
 
-    public function Create(VoucherDto $dto): void
+    public function create(VoucherDto $dto): void
     {
         $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https://" : "http://";
         $OwnUrl = $_SERVER['REQUEST_URI'];
@@ -45,7 +45,7 @@ class VoucherValidator
 
     }
 
-    public function List(VoucherDto $dto): void
+    public function list(VoucherDto $dto): void
     {
         $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https://" : "http://";
         $OwnUrl = $_SERVER['REQUEST_URI'];

@@ -63,7 +63,7 @@ class accountsService{
 
     }
 
-    public function RepoDataMake(accountsDto $dto){
+    public function repoDataMake(accountsDto $dto){
 
         foreach($dto->postDt['acctUpdDt'] as $key=>$row){ //array_Spliceでキー順序が更新されるため、削除は降順で実行
                 $dto->acctAltTbl[$key]['id']        = $dto->postDt['acctUpdDt'][$key]['id'];

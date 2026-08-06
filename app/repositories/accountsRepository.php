@@ -11,7 +11,7 @@ class accountsRepository
     public function __construct(accountsDto $dto)    {
     }
 
-    public function getaccounts(accountsDto $dto, bool $includeDeleted = false)  {
+    public function getAccounts(accountsDto $dto, bool $includeDeleted = false)  {
         try{
             //$pdo = getPDO();
             //$stmt = $pdo->query("
@@ -122,7 +122,7 @@ class accountsRepository
 
     }
 
-    public function AcctDlt(accountsDto $dto , $key) {
+    public function acctDlt(accountsDto $dto , $key) {
         $pdo = getPDO();
         $pdo->beginTransaction();
         try {

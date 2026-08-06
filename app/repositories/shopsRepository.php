@@ -39,7 +39,7 @@ class shopsRepository{
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function ShopsAdd($dto, ?int $key = null): void {
+    public function shopsAdd($dto, ?int $key = null): void {
         $pdo = getPDO();
         $pdo->beginTransaction();
         $createdAt = date('Y-m-d H:i:s');
@@ -49,7 +49,7 @@ class shopsRepository{
 
         // 🛠️ デバッグ用：000002の時だけ通して、000001の時は強制終了して止める
         // if (($rowsToInsert['shop_code'] ?? '') === '000001') {
-        //     echo "【デバッグ】なぜか古い店舗コード(000001)のデータでShopsAddが呼ばれました！<br>";
+        //     echo "【デバッグ】なぜか古い店舗コード(000001)のデータでshopsAddが呼ばれました！<br>";
         //     echo "渡されたキー(Key)は: " . $key . " です。<br>";
         //     echo "トレース情報:<br>";
         //     debug_print_backtrace(); // どこから呼び出されたかを逆引き表示
@@ -87,7 +87,7 @@ class shopsRepository{
         //var_dump($rowsToInsert);
 
         if (($rowsToInsert['editType'] ?? '') !== '追加') {
-            echo "ShopRepository.ShopsAdd 論理エラー　edittyeが追加でない";
+            echo "ShopRepository.shopsAdd 論理エラー　edittyeが追加でない";
             exit;
         }
 
@@ -128,7 +128,7 @@ class shopsRepository{
         }
     }
 
-    public function ShopsAlt($dto, ?int $key = null): void {
+    public function shopsAlt($dto, ?int $key = null): void {
         $pdo = getPDO();
         $pdo->beginTransaction();
 
@@ -159,7 +159,7 @@ class shopsRepository{
         ");
 
         if (($rowsToAlt['editType'] ?? '') !== '更新') {
-            echo "ShopRepository.ShopsAlt 論理エラー EditTypeが不正";
+            echo "ShopRepository.shopsAlt 論理エラー EditTypeが不正";
         }
 
         try {

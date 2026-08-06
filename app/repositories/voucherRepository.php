@@ -177,7 +177,7 @@ class voucherRepository{
         }
     }
 
-    public function VcrListSearch($vcrDto) {
+    public function vcrListSearch($vcrDto) {
 
         if(!empty($vcrDto->date)){
             $from = date('Y-m-d', strtotime($vcrDto->date));

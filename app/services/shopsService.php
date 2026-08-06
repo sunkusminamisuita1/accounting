@@ -66,7 +66,7 @@ class shopsService{
         return $dto->userShops;
     }
 
-    public function ShopsAdd(shopsDto $dto){
+    public function shopsAdd(shopsDto $dto){
 
         $userId = $dto->user['id'];
 
@@ -103,7 +103,7 @@ class shopsService{
 
     } 
 
-    public function RepoDataMake(shopsDto $dto){
+    public function repoDataMake(shopsDto $dto){
   
         //     // 検索を高速化するため、セッションの店舗一覧を shop_code をキーにした連想配列に変換（準備）
         $sessionShopsArray = array_column($_SESSION['userShops'] ?? [], null, 'shop_code');
@@ -202,7 +202,7 @@ class shopsService{
 
     
 
-    public function ShopsAlt(shopsDto $dto){
+    public function shopsAlt(shopsDto $dto){
 
         $err = $this->SvcVali->commonVali($dto);
         if($err > 0){
@@ -215,11 +215,11 @@ class shopsService{
             switch($row['edittype']){
                 case '追加':
                     //var_dump($_SESSION['userShops']); exit;
-                    $this->repo->ShopsAdd($dto,$Key);
+                    $this->repo->shopsAdd($dto,$Key);
                     break;
                 case '更新':
                     //var_dump($_SESSION['userShops']); exit;
-                    $this->repo->ShopsAlt($dto,$Key);
+                    $this->repo->shopsAlt($dto,$Key);
                     break;
                 // case '削除':
                 //     //var_dump($_SESSION['userShops']); exit;

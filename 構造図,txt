@@ -21,7 +21,7 @@ test6/
 │   │             homeLib.php
 │   │       accountsService.php
 │   │       authService.php
-│   │       HomeService.php
+│   │       homeService.php
 │   │       VoucherService.php
 │   │       reportService.php
 │   │
@@ -518,3 +518,26 @@ shopsService.php
 shopsValidator.php
 procSlct.php
 shopsView.php
+
+
+
+
+未使用関数メソッド2026/08/06
+validateLogin: authorValidator.php
+validateRegister: authorValidator.php
+getTrialBalance: reportService.php
+InitializeSession: voucherService.php
+vcrCreate: voucherService.php
+vcrSimpleSearch: voucherService.php
+vcrAddRowIns: voucherService.php
+vcrSearchedDataRemake: voucherService.php
+VcrRowAddCommon: voucherService.php
+vcrTmpDataSave: voucherService.php
+vcrListSearch: voucherRepository.php
+AcctDelete: accountsRepository.php
+acctDlt: accountsRepository.php
+vcrCreData: voucherDto.php
+old: helpers.php
+dispErrorMsg: helpers.php
+show (method): helpers.php
+isPL: test.php

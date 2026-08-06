@@ -220,9 +220,9 @@
                                 <input type="hidden" name="vcrUpdDt[<?= $vcrRowNo ?>][id]" value="<?= h($row['id'] ?? '') ?>">
                                 <input type="hidden" name="vcrUpdDt[<?= $vcrRowNo ?>][voucher_id]" value="<?= h($row['voucher_id'] ?? '') ?>">
                                 <input type="hidden" name="vcrUpdDt[<?= $vcrRowNo ?>][side]" value="<?= h($row['side'] ?? '') ?>">
-                                <button name="VcrAddDebit" type="submit" value="<?= h($vcrRowNo ?? '') ?>">借方行追加</button>
-                                <button name="VcrAddCredit" type="submit" value="<?= h($vcrRowNo ?? '') ?>">貸方行追加</button>
-                                <button name="VcrDetailLineDel" type="submit" value="<?= h($vcrRowNo ?? '') ?>">行削除</button>
+                                <button name="vcrAddDebit" type="submit" value="<?= h($vcrRowNo ?? '') ?>">借方行追加</button>
+                                <button name="vcrAddCredit" type="submit" value="<?= h($vcrRowNo ?? '') ?>">貸方行追加</button>
+                                <button name="vcrDetailLineDel" type="submit" value="<?= h($vcrRowNo ?? '') ?>">行削除</button>
                               </div>    
                             </td>
                     </tr>

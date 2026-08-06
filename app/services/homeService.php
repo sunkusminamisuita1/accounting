@@ -16,7 +16,7 @@ class homeServiceCls{
 		$this->zenki_to = "";
 
 	}
-	public function HomeService(){
+	public function homeService(){
 		require_once ROOT_PATH . '/app/dto/constants.php';
 		require_once ROOT_PATH . '/app/services/lib/homeLib.php';
 		ini_set('display_errors', 1);

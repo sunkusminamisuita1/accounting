@@ -22,7 +22,7 @@ class voucherController
         $this->repo = new voucherRepository();
         $this->validator = new voucherValidator();
         $this->errMsgPopUp = new errMsgPopUp();
-        $this->dto->accounts = $this->service->getaccounts();
+        $this->dto->accounts = $this->service->getAccounts();
     }
     public function create(): void    {
         //file_put_contents('/var/www/html/test6/public/debug.log', "メソッド通ったよ！\n", FILE_APPEND);

@@ -73,7 +73,7 @@ class voucherDto
 //        $this->amount       = [];
     }
 
-    public function List()
+    public function list()
     {
         $this->dtoDetails   = $this->initDetails??[]; //初期値の明細行をDtoにセット
         $_SESSION['voucherDetail'] = $_SESSION['voucherDetail']  ?? $this->initDetails;                 //セッションに初期値の明細行を保存(Voucher.create)
@@ -107,7 +107,7 @@ class voucherDto
         }
     }
 
-    public function VcrCreData()
+    public function vcrCreData()
     {
         $this->vcrListResult = $_SESSION['voucherDetail'] ?? [];         //検索結果の配列
         unset ($_SESSION['voucherDetail']);                              //セッションの検索結果を初期化
