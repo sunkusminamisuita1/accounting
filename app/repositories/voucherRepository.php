@@ -222,9 +222,11 @@ class voucherRepository{
         if (!empty($vcrDto->listVcrNum)) {
             $sql .= " AND jv.id = :vchrnumber ";
         }
+
         if (!empty($vcrDto->summary)) {
             $sql .= " AND jv.summary LIKE :vchrsummary ";
         }
+        
         $sql .= " GROUP BY jd.voucher_id,jd.id";
 
         $stmt = $pdo->prepare($sql);    
@@ -235,6 +237,8 @@ class voucherRepository{
         ];
         if (!empty($vcrDto->listVcrNum)) $params[':vchrnumber'] = $vcrDto->listVcrNum;
         if (!empty($vcrDto->summary))   $params[':vchrsummary'] = '%' . $vcrDto->summary . '%';
+        echo "<br>xxxxxxxxxxxxxxxxxxxxxxxxx";
+        print_r($params);
         $stmt->execute($params);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }

@@ -20,7 +20,7 @@ class userRepository
         return $user ?: null;
     }
 
-    public function insert($dto): void
+    public function insert( registerDto $dto): void
     {
         $pdo = getPDO();
 
@@ -31,7 +31,7 @@ class userRepository
         ");
 
         $stmt->execute([
-            $dto->username,
+            $dto->userName,
             $dto->email,
             $dto->password,
             $dto->fiscalMonth,

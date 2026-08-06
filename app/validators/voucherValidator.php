@@ -51,26 +51,26 @@ class VoucherValidator
         $OwnUrl = $_SERVER['REQUEST_URI'];
         $OwnUrl = $protocol . $OwnUrl;
         $dto->errData = [];
-        $Start  = $dto->vcrListDatePeriod['検索開始日付'] ?? '';
-        $End    = $dto->vcrListDatePeriod['検索終了日付'] ?? '';
+        $start  = $dto->vcrListDatePeriod['検索開始日付'] ?? '';
+        $end    = $dto->vcrListDatePeriod['検索終了日付'] ?? '';
         $date   = $dto->Date??'';   //###########################
-        $_SESSION['ListInputData'] = ['検索日付' => $date , '検索開始日付'=> $Start , '検索終了日付' => $End ] ; //############################
+        $_SESSION['listInputData'] = ['検索日付' => $date , '検索開始日付'=> $start , '検索終了日付' => $end ] ; //############################
 
     //    if (empty($dto->SearchType)) {
     //         $dto->errData[$OwnUrl] = '検索条件を選択してください';
     //         return;
     //    }
         
-        if($dto->SearchType === 'simpleSearch') {    
+        if($dto->searchType === 'simpleSearch') {    
 //          日付期間のチェック　未着手
-            //var_dump($date,$Start,$End);
-            if (!empty($date) && (!empty($Start) || !empty($End))) {
+            //var_dump($date,$start,$end);
+            if (!empty($date) && (!empty($start) || !empty($end))) {
                 $dto->errData[$OwnUrl] = '日付,検索期間は同時入力不可です。';
                 return;
             }
             // 期間検索パラメータが渡されている場合、開始日と終了日の両方を必須とする
-            if(!empty($Start) || !empty($End)){
-                if (empty($Start) || empty($End)) {
+            if(!empty($start) || !empty($end)){
+                if (empty($start) || empty($end)) {
                     $dto->errData[$OwnUrl] = '期間検索では開始日付・終了日付の両方を入力してください。';
                     return;
                 }

@@ -37,7 +37,7 @@ test6/
 │   ├── Dto/                ← データ構造
 │   │       accountsDto.php
 │   │       VoucherDto.php
-│   │       Constants.php
+│   │       constants.php
 │   │       hmSvcDto.php
 │   │       loginDto.php
 │   │       PdoDto.php

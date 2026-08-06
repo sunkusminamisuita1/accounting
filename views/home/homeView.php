@@ -1,5 +1,5 @@
 <?php 
-require_once ROOT_PATH . '/app/dto/Constants.php';
+require_once ROOT_PATH . '/app/dto/constants.php';
 ?>
 <!DOCTYPE html>
     <html lang="ja">
@@ -112,7 +112,7 @@ require_once ROOT_PATH . '/app/dto/Constants.php';
 	        </thead>
 	        <tbody>
 <?php
-    foreach ($ViewResult as $row){
+    foreach ($viewResult as $row){
         if ($row['row_type'] === 'account'){
 ?>
 		        <tr>
@@ -149,7 +149,7 @@ require_once ROOT_PATH . '/app/dto/Constants.php';
 	        </thead>
 	    <tbody>
 <?php
-        foreach ($ViewResult as $row):
+        foreach ($viewResult as $row):
             if ($row['row_type'] === 'account'):
 ?>
 	            <tr>
@@ -195,7 +195,7 @@ require_once ROOT_PATH . '/app/dto/Constants.php';
 	        </thead>
 	        <tbody>
 <?php
-        foreach ($ViewResult as $row){
+        foreach ($viewResult as $row){
  ?>
 		        <tr>
 			        <td class="text-left"><?= h($row['name']) ?></td>

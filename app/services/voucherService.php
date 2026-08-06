@@ -280,7 +280,7 @@ class voucherService{
         }
         $repo->insertVoucher($dto);/////////////1
         
-        $this->vcrsimpleSearch($dto);     //削除後、最新の検索データを読み直す
+        $this->vcrSimpleSearch($dto);     //削除後、最新の検索データを読み直す
         $dto->vcrSearchedData = [];       //削除後、編集エリアをクリア
 
         return true;
@@ -293,7 +293,7 @@ class voucherService{
         $dto->vcrUpdNo  =   $_SESSION['vcrUpdNo'] ?? 0;      //セッションにvcrUpdNoをDtoに保存
         $voucherId      =   $_SESSION['vcrUpdNo'] ?? 0;       //セッションから伝票番号を取得
         $repo->jvJdDelete($dto);/////////////1
-        $this->vcrsimpleSearch($dto);     //削除後、最新の検索データを読み直す
+        $this->vcrSimpleSearch($dto);     //削除後、最新の検索データを読み直す
         $dto->vcrSearchedData = [];       //削除後、編集エリアをクリア
 
         return true;

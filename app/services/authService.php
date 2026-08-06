@@ -15,9 +15,11 @@ class authService
     public function login(loginDto $dto): array
     {
         $user = $this->repo->findByEmail($dto->email);
-        $dto->user = $user;
+
         if (!$user || !password_verify($dto->password, $user['password_hash'])) {
             throw new Exception('ログイン失敗');
+        }else {
+                $dto->user = $user;
         }
         return $user;
     }
