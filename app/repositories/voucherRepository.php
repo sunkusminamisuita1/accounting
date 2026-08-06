@@ -224,9 +224,9 @@ class voucherRepository{
         }
 
         if (!empty($vcrDto->summary)) {
-            $sql .= " AND jv.summary LIKE :vchrsummary ";
+            $sql .= " AND (jv.summary LIKE :vchrsummary OR jd.jd_summary LIKE :vchrsummary) ";
         }
-        
+
         $sql .= " GROUP BY jd.voucher_id,jd.id";
 
         $stmt = $pdo->prepare($sql);    

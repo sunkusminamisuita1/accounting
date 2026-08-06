@@ -24,14 +24,14 @@ class shopsService{
                                     ? $_SESSION['shopAltTbl'] 
                                     : $dto->shopAltTbl ;
 
-        foreach($dto->shopAltTbl as $Key => $row   )
+        foreach($dto->shopAltTbl as $key => $row   )
         {
                 $test1 = (int)trim($dto->getShopCode);
                 $test2 = (int)trim($row['shop_code']);
 
             if( $test1 === $test2 ?? 1)
             {
-                $dto->TargetShop     =   $row;
+                $dto->targetShop     =   $row;
                 return $row;
             }
         }
@@ -74,7 +74,7 @@ class shopsService{
                                         'shop_code' =>  $_POST['NewShopCode'],          'shop_name'     =>  $_POST['NewShopName'],
                                         'open_date' =>  $_POST['NewOpenDate'],          'adress'        =>  '',
                                         'closed'    =>  0,                              'closed_date'   =>  '', 
-                                        'summary'   =>  $_POST['NewSummary'],           'EditType'      =>'追加'
+                                        'summary'   =>  $_POST['NewSummary'],           'editType'      =>'追加'
                                         ]                                       
         );
     }
@@ -83,9 +83,9 @@ class shopsService{
 
         //$dto->isLocked  =   "readonly";
         
-        foreach($dto->postDt['shopsUpdDt'] as $Key => $row)
+        foreach($dto->postDt['shopsUpdDt'] as $key => $row)
         {
-            //echo "<br>llllll= {$dto->postDt['shopsUpdDt'][$Key]['deletekey']}";
+            //echo "<br>llllll= {$dto->postDt['shopsUpdDt'][$key]['deletekey']}";
             $dltKey     =   ! empty($row['deletekey'])
                             ? $row['deletekey']
                             : "";
@@ -185,7 +185,7 @@ class shopsService{
                 'summary'     => $pRow['summary'] ?? '',
                 'closed'      => $pRow['closed'] ?? '',
                 'closed_date' => $this->formatdate($pRow['closed_date'] ?? ''),
-                'edittype'    => $editType,
+                'editType'    => $editType,
                 'deleted'     => isset($pRow['deleted']) ? $pRow['deleted'] : '0'
             ];
             //echo "<br><br>";
@@ -209,27 +209,27 @@ class shopsService{
             return;
         }
 
-        foreach($dto->shopAltTbl as $Key=>$row){
+        foreach($dto->shopAltTbl as $key=>$row){
             //var_dump($row);
             //echo "<br>";
-            switch($row['edittype']){
+            switch($row['editType']){
                 case '追加':
                     //var_dump($_SESSION['userShops']); exit;
-                    $this->repo->shopsAdd($dto,$Key);
+                    $this->repo->shopsAdd($dto,$key);
                     break;
                 case '更新':
                     //var_dump($_SESSION['userShops']); exit;
-                    $this->repo->shopsAlt($dto,$Key);
+                    $this->repo->shopsAlt($dto,$key);
                     break;
                 // case '削除':
                 //     //var_dump($_SESSION['userShops']); exit;
-                //     $this->repo->ShopsDlt($dto,$Key);
+                //     $this->repo->ShopsDlt($dto,$key);
                 //     break;
                 case '': // 変更なし
                     //var_dump($_SESSION['userShops']); exit;
                     break;
                 default:
-                    echo "system error: EditType is not set.";
+                    echo "system error: editType is not set.";
                     exit;
                     break;
             }
