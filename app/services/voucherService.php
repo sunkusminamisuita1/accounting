@@ -54,7 +54,7 @@ class voucherService{
     }
 
 
-    public function VcrSimpleSearch(voucherDto $dto): void {
+    public function VcrsimpleSearch(voucherDto $dto): void {
             $dto->list(); //dtoのListメソッドで検索条件をセット
             $this->validator->list($dto);
             if(empty($dto->errData)){
@@ -280,7 +280,7 @@ class voucherService{
         }
         $repo->insertVoucher($dto);/////////////1
         
-        $this->vcrSimpleSearch($dto);     //削除後、最新の検索データを読み直す
+        $this->vcrsimpleSearch($dto);     //削除後、最新の検索データを読み直す
         $dto->vcrSearchedData = [];       //削除後、編集エリアをクリア
 
         return true;
@@ -293,7 +293,7 @@ class voucherService{
         $dto->vcrUpdNo  =   $_SESSION['VcrUpdNo'] ?? 0;      //セッションにVcrUpdNoをDtoに保存
         $voucherId      =   $_SESSION['VcrUpdNo'] ?? 0;       //セッションから伝票番号を取得
         $repo->jvJdDelete($dto);/////////////1
-        $this->vcrSimpleSearch($dto);     //削除後、最新の検索データを読み直す
+        $this->vcrsimpleSearch($dto);     //削除後、最新の検索データを読み直す
         $dto->vcrSearchedData = [];       //削除後、編集エリアをクリア
 
         return true;

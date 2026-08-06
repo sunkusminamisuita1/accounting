@@ -80,7 +80,7 @@ class voucherController
             $this->dto->list(); //dtoのListメソッドで検索条件をセット 未入力の場合はセッションから検索条件をセットするため、POSTされた検索条件をDtoにセットする前にList()メソッドを呼び出す必要があります。
 
             if (isset($_POST['simpleSearch'])) {        //修正データ一覧作成
-                $this->service->vcrSimpleSearch($this->dto , $this->repo, $this->validator);
+                $this->service->vcrsimpleSearch($this->dto , $this->repo, $this->validator);
             }
             if (isset($_POST['vcrUpdateNo'])) {         //修正対象データ　編集用データ作成
                 $this->service->vcrUpdNo($this->dto, $this->repo, $this->validator);

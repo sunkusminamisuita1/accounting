@@ -23,7 +23,7 @@ class shopController{
                                     : $_SESSION['shopAltTbl'] ;
         $_SESSION['shopAltTbl'] =   $this->dto->shopAltTbl;
 
-        $this->service   		=   new ShopsService($this->dto);
+        $this->service   		=   new shopsService($this->dto);
         $this->ctrerrMsgPopUp 	= 	new errMsgPopUp($this->dto);
 		$this->repo				=	new shopsRepository();
 		$this->ctrerrMsgPopUp   =   new errMsgPopUp($this->dto);
@@ -127,7 +127,7 @@ class shopController{
         }else{
             $ShopList   =   $this->dto->shopAltTbl??'[]';
         }
-        require ROOT_PATH.'/views/Shops/ShopsView.php';
+        require ROOT_PATH.'/views/shops/shopsView.php';
     }
 
     private function restoreEditingData(shopsDto $dto){    //すでに修正データがある場合、編集データにコピー

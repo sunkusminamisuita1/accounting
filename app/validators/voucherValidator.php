@@ -17,7 +17,7 @@ class VoucherValidator
             return;
         }
 
-        if (empty($dto->Summary)) {
+        if (empty($dto->summary)) {
             $dto->errData[$OwnUrl] = '摘要は必須です';
             return;
         }
@@ -51,8 +51,8 @@ class VoucherValidator
         $OwnUrl = $_SERVER['REQUEST_URI'];
         $OwnUrl = $protocol . $OwnUrl;
         $dto->errData = [];
-        $Start  = $dto->VcrListDatePeriod['検索開始日付'] ?? '';
-        $End    = $dto->VcrListDatePeriod['検索終了日付'] ?? '';
+        $Start  = $dto->vcrListDatePeriod['検索開始日付'] ?? '';
+        $End    = $dto->vcrListDatePeriod['検索終了日付'] ?? '';
         $date   = $dto->Date??'';   //###########################
         $_SESSION['ListInputData'] = ['検索日付' => $date , '検索開始日付'=> $Start , '検索終了日付' => $End ] ; //############################
 
@@ -61,7 +61,7 @@ class VoucherValidator
     //         return;
     //    }
         
-        if($dto->SearchType === 'SimpleSearch') {    
+        if($dto->SearchType === 'simpleSearch') {    
 //          日付期間のチェック　未着手
             //var_dump($date,$Start,$End);
             if (!empty($date) && (!empty($Start) || !empty($End))) {

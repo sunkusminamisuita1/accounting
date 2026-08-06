@@ -78,10 +78,10 @@
                     期間        
                 </td>
                 <td>
-                    開始<input type="date" name="LstVcrSearchStartDate" value="<?= h($this->VcrListDatePeriod['検索開始日付'] ?? '') ?>">
+                    開始<input type="date" name="lstVcrSearchStartDate" value="<?= h($this->vcrListDatePeriod['検索開始日付'] ?? '') ?>">
                 
                 
-                    　　　終了<input type="date" name="LstVcrSearchEndDate" value="<?= h($this->VcrListDatePeriod['検索終了日付'] ?? '') ?>">
+                    　　　終了<input type="date" name="LstVcrSearchEndDate" value="<?= h($this->vcrListDatePeriod['検索終了日付'] ?? '') ?>">
                 </td>
             </tr>
 
@@ -94,12 +94,12 @@
                 </td>
 
                 <td>
-                    <input type="text" name="listVcrSummary" value="<?= h($this->dto->Summary ?? '') ?>">
+                    <input type="text" name="listVcrSummary" value="<?= h($this->dto->summary ?? '') ?>">
                 </td>
             </tr>
         </table>
         <br>
-        <button name="SimpleSearch" type="submit" value="<?= h('SimpleSearch') ?>">検索</button>
+        <button name="simpleSearch" type="submit" value="<?= h('simpleSearch') ?>">検索</button>
     </form>
     <hr>
 
@@ -114,10 +114,10 @@
             <input type="hidden" name="csrfTokenKey" value="<?= h($tokenKey) ?>">
             <input type="hidden" name="JdId" value="<?= h($tokenKey) ?>">
             <table class="UpdTbl">
-                <?php $vcrIdSW = 0; $VcrSearchedData = $this->dto->VcrSearchedData;
+                <?php $vcrIdSW = 0; $vcrSearchedData = $this->dto->vcrSearchedData;
                         $creditAmount = 0; $debitAmount = 0; $creditName = ''; $debitName = '';
                 ?>
-                <?php foreach ($VcrSearchedData as $vcrRowNo => $row):  ?>
+                <?php foreach ($vcrSearchedData as $vcrRowNo => $row):  ?>
                     <?php if($row['side'] === 'credit') {
                         $creditAmount = (int)$row['amount']??'0';
                         $creditName = $row['name']??'';
@@ -200,7 +200,7 @@
                                                 </option>
                                             <?php endforeach; ?>
                                     </select>
-                                    <input type="hidden" name="vcrUpdDt[<?= $vcrRowNo ?>][CreditName]" value="<?= h($creditName ?? '') ?>">
+                                    <input type="hidden" name="vcrUpdDt[<?= $vcrRowNo ?>][creditName]" value="<?= h($creditName ?? '') ?>">
                                 <?php endif; ?>                           
                             </td>
                             <td  style="font-weight: bold; text-align: center;">

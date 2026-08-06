@@ -14,7 +14,7 @@ test6/
 │   │       voucherController.php
 │   │       homeController.php
 │   │       logoutController.php
-│   │       MenuController.php
+│   │       menuController.php
 │   │
 │   ├── services/           ← 業務ロジック
 │   │         └lib
@@ -517,4 +517,4 @@ shopsRepository.php
 shopsService.php
 shopsValidator.php
 procSlct.php
-ShopsView.php
+shopsView.php

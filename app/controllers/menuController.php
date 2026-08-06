@@ -1,5 +1,5 @@
 <?php
-class MenuController{
+class menuController{
 	public function login()	{
 		$message = '';
 		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
