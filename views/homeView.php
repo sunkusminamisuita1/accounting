@@ -63,7 +63,6 @@ require_once ROOT_PATH . '/app/dto/constants.php';
                 $result = [];
                 if ($reportType) {
                     if($reportType === getujiSisanhyou){
-        //                $from = $from ?? $lastDate->format('Y-m');
                         $from = date('Y-m', strtotime($from));
 ?>
                         年月：<input type="month" name="from"
@@ -72,7 +71,7 @@ require_once ROOT_PATH . '/app/dto/constants.php';
                     if($reportType === nenjiSisanhyou){
 ?>
                         年：<input type="number" name="nenji_nen" min='1900' max='2100'
-                        value="<?= h($nenji_nen) ?>" required placeholder="例: 2025">
+                        value="<?= h($dto->post['nenji_nen']) ?>" required placeholder="例: 2025">
 <?php
                         $from = isset($_GET['nenji_nen'])?$_GET['nenji_nen'] . '0101':"";
                     };
@@ -89,7 +88,7 @@ require_once ROOT_PATH . '/app/dto/constants.php';
                     if($reportType === kikanSisanhyou){
 ?>
                         開始日：<input type="date" name="from" value="<?= h($from) ?>" required>
-                        終了日：<input type="date" name="to" value="" required>
+                        終了日：<input type="date" name="to" value="<?= h($to) ?>" required>
 <?php
                     };
                 }

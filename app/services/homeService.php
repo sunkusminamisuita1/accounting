@@ -37,6 +37,7 @@ class homeServiceCls{
 		];
 		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			$pdo = getPDO();
+			var_dump($dto->post);
 // --- 1. 入力値の受け取り  ---
 			$data				=	startEnd($this->reportType);
 			$this->from			=	$data['cur']['from']??"";

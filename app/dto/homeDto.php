@@ -6,6 +6,8 @@ class homeDto{
     public int $prevTo;
     public string $activeShop;
     public string $reportType;
+    public array    $session = [];
+    public array    $post = [];
 
     public function __construct($kikan) {
         $this->from = $kikan['cur']['from'] ?? 0;
@@ -13,6 +15,7 @@ class homeDto{
         $this->prevFrom = $kikan['prev']['from'] ?? 0;
         $this->prevTo = $kikan['prev']['to'] ?? 0;
         $this->activeShop = '   all';
+        $this->reportType = '月次試算表';
     }
 }
 ?>

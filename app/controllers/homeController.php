@@ -14,6 +14,9 @@ class homeController{
         // 次回のためにセッションを更新しておく
         $_SESSION['reportType'] = $reportType;
 		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+            $dto->session   = $_SESSION;
+            $dto->post      = $_POST;
 			requireCsrf();
             requireLogin();
             if(!isset($reportType)){
@@ -22,7 +25,7 @@ class homeController{
                 exit;
             }
             //$dto->activShop  = $_SESSION['current_shop_code'] ?? '   all';
-            $dto->activeShop = $_POST['active_shop'] ?? '   all';
+            $dto->activeShop = $dto->session['activeShopCode'] ?? '   all';
             echo "dto->activeShop : {$dto->activeShop}";
             $service = new homeServiceCls($reportType );
 
@@ -33,12 +36,11 @@ class homeController{
             $to         = $service->to;
             $zenki_from = $service->zenki_from;
             $zenki_to   = $service->zenki_to;
-            //$tokenKey = $_POST['csrfTokenKey'];
-            //}else{
-            //    $tokenKey  = generateCsrfToken();
         }
+        $this->render($reportType, $from, $to, $zenki_from, $zenki_to, $viewResult);
+    }
+    function render($reportType, $from, $to, $zenki_from, $zenki_to, $viewResult) {
         $tokenKey = generateCsrfToken();
-    //    $tokenTime = $_SESSION['csrfTokens'][$tokenKey] ?? '';
         require_once ROOT_PATH . '/views/homeView.php';
     }
 }

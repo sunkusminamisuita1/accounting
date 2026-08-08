@@ -13,6 +13,7 @@ class shopsDto
     public string   $activeShopCode = "";
     public array    $postDt = [];
     public string   $isLocked; //編集エリアにエラーがなければ　readonly(view編集エリアにセット)エラーがあれば　''をセット修正可能とする。
+ 
 
     //public function __construct(string $email, string $password)
     public function __construct()

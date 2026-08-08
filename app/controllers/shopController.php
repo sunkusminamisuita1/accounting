@@ -56,6 +56,7 @@ echo "<br>targetShopId: {$targetShopId}"; var_dump($targetShopId); echo "<br>";
 				if(!$validShop){
 					echo "<br>err shopcontoroller.switch 入力shop_idがありません";exit;
 				}
+                $_SESSION['activeShopCode'] = (string)$shop['shop_code'];
 
 			}
 			// 元のページ（またはホーム）に戻す
