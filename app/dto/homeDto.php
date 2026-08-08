@@ -1,13 +1,19 @@
 <?php
 class homeDto{
-    public int $from;
-    public int $to;
-    public int $prevFrom;
-    public int $prevTo;
-    public string $activeShop;
-    public string $reportType;
+    //public int $from;
+    public array    $viewResult = [];
+    public int      $prevFrom;
+    public int      $prevTo;
+    public string   $activeShop;
     public array    $session = [];
     public array    $post = [];
+    //public string   $viewResult;
+    public string   $reportType;
+    public string   $from;
+    public string   $to;
+    public string   $zenki_from;
+    public string   $zenki_to;
+    public string   $nenji_nen;
 
     public function __construct($kikan) {
         $this->from = $kikan['cur']['from'] ?? 0;

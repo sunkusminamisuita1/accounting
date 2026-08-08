@@ -8,18 +8,18 @@ class homeController{
 
         $dto = new homeDto([]);
         $messege = "";
-        $viewResult = [];
+        $dto->viewResult = [];
         // POST > SESSION > デフォルト の優先順位で確定させる           shopsデータが入っている。$_SESSION['user_shops']
-        $reportType = $_POST['reportType'] ?? $_SESSION['reportType'] ?? '月次試算表';
+        $dto->reportType = $_POST['reportType'] ?? $_SESSION['reportType'] ?? '月次試算表';
         // 次回のためにセッションを更新しておく
-        $_SESSION['reportType'] = $reportType;
+        $_SESSION['reportType'] = $dto->reportType;
 		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             $dto->session   = $_SESSION;
             $dto->post      = $_POST;
 			requireCsrf();
             requireLogin();
-            if(!isset($reportType)){
+            if(!isset($$dto->reportType)){
                 $messege = "試算表の種類を選択してください。";
                 require_once ROOT_PATH . '/views/auth/login.php';
                 exit;
@@ -27,20 +27,26 @@ class homeController{
             //$dto->activShop  = $_SESSION['current_shop_code'] ?? '   all';
             $dto->activeShop = $dto->session['activeShopCode'] ?? '   all';
             echo "dto->activeShop : {$dto->activeShop}";
-            $service = new homeServiceCls($reportType );
+            $service = new homeServiceCls($dto->reportType );
 
             $service->homeService($dto);
-            $viewResult = $service->result;
-            $reportType = $service->reportType;
-            $from       = $service->from;
-            $to         = $service->to;
-            $zenki_from = $service->zenki_from;
-            $zenki_to   = $service->zenki_to;
+            $dto->viewResult = $service->result;
+            $dto->reportType = $service->reportType;
+            $dto->from       = $service->from;
+            $dto->to         = $service->to;
+            $dto->zenki_from = $service->zenki_from;
+            $dto->zenki_to   = $service->zenki_to;
         }
-        $this->render($reportType, $from, $to, $zenki_from, $zenki_to, $viewResult);
+        $this->render( $dto );
     }
-    function render($reportType, $from, $to, $zenki_from, $zenki_to, $viewResult) {
+    function render( $dto ) {
         $tokenKey = generateCsrfToken();
+                $today = new dateTime();
+                $dto->nenji_nen = $dto->post['nenji_nen'] ?? $dto->nenji_nen ?? "";
+                $lastDate = $today->modify('-1 month');               
+                $dto->from = $dto->from ?? $lastDate->format('Y-m-d');
+                $dto->to = $dto->to ?? date('Y-m-d');
+                $result = [];
         require_once ROOT_PATH . '/views/homeView.php';
     }
 }
