@@ -53,6 +53,22 @@ class voucherService{
         }
     }
 
+    public function vcrRowAdd($vcrDto){
+        $details = $_POST['details'] ?? [];
+        $addKey = (int)$_POST['add_row'] + 1; //追加する行の位置
+        $addRow = [['account_id' => '', 'jd_summary' => "", 'amount' => '', 'side' => 'debit']]; //初期値は借方
+        array_splice($details, $addKey, 0, $addRow);
+        $vcrDto->dtoDetails = array_values($details); // インデックスを並べ直す     saveVoucher(array $data)
+    }
+
+
+    private function VcrRowAddCommon(voucherDto $dto, voucherRepository $repo, voucherValidator $validator): void {
+        $vcrSearchedData = $_SESSION['VcrSearchedData'];
+        $dto->vcrSearchedData = $_SESSION['VcrSearchedData'];
+        $newVcrRowAddr = (int)$_POST['vcrAddDebit']  + 1;
+        $newId = $_POST['id'] ?? '';
+    }
+
 
     public function vcrSimpleSearch(voucherDto $dto): void {
             $dto->list(); //dtoのListメソッドで検索条件をセット
@@ -230,13 +246,6 @@ class voucherService{
 
     }
 
-    private function VcrRowAddCommon(voucherDto $dto, voucherRepository $repo, voucherValidator $validator): void {
-        $vcrSearchedData = $_SESSION['VcrSearchedData'];
-        $dto->vcrSearchedData = $_SESSION['VcrSearchedData'];
-        $newVcrRowAddr = (int)$_POST['vcrAddDebit']  + 1;
-        $newId = $_POST['id'] ?? '';
-    }
-
     private function vcrTmpDataSave(voucherDto $dto, voucherRepository $repo, voucherValidator $validator): void {
         $dto->vcrSearchedData = array_values($dto->vcrSearchedData); //インデックスを振り直す
         $_SESSION['VcrSearchedData'] = $dto->vcrSearchedData;//行追加・行削除後のデータをセッションに保存
@@ -297,14 +306,6 @@ class voucherService{
         $dto->vcrSearchedData = [];       //削除後、編集エリアをクリア
 
         return true;
-    }
-
-    public function vcrRowAdd($vcrDto){
-        $details = $_POST['details'] ?? [];
-        $addKey = (int)$_POST['add_row'] + 1; //追加する行の位置
-        $addRow = [['account_id' => '', 'jd_summary' => "", 'amount' => '', 'side' => 'debit']]; //初期値は借方
-        array_splice($details, $addKey, 0, $addRow);
-        $vcrDto->dtoDetails = array_values($details); // インデックスを並べ直す     saveVoucher(array $data)
     }
             
     public function vcrRowDel($vcrDto){

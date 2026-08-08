@@ -15,8 +15,14 @@ class homeServiceCls{
 		$this->zenki_from = "";
 		$this->zenki_to = "";
 
+            // $dto->reportType = $reportType;
+            // $dto->from = $_POST['from'] ?? "";
+            // $dto->to = $_POST['to'] ?? "";
+            // $dto->kijyun_nen = $_POST['kijyun_nen'] ?? "";
+            // $dto->nenji_nen = $_POST['nenji_nen'] ?? "";
+
 	}
-	public function homeService(){
+	public function homeService(homeDto $dto){
 		require_once ROOT_PATH . '/app/dto/constants.php';
 		require_once ROOT_PATH . '/app/services/lib/homeLib.php';
 		ini_set('display_errors', 1);
@@ -38,11 +44,11 @@ class homeServiceCls{
 			$this->zenki_from	=	$data['prev']['from']??"";
 			$this->zenki_to		=	$data['prev']['to']??"";
 //対象データ読込
-			$trial_cur		= 	getTrial($pdo,$this->from,$this->to);
-			$trial_cur_bs	= 	getTrial($pdo, ACCOUNT_START, $this->to);
+			$trial_cur		= 	getTrial($pdo,$this->from,$this->to,$dto);
+			$trial_cur_bs	= 	getTrial($pdo, ACCOUNT_START, $this->to ,$dto);
 			if ($this->zenki_from && $this->zenki_to) {
-				$trial_prev		= getTrial($pdo,$this->zenki_from,$this->zenki_to);
-				$trial_prev_bs	= getTrial($pdo, ACCOUNT_START, $this->zenki_to);
+				$trial_prev		= getTrial($pdo,$this->zenki_from,$this->zenki_to, $dto);
+				$trial_prev_bs	= getTrial($pdo, ACCOUNT_START, $this->zenki_to, $dto);
 			}else{
 				$trial_prev	= [];
 				$trial_prev_bs	= [];

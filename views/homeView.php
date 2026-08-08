@@ -182,8 +182,8 @@ require_once ROOT_PATH . '/app/dto/constants.php';
 <?php
     if (in_array($reportType,[zenkiHikaku])){
 ?>
-        <p>当期期間： <?= h($hmSvcInstance->from) ?> 〜 <?= h($hmSvcInstance->to) ?></p>
-        <p>前期期間： <?= h($hmSvcInstance->zenki_from) ?> 〜 <?= h($hmSvcInstance->zenki_to) ?></p>
+        <p>当期期間： <?= h($service->from) ?> 〜 <?= h($service->to) ?></p>
+        <p>前期期間： <?= h($service->zenki_from) ?> 〜 <?= h($service->zenki_to) ?></p>
         <table>
 	        <thead>
 		        <tr>

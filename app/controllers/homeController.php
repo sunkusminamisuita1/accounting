@@ -4,6 +4,9 @@ class homeController{
         require_once ROOT_PATH . '/app/services/lib/homeLib.php';
         require_once ROOT_PATH . '/app/services/homeService.php';
         require_once ROOT_PATH . '/app/controllers/lib/auth.php';
+        require_once ROOT_PATH . '/app/dto/homeDto.php';
+
+        $dto = new homeDto([]);
         $messege = "";
         $viewResult = [];
         // POST > SESSION > デフォルト の優先順位で確定させる           shopsデータが入っている。$_SESSION['user_shops']
@@ -18,21 +21,25 @@ class homeController{
                 require_once ROOT_PATH . '/views/auth/login.php';
                 exit;
             }
-            $hmSvcInstance = new homeServiceCls($reportType);
-            $hmSvcInstance->homeService();
-            $viewResult = $hmSvcInstance->result;
-            $reportType = $hmSvcInstance->reportType;
-            $from = $hmSvcInstance->from;
-            $to = $hmSvcInstance->to;
-            $zenki_from = $hmSvcInstance->zenki_from;
-            $zenki_to = $hmSvcInstance->zenki_to;
+            //$dto->activShop  = $_SESSION['current_shop_code'] ?? '   all';
+            $dto->activeShop = $_POST['active_shop'] ?? '   all';
+            echo "dto->activeShop : {$dto->activeShop}";
+            $service = new homeServiceCls($reportType );
+
+            $service->homeService($dto);
+            $viewResult = $service->result;
+            $reportType = $service->reportType;
+            $from       = $service->from;
+            $to         = $service->to;
+            $zenki_from = $service->zenki_from;
+            $zenki_to   = $service->zenki_to;
             //$tokenKey = $_POST['csrfTokenKey'];
             //}else{
             //    $tokenKey  = generateCsrfToken();
         }
         $tokenKey = generateCsrfToken();
     //    $tokenTime = $_SESSION['csrfTokens'][$tokenKey] ?? '';
-        require_once ROOT_PATH . '/views/home/homeView.php';
+        require_once ROOT_PATH . '/views/homeView.php';
     }
 }
 

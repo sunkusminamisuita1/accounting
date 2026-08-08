@@ -35,7 +35,7 @@ class shopController{
 	{
 		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			$targetShopId = $_POST['active_shop'] ?? '';
-
+echo "<br>targetShopId: {$targetShopId}"; var_dump($targetShopId); echo "<br>";
 			// 所有している店舗リストの中に、選択されたIDが存在するか安全チェック
 			$validShop = false;
 			if ($targetShopId === '   all') {

@@ -77,7 +77,7 @@ $_SESSION['current_route'] = $requestRoute;
                                 <?php echo htmlspecialchars($shop['shop_name'], ENT_QUOTES, 'UTF-8'); ?>
                             </option>
                         <?php endforeach; ?>
-                        <option value="all" <?php echo ($_SESSION['current_shop_code'] === 'all') ? 'selected' : ''; ?>>【全店合算（連結決算）】</option>
+                        <option value="   all" <?php echo ($_SESSION['current_shop_code'] === '   all') ? 'selected' : ''; ?>>【全店合算（連結決算）】</option>
                     </select>
                 </form>
             </div>

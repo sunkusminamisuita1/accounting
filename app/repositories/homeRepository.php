@@ -1,5 +1,5 @@
 <?php
-function getTrial($from,$to){
+function getTrial($from, $to, $dto ){
 	$pdo = getPDO();
     $pdoDto = new pdoDto($pdo);
     $pdo = $pdoDto->instncPdo;
@@ -18,12 +18,14 @@ function getTrial($from,$to){
 		JOIN accounts a 			ON jd.account_id = a.id
 		WHERE jv.voucher_date BETWEEN :from AND :to
 			AND jv.user_id = :userId
+			AND jv.shop_code = :shopCode
 		GROUP BY a.id, a.name, a.type, jd.side
 		ORDER BY a.id
 		";
 		$userId = $_SESSION['user']['user_id'];
+		$shopCode = $dto->activeShop ?? '   all';
 		$stmt = $pdo->prepare($sql);
-		$stmt->execute([':from' => $from, ':to' => $to, ':userId' => $userId]);
+		$stmt->execute([':from' => $from, ':to' => $to, ':userId' => $userId, ':shopCode' => $shopCode]);
 		$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 	$trial = [];
 	foreach ($rows as $row) {
