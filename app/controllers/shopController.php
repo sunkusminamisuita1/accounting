@@ -33,6 +33,7 @@ class shopController{
 
     public function switch()
 	{
+echo "<br>shopController.switch start<br>";
 		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			$targetShopId = $_POST['active_shop'] ?? '';
 echo "<br>targetShopId: {$targetShopId}"; var_dump($targetShopId); echo "<br>";
@@ -48,6 +49,7 @@ echo "<br>targetShopId: {$targetShopId}"; var_dump($targetShopId); echo "<br>";
 
 					if ((string)$shop['shop_code'] === $targetShopId) {
 						$_SESSION['current_shop_code'] = (string)$shop['shop_code'];
+                        echo "<br>shopController.switch shop_code: " . var_dump($_SESSION['current_shop_code']) . "<br>";
 						$_SESSION['current_shop_name'] = (string)$shop['shop_name'];
 						$validShop = true;
 						break;

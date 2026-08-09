@@ -54,6 +54,7 @@ class shopsService{
 
         $dto->shopAltTbl             =   $dto->userShops; //Shop修正用テーブル作成
         // 初期選択店舗として、リストの先頭にある店舗のIDを「現在の操作店舗」としてセット
+        //echo "<br>shopsService.getShopsData dto->userShops: "; var_dump($dto->userShops); echo "<br>";
         if (!empty($dto->userShops)??"") {
             $_SESSION['current_shop_code'] = $dto->userShops[0]['shop_code']; 
             $_SESSION['current_shop_name'] = $dto->userShops[0]['shop_name'];

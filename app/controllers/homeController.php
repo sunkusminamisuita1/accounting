@@ -19,14 +19,14 @@ class homeController{
             $dto->post      = $_POST;
 			requireCsrf();
             requireLogin();
-            if(!isset($$dto->reportType)){
+            if(!isset($dto->reportType)){
                 $messege = "試算表の種類を選択してください。";
                 require_once ROOT_PATH . '/views/auth/login.php';
                 exit;
             }
-            //$dto->activShop  = $_SESSION['current_shop_code'] ?? '   all';
+            //$dto->activShop  = $_SESSION['current_shop_code'] ?? '   all';   //$_SESSION['current_shop_code']
             $dto->activeShop = $dto->session['activeShopCode'] ?? '   all';
-            echo "dto->activeShop : {$dto->activeShop}";
+            //echo "dto->activeShop : {$dto->activeShop}";
             $service = new homeServiceCls($dto->reportType );
 
             $service->homeService($dto);

@@ -66,9 +66,9 @@ require_once ROOT_PATH . '/app/dto/constants.php';
                     if($dto->reportType  === nenjiSisanhyou){
 ?>
                         年：<input type="number" name="nenji_nen" min='1900' max='2100'
-                        value="<?= h($dto->post['nenji_nen']) ?>" required placeholder="例: 2025">
+                        value="<?= h($dto->post['nenji_nen'] ?? "") ?>" required placeholder="例: 2025">
 <?php
-                        $dto->from = isset($_GET['nenji_nen'])?$_GET['nenji_nen'] . '0101':"";
+                        $dto->from = isset($_GET['nenji_nen']) ? $_GET['nenji_nen'] . '0101' : "";
                     };
                     if($dto->reportType  === ruisekiSisanhyou){
 ?>

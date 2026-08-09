@@ -70,7 +70,63 @@ function applyAccountingRule($row){
 	};
 }
 //DB読込集計
-function getTrial($pdo,$from,$to){
+function YYYgetTrial($pdo, $from, $to, $dto ){
+	//echo "aaaaaaaaaaaaaa";exit;
+	//$pdo = getPDO();
+    //$pdoDto = new pdoDto($pdo);
+    //$pdo = $pdoDto->instncPdo;
+
+	//呼び出し元の情報を取得
+	//$trace = debug_backtrace();
+    //echo "<br>////////////////////////////////////////////////////////////////<br>";
+	//print_r($trace[1]); // 呼び出し元フレーム
+    //echo "<br>////////////////////////////////////////////////////////////////<br>";
+	if(!$from || !$to){
+		return [];
+	};
+	$sql = 
+		"SELECT	
+			a.id		as account_id,
+			a.name	as name,
+			a.type	as type,
+			jd.side,
+			SUM(jd.amount) AS total
+		FROM journal_details jd
+		JOIN journal_vouchers jv	ON jd.voucher_id = jv.id
+		JOIN accounts a 			ON jd.account_id = a.id
+		WHERE jv.voucher_date BETWEEN :from AND :to
+			AND jv.user_id = :userId
+			AND jv.shop_code = :shopCode
+		GROUP BY a.id, a.name, a.type, jd.side
+		ORDER BY a.id
+		";
+		//$userId = $_SESSION['user']['user_id'];
+		$userId = $_SESSION['user']['id'];
+		$shopCode = $dto->activeShop ?? '   all';
+		$stmt = $pdo->prepare($sql);
+		$stmt->execute([':from' => $from, ':to' => $to, ':userId' => $userId, ':shopCode' => $shopCode]);
+		$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+		echo "<br>入力ショップコード: " . var_dump($shopCode) . "<br>";
+	$trial = [];
+	foreach ($rows as $row) {
+		echo "<br>journal_vouchers: " . var_dump($row) . "<br>";exit;
+
+		$id = $row['account_id'];
+		if (!isset($trial[$id])) {
+			$trial[$id] = ['name'	=> $row['name'],
+						'type'	=> $row['type'],
+						'debit'	=> 0,
+						'credit'	=> 0
+			];
+		}
+		$trial[$id][$row['side']] += $row['total'];
+	}
+	return $trial;
+}
+
+
+//下記は古い仕様
+function XXgetTrial($pdo,$from,$to){
 	if(!$from || !$to){
 		return [];
 	};
