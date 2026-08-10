@@ -35,7 +35,7 @@ class homeRepository{
 			";
 			//$userId = $_SESSION['user']['user_id'];  ############################   $dto->activeShop
 			$userId = $_SESSION['user']['id'];
-			$shopCode = $dto->activeShop ?? '   all';
+			$shopCode = $dto->session['current_shop_code'] ?? '   all';
 
 			if($shopCode !== '   all'){
 				$sql = $sql0 . $sql2 . $sql3 ;
@@ -58,7 +58,7 @@ class homeRepository{
 			echo "<br>入力ショップコード: " . var_dump($shopCode) . "<br>";
 		$trial = [];
 		foreach ($rows as $row) {
-			echo "<br>journal_vouchers: " . var_dump($row) . "<br>";exit;
+			//echo "<br>journal_vouchers: " . var_dump($row) . "<br>";exit;
 
 			$id = $row['account_id'];
 			if (!isset($trial[$id])) {

@@ -63,7 +63,7 @@ $_SESSION['current_route'] = $requestRoute;
 
     <tr>
 
-        <?= var_dump($_SESSION['current_shop_code'])  ?> xxxxxxxxxxxxx<br>
+        <?= var_dump($_SESSION['current_shop_code'])  ?> procslct<br>
 
         <td colspan="<?= count($display_buttons) + 1; ?>" style="text-align: center; padding-bottom: 15px;">
 
