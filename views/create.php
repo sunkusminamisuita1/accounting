@@ -2,7 +2,7 @@
 <!-- ##############     エラーメッセージ表示    ################ -->
 <?=  $this->errMsgPopUp->Show($this->dto);  ?>
 <?php
-require_once ROOT_PATH . '/views/lib/procSlct.php';
+require_once ROOT_PATH . '/views/procSlct.php';
 $details = $this->dto->dtoDetails;
 ?>
 <?php if (!empty($this->dto->errData)): ?>

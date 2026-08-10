@@ -130,7 +130,7 @@ echo "<br>targetShopId: {$targetShopId}"; var_dump($targetShopId); echo "<br>";
         }else{
             $ShopList   =   $this->dto->shopAltTbl??'[]';
         }
-        require ROOT_PATH.'/views/shops/shopsView.php';
+        require ROOT_PATH.'/views/shopsView.php';
     }
 
     private function restoreEditingData(shopsDto $dto){    //すでに修正データがある場合、編集データにコピー

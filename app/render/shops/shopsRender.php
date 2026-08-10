@@ -6,6 +6,6 @@
         }else{
             $ShopList   =   $dto->shopAltTbl??'[]';
         }
-        require ROOT_PATH.'/views/shops/shopsView.php';
+        require ROOT_PATH.'/views/shopsView.php';
     }
 ?>

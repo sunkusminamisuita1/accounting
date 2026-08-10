@@ -32,7 +32,7 @@ require_once ROOT_PATH . '/app/dto/constants.php';
 
                         <?php
                             //echo "qqqqqqq : {$_GET['route']}";
-                            require_once ROOT_PATH.'/views/lib/procSlct.php'; 
+                            require_once ROOT_PATH.'/views/procSlct.php'; 
                         ?>
 
                     <h2>試算表表示：<?= $dto->reportType ?></h2>

@@ -37,7 +37,7 @@
 <?php unset($_SESSION['flash_message']); endif; ?>
 
     <?php
-        require_once ROOT_PATH . '/views/lib/procSlct.php';
+        require_once ROOT_PATH . '/views/procSlct.php';
     ?>
     <?php if (!empty($this->ctrDto->errData)): ?>
         <ul style="color: red;">

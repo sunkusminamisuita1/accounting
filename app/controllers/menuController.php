@@ -26,7 +26,7 @@ class menuController{
 		}else{
 			$tokenKey  = generateCsrfToken();
 		}
-		require ROOT_PATH.'/views/auth/login.php';
+		require ROOT_PATH.'/views/login.php';
 	}
 
 	//誤って、削除(いつ削除したかは不明)　以降はvscodeで再実装してもらった。2026-08-4

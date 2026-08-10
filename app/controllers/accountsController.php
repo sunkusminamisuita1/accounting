@@ -63,7 +63,7 @@ class accountsController {
 
             $tokenKey = generateCsrfToken();
             $accounts   =   $this->ctrDto->acctAltTbl;
-        require ROOT_PATH.'/views/accounts/accountsView.php';
+        require ROOT_PATH.'/views/accountsView.php';
     }
 
     private function restoreEditingData(accountsDto $dto){    //すでに修正データがある場合、編集データにコピー

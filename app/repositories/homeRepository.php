@@ -58,7 +58,7 @@ class homeRepository{
 			echo "<br>入力ショップコード: " . var_dump($shopCode) . "<br>";
 		$trial = [];
 		foreach ($rows as $row) {
-			//echo "<br>journal_vouchers: " . var_dump($row) . "<br>";exit;
+			//echo "<br>homeRepository.getTrial  journal_vouchers: " . var_dump($row) . "<br>";exit;
 
 			$id = $row['account_id'];
 			if (!isset($trial[$id])) {

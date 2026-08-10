@@ -69,7 +69,7 @@ class voucherController
     public function index() {
         $userId = getLoginUserId();
         $vouchers = $this->service->list($userId);
-        require ROOT_PATH.'/views/voucher/index.php';
+        require ROOT_PATH.'/views/index2.php';
     }
 
     // 修正、削除データ検索
@@ -129,7 +129,7 @@ class voucherController
     public function edit(){
         $id = (int)($_GET['id'] ?? 0);
         $voucher = $this->service->find($id);
-        require ROOT_PATH.'/views/voucher/edit.php';
+        require ROOT_PATH.'/views/edit.php';
     }
 
     // 更新
@@ -150,11 +150,11 @@ class voucherController
         $tokenKey = $this->tokenKey;
         if($renderType === 'create'){
 
-            require ROOT_PATH . '/views/voucher/create.php';
+            require ROOT_PATH . '/views/create.php';
             return 1;
         }
         if($renderType === 'list'){
-            require ROOT_PATH.'/views/voucher/list.php';
+            require ROOT_PATH.'/views/list.php';
             return 1;
         }
     }

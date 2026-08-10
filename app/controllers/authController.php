@@ -38,7 +38,7 @@ class authController{
         }else{
             $tokenKey = generateCsrfToken();
         }
-        require ROOT_PATH.'/views/auth/login.php';
+        require ROOT_PATH.'/views/login.php';
     }
 
     public function register()
@@ -63,7 +63,7 @@ class authController{
             }
         }
         $tokenKey = generateCsrfToken();
-        require ROOT_PATH.'/views/auth/register.php';
+        require ROOT_PATH.'/views/register.php';
     }
 }
 ?>

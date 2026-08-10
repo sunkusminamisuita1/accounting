@@ -17,14 +17,8 @@ class homeServiceCls{
 		$this->zenki_from = "";
 		$this->zenki_to = "";
 		$this->repo = new homeRepository();
-
-            // $dto->reportType = $reportType;
-            // $dto->from = $_POST['from'] ?? "";
-            // $dto->to = $_POST['to'] ?? "";
-            // $dto->kijyun_nen = $_POST['kijyun_nen'] ?? "";
-            // $dto->nenji_nen = $_POST['nenji_nen'] ?? "";
-
 	}
+
 	public function homeService(homeDto $dto){
 		require_once ROOT_PATH . '/app/dto/constants.php';
 		require_once ROOT_PATH . '/app/services/lib/homeLib.php';
@@ -40,7 +34,6 @@ class homeServiceCls{
 		];
 		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			$pdo = getPDO();
-			//var_dump($dto->post);
 		// --- 1. 入力値の受け取り  ---
 			$data				=	$this->startEnd($this->reportType);
 			$this->from			=	$data['cur']['from']??"";
@@ -49,7 +42,6 @@ class homeServiceCls{
 			$this->zenki_to		=	$data['prev']['to']??"";
 		//対象データ読込
 			$x = ACCOUNT_START;
-			echo "<br>xxxxxxxxxxxx{$x}xxxxxxxxxxxx<br>";
 			$trial_cur		= 	$this->repo->getTrial($pdo,$this->from,$this->to,$dto);
 			$trial_cur_bs	= 	$this->repo->getTrial($pdo, ACCOUNT_START, $this->to ,$dto);
 			if ($this->zenki_from && $this->zenki_to) {

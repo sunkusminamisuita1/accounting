@@ -21,14 +21,10 @@ class homeController{
             requireLogin();
             if(!isset($dto->reportType)){
                 $messege = "試算表の種類を選択してください。";
-                require_once ROOT_PATH . '/views/auth/login.php';
+                require_once ROOT_PATH . '/views/login.php';
                 exit;
             }
-            //$dto->activShop  = $_SESSION['current_shop_code'] ?? '   all';   //$_SESSION['current_shop_code']
-            
-            //$dto->activeShop = $dto->session['activeShopCode'] ??  $dto->session['current_shop_code'] ?? '   all';
-            
-            //echo "dto->activeShop :" . var_dump($dto->session) . "homeController.index<br>";
+
             $service = new homeServiceCls($dto->reportType );
 
             $service->homeService($dto);
