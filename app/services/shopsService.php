@@ -19,6 +19,7 @@ class shopsService{
     {
 
         $dto->getShopCode   =   isset($_POST['active_shop']) ? $_POST['active_shop'] : '     1';
+        ////////////////////////$dto->getShopCode   =   isset($_POST['active_shop']) ? $_POST['active_shop'] : '     1';
 
         $dto->shopAltTbl    =   empty($dto->shopAltTbl) 
                                     ? $_SESSION['shopAltTbl'] 
@@ -28,13 +29,17 @@ class shopsService{
         {
                 $test1 = (int)trim($dto->getShopCode);
                 $test2 = (int)trim($row['shop_code']);
+                /////////////////////////////////$test1 = (string) $dto->getShopCode;
+                /////////////////////////////////$test2 = (string) $row['shop_code'];
 
-            if( $test1 === $test2 ?? 1)
+            if( $test1 === $test2 ?? 1 )
             {
                 $dto->targetShop     =   $row;
                 return $row;
             }
         }
+        echo "<br>shopsService(renewTargetShopCode) test1: " . var_dump($test1) . "<br>";
+        echo "<br>shopsService(renewTargetShopCode) test2: " . var_dump($test2) . "<br>";
         echo "エラー shopsService(renewTargetShopCode) 入力された店名がありません。";
         exit;
 

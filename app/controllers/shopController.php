@@ -80,7 +80,7 @@ echo "<br>targetShopId: {$targetShopId}"; var_dump($targetShopId); echo "<br>";
 		    requireCsrf();
 
 			//procSlct.phpでShopCodeが変更できるため、最新のShopCodeをサービスに設定
-			$this->service->renewTargetShopCode($this->dto);
+			//$this->service->renewTargetShopCode($this->dto);
 
             $this->dto->postDt = $_POST ?? '';
 

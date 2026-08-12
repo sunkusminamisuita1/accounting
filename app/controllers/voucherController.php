@@ -33,7 +33,7 @@ class voucherController
             requireCsrf();
             $this->service->vcrCreate($this->dto);
             // POST を処理した後は再描画用に新しいトークンを発行する
-            $this->tokenKey = generateCsrfToken();
+            $this->tokenKey  = generateCsrfToken();
         }else{
             $this->tokenKey  = generateCsrfToken();          
         }

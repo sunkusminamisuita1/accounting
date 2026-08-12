@@ -12,7 +12,7 @@ class VoucherValidator
         $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https://" : "http://";
         $OwnUrl = $_SERVER['REQUEST_URI'];
         $OwnUrl = $protocol . $OwnUrl;
-        if (empty($dto->Date)) {
+        if (empty($dto->date)) {
             $dto->errData[$OwnUrl] = '日付は必須です';
             return;
         }

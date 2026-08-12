@@ -44,6 +44,7 @@ class voucherService{
             $this->vcrRowDel($dto);
         }
         if (isset($_POST['save'])) {
+            $dto->date = $_POST['voucher_date'] ?? "" ;
             $this->validator->Create($dto);
             $this->vcrSave($dto,$this->validator);
             if(empty($dto->errData)) {

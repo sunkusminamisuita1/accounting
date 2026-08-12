@@ -74,5 +74,5 @@ $details = $this->dto->dtoDetails;
         <?php endforeach; ?>
 
     </table>
-    <button name="save" type="submit">保存</button>
+    <button name="save" type="submit" value="on" >保存</button>
 </form>

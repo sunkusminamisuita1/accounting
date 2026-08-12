@@ -132,7 +132,7 @@ class voucherRepository{
             
             $stmt = $pdo->prepare("
                 INSERT INTO journal_vouchers
-                    (voucher_date, summary, user_id, shop_code created_at)
+                    (voucher_date, summary, user_id, shop_code, created_at)
                     VALUES (?,?,?,?,?)
             ");
             $stmt->execute([
