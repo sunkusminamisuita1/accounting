@@ -1,7 +1,7 @@
 <?php
 ?>
 <style>
-    .TxtBoxLineDel{
+    .txtBoxLineDel{
         /*テキストボックス枠線なし*/outline: none;
         border: none;
         background: #e7edf8; 
@@ -79,7 +79,7 @@
                                     <tr style="background-color: #ffffff; font-weight: bold; text-align: center;">
 
                                         <td>                           <!--   店舗番号   -->
-                                            <input class="TxtBoxLineDel" style="width: 90%; text-align: center;" 
+                                            <input class="txtBoxLineDel" style="width: 90%; text-align: center;" 
                                                 maxlength="6" 
                                                 inputmode="numeric" 
                                                 pattern="[0-9]{6}" 
@@ -89,26 +89,26 @@
                                         </td>
 
                                         <td style="text-align: left;">  <!--   店舗名称   -->
-                                            <input class="TxtBoxLineDel" style="width: 90%; text-align: center;" 
+                                            <input class="txtBoxLineDel" style="width: 90%; text-align: center;" 
                                                 type="text" name="newShopName"
                                                 value="<?= h($newShopName ?? '' ) ?>">
                                         </td>
 
                                         <td style="text-align: left;">  <!--   開業日   -->
-                                            <input class="TxtBoxLineDel" style="width: 90%;" 
+                                            <input class="txtBoxLineDel" style="width: 90%;" 
                                                 type="text" name="newOpenDate" 
                                                 value="<?= h($newOpenDate ?? '' ) ?>">
                                         </td>
 
                                         <td style="text-align: left;">  <!--   摘要   -->
-                                            <input class="TxtBoxLineDel" style="width: 90%;" 
+                                            <input class="txtBoxLineDel" style="width: 90%;" 
                                                 type="text" name="newSummary" 
                                                 value="<?= h($newSummary ?? '' ) ?>">
 
                                         </td>
 
                                         <td style="font-color: #ff0000;">    <!--   エラーメッセージ   -->
-                                            <input class="TxtBoxLineDel" style="width: 90%;" type="text" 
+                                            <input class="txtBoxLineDel" style="width: 90%;" type="text" 
                                                 name="newErrmsg"
                                                 value="<?= h($newErrMsg ?? '' )  ?>" >
                                         </td>
@@ -168,7 +168,7 @@
                                         <tr style="background-color: #ffffff; font-weight: bold; text-align: center;">
 
                                             <td>                           <!--   店舗番号　pri-key   -->
-                                                <input class="TxtBoxLineDel" style="width: 90%; text-align: center;" 
+                                                <input class="txtBoxLineDel" style="width: 90%; text-align: center;" 
                                                     maxlength="6" 
                                                     inputmode="numeric" 
                                                     pattern="[0-9]{6}" 
@@ -178,20 +178,20 @@
                                             </td>
 
                                             <td style="text-align: left;">  <!--   店舗名称   -->
-                                                <input class="TxtBoxLineDel" style="width: 90%; text-align: center;" 
+                                                <input class="txtBoxLineDel" style="width: 90%; text-align: center;" 
                                                     type="text" name="shopsUpdDt[<?= $Key ?>][shop_name]"
                                                     value="<?= h($row['shop_name']) ?? '' ?>" readonly>
                                             </td>
 
                                             <td style="text-align: left;">  <!--   開業日   -->
-                                                <input class="TxtBoxLineDel" style="width: 90%;" 
+                                                <input class="txtBoxLineDel" style="width: 90%;" 
                                                     type="text" name="shopsUpdDt[<?= $Key ?>][open_date]" 
                                                     value="<?= h($row['open_date']) ?? '' ?>" <?= $isLocked??'' ?> 
                                                 >
                                             </td>
 
                                             <td style="text-align: left;">  <!--   摘要   -->
-                                                <input class="TxtBoxLineDel" style="width: 90%;" 
+                                                <input class="txtBoxLineDel" style="width: 90%;" 
                                                     type="text" name="shopsUpdDt[<?= $Key ?>][summary]" 
                                                     value="<?= h($row['summary']) ?? '' ?>"  <?= $isLocked??'' ?> 
                                                 >
@@ -207,7 +207,7 @@
                                                             $checked = 'checked';
                                                     }
                                                 ?>
-                                                <input class="TxtBoxLineDel" style="width: 90%;" type="checkbox" 
+                                                <input class="txtBoxLineDel" style="width: 90%;" type="checkbox" 
                                                     name="shopsUpdDt[<?= $Key ?>][closed]" value="1"
                                                     <?= $checked ?>
                                                     <?= $isLocked??'' ?> 
@@ -215,14 +215,14 @@
                                             </td>
 
                                             <td>                            <!--   閉店日   -->
-                                                <input class="TxtBoxLineDel" style="width: 90%;" type="text" 
+                                                <input class="txtBoxLineDel" style="width: 90%;" type="text" 
                                                     name="shopsUpdDt[<?= $Key ?>][closed_date]" 
                                                     value="<?= h($row['closed_date']) ?? '' ?>"  <?= $isLocked??'' ?>
                                                 >
                                             </td>                                          
 
                                             <td style="font-color: #ff0000;">    <!--   エラーメッセージ   -->
-                                                <input class="TxtBoxLineDel" style="width: 90%;" type="text" 
+                                                <input class="txtBoxLineDel" style="width: 90%;" type="text" 
                                                     name="shopsUpdDt[<?= $Key ?>][errmsg]"
                                                     value="<?= h($row['errmsg'] ?? '')  ?>" readonly>
                                             </td>
@@ -237,7 +237,7 @@
                                                             $checked = 'checked';
                                                     }
                                                 ?>                                                
-                                                <input class="TxtBoxLineDel" style="width: 90%;" type="checkbox" 
+                                                <input class="txtBoxLineDel" style="width: 90%;" type="checkbox" 
                                                     name="shopsUpdDt[<?= $Key ?>][deleted]" value="1"
                                                     <?= $checked ?>
                                                    <?= $isLocked??'' ?>

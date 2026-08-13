@@ -1,7 +1,7 @@
 <?php
 ?>
 <style>
-    .TxtBoxLineDel{
+    .txtBoxLineDel{
     /*テキストボックス枠線なし*/outline: none;
     border: none;
     background: #e7edf8;
@@ -99,17 +99,17 @@
                                         <input type="hidden" name="viewEditKey" value="<?= h($Key) ?>">
                                         <tr style="background-color: #ffffff; font-weight: bold; text-align: center;">
                                             <td>                           <!--   行番号　pri-key   -->
-                                                <input class="TxtBoxLineDel" style="width: 90%; text-align: center;" 
+                                                <input class="txtBoxLineDel" style="width: 90%; text-align: center;" 
                                                     type="text" name="AcctUpdDt[<?= $Key ?>][id]"
                                                     value="<?= h($row['id']) ?? '' ?>" readonly>
                                             </td>
                                             <td style="text-align: left;">  <!--   ユーザーID   -->
-                                                <input class="TxtBoxLineDel" style="width: 90%; text-align: center;" 
+                                                <input class="txtBoxLineDel" style="width: 90%; text-align: center;" 
                                                     type="text" name="AcctUpdDt[<?= $Key ?>][user_id]"
                                                     value="<?= h($row['user_id']) ?? '' ?>" readonly>
                                             </td>
                                             <td style="text-align: left;">  <!--   勘定科目名   -->
-                                                <input class="TxtBoxLineDel" style="width: 90%;" 
+                                                <input class="txtBoxLineDel" style="width: 90%;" 
                                                     type="text" name="AcctUpdDt[<?= $Key ?>][name]" 
                                                     value="<?= h($row['name']) ?? '' ?>">
                                             </td>
@@ -125,18 +125,18 @@
                                                     <?php endforeach; ?>
 
                                                 </select>
-                                                <!-- <input class="TxtBoxLineDel" style="width: 90%; text-align: center;" 
+                                                <!-- <input class="txtBoxLineDel" style="width: 90%; text-align: center;" 
                                                     type="hidden" name="AcctUpdDt[<?php //echo $Key ?>][type]" 
                                                     value="<?//php echo h($row['type']) ?? '' ?>"
                                                 > -->
                                             </td>
                                             <td style="font-color: #ff0000;">    <!--   エラーメッセージ   -->
-                                                <input class="TxtBoxLineDel" style="width: 90%;" type="text" 
+                                                <input class="txtBoxLineDel" style="width: 90%;" type="text" 
                                                     name="AcctUpdDt[<?= $Key ?>][errmsg]"
                                                     value="<?= h($row['errmsg'] ?? '')  ?>" readonly>
                                             </td>
                                             <td>                            <!--   削除チェックボックス   -->
-                                                <input class="TxtBoxLineDel" style="width: 90%;" type="checkbox" 
+                                                <input class="txtBoxLineDel" style="width: 90%;" type="checkbox" 
                                                     name="AcctUpdDt[<?= $Key ?>][del]" value="On"
                                                     <?php if (isset($row['edittype']) && $row['edittype'] === '削除') { 
                                                         echo 'checked'; } ?>

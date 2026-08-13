@@ -343,7 +343,7 @@ function isPL($type) {
 	</head>
 	<body>
 	<h1>ホーム画面</h1>
-	<p>ようこそ <?= htmlspecialchars($_SESSION['user']['username'] ?? 'ゲスト') ?></p>
+	<p>ようこそ <?= htmlspecialchars($_SESSION['user']['userName'] ?? 'ゲスト') ?></p>
 	<form action="index.php?route=logout" method="post">
 		<input type="hidden" name="csrfToken" value="<?= h(generateCsrfToken()) ?>">
 		<button type="submit">ログアウト</button>

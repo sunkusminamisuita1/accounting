@@ -61,11 +61,11 @@ class shopsService{
         // 初期選択店舗として、リストの先頭にある店舗のIDを「現在の操作店舗」としてセット
         //echo "<br>shopsService.getShopsData dto->userShops: "; var_dump($dto->userShops); echo "<br>";
         if (!empty($dto->userShops)??"") {
-            $_SESSION['current_shop_code'] = $dto->userShops[0]['shop_code']; 
+            $_SESSION['currentShopCode'] = $dto->userShops[0]['shop_code']; 
             $_SESSION['current_shop_name'] = $dto->userShops[0]['shop_name'];
         } else {
         // 店舗が未登録の場合のフォールバック
-            $_SESSION['current_shop_code'] = 0;
+            $_SESSION['currentShopCode'] = 0;
             $_SESSION['current_shop_name'] = "店舗未登録";
         }
 

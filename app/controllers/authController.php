@@ -49,7 +49,7 @@ class authController{
             try {
                 require_once ROOT_PATH.'/app/dto/registerDto.php';
                 $dto =  new registerDto(
-                                        trim($_POST['username']),
+                                        trim($_POST['userName']),
                                         trim($_POST['email']),
                                         $_POST['password'],
                                         (int)$_POST['fiscal_month'],

@@ -22,7 +22,7 @@ class accountsDto{
 
     public function __construct()    {
         $this->id          =   $_SESSION['user']['id']??'0';  //UserId
-        $this->userName    =   $_SESSION['user']['username']??'';  //UserId
+        $this->userName    =   $_SESSION['user']['userName']??'';  //UserId
         $this->email       =   $_SESSION['user']['email']??'';  //UserId
         $this->accounts    =   [];
         $this->accountsType =  ['収益',

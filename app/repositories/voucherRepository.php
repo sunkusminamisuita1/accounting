@@ -139,7 +139,7 @@ class voucherRepository{
                 $dto->date,
                 $dto->summary  ,
                 $_SESSION['user']['id'],
-                $_SESSION['current_shop_code'] ?? '',
+                $_SESSION['currentShopCode'] ?? '',
                 date('Y-m-d H:i:s')
             ]);
 

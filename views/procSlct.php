@@ -63,13 +63,13 @@ $_SESSION['current_route'] = $requestRoute;
 
     <tr>
 
-        <!-- <?= var_dump($_SESSION['current_shop_code'])  ?> procslct<br> -->
+        <!-- <?= var_dump($_SESSION['currentShopCode'])  ?> procslct<br> -->
 
         <td colspan="<?= count($display_buttons) + 1; ?>" style="text-align: center; padding-bottom: 15px;">
 
             <div class="shop-selector-container" style="display: inline-block; text-align: left;">
-                <!-- <p>ようこそ <?= htmlspecialchars($_SESSION['user']['username'] ?? 'ゲスト') ?></p> -->
-                <label for="active_shop">ようこそ <?= htmlspecialchars($_SESSION['user']['username'] ?? 'ゲスト') ?>
+                <!-- <p>ようこそ <?= htmlspecialchars($_SESSION['user']['userName'] ?? 'ゲスト') ?></p> -->
+                <label for="active_shop">ようこそ <?= htmlspecialchars($_SESSION['user']['userName'] ?? 'ゲスト') ?>
                 　　現在の操作店舗：</label>
                 <!-- フォームを配置し、methodをpostにする -->
                 <form action="index.php?route=shop.switch" method="POST" id="shop_selector_form" style="display: inline;">
@@ -79,13 +79,13 @@ $_SESSION['current_route'] = $requestRoute;
                         <?php foreach ($_SESSION['userShops'] as $shop): ?>
 
                             <option value="<?php echo $shop['shop_code']; ?>" 
-                                <?php echo ($shop['shop_code'] == $_SESSION['current_shop_code']) ? 'selected' : ''; ?>>
+                                <?php echo ($shop['shop_code'] == $_SESSION['currentShopCode']) ? 'selected' : ''; ?>>
                                 <?php echo htmlspecialchars($shop['shop_name'], ENT_QUOTES, 'UTF-8'); ?>
                             </option>
 
                         <?php endforeach; ?>
 
-                        <option value="   all" <?php echo ($_SESSION['current_shop_code'] === '   all') ? 'selected' : ''; ?>>
+                        <option value="   all" <?php echo ($_SESSION['currentShopCode'] === '   all') ? 'selected' : ''; ?>>
                             【全店合算（連結決算）】</option>
                     </select>
                 </form>
@@ -103,11 +103,11 @@ $_SESSION['current_route'] = $requestRoute;
                     <form action="index.php?route=shop.switch" method="POST" id="shop_selector_form">
                         <select name="active_shop" id="active_shop" onchange="document.getElementById('shop_selector_form').submit();">
                             <?php foreach ($_SESSION['user_shops'] as $shop): ?>
-                                <option value="<?php echo $shop['id']; ?>" <?php echo ($shop['id'] == $_SESSION['current_shop_code']) ? 'selected' : ''; ?>>
+                                <option value="<?php echo $shop['id']; ?>" <?php echo ($shop['id'] == $_SESSION['currentShopCode']) ? 'selected' : ''; ?>>
                                     <?php echo htmlspecialchars($shop['shop_name'], ENT_QUOTES, 'UTF-8'); ?>
                                 </option>
                             <?php endforeach; ?>
-                            <option value="all" <?php echo ($_SESSION['current_shop_code'] === 'all') ? 'selected' : ''; ?>>【全店合算（連結決算）】</option>
+                            <option value="all" <?php echo ($_SESSION['currentShopCode'] === 'all') ? 'selected' : ''; ?>>【全店合算（連結決算）】</option>
                         </select>
                     </form>
                 </div>

@@ -28,7 +28,7 @@ require_once ROOT_PATH . '/app/dto/constants.php';
 
 
                     <h1>ホーム画面</h1>
-                        <!-- <p>ようこそ <?= htmlspecialchars($_SESSION['user']['username'] ?? 'ゲスト') ?></p> -->
+                        <!-- <p>ようこそ <?= htmlspecialchars($_SESSION['user']['userName'] ?? 'ゲスト') ?></p> -->
 
                         <?php
                             //echo "qqqqqqq : {$_GET['route']}";

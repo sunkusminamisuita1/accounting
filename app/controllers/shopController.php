@@ -43,15 +43,15 @@ echo "<br>targetShopId: {$targetShopId}"; var_dump($targetShopId); echo "<br>";
 			$validShop = false;
 			if ($targetShopId === '   all') {
 				$validShop = true;
-				$_SESSION['current_shop_code'] = '   all';
+				$_SESSION['currentShopCode'] = '   all';
 				$_SESSION['current_shop_name'] = '全店合算';
 			} else {
 
 				foreach ($_SESSION['shopAltTbl'] as $i=>$shop) {
 
 					if ((string)$shop['shop_code'] === $targetShopId) {
-						$_SESSION['current_shop_code'] = (string)$shop['shop_code'];
-                        echo "<br>shopController.switch shop_code: " . var_dump($_SESSION['current_shop_code']) . "<br>";
+						$_SESSION['currentShopCode'] = (string)$shop['shop_code'];
+                        echo "<br>shopController.switch shop_code: " . var_dump($_SESSION['currentShopCode']) . "<br>";
 						$_SESSION['current_shop_name'] = (string)$shop['shop_name'];
 						$validShop = true;
 						break;

@@ -19,7 +19,7 @@ class AuthValidator
 
     public function validateRegister(registerDto $dto): void
     {
-        if (empty($dto->username)) {
+        if (empty($dto->userName)) {
             throw new Exception('ユーザー名は必須です');
         }
 

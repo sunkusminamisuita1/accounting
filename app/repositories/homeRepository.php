@@ -35,7 +35,7 @@ class homeRepository{
 			";
 			//$userId = $_SESSION['user']['user_id'];  ############################   $dto->activeShop
 			$userId = $_SESSION['user']['id'];
-			$shopCode = $dto->session['current_shop_code'] ?? '   all';
+			$shopCode = $dto->session['currentShopCode'] ?? '   all';
 
 			if($shopCode !== '   all'){
 				$sql = $sql0 . $sql2 . $sql3 ;

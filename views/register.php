@@ -13,7 +13,7 @@
 		<input type="hidden" name="csrfTokenKey" value="<?= h($tokenKey) ?>">
 
 			<p>ユーザー名
-				<input type="text" name="username" required>
+				<input type="text" name="userName" required>
 			</p>
 
 			<p>	メールアドレス
