@@ -100,7 +100,7 @@ echo "<br>targetShopId: {$targetShopId}"; var_dump($targetShopId); echo "<br>";
                 case '登録実行': //新規登録データを編集エリアに追加する
                     $this->newShopRegisterBkup = $this->dto->shopAltTbl;
                     $iserror = $this->shopsVali->newRegister($this->dto);
-                    if( ! $iserr){
+                    if( ! $iserror){
                         $this->service->shopsAdd($this->dto);
                     }
                     break;
@@ -143,7 +143,7 @@ echo "<br>targetShopId: {$targetShopId}"; var_dump($targetShopId); echo "<br>";
             $ShopList   =   $this->dto->shopAltTbl??'[]';
         }
         //新規登録のrender
-        echo "aaaaaaa";
+        //echo "aaaaaaa";
         if($_POST['shopsPfm'] ?? '' === '登録実行'){
             
             $newShopsCode   =   $this->dto->newShopCode ?? '';
@@ -153,7 +153,7 @@ echo "<br>targetShopId: {$targetShopId}"; var_dump($targetShopId); echo "<br>";
             $newErrMsg      =   $this->dto->newErrMsg ?? '';
 
         
-            echo "<br>errmsg: " . var_dump($this->dto->postDt) . "<br>";
+            //echo "<br>errmsg: " . var_dump($this->dto->postDt) . "<br>";
             //if($iserror){
             //    echo "mmmmmmmmmmmm";
             //}

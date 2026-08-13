@@ -237,8 +237,8 @@ class voucherRepository{
         ];
         if (!empty($vcrDto->listVcrNum)) $params[':vchrnumber'] = $vcrDto->listVcrNum;
         if (!empty($vcrDto->summary))   $params[':vchrsummary'] = '%' . $vcrDto->summary . '%';
-        echo "<br>xxxxxxxxxxxxxxxxxxxxxxxxx";
-        print_r($params);
+        //echo "<br>xxxxxxxxxxxxxxxxxxxxxxxxx";
+        //print_r($params);
         $stmt->execute($params);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }

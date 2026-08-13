@@ -18,13 +18,13 @@
     }
 </style>
 <!-- ##############     エラーメッセージ表示    ################ -->
-    <?php if (!empty($this->dto->errData)): ?>
+    <!-- <?php if (!empty($this->dto->errData)): ?>
         <ul style="color: red;">
             <?php foreach ($this->dto->errData as $mod => $err): ?>
                 <li><?= h($mod) . ": " . h($err) ?></li>
             <?php endforeach; ?>
         </ul>
-    <?php endif; ?>
+    <?php endif; ?> -->
 
 <!-- #############     エラーメッセージ POPUP    ############### -->
 
