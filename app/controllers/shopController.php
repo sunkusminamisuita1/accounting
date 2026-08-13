@@ -11,6 +11,7 @@ class shopController{
 	public		  $repo;
 	//public		  $ctrerrMsgPopUp;
     private       $shopsVali;
+    private       $newShopRegisterBkup;
 
 	public function __construct()
     {
@@ -28,6 +29,7 @@ class shopController{
 		$this->repo				=	new shopsRepository();
 		$this->ctrerrMsgPopUp   =   new errMsgPopUp($this->dto);
         $this->shopsVali        =   new shopsValidator('');
+        $this->newShopRegisterBkup = [];
 		
     }
 
@@ -82,19 +84,25 @@ echo "<br>targetShopId: {$targetShopId}"; var_dump($targetShopId); echo "<br>";
 			//procSlct.phpでShopCodeが変更できるため、最新のShopCodeをサービスに設定
 			//$this->service->renewTargetShopCode($this->dto);
 
-            $this->dto->postDt = $_POST ?? '';
+            $this->dto->postDt = $_POST ?? [];
+            $this->dto->sessionDt   =   $_SESSION ?? [];
 
             $viewEditKey = $_POST['viewEditKey'] ?? null; //修正表　行インデックス
 
             $this->restoreEditingData($this->dto);
+
+
 
             $_SESSION['isValidated']    =   '';
 
             switch($_POST['shopsPfm']){
 
                 case '登録実行': //新規登録データを編集エリアに追加する
-                    $this->service->shopsAdd($this->dto);
-                    $this->shopsVali->commonVali($this->dto);
+                    $this->newShopRegisterBkup = $this->dto->shopAltTbl;
+                    $iserror = $this->shopsVali->newRegister($this->dto);
+                    if( ! $iserr){
+                        $this->service->shopsAdd($this->dto);
+                    }
                     break;
 
                 case '修正実行':  //shopAltTblの内容をDBに反映する。     
@@ -123,12 +131,32 @@ echo "<br>targetShopId: {$targetShopId}"; var_dump($targetShopId); echo "<br>";
     }
 //
     private function render(){
-        
+
+        //CSRFトークンを生成してセッションに保存
         $tokenKey = generateCsrfToken();
+
+        //修正実行時のrender
+
         if(empty($this->dto->shopAltTbl??'[]')){
             $ShopList   =   $this->service->getShopsData($this->dto);
         }else{
             $ShopList   =   $this->dto->shopAltTbl??'[]';
+        }
+        //新規登録のrender
+        echo "aaaaaaa";
+        if($_POST['shopsPfm'] ?? '' === '登録実行'){
+            
+            $newShopsCode   =   $this->dto->newShopCode ?? '';
+            $newShopName    =   $this->dto->newShopName ?? '';
+            $newOpenDate    =   $this->dto->newOpenDate ?? '';
+            $newSummary     =   $this->dto->newSummary ?? '';
+            $newErrMsg      =   $this->dto->newErrMsg ?? '';
+
+        
+            echo "<br>errmsg: " . var_dump($this->dto->postDt) . "<br>";
+            //if($iserror){
+            //    echo "mmmmmmmmmmmm";
+            //}
         }
         require ROOT_PATH.'/views/shopsView.php';
     }

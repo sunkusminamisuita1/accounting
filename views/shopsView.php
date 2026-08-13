@@ -84,32 +84,32 @@
                                                 inputmode="numeric" 
                                                 pattern="[0-9]{6}" 
                                                 placeholder="例: 000001" 
-                                                type="text" name="NewShopCode"
+                                                type="text" name="newShopCode"
                                                 value="<?= h($newShopsCode ?? '' )?>" >
                                         </td>
 
                                         <td style="text-align: left;">  <!--   店舗名称   -->
                                             <input class="TxtBoxLineDel" style="width: 90%; text-align: center;" 
-                                                type="text" name="NewShopName"
+                                                type="text" name="newShopName"
                                                 value="<?= h($newShopName ?? '' ) ?>">
                                         </td>
 
                                         <td style="text-align: left;">  <!--   開業日   -->
                                             <input class="TxtBoxLineDel" style="width: 90%;" 
-                                                type="text" name="NewOpenDate" 
+                                                type="text" name="newOpenDate" 
                                                 value="<?= h($newOpenDate ?? '' ) ?>">
                                         </td>
 
                                         <td style="text-align: left;">  <!--   摘要   -->
                                             <input class="TxtBoxLineDel" style="width: 90%;" 
-                                                type="text" name="NewSummary" 
+                                                type="text" name="newSummary" 
                                                 value="<?= h($newSummary ?? '' ) ?>">
 
                                         </td>
 
                                         <td style="font-color: #ff0000;">    <!--   エラーメッセージ   -->
                                             <input class="TxtBoxLineDel" style="width: 90%;" type="text" 
-                                                name="NewErrmsg"
+                                                name="newErrmsg"
                                                 value="<?= h($newErrMsg ?? '' )  ?>" >
                                         </td>
                                     </tr>

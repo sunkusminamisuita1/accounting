@@ -76,11 +76,11 @@ class shopsService{
 
         $userId = $dto->user['id'];
 
-        array_unshift($dto->shopAltTbl,['id'        =>  null,                           'user_id'       =>  (int)$userId, 
-                                        'shop_code' =>  $_POST['NewShopCode'],          'shop_name'     =>  $_POST['NewShopName'],
-                                        'open_date' =>  $_POST['NewOpenDate'],          'adress'        =>  '',
-                                        'closed'    =>  0,                              'closed_date'   =>  '', 
-                                        'summary'   =>  $_POST['NewSummary'],           'editType'      =>'追加'
+        array_unshift($dto->shopAltTbl,['id'        =>  null,                         'user_id'     =>  (int)$userId ?? 0, 
+                                        'shop_code' =>  $_POST['newShopCode'] ?? '',  'shop_name'   =>  $_POST['newShopName'] ?? '',
+                                        'open_date' =>  $_POST['newOpenDate'] ?? '',  'adress'      =>  '',
+                                        'closed'    =>  0,                            'closed_date' =>  '', 
+                                        'summary'   =>  $_POST['newSummary'] ?? '',   'editType'    =>'追加'
                                         ]                                       
         );
     }

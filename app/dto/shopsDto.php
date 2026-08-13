@@ -12,7 +12,9 @@ class shopsDto
     public array    $shopAltTbl =[]; //ショップ　修正用テーブル
     public string   $activeShopCode = "";
     public array    $postDt = [];
+    public array    $sessionDt =[];
     public string   $isLocked; //編集エリアにエラーがなければ　readonly(view編集エリアにセット)エラーがあれば　''をセット修正可能とする。
+    public string   $newErrMsg //新規登録時　validate エラーメッセージ格納エリア
  
 
     //public function __construct(string $email, string $password)

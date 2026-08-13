@@ -20,6 +20,53 @@ class shopsValidator
         }
     }
 
+    public function newRegister(shopsDto $dto): int
+    {
+        // パスカルケース（大文字始まり）だったローカル変数を、PHPで一般的なキャメルケース（小文字始まり）に統一
+        $errFlg = 0;
+        $dto->isLocked   = '';
+
+        $this->log("バリデーション開始。対象データ数: " . count($dto->shopAltTbl));
+        //var_dump($dto->shopAltTbl);exit;
+
+        // 1. 店舗番号チェック
+        $shopCode = trim((string)$dto->postDt['newShopCode']);
+            //店番を正規表現で'000001'~'999999'でチェック
+        $shopNoPattern  =   '/^\d{6}$/';
+        if ( ! preg_match($shopNoPattern , $shopCode) ) {
+            $dto->newErrMsg = "shopsvali  店番は半角数字６桁で入力してください。";
+            $errFlg++;
+        }
+        if ($shopCode === '000000') {
+            $dto->newErrMsg = "shopsvali 000000は無効な店番です（000001以上）。";
+            $errFlg++;
+        }
+
+        // 3. 必須・店舗名チェック
+        $shopName = trim(mb_convert_kana($row['shop_name'] ?? '', "s", "UTF-8"));
+        if ($shopName === '') {
+            $dto->newErrMsg = "店舗名は必須です。";
+            $errFlg++;
+        }
+        if (mb_strlen($shopName, 'UTF-8') > 50) {
+            $dto->newErrMsg = "店舗名は50文字以内で入力してください。";
+            $errFlg++;
+        }
+
+        if ($errFlg > 0) {
+            $dto->errData['shopValidator.commonVali'] = "登録エラーが存在します。エラーを修正してください。";
+            $dto->isLocked   = '';
+        }else{
+            $dto->isLocked   = 'readonly';
+        }
+
+        $this->log("バリデーション終了。エラー数: " . $errFlg);
+
+        return $errFlg;
+
+
+    }
+
     public function commonVali(shopsDto $dto): int
     {
         // パスカルケース（大文字始まり）だったローカル変数を、PHPで一般的なキャメルケース（小文字始まり）に統一
@@ -32,15 +79,15 @@ class shopsValidator
         foreach ($dto->shopAltTbl as $key => $row) 
         {
             // 1. 店舗番号チェック
-            $ShopCode = trim((string)$row['shop_code']);
+            $shopCode = trim((string)$row['shop_code']);
                 //店番を正規表現で'000001'~'999999'でチェック
-            $ShopNoPattern  =   '/^\d{6}$/';
-            if ( ! preg_match($ShopNoPattern , $ShopCode) ) {
+            $shopNoPattern  =   '/^\d{6}$/';
+            if ( ! preg_match($shopNoPattern , $shopCode) ) {
                 $dto->shopAltTbl[$key]['errmsg'] = "shopsvali  店番は半角数字６桁で入力してください。";
                 $errFlg++;
                 continue;
             }
-            if ($ShopCode === '000000') {
+            if ($shopCode === '000000') {
                 $dto->shopAltTbl[$key]['errmsg'] = "shopsvali 000000は無効な店番です（000001以上）。";
                 $errFlg++;
                 continue;
@@ -53,13 +100,13 @@ class shopsValidator
             }
 
             // 3. 必須・店舗名チェック
-            $ShopName = trim(mb_convert_kana($row['shop_name'] ?? '', "s", "UTF-8"));
-            if ($ShopName === '') {
+            $shopName = trim(mb_convert_kana($row['shop_name'] ?? '', "s", "UTF-8"));
+            if ($shopName === '') {
                 $dto->shopAltTbl[$key]['errmsg'] = "店舗名は必須です。";
                 $errFlg++;
                 continue;
             }
-            if (mb_strlen($ShopName, 'UTF-8') > 50) {
+            if (mb_strlen($shopName, 'UTF-8') > 50) {
                 $dto->shopAltTbl[$key]['errmsg'] = "店舗名は50文字以内で入力してください。";
                 $errFlg++;
                 continue;
