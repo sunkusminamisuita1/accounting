@@ -10,10 +10,8 @@ $all_routes = [
     'voucher.create' => '仕分処理',
     'voucher.list'   => '仕分伝票修正',
     'accounts.edit'  => '勘定科目追加',
-    'voucher.delete' => '仕分削除',
-    'voucher.index'  => '仕分一覧',
-    'logout'         => 'ログアウト',
-    'shop.edit'      => '店舗情報編集'
+    'shop.edit'      => '店舗情報編集',
+    'logout'         => 'ログアウト'
 //    $url             => '戻る', //呼び出し元に戻るボタンを追加  
 ];
 
