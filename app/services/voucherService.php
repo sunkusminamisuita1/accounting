@@ -45,7 +45,7 @@ class voucherService{
         }
         if (isset($_POST['save'])) {
             $dto->date = $_POST['voucher_date'] ?? "" ;
-            $this->validator->Create($dto);
+            $this->validator->create($dto);
             $this->vcrSave($dto,$this->validator);
             if(empty($dto->errData)) {
                 $dto->InitDetailsDto(); //保存成功後、Dtoの明細行を初期化

@@ -49,11 +49,35 @@
 
     <!-- ##############     エラーメッセージ表示    ################ -->
     <?=  $this->ctrerrMsgPopUp->Show($this->ctrDto);  ?>
-    <hr>
+    <!--<hr>
     <h3>下表の勘定科目を追加・修正・削除<br><br>
     <div style="text-align: center;">表の修正完了後、修正実行ボタンを押してください。</div>
-    </h3>
+    </h3> -->
     <form method="POST" action="index.php?route=accounts.edit">
+        <!-- <div style="text-align: center;" >
+            <input type="hidden" name="csrfTokenKey" value="<?= h($tokenKey) ?>">
+            <button name="AcctPfm" type="submit"
+                onclick="return confirm
+                    ('勘定科目 修正欄の内容をデータベースに登録します。\n本当に変更してもよろしいですか？');"  
+                    value="<?= h('修正実行') ?>" >修正実行
+            </button>
+            <button name="AcctPfm" type="submit"
+                onclick="return confirm
+                    ('勘定科目 修正欄の内容を、もとに戻します。\nよろしいですか？');"  
+                    value="<?= h('キャンセル') ?>" >キャンセル
+            </button>
+        </div> -->
+        <!--</form>$$$$$$$$$$$$$$$$$$$$$$$-->
+
+        <table class="UpdTbl" >
+
+            <tbody>
+                <tr>
+                    <td style="width: 50%; vertical-align: top;">
+                        <!-- <div>これは左側です。</div> -->
+                        <h3>下表の勘定科目を追加・修正・削除<br><br>
+                            <div style="text-align: center;">表の修正完了後、修正実行ボタンを押してください。</div>
+                        </h3>
         <div style="text-align: center;" >
             <input type="hidden" name="csrfTokenKey" value="<?= h($tokenKey) ?>">
             <button name="AcctPfm" type="submit"
@@ -67,14 +91,6 @@
                     value="<?= h('キャンセル') ?>" >キャンセル
             </button>
         </div>
-        <!--</form>$$$$$$$$$$$$$$$$$$$$$$$-->
-
-        <table class="UpdTbl" >
-
-            <tbody>
-                <tr>
-                    <td style="width: 50%; vertical-align: top;">
-                        <div>これは左側です。</div>
 
                         <!--<form method="POST" action="index.php?route=accounts.edit">$$$$$$$$$$$$$$$$$$$$$$-->
                             <!--<input type="hidden" name="csrfTokenKey" value="<?= h($tokenKey) ?>">-->

@@ -55,7 +55,7 @@ class homeRepository{
 
 			
 			$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-			echo "<br>入力ショップコード: " . var_dump($shopCode) . "<br>";
+			//echo "<br>入力ショップコード: " . var_dump($shopCode) . "<br>";
 		$trial = [];
 		foreach ($rows as $row) {
 			//echo "<br>homeRepository.getTrial  journal_vouchers: " . var_dump($row) . "<br>";exit;

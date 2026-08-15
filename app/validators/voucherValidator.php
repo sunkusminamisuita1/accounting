@@ -9,9 +9,16 @@ class VoucherValidator
 
     public function create(VoucherDto $dto): void
     {
+        $_SESSION['dtoDetail'] = $dto->dtoDetails; //エラー発生時、入力データを復元するためにPOSTされた明細行をセッションに保存する。
         $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https://" : "http://";
         $OwnUrl = $_SERVER['REQUEST_URI'];
         $OwnUrl = $protocol . $OwnUrl;
+        //var_dump($dto->session['currentShopCode'] ?? 'xxxxxxxxxxxxxxx');
+        if ((trim($dto->session['currentShopCode'] ?? '')) === 'all') {
+            $dto->errData[$OwnUrl] = '仕分け伝票作成で全店は選択できません。店舗を選択してください。';
+            return;
+        }
+
         if (empty($dto->date)) {
             $dto->errData[$OwnUrl] = '日付は必須です';
             return;

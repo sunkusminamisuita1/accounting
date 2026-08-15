@@ -178,6 +178,7 @@ class voucherRepository{
     }
 
     public function vcrListSearch($vcrDto) {
+        //echo "current shop code : " . var_dump($_SESSION['currentShopCode']) . "<br>";exit;
 
         if(!empty($vcrDto->date)){
             $from = date('Y-m-d', strtotime($vcrDto->date));
@@ -205,6 +206,7 @@ class voucherRepository{
                 jd.id as JdId,
                 jv.voucher_date,
                 jv.summary,
+                jv.shop_code,
                 a.id as account_id,
                 a.name,
                 a.type,
@@ -216,9 +218,16 @@ class voucherRepository{
             JOIN journal_details jd ON jv.id            = jd.voucher_id
             JOIN accounts a         ON jd.account_id    = a.id
             WHERE jv.user_id = :user_id
-              AND jv.voucher_date BETWEEN :from AND :to";             
+              AND jv.voucher_date BETWEEN :from AND :to
+              ";
 
         // 条件がある場合だけ絞り込むロジック
+        $params0 = [];
+        if (trim($vcrDto->session['currentShopCode']) !== 'all') {
+            $sql .= " AND jv.shop_code = :shop_code ";
+            $params0 = [':shop_code' => $vcrDto->session['currentShopCode']];
+        }
+
         if (!empty($vcrDto->listVcrNum)) {
             $sql .= " AND jv.id = :vchrnumber ";
         }
@@ -229,16 +238,20 @@ class voucherRepository{
 
         $sql .= " GROUP BY jd.voucher_id,jd.id";
 
-        $stmt = $pdo->prepare($sql);    
-        $params = [
+        $stmt = $pdo->prepare($sql); 
+        
+        $params1 = [
             ':from'   => $from,
             ':to'     => $to,
-            ':user_id' => $userId
+            ':user_id' => $userId,
         ];
+        $params = array_merge($params1, $params0);
         if (!empty($vcrDto->listVcrNum)) $params[':vchrnumber'] = $vcrDto->listVcrNum;
         if (!empty($vcrDto->summary))   $params[':vchrsummary'] = '%' . $vcrDto->summary . '%';
-        //echo "<br>xxxxxxxxxxxxxxxxxxxxxxxxx";
-        //print_r($params);
+        // echo "<br>sql:";
+        // print_r($sql);
+        // echo "<br>params:";
+        // print_r($params);
         $stmt->execute($params);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }

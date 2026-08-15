@@ -2,6 +2,7 @@
 class homeDto{
     //public int $from;
     public array    $viewResult = [];
+    public array    $errData = [];
     public int      $prevFrom;
     public int      $prevTo;
     public string   $activeShop;

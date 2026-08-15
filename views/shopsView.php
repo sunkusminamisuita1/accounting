@@ -229,14 +229,14 @@
                             
 
                                             <td>                            <!--   行削除チェックボックス   -->     
-                                                 <?php
+                                                <?php
                                                     $checked = '';
                                                     if (!empty($row['deleted']) || 
                                                        (!empty($_POST['shopsUpdDt'][$Key]['deleted']) && 
                                                        $_POST['shopsUpdDt'][$Key]['deleted'] === '1')) {
                                                             $checked = 'checked';
                                                     }
-                                                ?>                                                
+                                                ?>
                                                 <input class="txtBoxLineDel" style="width: 90%;" type="checkbox" 
                                                     name="shopsUpdDt[<?= $Key ?>][deleted]" value="1"
                                                     <?= $checked ?>

@@ -67,7 +67,7 @@ $_SESSION['current_route'] = $requestRoute;
 
             <div class="shop-selector-container" style="display: inline-block; text-align: left;">
                 <!-- <p>ようこそ <?= htmlspecialchars($_SESSION['user']['userName'] ?? 'ゲスト') ?></p> -->
-                <label for="active_shop">ようこそ <?= htmlspecialchars($_SESSION['user']['userName'] ?? 'ゲスト') ?>
+                <label for="active_shop">ようこそ <?= htmlspecialchars($_SESSION['user']['username'] ?? 'ゲスト') ?>
                 　　現在の操作店舗：</label>
                 <!-- フォームを配置し、methodをpostにする -->
                 <form action="index.php?route=shop.switch" method="POST" id="shop_selector_form" style="display: inline;">

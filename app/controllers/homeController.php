@@ -14,12 +14,26 @@ class homeController{
         // 次回のためにセッションを更新しておく
         $_SESSION['reportType'] = $dto->reportType;
 		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            echo  "<br>試算表ボタン：";
+            if($_POST['sisanhyouSwitch'] ?? "" === "switch"){
+                echo "on";
+            }else{
+                echo "off " . true;
+            };
 
             $dto->session   = $_SESSION;
             $dto->post      = $_POST;
-			requireCsrf();
-            requireLogin();
-            if(!isset($dto->reportType)){
+            requireCsrf();
+                requireLogin();
+                require_once ROOT_PATH . '/app/validators/homeValidator.php';
+                $validator = new homeValidator();
+                $err = $validator->commonVali($dto);
+                if ($err > 0) {
+                    // バリデーションエラーがある場合は集計処理を行わず、レンダリングして終了
+                    $this->render($dto);
+                    return;
+                }
+                if(!isset($dto->reportType)){
                 $messege = "試算表の種類を選択してください。";
                 require_once ROOT_PATH . '/views/login.php';
                 exit;
@@ -39,12 +53,13 @@ class homeController{
     }
     function render( $dto ) {
         $tokenKey = generateCsrfToken();
-                $today = new dateTime();
-                $dto->nenji_nen = $dto->post['nenji_nen'] ?? $dto->nenji_nen ?? "";
-                $lastDate = $today->modify('-1 month');               
-                $dto->from = $dto->from ?? $lastDate->format('Y-m-d');
-                $dto->to = $dto->to ?? date('Y-m-d');
-                $result = [];
+        $today = new dateTime();
+        $dto->nenji_nen = $dto->post['nenji_nen'] ?? $dto->nenji_nen ?? "";
+        $lastDate = $today->modify('-1 month');               
+        $dto->from = $dto->from ?? $lastDate->format('Y-m-d');
+        $dto->to = $dto->to ?? date('Y-m-d');
+        $result = [];
+        $currentReport = $dto->post['reportType'] ?? '';                
         require_once ROOT_PATH . '/views/homeView.php';
     }
 }

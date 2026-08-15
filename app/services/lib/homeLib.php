@@ -106,7 +106,7 @@ function YYYgetTrial($pdo, $from, $to, $dto ){
 		$stmt = $pdo->prepare($sql);
 		$stmt->execute([':from' => $from, ':to' => $to, ':userId' => $userId, ':shopCode' => $shopCode]);
 		$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-		echo "<br>入力ショップコード: " . var_dump($shopCode) . "<br>";
+		//echo "<br>入力ショップコード: " . var_dump($shopCode) . "<br>";
 	$trial = [];
 	foreach ($rows as $row) {
 		echo "<br>journal_vouchers: " . var_dump($row) . "<br>";exit;

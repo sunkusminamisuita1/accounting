@@ -31,6 +31,11 @@ class voucherController
         $accounts = $this->dto->accounts;
         if ($_SERVER['REQUEST_METHOD'] === 'POST'){
             requireCsrf();
+            $this->dto->post = $_POST;
+            $this->dto->session = $_SESSION;
+            // $this->dto->vcrCreData();                           //dtoにPOSTされた明細行を渡す
+            // $details = $this->dto->dtoDetails;                  //dtoから明細行を取得
+            // $accounts = $this->dto->accounts;
             $this->service->vcrCreate($this->dto);
             // POST を処理した後は再描画用に新しいトークンを発行する
             $this->tokenKey  = generateCsrfToken();
@@ -75,8 +80,11 @@ class voucherController
     // 修正、削除データ検索
     public function list() {
         $this->dto->list(); //dtoのListメソッドで検索条件をセット
+        $this->dto->dtoDetails = $_SESSION['dtoDetail'] ?? $this->dto->initDetails; //エラーからの復帰時、入力データを復元するためにPOSTされた明細行をセッションからDtoにセットする。
         if ($_SERVER['REQUEST_METHOD'] === 'POST'){
             requireCsrf();                              //CSRFトークンの検証
+            $this->dto->session = $_SESSION;
+            $this->dto->post = $_POST; 
             $this->dto->list(); //dtoのListメソッドで検索条件をセット 未入力の場合はセッションから検索条件をセットするため、POSTされた検索条件をDtoにセットする前にList()メソッドを呼び出す必要があります。
 
             if (isset($_POST['simpleSearch'])) {        //修正データ一覧作成
@@ -145,11 +153,11 @@ class voucherController
         exit;
     }
     private function render($renderType) {
-        $vcrListResult = $dto->vcrListResult ?? [];
-        $accounts = $this->dto->accounts ?? [];
-        $tokenKey = $this->tokenKey;
+        $vcrListResult  = $this->dto->vcrListResult ?? [];
+        $accounts       = $this->dto->accounts ?? [];
+        $tokenKey       = $this->tokenKey;
         if($renderType === 'create'){
-
+            $details = $this->dto->dtoDetails;
             require ROOT_PATH . '/views/create.php';
             return 1;
         }

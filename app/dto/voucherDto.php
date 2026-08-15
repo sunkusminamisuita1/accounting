@@ -21,6 +21,8 @@ class voucherDto
     public $vcrUpdNo = 0;
     public $vcrDeleteNo = 0;//vcrlistで伝票削除行の行番号を格納する変数(voucher_id)
     public array $vcrInputData = []; //vcrlistで検索条件を格納する配列
+    public array $post = [];
+    public array $session = [];
 
 
     public function __construct(array $details)
