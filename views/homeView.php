@@ -239,7 +239,7 @@ document.addEventListener('DOMContentLoaded', function(){
     if (in_array($dto->reportType,[zenkiHikaku])){
 ?>
         <p>当期期間： <?= h($dto->from) ?> 〜 <?= h($dto->to) ?></p>
-        <p>前期期間： <?= h($dto->zenki_from) ?> 〜 <?= h($dto->zenki_to) ?></p>
+        <p>前期期間： <?= h($dto->zenki_from) ?? '' ?> 〜 <?= h($dto->zenki_to) ?? '' ?></p>
         <table>
 	        <thead>
 		        <tr>

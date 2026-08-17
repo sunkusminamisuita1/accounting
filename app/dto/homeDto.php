@@ -23,6 +23,8 @@ class homeDto{
         $this->prevTo = $kikan['prev']['to'] ?? 0;
         $this->activeShop = '   all';
         $this->reportType = '月次試算表';
+        $this->zenki_from = '';
+        $this->zenki_to   = '';
     }
 }
 ?>

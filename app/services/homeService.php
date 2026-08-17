@@ -72,6 +72,7 @@ class homeServiceCls{
 					];
 		//月次・年次・期間 試算表集計
 					$rows = $this->buildLogicalRows($trial_cur);
+					//var_dump($rows);exit;
 					foreach ($rows as $id => $row) {
 						$total['debit']  += $row['debit'];
 						$total['credit'] += $row['credit'];
@@ -262,6 +263,7 @@ class homeServiceCls{
 	}
 	//加算、減算　タイプ別残高計算
 	function applyAccountingRule($row){
+
 		switch($row['type']){
 			case '資産':
 			case '費用':

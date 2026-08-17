@@ -76,12 +76,13 @@ class VoucherValidator
                 return;
             }
             // 期間検索パラメータが渡されている場合、開始日と終了日の両方を必須とする
-            if(!empty($start) || !empty($end)){
+            //if(!empty($start) || !empty($end)){
+            echo "<br>start:{$start}  /  end:{$end}";
                 if (empty($start) || empty($end)) {
                     $dto->errData[$OwnUrl] = '期間検索では開始日付・終了日付の両方を入力してください。';
                     return;
                 }
-            }
+            //}
         }
     }
 
