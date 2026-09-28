@@ -1,65 +1,75 @@
 <?php
+require_once ROOT_PATH . '/app/services/lib/homeLib.php';
+require_once ROOT_PATH . '/app/services/homeService.php';
+require_once ROOT_PATH . '/app/controllers/lib/auth.php';
+require_once ROOT_PATH . '/app/dto/homeDto.php';
+require_once ROOT_PATH . '/app/validators/homeValidator.php';
+
+require_once ROOT_PATH . '/lib/helpers.php';
+
+//デバッグ出力　function debug_log(string $message, mixed $data = null, bool $debugMode = true): void {
+
 class homeController{
+
+    private $pdo;
+    private $validator;
+    private $service;
+    private $dto;
+
+    public function __construct($pdo) {
+        $this->pdo      = $pdo;
+        $this->dto      = new homeDto([]);
+        $this->validator = new homeValidator($this->dto, false);
+        $this->service = new homeService($this->dto, $this->pdo );
+    }
+
     public function index() {
-        require_once ROOT_PATH . '/app/services/lib/homeLib.php';
-        require_once ROOT_PATH . '/app/services/homeService.php';
-        require_once ROOT_PATH . '/app/controllers/lib/auth.php';
-        require_once ROOT_PATH . '/app/dto/homeDto.php';
 
-        $dto = new homeDto([]);
+//        $this->dto = new homeDto([]);
         $messege = "";
-        $dto->viewResult = [];
+        $this->dto->viewResult = [];
         // POST > SESSION > デフォルト の優先順位で確定させる           shopsデータが入っている。$_SESSION['user_shops']
-        $dto->reportType = $_POST['reportType'] ?? $_SESSION['reportType'] ?? '月次試算表';
+        $this->dto->reportType = $_POST['reportType'] ?? $_SESSION['reportType'] ?? '月次試算表';
         // 次回のためにセッションを更新しておく
-        $_SESSION['reportType'] = $dto->reportType;
+        $_SESSION['reportType'] = $this->dto->reportType;
 		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            echo  "<br>試算表ボタン：";
-            if($_POST['sisanhyouSwitch'] ?? "" === "switch"){
-                echo "on";
-            }else{
-                echo "off " . true;
-            };
 
-            $dto->session   = $_SESSION;
-            $dto->post      = $_POST;
+            $this->dto->session   = $_SESSION;
+            $this->dto->post      = $_POST;
             requireCsrf();
-                requireLogin();
-                require_once ROOT_PATH . '/app/validators/homeValidator.php';
-                $validator = new homeValidator();
-                $err = $validator->commonVali($dto);
-                if ($err > 0) {
-                    // バリデーションエラーがある場合は集計処理を行わず、レンダリングして終了
-                    $this->render($dto);
-                    return;
-                }
-                if(!isset($dto->reportType)){
+            requireLogin();
+            require_once ROOT_PATH . '/app/validators/homeValidator.php';
+            $err = $this->validator->commonVali();
+            if ($err > 0) {
+                // バリデーションエラーがある場合は集計処理を行わず、レンダリングして終了
+                $this->render();
+                return;
+            }
+            if(!isset($this->dto->reportType)){
                 $messege = "試算表の種類を選択してください。";
                 require_once ROOT_PATH . '/views/login.php';
                 exit;
             }
 
-            $service = new homeServiceCls($dto->reportType );
-
-            $service->homeService($dto);
-            $dto->viewResult = $service->result;
-            $dto->reportType = $service->reportType;
-            $dto->from       = $service->from;
-            $dto->to         = $service->to;
-            $dto->zenki_from = $service->zenki_from;
-            $dto->zenki_to   = $service->zenki_to;
+            $this->service->homeService();
+            $this->dto->viewResult = $this->service->result;
+            $this->dto->reportType = $this->service->reportType;
+            $this->dto->from       = $this->service->from;
+            $this->dto->to         = $this->service->to;
+            $this->dto->zenki_from = $this->service->zenki_from;
+            $this->dto->zenki_to   = $this->service->zenki_to;
         }
-        $this->render( $dto );
+        $this->render();
     }
-    function render( $dto ) {
+    function render() {
         $tokenKey = generateCsrfToken();
         $today = new dateTime();
-        $dto->nenji_nen = $dto->post['nenji_nen'] ?? $dto->nenji_nen ?? "";
+        $this->dto->nenji_nen = $this->dto->post['nenji_nen'] ?? $this->dto->nenji_nen ?? "";
         $lastDate = $today->modify('-1 month');               
-        $dto->from = $dto->from ?? $lastDate->format('Y-m-d');
-        $dto->to = $dto->to ?? date('Y-m-d');
+        $this->dto->from = $this->dto->from ?? $lastDate->format('Y-m-d');
+        $this->dto->to = $this->dto->to ?? date('Y-m-d');
         $result = [];
-        $currentReport = $dto->post['reportType'] ?? '';                
+        $currentReport = $this->dto->post['reportType'] ?? '';                
         require_once ROOT_PATH . '/views/homeView.php';
     }
 }

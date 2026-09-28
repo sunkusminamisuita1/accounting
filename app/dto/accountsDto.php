@@ -1,5 +1,6 @@
 <?php
 // app/dto/accountsDto.php
+//デバッグ出力　function debug_log(string $message, mixed $data = null, bool $debugMode = true): void {
 class accountsDto{
 //                $_SESSION['user'] = [
 //                    'id' => (int)$user['id'],
@@ -18,6 +19,7 @@ class accountsDto{
     public array $accountsType = [];
     public array $editedRow = [];
     public array $postDt = [];
+    public string $shopCode;
 
 
     public function __construct()    {
@@ -31,6 +33,7 @@ class accountsDto{
                                 '負債',
                                 '資本'
                                 ];
+        $this->shopCode = $_SESSION['currentShopCode'];
 
     }
 

@@ -1,4 +1,5 @@
 <?php
+//未使用モジュール　＃＃＃＃　　　削除可能　　　＃＃＃＃
 class menuController{
 	public function login()	{
 		$message = '';

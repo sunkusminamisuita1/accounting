@@ -4,6 +4,7 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 require_once __DIR__.'/../config/bootstrap.php';
+$pdo = getPDO();
 $route = $_GET['route'] ?? 'login';
 $routes =   [
                 //login処理　shopsテーブルも読み込む
@@ -99,5 +100,5 @@ if ($routeInfo['auth']) {
 }
 $controllerName = $routeInfo['controller'];
 $method = $routeInfo['method'];
-$controller = new $controllerName();
+$controller = new $controllerName($pdo);
 $controller->$method();

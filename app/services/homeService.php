@@ -1,6 +1,9 @@
 <?php
+//デバッグ出力　function debug_log(string $message, mixed $data = null, bool $debugMode = true): void {
 require_once ROOT_PATH . '/app/repositories/homeRepository.php';
-class homeServiceCls{
+require_once ROOT_PATH . '/lib/helpers.php';
+
+class homeService{
     public $result;
 	public $reportType;
 	public $from;
@@ -8,20 +11,25 @@ class homeServiceCls{
 	public $zenki_from;
 	public $zenki_to;
 	public $repo;
+	private $dto;
+	private $pdo;
 
-    public function __construct($reportType) {
-        $this->reportType = $reportType;
+    public function __construct($dto, $pdo) {
+		$this->dto	= $dto;	
+		$this->pdo	= $pdo;
+        $this->reportType = $this->dto->reportType;
         $this->result = [];
 		$this->from = "";
 		$this->to = "";
 		$this->zenki_from = "";
 		$this->zenki_to = "";
-		$this->repo = new homeRepository();
+		$this->repo = new homeRepository($this->dto, $this->pdo);
 	}
 
-	public function homeService(homeDto $dto){
+	public function homeService(){
 		require_once ROOT_PATH . '/app/dto/constants.php';
 		require_once ROOT_PATH . '/app/services/lib/homeLib.php';
+		$this->reportType = $this->dto->reportType;
 		ini_set('display_errors', 1);
 		ini_set('display_startup_errors', 1);
 		error_reporting(E_ALL);
@@ -33,24 +41,27 @@ class homeServiceCls{
 				'収益'     => 4, '費用'     => 5,
 		];
 		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-			$pdo = getPDO();
 		// --- 1. 入力値の受け取り  ---
-			$data				=	$this->startEnd($this->reportType);
+			$data				=	$this->startEnd();
 			$this->from			=	$data['cur']['from']??"";
 			$this->to			=	$data['cur']['to']??"";
 			$this->zenki_from	=	$data['prev']['from']??"";
 			$this->zenki_to		=	$data['prev']['to']??"";
-		//対象データ読込
+		//対象データ読込  試算表
 			$x = ACCOUNT_START;
-			$trial_cur		= 	$this->repo->getTrial($pdo,$this->from,$this->to,$dto);
-			$trial_cur_bs	= 	$this->repo->getTrial($pdo, ACCOUNT_START, $this->to ,$dto);
+			$trial_cur		= 	$this->repo->getTrial($this->from,$this->to);
+			$trial_cur_bs	= 	$this->repo->getTrial(ACCOUNT_START, $this->to);
 			if ($this->zenki_from && $this->zenki_to) {
-				$trial_prev		= $this->repo->getTrial($pdo,$this->zenki_from,$this->zenki_to, $dto);
-				$trial_prev_bs	= $this->repo->getTrial($pdo, ACCOUNT_START, $this->zenki_to, $dto);
+				$trial_prev		= $this->repo->getTrial($this->zenki_from,$this->zenki_to);
+				$trial_prev_bs	= $this->repo->getTrial(ACCOUNT_START, $this->zenki_to);
 			}else{
 				$trial_prev	= [];
 				$trial_prev_bs	= [];
 			}
+
+		//対象データ読み込み　経費一覧
+			$this->dto->keihiItiran = $this->repo->getKeihiItiran($this->from,$this->to);
+			//var_dump($this->dto->keihiItiran);
 		//科目コード一覧(全件)
 			$account_codes = array_merge(
 				array_keys($trial_cur),
@@ -204,32 +215,32 @@ class homeServiceCls{
 		}
 	}
 
-	function startEnd($sisan_syurui) {
+	function startEnd() {
 		$from = ""; $to =""; $zenki_from=""; $zenki_to=""; $result="";
 		$result =	[	
 					'cur'   => ['from'=>null,'to'=>null],
 					'prev'  => ['from'=>null,'to'=>null]	
 				];
 	// --- 1. 年次試算表 $from, $to を再計算 ---
-		if ($sisan_syurui === nenjiSisanhyou && isset($_POST['nenji_nen'])) {
+		if ($this->dto->reportType === nenjiSisanhyou && isset($_POST['nenji_nen'])) {
 			$from = $_POST['nenji_nen'] . '-01-01';
 			$to   = $_POST['nenji_nen'] . '-12-31';
 			$result['cur'] = ['from'=>$from, 'to'=>$to];
 		}
 	// --- 2. 月次試算表 $from, $to を再計算 ---
-		if ($sisan_syurui === getujiSisanhyou && isset($_POST['from'])) {
+		if ($this->dto->reportType === getujiSisanhyou && isset($_POST['from'])) {
 			$from = substr($_POST['from'],0,7) . '-01';
 			$to   = date('Y-m-t', strtotime($from));
 			$result['cur'] = ['from'=>$from, 'to'=>$to];
 		}
 	// --- 3. 累積試算表 $from, $to を再計算 ---ACCOUNT_START
-		if ($sisan_syurui === ruisekiSisanhyou && isset($_POST['to'])) {
+		if ($this->dto->reportType === ruisekiSisanhyou && isset($_POST['to'])) {
 			$from = ACCOUNT_START;
 			$to   = $_POST['to'];
 			$result['cur'] = ['from'=>$from, 'to'=>$to];
 		}
 	// --- 4. 前期比較試算表 $from, $to を再計算 ---
-		if ($sisan_syurui === zenkiHikaku && isset($_POST['kijyun_nen'])) {
+		if ($this->dto->reportType === zenkiHikaku && isset($_POST['kijyun_nen'])) {
 			$from = $_POST['kijyun_nen'] . '-01-01';
 			$to   = $_POST['kijyun_nen'] . '-12-31';
 			$prev_from = ($_POST['kijyun_nen'] - 1 ) . '-01-01';
@@ -238,7 +249,7 @@ class homeServiceCls{
 			$result['prev'] = ['from'=>$prev_from, 'to'=>$prev_to];
 		}
 	// --- 5. 期間入力 $from, $to を再計算 ---
-		if ($sisan_syurui === kikanSisanhyou && isset($_POST['to'])) {
+		if ($this->dto->reportType === kikanSisanhyou && isset($_POST['to'])) {
 			$from = $_POST['from'];
 			$to   = $_POST['to'];
 			$result['cur'] = ['from'=>$from, 'to'=>$to];

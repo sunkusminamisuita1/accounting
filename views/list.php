@@ -81,7 +81,7 @@
                     開始<input type="date" name="lstVcrSearchStartDate" value="<?= h($this->vcrListDatePeriod['検索開始日付'] ?? '') ?>">
                 
                 
-                    　　　終了<input type="date" name="LstVcrSearchEndDate" value="<?= h($this->vcrListDatePeriod['検索終了日付'] ?? '') ?>">
+                    　　　終了<input type="date" name="lstVcrSearchEndDate" value="<?= h($this->vcrListDatePeriod['検索終了日付'] ?? '') ?>">
                 </td>
             </tr>
 
@@ -143,7 +143,7 @@
                                     <button name="vcrUpdate" type="submit"
                                         onclick="return confirm('伝票修正欄の内容をデータベースに登録します。元に戻せません。\n本当に変更してもよろしいですか？');" 
                                         class="btn btn-danger"
-                                        value="<?= h('vcrUpdate') ?>">修正実行
+                                        value="<?= h('vcrUpdate') ?>">保存
                                     <button name="vcrDelete" type="submit" 
                                         onclick="return confirm('この伝票を削除すると、紐づく明細データもすべて削除されます。\n本当に削除してもよろしいですか？');" 
                                         class="btn btn-danger"

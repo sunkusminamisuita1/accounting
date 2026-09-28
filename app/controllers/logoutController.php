@@ -1,5 +1,12 @@
 <?php
 class logoutController{
+
+    private $pdo;
+
+    public function __construct($pdo) {
+        $this->pdo      = $pdo;
+    }
+
     public function index() {
 // セッション開始（未開始の場合）
         if (session_status() == PHP_SESSION_NONE) {

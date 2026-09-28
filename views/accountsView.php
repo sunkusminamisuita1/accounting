@@ -1,4 +1,5 @@
 <?php
+//デバッグ出力　function debug_log(string $message, mixed $data = null, bool $debugMode = true): void {
 ?>
 <style>
     .txtBoxLineDel{
@@ -39,35 +40,18 @@
     <?php
         require_once ROOT_PATH . '/views/procSlct.php';
     ?>
-    <?php if (!empty($this->ctrDto->errData)): ?>
+    <?php if (!empty($this->dto->errData)): ?>
         <ul style="color: red;">
-            <?php foreach ($this->ctrDto->errData as $mod => $err): ?>
+            <?php foreach ($this->dto->errData as $mod => $err): ?>
                 <li><?= h($mod) . ": " . h($err) ?></li>
             <?php endforeach; ?>
         </ul>
     <?php endif; ?>
 
     <!-- ##############     エラーメッセージ表示    ################ -->
-    <?=  $this->ctrerrMsgPopUp->Show($this->ctrDto);  ?>
-    <!--<hr>
-    <h3>下表の勘定科目を追加・修正・削除<br><br>
-    <div style="text-align: center;">表の修正完了後、修正実行ボタンを押してください。</div>
-    </h3> -->
+    <?=  $this->ctrerrMsgPopUp->Show($this->dto);  ?>
+ 
     <form method="POST" action="index.php?route=accounts.edit">
-        <!-- <div style="text-align: center;" >
-            <input type="hidden" name="csrfTokenKey" value="<?= h($tokenKey) ?>">
-            <button name="AcctPfm" type="submit"
-                onclick="return confirm
-                    ('勘定科目 修正欄の内容をデータベースに登録します。\n本当に変更してもよろしいですか？');"  
-                    value="<?= h('修正実行') ?>" >修正実行
-            </button>
-            <button name="AcctPfm" type="submit"
-                onclick="return confirm
-                    ('勘定科目 修正欄の内容を、もとに戻します。\nよろしいですか？');"  
-                    value="<?= h('キャンセル') ?>" >キャンセル
-            </button>
-        </div> -->
-        <!--</form>$$$$$$$$$$$$$$$$$$$$$$$-->
 
         <table class="UpdTbl" >
 
@@ -83,7 +67,7 @@
             <button name="AcctPfm" type="submit"
                 onclick="return confirm
                     ('勘定科目 修正欄の内容をデータベースに登録します。\n本当に変更してもよろしいですか？');"  
-                    value="<?= h('修正実行') ?>" >修正実行
+                    value="<?= h('修正実行') ?>" >保存
             </button>
             <button name="AcctPfm" type="submit"
                 onclick="return confirm
@@ -92,8 +76,6 @@
             </button>
         </div>
 
-                        <!--<form method="POST" action="index.php?route=accounts.edit">$$$$$$$$$$$$$$$$$$$$$$-->
-                            <!--<input type="hidden" name="csrfTokenKey" value="<?= h($tokenKey) ?>">-->
                             <table class="UpdTbl">
                                 <tbody>
                                     <tr style="background-color: #e0e0e1; font-weight: bold; text-align: center;">
@@ -101,6 +83,7 @@
                                         <th style="width: 8%;" >ユーザーID</th>
                                         <th style="width: 13%;" > 勘定科目</th>
                                         <th style="width: 8%;" >貸借種別</th>
+                                        <th style="width: 8%;" >表示順序</th>
                                         <th style="width: 25%;" >
 
                                                 <button name="AcctPfm" type="submit" value="<?= h('追加') ?>" >行追加</button>
@@ -108,32 +91,42 @@
                                                 エラーメッセージ
                                         </th>
                                         <th style="width: 6%;" >
-                                            <button name="AcctPfm" type="submit" value="<?= h('削除') ?>" >削除</button>
+                                            <button name="AcctPfm" type="submit" 
+                                                onclick="return confirm
+                                                    ('修正欄の削除チェックされたデータベースから削除します。\n本当に変更してもよろしいですか？');"  
+                                                    value="<?= h('削除') ?>" >削除
+                                            </button>
                                         </th>
                                     </tr>
                                     <?php foreach ($accounts as $Key => $row): ?>
                                         <input type="hidden" name="viewEditKey" value="<?= h($Key) ?>">
+                                                <input type="hidden" name="acctUpdDt[<?= $Key ?>][editType]" 
+                                                    value="<?= h($row['editType'] ?? '') ?>" >
                                         <tr style="background-color: #ffffff; font-weight: bold; text-align: center;">
+
                                             <td>                           <!--   行番号　pri-key   -->
                                                 <input class="txtBoxLineDel" style="width: 90%; text-align: center;" 
-                                                    type="text" name="AcctUpdDt[<?= $Key ?>][id]"
-                                                    value="<?= h($row['id']) ?? '' ?>" readonly>
+                                                    type="text" name="acctUpdDt[<?= $Key ?>][id]"
+                                                    value="<?= h($row['id'] ?? '' ) ?>" readonly>
                                             </td>
+
                                             <td style="text-align: left;">  <!--   ユーザーID   -->
                                                 <input class="txtBoxLineDel" style="width: 90%; text-align: center;" 
-                                                    type="text" name="AcctUpdDt[<?= $Key ?>][user_id]"
-                                                    value="<?= h($row['user_id']) ?? '' ?>" readonly>
+                                                    type="text" name="acctUpdDt[<?= $Key ?>][user_id]"
+                                                    value="<?= h($row['user_id'] ?? '' ) ?>" readonly>
                                             </td>
+
                                             <td style="text-align: left;">  <!--   勘定科目名   -->
                                                 <input class="txtBoxLineDel" style="width: 90%;" 
-                                                    type="text" name="AcctUpdDt[<?= $Key ?>][name]" 
-                                                    value="<?= h($row['name']) ?? '' ?>">
+                                                    type="text" name="acctUpdDt[<?= $Key ?>][name]" 
+                                                    value="<?= h($row['name'] ?? '' )  ?>">
                                             </td>
+
                                             <td>                            <!--   勘定科目種別   -->
-                                                <select style="width: 95%;" name="AcctUpdDt[<?= $Key ?>][type]" required>
+                                                <select style="width: 95%;" name="acctUpdDt[<?= $Key ?>][type]" required>
                                                     <option value="">選択してください</option>
     
-                                                    <?php foreach($this->ctrDto->accountsType as $i => $a): ?>
+                                                    <?php foreach($this->dto->accountsType as $i => $a): ?>
                                                         <option value="<?= h($a) ?>" 
                                                             <?= (isset($row['type']) && $row['type'] == $a) ? 'selected' : '' ?>>
                                                             <?= h($a) ?> 
@@ -141,21 +134,24 @@
                                                     <?php endforeach; ?>
 
                                                 </select>
-                                                <!-- <input class="txtBoxLineDel" style="width: 90%; text-align: center;" 
-                                                    type="hidden" name="AcctUpdDt[<?php //echo $Key ?>][type]" 
-                                                    value="<?//php echo h($row['type']) ?? '' ?>"
-                                                > -->
                                             </td>
+
+                                            <td style="text-align: left;">  <!--   sort_order   -->
+                                                <input  class="txtBoxLineDel" style="width: 90%; text-align: center;"
+                                                    type="number" name="acctUpdDt[<?= $Key ?>][sort_order]" 
+                                                    value="<?= h($row['sort_order'] ?? '')  ?>">
+                                            </td>
+
                                             <td style="font-color: #ff0000;">    <!--   エラーメッセージ   -->
                                                 <input class="txtBoxLineDel" style="width: 90%;" type="text" 
-                                                    name="AcctUpdDt[<?= $Key ?>][errmsg]"
+                                                    name="acctUpdDt[<?= $Key ?>][errmsg]"
                                                     value="<?= h($row['errmsg'] ?? '')  ?>" readonly>
                                             </td>
+
                                             <td>                            <!--   削除チェックボックス   -->
                                                 <input class="txtBoxLineDel" style="width: 90%;" type="checkbox" 
-                                                    name="AcctUpdDt[<?= $Key ?>][del]" value="On"
-                                                    <?php if (isset($row['edittype']) && $row['edittype'] === '削除') { 
-                                                        echo 'checked'; } ?>
+                                                    name="acctUpdDt[<?= $Key ?>][del]" value="1"
+                                                    <?php if (!empty($row['is_deleted'])) { echo 'checked'; } ?>
                                                 >
                                             </td>
 
@@ -163,8 +159,6 @@
                                     <?php endforeach; ?>
                                 </tbody>
                             </table>
-
-
 
                     </td>
 
@@ -174,6 +168,12 @@
 
 
                         ここには修正した勘定科目が損益計算書、貸借対象表のどの位置に追加修正されたか確認できるようにする
+                        表示順序割当範囲<br>
+                        　損益計算書　収益　 500～999<br>
+                        　損益計算書　費用　2000～2499<br>
+                        　貸借対照表　資産　4500～4999<br>
+                        　貸借対照表　負債　6500～6999<br>
+                        　貸借対照表　資本　8000～8499<br>
 
 
 

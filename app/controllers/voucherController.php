@@ -6,8 +6,9 @@ require_once ROOT_PATH . '/app/controllers/lib/auth.php';
 require_once ROOT_PATH . '/app/validators/voucherValidator.php';
 require_once ROOT_PATH . '/app/repositories/voucherRepository.php';
 
-class voucherController
-{
+class voucherController{
+
+    private $pdo;
     private voucherService $service;
     private voucherDto $dto;
     private voucherValidator $validator;
@@ -16,13 +17,14 @@ class voucherController
     private string $renderType;
     private $tokenKey;
 
-    public function __construct()  {
-        $this->dto = new voucherDto([]);
-        $this->service = new voucherService();
-        $this->repo = new voucherRepository();
-        $this->validator = new voucherValidator();
-        $this->errMsgPopUp = new errMsgPopUp();
-        $this->dto->accounts = $this->service->getAccounts();
+    public function __construct($pdo)  {
+        $this->pdo              = $pdo;
+        $this->dto              = new voucherDto([]);
+        $this->validator        = new voucherValidator($this->dto);
+        $this->repo             = new voucherRepository($this->pdo,$this->dto, $this->validator);
+        $this->service          = new voucherService($this->pdo,$this->dto, $this->validator, $this->repo);
+        $this->errMsgPopUp      = new errMsgPopUp();
+        $this->dto->accounts    = $this->service->getAccounts();
     }
     public function create(): void    {
         //file_put_contents('/var/www/html/test6/public/debug.log', "メソッド通ったよ！\n", FILE_APPEND);
@@ -36,7 +38,7 @@ class voucherController
             // $this->dto->vcrCreData();                           //dtoにPOSTされた明細行を渡す
             // $details = $this->dto->dtoDetails;                  //dtoから明細行を取得
             // $accounts = $this->dto->accounts;
-            $this->service->vcrCreate($this->dto);
+            $this->service->vcrCreate();
             // POST を処理した後は再描画用に新しいトークンを発行する
             $this->tokenKey  = generateCsrfToken();
         }else{
@@ -66,7 +68,7 @@ class voucherController
         ];
 
         //$this->service->saveVoucher($data);
-        $this->service->vcrSave($this->dto,$this->validator);
+        $this->service->vcrSave();
         header('location: index.php?route=voucher.index');
         exit;
     }
@@ -88,10 +90,10 @@ class voucherController
             $this->dto->list(); //dtoのListメソッドで検索条件をセット 未入力の場合はセッションから検索条件をセットするため、POSTされた検索条件をDtoにセットする前にList()メソッドを呼び出す必要があります。
 
             if (isset($_POST['simpleSearch'])) {        //修正データ一覧作成
-                $this->service->vcrsimpleSearch($this->dto , $this->repo, $this->validator);
+                $this->service->vcrsimpleSearch();
             }
             if (isset($_POST['vcrUpdateNo'])) {         //修正対象データ　編集用データ作成
-                $this->service->vcrUpdNo($this->dto, $this->repo, $this->validator);
+                $this->service->vcrUpdNo();
             }
             //前回の行追加、行削除の処理は、修正対象データの編集用データ作成の後に行う必要があり、
             //行追加、行削除の処理は、編集用データを基に行う必要があるためです。
@@ -101,16 +103,16 @@ class voucherController
             //    $this->service->vcrSearchedDataRemake($this->dto , $this->repo, $this->validator);
             //}
             if( isset($_POST['vcrAddDebit'])) {         //行追加ボタン（借方）を押したときの処理
-                $this->service->vcrAddDebit($this->dto, $this->repo, $this->validator);
+                $this->service->vcrAddDebit();
             }
             if( isset($_POST['vcrAddCredit'])) {        //行追加ボタン（貸方）を押したときの処理
-                $this->service->vcrAddCredit($this->dto, $this->repo, $this->validator);
+                $this->service->vcrAddCredit();
             }
             if( isset($_POST['vcrDetailLineDel'])) {    //仕分け編集データから　一行削除
-                $this->service->vcrDetailLineDel($this->dto, $this->repo, $this->validator);
+                $this->service->vcrDetailLineDel();
             }
             if( isset($_POST['vcrDelete'])) {           //1仕分け伝票削除
-                $Success = $this->service->vcrDelete($this->dto, $this->repo, $this->validator);
+                $Success = $this->service->vcrDelete();
                 if ($Success) {
                     //file_put_contents('/var/www/html/test6/public/debug.log', "Success2 = {$Success}！\n", FILE_APPEND);
                     // 3. ユーザーへの完了通知メッセージだけをセッションに仕込む
@@ -121,7 +123,7 @@ class voucherController
                 }
             }
             if( isset($_POST['vcrUpdate'])) {           //1仕分け伝票データ　DB更新
-                $Success = $this->service->vcrUpdate($this->dto, $this->repo, $this->validator);
+                $Success = $this->service->vcrUpdate();
             }
 
             // POST を処理した後は再描画用に新しいトークンを発行する

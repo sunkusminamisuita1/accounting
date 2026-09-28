@@ -29,6 +29,7 @@ function verifyCsrfToken(string $fmTknKey): void
 		// 詳細ログ（デバッグ用）
 		//error_log("[CSRF] verify failed. Posted token=" . var_export($fmTknKey, true));
 		//error_log("[CSRF] session tokens=" . var_export($_SESSION['csrfTokens'] ?? [], true));
+		unset($_SESSION);
 		http_response_code(403);
 		exit('Invalid CSRF token-X');
 	}
@@ -39,6 +40,7 @@ function verifyCsrfToken(string $fmTknKey): void
 	if (!is_numeric($created) || (time() - (int)$created > $ttl)) {
 		// ワンタイムなので削除
 		unset($_SESSION['csrfTokens'][$fmTknKey]);
+		unset($_SESSION);
 		// デバッグログ出力
 		//error_log("[CSRF] token expired. token=" . var_export($fmTknKey, true) . " created_at=" . var_export($created, true));
 		$_SESSION['flash_message'] = "セッションの有効期限が切れたか、不正な操作が行われました。再度ログインしてください。";

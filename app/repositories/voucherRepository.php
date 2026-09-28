@@ -6,20 +6,23 @@ require_once ROOT_PATH . '/app/controllers/lib/auth.php';
 require_once ROOT_PATH . '/app/validators/voucherValidator.php';
 
 class voucherRepository{
-    
+    //voucherRepository($this->pdo,$this->dto, $this->validator);
     private voucherService $service;
     private voucherDto $dto;
     private voucherValidator $validator;
     //private errMsgPopUp $errMsgPopUp;
     private string $renderType;
+    private $pdo;
 
-    public function __construct()  {
-
+    public function __construct($pdo,$dto, $validator)  {
+        $this->pdo              = $pdo;
+        $this->dto              = $dto;
+        $this->validator        = $validator;
     }
 
     public function findAllByUser(int $userId): array {
-        $pdo = getPDO();
-        $stmt = $pdo->prepare("
+        // $pdo = getPDO();
+        $stmt = $this->pdo->prepare("
             SELECT id, voucher_date, summary
             FROM journal_vouchers
             WHERE user_id = ?
@@ -30,8 +33,8 @@ class voucherRepository{
     }
 
     public function find(int $id) {
-        $pdo = getPDO();
-        $stmt = $pdo->prepare("
+        // $pdo = getPDO();
+        $stmt = $this->pdo->prepare("
             SELECT *
             FROM journal_vouchers
             WHERE id = ?
@@ -41,8 +44,8 @@ class voucherRepository{
     }
 
     public function update(int $id, array $data) {
-        $pdo = getPDO();
-        $stmt = $pdo->prepare("
+        // $pdo = getPDO();
+        $stmt = $this->pdo->prepare("
             UPDATE journal_vouchers
             SET voucher_date = ?, summary = ?
             WHERE id = ?
@@ -56,20 +59,20 @@ class voucherRepository{
 
     public function delete(int $id) {
         try{
-            $pdo = getPDO();
-            $pdo->beginTransaction();
+            //$pdo = getPDO();
+            $this->pdo->beginTransaction();
 
             // 伝票に紐づく明細を削除
-             $stmtDetails = $pdo->prepare("DELETE FROM journal_details WHERE voucher_id = ?");
+             $stmtDetails = $this->pdo->prepare("DELETE FROM journal_details WHERE voucher_id = ?");
              $stmtDetails->execute([$id]);
 
             // 伝票を削除
-            $stmtVoucher = $pdo->prepare("DELETE FROM journal_vouchers WHERE id = ?");
+            $stmtVoucher = $this->pdo->prepare("DELETE FROM journal_vouchers WHERE id = ?");
             $stmtVoucher->execute([$id]);
 
-            $pdo->commit();
+            $this->pdo->commit();
         } catch (Exception $e) {
-            $pdo->rollBack();
+            $this->pdo->rollBack();
             throw $e;
         }
         if ($stmtVoucher->rowCount() > $stmtDetails->rowCount()) {
@@ -79,23 +82,23 @@ class voucherRepository{
         }
     }
 
-    public function jvJdDelete($dto) {
-            $voucherId  =   $dto->vcrSearchedData[0]['voucher_id'];
+    public function jvJdDelete() {
+            $voucherId  =   $this->dto->vcrSearchedData[0]['voucher_id'];
         try{
-            $pdo = getPDO();
-            $pdo->beginTransaction();
+            //$pdo = getPDO();
+            $this->pdo->beginTransaction();
 
             // 伝票に紐づく明細を削除
-            $stmtDetails = $pdo->prepare("DELETE FROM journal_details WHERE voucher_id = ?");
+            $stmtDetails = $this->pdo->prepare("DELETE FROM journal_details WHERE voucher_id = ?");
             $stmtDetails->execute([$voucherId]);
 
             // 伝票を削除
-            $stmtVoucher = $pdo->prepare("DELETE FROM journal_vouchers WHERE id = ?");
+            $stmtVoucher = $this->pdo->prepare("DELETE FROM journal_vouchers WHERE id = ?");
             $stmtVoucher->execute([$voucherId]);
 
-            $pdo->commit();
+            $this->pdo->commit();
         } catch (Exception $e) {
-            $pdo->rollBack();
+            $this->pdo->rollBack();
             throw $e;
         }
         if ($stmtVoucher->rowCount() > $stmtDetails->rowCount()) {
@@ -107,8 +110,7 @@ class voucherRepository{
 
     public function getAccounts()  {
         try{
-            $pdo = getPDO();
-            $stmt = $pdo->query("
+            $stmt = $this->pdo->query("
                 SELECT id, name, type
                 FROM accounts
                 ORDER BY id
@@ -119,39 +121,39 @@ class voucherRepository{
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     
-    public function insertVoucher($dto){
-        $indexCount = count($dto->dtoDetails);
-        $pdo = getPDO();
-        $pdo->beginTransaction();
+    public function insertVoucher(){
+        $indexCount = count($this->dto->dtoDetails);
+        //$pdo = getPDO();
+        $this->pdo->beginTransaction();
 
         if( isset($_POST['vcrUpdate'])) {
-            $voucherId  =   (int)$dto->vcrSearchedData[0]['id'];
+            $voucherId  =   (int)$this->dto->vcrSearchedData[0]['id'];
         }
 
         try {
             
-            $stmt = $pdo->prepare("
-                INSERT INTO journal_vouchers
+            $stmt = $this->pdo->prepare(
+                "INSERT INTO journal_vouchers
                     (voucher_date, summary, user_id, shop_code, created_at)
-                    VALUES (?,?,?,?,?)
-            ");
+                    VALUES (?,?,?,?,?)"
+            );
             $stmt->execute([
-                $dto->date,
-                $dto->summary  ,
+                $this->dto->date,
+                $this->dto->summary  ,
                 $_SESSION['user']['id'],
                 $_SESSION['currentShopCode'] ?? '',
                 date('Y-m-d H:i:s')
             ]);
 
-            $voucherId = (int)$pdo->lastInsertId();
+            $voucherId = (int)$this->pdo->lastInsertId();
            
-            $stmtDetail = $pdo->prepare("
+            $stmtDetail = $this->pdo->prepare("
                 INSERT INTO journal_details
                     (voucher_id, jd_summary, account_id, side, amount)
                     VALUES (?,?,?,?,?)
             ");
 
-            foreach ($dto->dtoDetails as $recNo => $row){
+            foreach ($this->dto->dtoDetails as $recNo => $row){
                 if($row['side'] === 'debit') {
                     $stmtDetail->execute([
                         $voucherId,
@@ -170,27 +172,30 @@ class voucherRepository{
                     ]);
                 }
             }
-            $pdo->commit();
+            $this->pdo->commit();
         } catch (Exception $e) {
-            $pdo->rollBack();
+            $this->pdo->rollBack();
             throw $e;
         }
     }
 
-    public function vcrListSearch($vcrDto) {
+    public function vcrListSearch() {
         //echo "current shop code : " . var_dump($_SESSION['currentShopCode']) . "<br>";exit;
 
-        if(!empty($vcrDto->date)){
-            $from = date('Y-m-d', strtotime($vcrDto->date));
-            $to =   date('Y-m-d', strtotime($vcrDto->date));
+        if(!empty($this->dto->date)){
+            //echo "vcrrepo 186";
+            $from = date('Y-m-d', strtotime($this->dto->date));
+            $to =   date('Y-m-d', strtotime($this->dto->date));
         }
         if(
-            !empty($vcrDto->vcrListDatePeriod['検索開始日付'] )   &&
-            !empty($vcrDto->vcrListDatePeriod['検索終了日付'] )
+            !empty($this->dto->vcrListDatePeriod['検索開始日付'] )   &&
+            !empty($this->dto->vcrListDatePeriod['検索終了日付'] )
         )
         {
-            $from = date('Y-m-d', strtotime($vcrDto->vcrListDatePeriod['検索開始日付']));
-            $to   =  date('Y-m-d', strtotime($vcrDto->vcrListDatePeriod['検索終了日付']));
+            
+            $from = date('Y-m-d', strtotime($this->dto->vcrListDatePeriod['検索開始日付']));
+            $to   = date('Y-m-d', strtotime($this->dto->vcrListDatePeriod['検索終了日付']));
+            //echo "vcrrepo 195  {$from}/{$to}";
         }
 
         if(empty($from) || empty($to)) {
@@ -199,7 +204,7 @@ class voucherRepository{
         }
 
         $userId = getLoginUserId();
-        $pdo = getPDO();
+        //$pdo = getPDO();
 
          $sql = "SELECT 
                 jv.id,
@@ -223,22 +228,22 @@ class voucherRepository{
 
         // 条件がある場合だけ絞り込むロジック
         $params0 = [];
-        if (trim($vcrDto->session['currentShopCode']) !== 'all') {
+        if (trim($this->dto->session['currentShopCode']) !== 'all') {
             $sql .= " AND jv.shop_code = :shop_code ";
-            $params0 = [':shop_code' => $vcrDto->session['currentShopCode']];
+            $params0 = [':shop_code' => $this->dto->session['currentShopCode']];
         }
 
-        if (!empty($vcrDto->listVcrNum)) {
+        if (!empty($this->dto->listVcrNum)) {
             $sql .= " AND jv.id = :vchrnumber ";
         }
 
-        if (!empty($vcrDto->summary)) {
+        if (!empty($this->dto->summary)) {
             $sql .= " AND (jv.summary LIKE :vchrsummary OR jd.jd_summary LIKE :vchrsummary) ";
         }
 
         $sql .= " GROUP BY jd.voucher_id,jd.id";
 
-        $stmt = $pdo->prepare($sql); 
+        $stmt = $this->pdo->prepare($sql); 
         
         $params1 = [
             ':from'   => $from,
@@ -246,12 +251,14 @@ class voucherRepository{
             ':user_id' => $userId,
         ];
         $params = array_merge($params1, $params0);
-        if (!empty($vcrDto->listVcrNum)) $params[':vchrnumber'] = $vcrDto->listVcrNum;
-        if (!empty($vcrDto->summary))   $params[':vchrsummary'] = '%' . $vcrDto->summary . '%';
-        // echo "<br>sql:";
+
+        if (!empty($this->dto->listVcrNum)) $params[':vchrnumber'] = $this->dto->listVcrNum;
+        if (!empty($this->dto->summary))   $params[':vchrsummary'] = '%' . $this->dto->summary . '%';
+        // echo "<br>voucherrepository.php sql:";
         // print_r($sql);
         // echo "<br>params:";
         // print_r($params);
+        //echo "vcrrepo line258<br>";exit;
         $stmt->execute($params);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }

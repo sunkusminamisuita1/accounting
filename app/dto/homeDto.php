@@ -1,4 +1,5 @@
 <?php
+//デバッグ出力　function debug_log(string $message, mixed $data = null, bool $debugMode = true): void {
 class homeDto{
     //public int $from;
     public array    $viewResult = [];
@@ -15,6 +16,7 @@ class homeDto{
     public string   $zenki_from;
     public string   $zenki_to;
     public string   $nenji_nen;
+    public array    $keihiItiran = [];
 
     public function __construct($kikan) {
         $this->from = $kikan['cur']['from'] ?? 0;

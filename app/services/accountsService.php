@@ -1,4 +1,5 @@
 <?php
+//デバッグ出力　function debug_log(string $message, mixed $data = null, bool $debugMode = true): void {
 // app/services/authService.php
 require_once ROOT_PATH . '/lib/helpers.php';
 require_once ROOT_PATH.'/app/repositories/accountsRepository.php';
@@ -8,111 +9,211 @@ require_once ROOT_PATH.'/app/validators/accountsValidator.php';
 
 class accountsService{
 
-    public accountsValidator    $svcVali;
-    public accountsRepository   $svcRepo;
-    //public accountsDto          $ctrDto;
+    public accountsValidator    $vali;
+    public accountsRepository   $repo;
+    private $pdo;
+    private $dto;
+    //private array $orgAcctAltTbl;
 
-    public function __construct(accountsDto $dto)    {
-        $this->svcRepo =   new accountsRepository($dto);
-        $this->svcVali =   new accountsValidator('true');
+    public function __construct(accountsDto $dto, $pdo)    {
+        $this->pdo      =   $pdo;
+        $this->dto      =   $dto;
+        
+        $this->repo =   new accountsRepository($this->dto, $this->pdo);
+        $this->vali =   new accountsValidator($this->dto, $this->pdo, $this->repo, false);
+
+        //$this->orgAcctAltTbl = [];
     }
 
-    public function getAccounts( accountsDto $dto){
+    public function getAccounts(){
 
-        $dto->accounts  =   $this->svcRepo->getAccounts($dto,true);
-        //echo "<br><pre>" . var_dump($dto->accounts) . "</pre><br>";
+        $this->dto->accounts  =   $this->repo->getAccounts(true);
+        $this->dto->acctAltTbl = $this->dto->accounts;         //修正用科目テーブル作成
 
-        $dto->acctAltTbl = $dto->accounts;         //修正用科目テーブル作成
-
-        foreach($dto->acctAltTbl as $key=>$row){   //errmsgカラム追加,初期化
-            $dto->acctAltTbl[$key]['errmsg'] = '';
-            $dto->acctAltTbl[$key]['edittype'] = '更新';//初期値セット
+        foreach($this->dto->acctAltTbl as $key=>$row){   //errmsgカラム追加,初期化
+            
+            $this->dto->acctAltTbl[$key]['errmsg'] = '';
+            $this->dto->acctAltTbl[$key]['editType'] = '';//初期値セット
             if(isset($row['is_deleted']) && $row['is_deleted'] ?? 0) {
-                $dto->acctAltTbl[$key]['errmsg'] = "この勘定科目は削除済みです。";
-                $dto->acctAltTbl[$key]['edittype'] = "削除";
+                $this->dto->acctAltTbl[$key]['errmsg'] = "この勘定科目は削除済みです。";
+                $this->dto->acctAltTbl[$key]['editType'] = "削除";
             }
          
         }
-        //echo "<br>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx<br><pre>" .var_dump($dto->accounts) . "</pre>yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy<br>";
-
         unset($row);
     }
 
-    public function accountsEdit(accountsDto $dto){
-        //echo "<br><pre>" .var_dump($dto->acctAltTbl) . "</pre>";
+    public function accountsEdit(){
         $delKeys = [];
-        foreach( $dto->postDt['acctUpdDt'] as $key=>$row){
+        foreach( $this->dto->postDt['acctUpdDt'] as $key=>$row){
             if($row['del'] ?? ''){
-                $dto->acctAltTbl[$key]['edittype'] = '削除';
-                $dto->acctAltTbl[$key]['errmsg'] = '削除済み';
-                $dto->acctAltTbl[$key]['is_deleted'] = 1;
+                $this->dto->acctAltTbl[$key]['editType'] = '削除';
+                $this->dto->acctAltTbl[$key]['errmsg'] = '削除済み';
+                $this->dto->acctAltTbl[$key]['is_deleted'] = 1;
             }else{
-                //$dto->acctAltTbl[$key] = $row;
-                $dto->acctAltTbl[$key]['edittype'] = '更新';
-                $dto->acctAltTbl[$key]['errmsg'] = '';
-                $dto->acctAltTbl[$key]['is_deleted'] = 0;
+                $this->dto->acctAltTbl[$key]['editType'] = '更新';
+                $this->dto->acctAltTbl[$key]['errmsg'] = '';
+                $this->dto->acctAltTbl[$key]['is_deleted'] = 0;
             }
         }
         
     }
 
-    public function accountsAdd(accountsDto $dto){
-
-        $userId = $dto->id;
-        array_unshift($dto->acctAltTbl,['id'=> null,'user_id'=>(int)$userId,'name'=>'','type'=>'', 'errmsg'=>'', 'edittype'=>'追加']);
-
-    }
-
-    public function repoDataMake(accountsDto $dto){
-
-        foreach($dto->postDt['acctUpdDt'] as $key=>$row){ //array_Spliceでキー順序が更新されるため、削除は降順で実行
-                $dto->acctAltTbl[$key]['id']        = $dto->postDt['acctUpdDt'][$key]['id'];
-                $dto->acctAltTbl[$key]['user_id']   = $dto->postDt['acctUpdDt'][$key]['user_id'];
-                $dto->acctAltTbl[$key]['name']      = $dto->postDt['acctUpdDt'][$key]['name'];
-                $dto->acctAltTbl[$key]['type']      = $dto->postDt['acctUpdDt'][$key]['type'];
-                //$dto->acctAltTbl[$key]['errmsg']    = "このデータは削除済みです。";
-                //$dto->acctAltTbl[$key]['edittype']  = "削除";
-
-                //if(!isset($row['is_deleted']) && $row['is_deleted'] ?? 0) {
-                //    $dto->acctAltTbl[$key]['errmsg'] = "このデータは削除済みです。";
-                //    $dto->acctAltTbl[$key]['edittype'] = "削除";
-                //}
-                //$dto->postDt['acctUpdDt'][$key]['del']= "on";
-                //$dto->acctAltTbl[$key]['edittype']  = $dto->postDt['acctUpdDt'][$key]['edittype'] ?? '';
+    public function accountsDlt(){
+        $delKeys = [];
+        $acctAltTbl = [];
+        foreach( $this->dto->postDt['acctUpdDt'] as $key=>$row){
+        //削除指定の勘定科目が仕訳帳に使用されているか確認し、使用されている場合はエラー処理
+            if($row['del'] ?? ''){
+                $err = $this->vali->accountsVali();
+                if ($err > 0) {
+                    unset($_SESSION['acctAltTbl']);
+                    return $err;
+                }
+            }
         }
 
+        foreach( $this->dto->postDt['acctUpdDt'] as $key=>$row){
+
+            if( ( $row['del'] ?? '' ) && ( $this->dto->postDt['AcctPfm'] === '削除' ?? '' ) ){
+                $this->repo->acctDlt($key);
+            }else{
+                $acctAltTbl[$key]['id']         =   (int)($this->dto->postDt['acctUpdDt'][$key]['id'] ?? null);
+                $acctAltTbl[$key]['user_id']    =   (int)($this->dto->postDt['acctUpdDt'][$key]['user_id'] ?? '');
+                $acctAltTbl[$key]['shop_code']  =   (string)($this->dto->shopCode ?? '');
+                $acctAltTbl[$key]['name']       =   (string)($this->dto->postDt['acctUpdDt'][$key]['name'] ?? '');
+                $acctAltTbl[$key]['type']       =   (string)($this->dto->postDt['acctUpdDt'][$key]['type'] ?? '');
+                $acctAltTbl[$key]['sort_order'] =   (string)($this->dto->postDt['acctUpdDt'][$key]['sort_order'] ?? '');
+                $acctAltTbl[$key]['errmsg']     =   (string)($this->dto->postDt['acctUpdDt'][$key]['errmsg'] ?? '');
+                $acctAltTbl[$key]['editType']   =   (string)($this->dto->postDt['acctUpdDt'][$key]['editType'] ?? '');
+                $acctAltTbl[$key]['is_deleted'] =   (int)($this->dto->postDt['acctUpdDt'][$key]['del'] ?? '');
+            }
+        }
+        return 0;
     }
 
-    public function accountsAlt(accountsDto $dto){
+    public function accountsAdd(){
+        $postedRows = [];
+        $postedRows = $this->dto->postDt['acctUpdDt'] ?? [];
+        $this->dto->acctAltTbl = [];
+        foreach ($postedRows as $key => $postRow) {
+            if (!isset($postRow)) {
+                continue;
+            }
+            $this->dto->acctAltTbl[$key]['id']          = (int)($postRow['id'] ?? null);
+            $this->dto->acctAltTbl[$key]['user_id']     = (int)($postRow['user_id'] ?? null);
+            $this->dto->acctAltTbl[$key]['shop_code']   = (string)($this->dto->shopCode ?? '');
+            $this->dto->acctAltTbl[$key]['name']        = (string)($postRow['name'] ?? '');
+            $this->dto->acctAltTbl[$key]['type']        = (string)($postRow['type'] ?? '');
+            $this->dto->acctAltTbl[$key]['sort_order']  = (string)($postRow['sort_order'] ?? '');
+            $this->dto->acctAltTbl[$key]['errmsg']      = (string)($postRow['errmsg'] ?? '');
+            $this->dto->acctAltTbl[$key]['editType']    = (string)($postRow['editType'] ?? '');
+            $this->dto->acctAltTbl[$key]['is_deleted']  = (int)($postRow['del'] ?? 0);
+        }
 
-        $err = $this->svcVali->accountsVali($dto);
-        if($err > 0){
+        $_SESSION['tempNewId'] =  ($_SESSION['tempNewId'] ?? 0 ) - 1 ;
+
+        $userId = $this->dto->id;
+        if (!is_array($this->dto->postDt['acctUpdDt'] ?? null)) {
+            $this->dto->postDt['acctUpdDt'] = [];
+        }
+        array_unshift($this->dto->acctAltTbl,['id'=> $_SESSION['tempNewId'], 'user_id'=>(int)$userId, 
+                                              'shop_code'=>(string)($this->dto->shopCode ?? ''),
+                                              'name'=>(string)($this->dto->postDt['acctUpdDt'][0]['name'] ?? '') ,
+                                              'type'=>(string)($this->dto->postDt['acctUpdDt'][0]['type'] ?? ''), 
+                                              'sort_order'=>(string)($this->dto->postDt['acctUpdDt'][0]['sort_order'] ?? ''),
+                                              'errmsg'=>'', 
+                                              'editType'=>'追加', 
+                                              'is_deleted'=> 0 
+                                          ]);
+
+        return $this->dto->acctAltTbl;
+    }
+
+    public function repoDataMake(){
+
+        foreach($this->dto->postDt['acctUpdDt'] ?? [] as $postKey=>$postRow){
+            $editType = '';
+            $newId = null;
+
+            foreach($this->dto->acctAltTbl as $altKey => $altRow){
+                $isAlt = (  (int)$postRow['id'] )       ===     ( (int)$altRow['id'] )            && 
+                         (
+                            (($postRow['name'] ?? null)         !==     ($altRow['name'] ?? null))         || 
+                            (($postRow['type'] ?? null)         !==     ($altRow['type'] ?? null))         ||
+                            (($postRow['sort_order'] ?? null)   !==     ($altRow['sort_order'] ?? null))   ||
+                            ((int)($postRow['del'] ?? null)     !==     (int)($altRow['is_deleted'] ?? null))
+                         );
+
+                if( $isAlt ){
+
+                    if(($this->dto->acctAltTbl[$altKey]['editType'] ?? '') === '追加'){
+                        $editType = '追加';
+                    }elseif((int)($postRow['del'] ?? 0) === 1){
+                        $editType = '削除';
+                    }else{
+                        $editType = '更新';
+                    }
+
+                    if($this->dto->acctAltTbl[$altKey]['id'] == false){
+                        $newId = 10000 + $altKey;
+                    }
+
+                    $this->dto->acctAltTbl[$altKey] = [
+                        'id'        => (int)($postRow['id'] ? $postRow['id'] : $newId),
+                        'user_id'   => (int)($postRow['user_id'] ?? $this->dto->id),
+                        'shop_code' => (string)($this->dto->shopCode ?? ''),
+                        'name'      => (string)($postRow['name'] ?? ''),
+                        'type'      => (string)($postRow['type'] ?? ''),
+                        'sort_order'=> (string)($postRow['sort_order'] ?? ''),
+                        'errmsg'    => (string)($postRow['errmsg'] ?? ''),
+                        'editType'  => (string)$editType,
+                        'is_deleted'=> (int)($postRow['del'] ?? 0),
+                    ];
+                }
+            }
+        }
+        $this->accountsAlt();
+        return $this->dto->acctAltTbl;
+    }
+
+    public function accountsAlt(){
+
+        $err = $this->vali->accountsVali();
+        if ($err > 0) {
+            unset($_SESSION['acctAltTbl']);
             return;
         }
 
-        foreach($dto->acctAltTbl as $key=>$row){
+        // 画面全体の操作が「削除ボタンのクリック」だったかを変数に持っておく
+        $isDeleteAction = (($this->dto->postDt['AcctPfm'] ?? '') === '削除');
 
-            switch($row['edittype']){
+        foreach ($this->dto->acctAltTbl as $key => $row) {
+            
+            // 💡 1行ごとに「削除」の条件を満たしているかチェック
+            // （前段の repoDataMake で is_deleted に '1' や 1 が入っていると仮定）
+            if ($isDeleteAction && ($row['is_deleted'] === 1 ) ) {
+                $this->repo->acctDlt( $key);
+                continue; // 削除した行は、追加や修正のチェックをスキップして次の行へ
+            }
+            switch ($row['editType']) {
                 case '追加':
-                    $this->svcRepo->acctAdd($dto,$key);
+                    $this->repo->acctAdd($key);
                     break;
+
                 case '更新':
-                    $this->svcRepo->acctEdit($dto,$key);
-                    break;
                 case '削除':
-                    $this->svcRepo->acctDlt($dto,$key);
-                    break;
-                default:
-                    echo "system error: edittype is not set.";
-                    exit;
+                    $this->repo->acctEdit($key);
                     break;
             }
         }
     }
 
-    public function accountsCancel(accountsDto $dto){    //修正データをもとに戻す
+    public function accountsCancel(){    //修正データをもとに戻す
+        unset($this->dto->acctAltTbl);
+        $this->dto->acctAltTbl = $this->dto->accounts;
 
-        $dto->acctAltTbl = $dto->accounts;
+        //＃＃＃＃＃＃＃＃＃　　　cancel用repository作成必要　　　＃＃＃＃＃＃＃＃＃＃＃＃
 
     }
 

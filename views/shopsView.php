@@ -74,7 +74,7 @@
                                         <th style="width: 8%;" >店舗名</th>
                                         <th style="width: 8%;" >開業日</th>
                                         <th style="width: 13%;" >備考</th>
-                                        <th style="width: 25%;"></th>
+                                        <th style="width: 25%;">エラーメッセージ</th>
                                     </tr>
                                     <tr style="background-color: #ffffff; font-weight: bold; text-align: center;">
 
@@ -85,25 +85,25 @@
                                                 pattern="[0-9]{6}" 
                                                 placeholder="例: 000001" 
                                                 type="text" name="newShopCode"
-                                                value="<?= h($newShopsCode ?? '' )?>" >
+                                                value="<?= h($this->dto->postDt['newShopCode'] ?? '' )?>" >
                                         </td>
 
                                         <td style="text-align: left;">  <!--   店舗名称   -->
                                             <input class="txtBoxLineDel" style="width: 90%; text-align: center;" 
                                                 type="text" name="newShopName"
-                                                value="<?= h($newShopName ?? '' ) ?>">
+                                                value="<?= h($this->dto->postDt['newShopName'] ?? '' ) ?>">
                                         </td>
 
                                         <td style="text-align: left;">  <!--   開業日   -->
                                             <input class="txtBoxLineDel" style="width: 90%;" 
                                                 type="text" name="newOpenDate" 
-                                                value="<?= h($newOpenDate ?? '' ) ?>">
+                                                value="<?= h($this->dto->postDt['newOpenDate'] ?? '' ) ?>">
                                         </td>
 
                                         <td style="text-align: left;">  <!--   摘要   -->
                                             <input class="txtBoxLineDel" style="width: 90%;" 
                                                 type="text" name="newSummary" 
-                                                value="<?= h($newSummary ?? '' ) ?>">
+                                                value="<?= h($this->dto->postDt['newSummary'] ?? '' ) ?>">
 
                                         </td>
 
@@ -130,12 +130,17 @@
                             <button name="shopsPfm" type="submit"
                                 onclick="return confirm
                                 ('店舗情報 修正欄の内容をデータベースに登録します。\n本当に変更してもよろしいですか？');"  
-                                value="<?= h('修正実行') ?>" >修正実行
+                                value="<?= h('修正実行') ?>" >保存
                             </button>
                             <button name="shopsPfm" type="submit"
                                 onclick="return confirm
                                 ('店舗情報 修正欄の内容を、もとに戻します。\nよろしいですか？');"  
                                 value="<?= h('キャンセル') ?>" >キャンセル
+                            </button>
+                            <button name="shopsPfm" type="submit"
+                                onclick="return confirm
+                                ('店舗情報 削除済み店舗　復元します。\nよろしいですか？');"  
+                                value="<?= h('削除店舗復元') ?>" >削除店舗復元
                             </button>
                         </div>
                         <br>

@@ -1,7 +1,19 @@
 <?php
 class shopsRepository{
 
-    public function getShopsByUserId($dto): array {
+    private $dto;
+    private $pdo;
+
+    public function __construct($dto, $pdo)
+    {
+        $this->dto         = $dto;
+        $this->pdo         = $pdo;
+        //$this->authSvc     = new authService($this->authDto, $pdo);
+        //$this->shopsSvc    = new shopsService($this->shopsDto, $pdo);
+        
+    }
+
+    public function getShopsByUserId($delMode): array {
         // +-------------+--------------+------+-----+---------------------+----------------+
         // | Field       | Type         | Null | Key | Default             | Extra          |
         // +-------------+--------------+------+-----+---------------------+----------------+
@@ -17,19 +29,22 @@ class shopsRepository{
         // | created_at  | timestamp    | YES  |     | current_timestamp() |                |
         // | edittype    | varchar(255) | YES  |     | NULL                |                |
         // +-------------+--------------+------+-----+---------------------+----------------+
+        //echo "getShopsByUserId={$this->dto->user['id']}";exit;
 
-        $pdo = getPDO();
-
-        $stmt = $pdo->prepare("
+        $stmt = $this->pdo->prepare("
             SELECT id, user_id, shop_code, shop_name , open_date , address , closed , closed_date ,
                 summary , created_at, deleted, edittype
-                FROM shops WHERE user_id = ? AND (edittype IS NULL OR edittype <> ?)
+                FROM shops WHERE 
+                            (user_id = ?)                          AND 
+                            (edittype IS NULL OR edittype <> ?)    AND
+                            (deleted = ?)
         ");
 
         try {
             $stmt->execute([
-                $dto->user['id'] ?? "",
-                '削除'
+                $this->dto->user['id'] ?? "",
+                '削除',
+                $delMode
             ]);
         } catch(Exception $e) {
             $message = $e->getMessage();
@@ -39,28 +54,12 @@ class shopsRepository{
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function shopsAdd($dto, ?int $key = null): void {
-        $pdo = getPDO();
-        $pdo->beginTransaction();
+    public function shopsAdd(?int $key = null): void {
+        $this->pdo->beginTransaction();
         $createdAt = date('Y-m-d H:i:s');
 
         $rowsToInsert = [];
-        $rowsToInsert = $dto->shopAltTbl[$key];
-
-        // 🛠️ デバッグ用：000002の時だけ通して、000001の時は強制終了して止める
-        // if (($rowsToInsert['shop_code'] ?? '') === '000001') {
-        //     echo "【デバッグ】なぜか古い店舗コード(000001)のデータでshopsAddが呼ばれました！<br>";
-        //     echo "渡されたキー(Key)は: " . $key . " です。<br>";
-        //     echo "トレース情報:<br>";
-        //     debug_print_backtrace(); // どこから呼び出されたかを逆引き表示
-        //     exit;
-        // }
-        // if(  $rowsToInsert['editType'] ){
-        //     echo "<br>読み飛ばし{$rowsToInsert['shop_code']}<br>";
-        //     var_dump($rowsToInsert['editType']);
-        //     exit;
-        // }
-
+        $rowsToInsert = $this->dto->shopAltTbl[$key];
         $closedDate = trim((string)($rowsToInsert['closed_date'] ?? ''));
         $closedDateValue = null;
         if ($closedDate !== '') {
@@ -104,11 +103,11 @@ class shopsRepository{
             edittype
         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-        $stmt = $pdo->prepare($sql);
+        $stmt = $this->pdo->prepare($sql);
 
         try {
             $stmt->execute([
-                $rowsToInsert['user_id'] ?? $dto->user['id'] ?? null,
+                $rowsToInsert['user_id'] ?? $this->dto->user['id'] ?? null,
                 $rowsToInsert['shop_code'] ?? null,
                 $rowsToInsert['shop_name'] ?? null,
                 $openDateValue,
@@ -117,25 +116,24 @@ class shopsRepository{
                 $rowsToInsert['summary'] ?? null,
                 $createdAt,
                 $rowsToInsert['deleted'] ?? 0,
-                $rowsToInsert['editType'] ?? null
+                ''
             ]);
-            $pdo->commit();
+            $this->pdo->commit();
         } catch (Exception $e) {
-            $pdo->rollBack();
+            $this->pdo->rollBack();
             $message = $e->getMessage();
             echo $message;
             throw $e;
         }
     }
 
-    public function shopsAlt($dto, ?int $key = null): void {
-        $pdo = getPDO();
-        $pdo->beginTransaction();
+    public function shopsAlt(?int $key = null): void {
+        $this->pdo->beginTransaction();
 
         $createdAt = date('Y-m-d H:i:s');
 
         $rowsToAlt = [];
-        $rowsToAlt = $dto->shopAltTbl[$key];
+        $rowsToAlt = $this->dto->shopAltTbl[$key];
         //var_dump($rowsToAlt);
         $openDate = trim((string)($rowsToAlt['open_date'] ?? ''));
         $openDateValue = $openDate === '' ? null : $openDate;
@@ -143,7 +141,7 @@ class shopsRepository{
         $closedDate = trim((string)($rowsToAlt['closed_date'] ?? ''));
         $closedDateValue = $closedDate === '' ? null : $closedDate;
 
-        $stmt = $pdo->prepare("UPDATE shops SET
+        $stmt = $this->pdo->prepare("UPDATE shops SET
                                     user_id         = ?,
                                     shop_code       = ?,
                                     shop_name       = ?,
@@ -151,7 +149,6 @@ class shopsRepository{
                                     closed          = ?,
                                     closed_date     = ?,
                                     summary         = ?,
-                                    created_at      = ?,
                                     deleted         = ?,
                                     edittype        = ?
                                 WHERE
@@ -164,22 +161,21 @@ class shopsRepository{
 
         try {
         $stmt->execute([
-            $rowsToAlt['user_id'] ?? $dto->user['id'] ?? null,
+            $rowsToAlt['user_id'] ?? $this->dto->user['id'] ?? null,
             $rowsToAlt['shop_code'] ?? null,
             $rowsToAlt['shop_name'] ?? null,
             $openDate,
             (int)($rowsToAlt['closed'] ?? 0),
             $closedDateValue,
             $rowsToAlt['summary'] ?? null,
-            $rowsToAlt['created_at']?? null,
             $rowsToAlt['deleted'] ?? 0,
-            $rowsToAlt['editType'] ?? null,
+            '',
             $rowsToAlt['shop_code'] ?? null
         ]);
-        $pdo->commit();
+        $this->pdo->commit();
 
         } catch (Exception $e) {
-            $pdo->rollBack();
+            $this->pdo->rollBack();
             $message = $e->getMessage();
             echo $message;
             throw $e;

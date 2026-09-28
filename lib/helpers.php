@@ -36,8 +36,54 @@ function dispErrorMsg($errMsg)
    
 }
 
+/**
+ * デバッグログ出力用メソッド
+ */
+
+
+function debug_log(string $message, mixed $data = null, bool $debugMode = true): void {
+    // デバッグモードがオフなら何もせず終了
+    if (!$debugMode) {
+        return;
+    }
+
+    $trace = debug_backtrace();
+    
+    // 呼び出し元の情報を取得
+    $callerFile   = $trace[0]['file']     ?? '不明';
+    $callerLine   = $trace[0]['line']     ?? '不明';
+    $callerMethod = $trace[1]['function'] ?? '不明';
+    $callerClass  = $trace[1]['class']    ?? '';
+    
+    $fileName = basename($callerFile);
+    $location = " [{$fileName}:{$callerLine}] [{$callerClass}->{$callerMethod}]";
+
+    // 1. 保存先のログファイルのパスを指定（例：同じディレクトリの debug.log）
+    // ※環境に合わせて '/var/www/html/test6/logs/debug.log' など絶対パスでの指定が確実です
+    $logFile = __DIR__ . '/debug.log';
+
+    // 2. ログに書き出すテキスト（1行目）を組み立てる
+    $logText = "[DEBUG]{$location} メッセージ: {$message}\n";
+
+    // 3. 配列やオブジェクト（$data）がある場合は、テキストに変換して合体させる
+    if ($data !== null) {
+        // print_r の第2引数を true にすると、画面に出さず「文字列」として変数に代入できます
+        $dataString = print_r($data, true);
+        $logText .= "--- 付属データ ---\n" . $dataString . "-----------------\n";
+    }
+
+    // 4. ファイルへ書き出す（自動で日時のタイムスタンプが先頭に付きます）
+    // 3番目の引数に「3」を指定すると、指定したファイルに「追記（末尾に足していく）」してくれます
+    error_log($logText, 3, $logFile);
+}
+
+
+
+
 class errMsgPopUp
 {
+    private bool $debugMode = false;
+
     //    public function __construct($dto)  {
     //    }
     public  function show($dto)
@@ -68,4 +114,5 @@ class errMsgPopUp
         }
         return null;
     }
+
 }

@@ -13,41 +13,11 @@ require_once ROOT_PATH . '/app/dto/constants.php';
                     th { background: #f4f4f4; text-align: center; }
                     td { border: 1px solid #ccc; padding: 8px; text-align: right; }
                     .text-left { text-align: left; }
-
-                    /* テーブル全体のデザイン */
-                    .tb-style {
-                        width: 100%;
-                        border-collapse: collapse;
-                        margin-top: 10px;
-                    }
-
-                    /* th行：センター、太字 */
-                    .tb-style th {
-                        text-align: center;
-                        font-weight: bold;
-                        padding:8px;
-                        border-bottom: 2px solid #ccc; /* 見出しの下に線を引いて見やすくしています */
-                    } 
-                    /* td共通の余白 */
-                    .tb-style td {
-                        padding: 6px 8px;
-                        border-bottom: 1px solid #eee; /* 行ごとの区切り線 */
-                    }
-
-                    /* 科目名：センター */
-                    .tb-style .col-name {
-                        text-align: center;
-                    }
-
-                    /* 金額：右詰め */
-                    .tb-style .col-amount {
-                        text-align: right;
-                        font-family: 'Courier New', Courier, monospace; /* 数字の桁が綺麗に揃うフォント（お好みで） */
-                    }
-
                 </style>
             </head>
                 <body>
+
+
 
                     <?php if (!empty($_SESSION['flash_message'])): ?>
                         <script>
@@ -55,19 +25,19 @@ require_once ROOT_PATH . '/app/dto/constants.php';
                         </script>
                     <?php unset($_SESSION['flash_message']); endif; ?>
 
+
+
                     <h1>ホーム画面</h1>
                         <!-- <p>ようこそ <?= htmlspecialchars($_SESSION['user']['userName'] ?? 'ゲスト') ?></p> -->
-                        <div class="two-col" style="display:flex; gap:1rem; align-items:flex-start;">
-                            <div class="left-col" style="flex:1;">
 
                         <?php
                             //echo "qqqqqqq : {$_GET['route']}";
                             require_once ROOT_PATH.'/views/procSlct.php'; 
 
                         // バリデーション用メッセージ領域（常に高さを確保して表示によるレイアウト崩れを防ぐ）
-                        // $this->dto->errData は ['fieldName'=>'msg', $OwnUrl=>'msg'] の可能性がある
+                        // $dto->errData は ['fieldName'=>'msg', $OwnUrl=>'msg'] の可能性がある
                         $validationItems = [];
-                        foreach ($this->dto->errData ?? [] as $field => $msg) {
+                        foreach ($dto->errData ?? [] as $field => $msg) {
                             // OwnUrlキーは http:// or https:// で始まるので除外
                             if (is_string($field) && (strpos($field, 'http://') === 0 || strpos($field, 'https://') === 0)) {
                                 continue;
@@ -92,7 +62,7 @@ require_once ROOT_PATH . '/app/dto/constants.php';
                         <?php
                         ?>
 
-                    <h2>試算表表示：<?= $this->dto->reportType ?></h2>
+                    <h2>試算表表示：<?= $dto->reportType ?></h2>
                     <form action="index.php?route=home" method="post">試算表<br>
 
                         <input type="hidden" name="csrfTokenKey" value="<?= h($tokenKey) ?>">
@@ -119,38 +89,38 @@ require_once ROOT_PATH . '/app/dto/constants.php';
                         <input type="hidden" name="csrfTokenKey" value="<?= h($tokenKey) ?>">
 <?php
 
-                if ($this->dto->reportType) {
-                    if($this->dto->reportType === getujiSisanhyou){
-                        $this->dto->from = date('Y-m', strtotime($this->dto->from));
+                if ($dto->reportType) {
+                    if($dto->reportType === getujiSisanhyou){
+                        $dto->from = date('Y-m', strtotime($dto->from));
 ?>
                         年月：<input type="month" name="from"
-                        value="<?= h($this->dto->from ) ?>" placeholder="例: 2025-01">
+                        value="<?= h($dto->from ) ?>" placeholder="例: 2025-01">
                         
 <?php               } 
-                    if($this->dto->reportType  === nenjiSisanhyou){
+                    if($dto->reportType  === nenjiSisanhyou){
 ?>
                         年：<input type="number" name="nenji_nen" min='1900' max='2100'
-                        value="<?= h($this->dto->post['nenji_nen'] ?? "") ?>" placeholder="例: 2025">
+                        value="<?= h($dto->post['nenji_nen'] ?? "") ?>" placeholder="例: 2025">
                         
 <?php
-                        $this->dto->from = isset($_POST['nenji_nen']) ? $_POST['nenji_nen'] . '0101' : "";
+                        $dto->from = isset($_GET['nenji_nen']) ? $_GET['nenji_nen'] . '0101' : "";
                     };
-                    if($this->dto->reportType  === ruisekiSisanhyou){
+                    if($dto->reportType  === ruisekiSisanhyou){
 ?>
-                        試算表期日：<input type="date" name="to" value="<?= h($this->dto->to ) ?>" placeholder="例: 2025-01-01">
+                        試算表期日：<input type="date" name="to" value="<?= h($dto->to ) ?>" placeholder="例: 2025-01-01">
                         
 <?php               }
-                    if($this->dto->reportType  === zenkiHikaku){
+                    if($dto->reportType  === zenkiHikaku){
 ?>
                         基準年：<input type="number" name="kijyun_nen" min='1900' max='2100'
                         value=""  placeholder="例: 2025">
                         
-<?php                   $this->dto->from = isset($_POST['kijyun_nen'])?$_POST['kijyun_nen'] . '0101':"";
+<?php                   $dto->from = isset($_GET['kijyun_nen'])?$_GET['kijyun_nen'] . '0101':"";
                     };
-                    if($this->dto->reportType  === kikanSisanhyou){
+                    if($dto->reportType  === kikanSisanhyou){
 ?>
-                        開始日：<input type="date" name="from" value="<?= h($this->dto->from) ?>" placeholder="例: 2025-01-01">
-                        終了日：<input type="date" name="to" value="<?= h($this->dto->to ) ?>" placeholder="例: 2025-01-01">
+                        開始日：<input type="date" name="from" value="<?= h($dto->from) ?>" placeholder="例: 2025-01-01">
+                        終了日：<input type="date" name="to" value="<?= h($dto->to ) ?>" placeholder="例: 2025-01-01">
 <?php
                     };
                 }
@@ -159,9 +129,9 @@ require_once ROOT_PATH . '/app/dto/constants.php';
 			            <button name="KeisanJikkou" type="submit" value="Exec"> 計算実行</button>
 		            </form>
 <?php
-    if (in_array($this->dto->reportType, [getujiSisanhyou, nenjiSisanhyou, kikanSisanhyou])){
+    if (in_array($dto->reportType, [getujiSisanhyou, nenjiSisanhyou, kikanSisanhyou])){
 ?>
-        <p>抽出期間： <?= h($this->dto->from) ?> 〜 <?= h($this->dto->to ) ?></p>
+        <p>抽出期間： <?= h($dto->from) ?> 〜 <?= h($dto->to ) ?></p>
         <table>
 	        <thead>
 		        <tr>
@@ -173,7 +143,7 @@ require_once ROOT_PATH . '/app/dto/constants.php';
 	        </thead>
 	        <tbody>
 <?php
-    foreach ($this->dto->viewResult as $row){
+    foreach ($dto->viewResult as $row){
         if ($row['row_type'] === 'account'){
 ?>
 		        <tr>
@@ -198,9 +168,9 @@ require_once ROOT_PATH . '/app/dto/constants.php';
         </table>
 <?php
     }
-    if (in_array($this->dto->reportType,[ruisekiSisanhyou])):
+    if (in_array($dto->reportType,[ruisekiSisanhyou])):
 ?>
-        <p>期間： <?= h($this->dto->from) ?> 〜 <?= h($this->dto->to ) ?></p>
+        <p>期間： <?= h($dto->from) ?> 〜 <?= h($dto->to ) ?></p>
         <table>
 	        <thead>
 	            <tr>
@@ -210,7 +180,7 @@ require_once ROOT_PATH . '/app/dto/constants.php';
 	        </thead>
 	    <tbody>
 <?php
-        foreach ($this->dto->viewResult as $row):
+        foreach ($dto->viewResult as $row):
             if ($row['row_type'] === 'account'):
 ?>
 	            <tr>
@@ -266,10 +236,10 @@ document.addEventListener('DOMContentLoaded', function(){
 });
 </script>
 <?php
-    if (in_array($this->dto->reportType,[zenkiHikaku])){
+    if (in_array($dto->reportType,[zenkiHikaku])){
 ?>
-        <p>当期期間： <?= h($this->dto->from) ?> 〜 <?= h($this->dto->to) ?></p>
-        <p>前期期間： <?= h($this->dto->zenki_from) ?? '' ?> 〜 <?= h($this->dto->zenki_to) ?? '' ?></p>
+        <p>当期期間： <?= h($dto->from) ?> 〜 <?= h($dto->to) ?></p>
+        <p>前期期間： <?= h($dto->zenki_from) ?? '' ?> 〜 <?= h($dto->zenki_to) ?? '' ?></p>
         <table>
 	        <thead>
 		        <tr>
@@ -281,7 +251,7 @@ document.addEventListener('DOMContentLoaded', function(){
 	        </thead>
 	        <tbody>
 <?php
-        foreach ($this->dto->viewResult as $row){
+        foreach ($dto->viewResult as $row){
  ?>
 		        <tr>
 			        <td class="text-left"><?= h($row['name']) ?></td>
@@ -293,47 +263,6 @@ document.addEventListener('DOMContentLoaded', function(){
         }
     }
 ?>
-
-<?php
-    for($idx=0; $idx < 10; $idx++){
-        $keihiItiran[$idx] = ['name'=> 'name'. $idx,  'amount'=> 'amount' . $idx];
-    }
-?>
-
 	        </tbody>
         </table>
-
-</div>
-        <div class="right-col" style="flex:1;">
-            <div style="border:1px dashed #ccc; padding:1rem;">
-                右側表示エリア
-                   
-                <!-- テーブルにCSSクラス「tb-style」を適用 -->
-                <table class="tb-style">
-                    <tbody>
-                        <tr>
-                            <th>経費科目</th>
-                            <th>金額</th>
-                        </tr>
-                            <?php foreach ($this->dto->keihiItiran as $key => $row) : ?>
-                        <tr>
-                            <!-- クラス「col-name」でセンター寄せ -->
-                            <td class="col-name">
-                                <?= h($row['name']) ?>
-                            </td>
-                            <!-- クラス「col-amount」で右詰め -->
-                            <td class="col-amount">
-                                <?php 
-                                   // 3桁カンマ区切りにし、前後に ¥ と .- を付与
-                                   $formatted_debit = number_format((int)$row['debit']);
-                                   echo h("¥{$formatted_debit}.-");
-                                ?>
-                            </td>
-                        </tr>
-                            <?php endforeach; ?>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-</div>
-</html>
+    </html>

@@ -1,45 +1,54 @@
 <?php
+//デバッグ出力　function debug_log(string $message, mixed $data = null, bool $debugMode = true): void {
 require_once ROOT_PATH.'/app/services/authService.php';
 require_once ROOT_PATH.'/app/repositories/userRepository.php';
 require_once ROOT_PATH.'/app/repositories/voucherRepository.php';
 require_once ROOT_PATH.'/app/dto/accountsDto.php';
+require_once ROOT_PATH . '/lib/helpers.php';
+
 
 class accountsRepository
 {
-    public accountsDto          $ctrDto;
+    private     $dto;
+    private     $pdo;
+    private     bool $debugMode;
 
-    public function __construct(accountsDto $dto)    {
+    public function __construct(accountsDto $dto, $pdo)    {
+        $this->dto  = $dto;
+        $this->pdo  = $pdo;
+        $this->debugMode = true; 
     }
 
-    public function getAccounts(accountsDto $dto, bool $includeDeleted = false)  {
-        try{
-            //$pdo = getPDO();
-            //$stmt = $pdo->query("
-            //    SELECT id, user_id, name, type
-            //    FROM accounts
-            //    WHERE is_deleted = 0
-            //    ORDER BY type,name
-            //");
+    public function getAccounts(bool $includeDeleted = true)  {
+        if ($this->dto->shopCode === null || $this->dto->shopCode === '') {
+            throw new InvalidArgumentException('shopCode is required.');
+        }
 
-            $Where = $includeDeleted ? "" : "WHERE is_deleted = 0";
-            $pdo = getPDO();
-            $stmt = $pdo->query("
-                SELECT id, user_id, name, type, is_deleted
+        if ($this->dto->id === null || $this->dto->id === '') {
+            throw new InvalidArgumentException('userId is required.');
+        }
+        try{
+            if($includeDeleted) {
+                $Where0 = "WHERE ( is_deleted = 0  OR  is_deleted =  1 ) ";
+            } else {
+                $Where0 = "WHERE is_deleted = 0 ";
+            }
+            //str_contains(検索対象文字列, 探したい文字列)
+            if(str_contains($this->dto->shopCode, 'all')) {
+                $allShopCode = "";
+            } else {
+                $allShopCode = " AND shop_code = " . $this->dto->shopCode ;
+            }
+
+            $Where = $Where0 . " AND user_id = " . $this->dto->id . $allShopCode;
+            //var_dump($this->dto->shopCode);exit;
+            //echo $Where;exit;
+            $stmt = $this->pdo->query("
+                SELECT id, user_id, shop_code, name, type, sort_order, is_deleted
                 FROM accounts
                 $Where
                 ORDER BY type,name
             ");
-
-            //$pdo = getPDO();
-            //$stmt = $pdo->prepare("
-            //    SELECT id, user_id, name, type
-            //    FROM accounts
-            //    WHERE is_deleted = ?
-            //    ORDER BY type,name
-            //");
-            //$stmt->execute([
-            //    $_GET['route'] === 'accounts.edit' ? 1 : 0
-            //]);
 
         } catch(Exception $e) {
             $message = $e->getMessage();
@@ -50,98 +59,110 @@ class accountsRepository
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    //public function AcctDelete(accountsDto $dto) {
-    //    try{
-    //        $pdo = getPDO();
-    //        $pdo->beginTransaction();
 
-            // 該当ユーザーIDの勘定科目テーブルを削除
-    //        $stmtVoucher = $pdo->prepare("DELETE FROM accounts WHERE user_id = ?");
-    //        $stmtVoucher->execute($dto->id);
+    public function getJournalDtails($shopCode, $userId){
+        if ($shopCode === null || $shopCode === '') {
+            throw new InvalidArgumentException('shopCode is required.');
+        }
 
-    //        $pdo->commit();
-    //    } catch (Exception $e) {
-    //        $pdo->rollBack();
-    //        throw $e;
-    //    }
+        if ($userId === null || $userId === '') {
+            throw new InvalidArgumentException('userId is required.');
+        }
+        try{
+            $stmt = $this->pdo->prepare("
+                SELECT  jv.shop_code, 
+                        jv.user_id, 
+                        jd.account_id  
+                    FROM journal_vouchers AS jv
+                JOIN journal_details AS jd ON jv.id = jd.voucher_id
+                WHERE jv.shop_code = ? AND jv.user_id = ?
+                ORDER BY jv.id, jd.account_id
+            ");
+            $stmt->execute([$shopCode, $userId]);
 
-    //}
+        } catch(Exception $e) {
+            $message = $e->getMessage();
+            echo $message;
+            throw $e;
+        }
 
-    public function acctAdd(accountsDto $dto , $key) {
-        $pdo = getPDO();
-        $pdo->beginTransaction();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+
+
+    public function acctAdd($key) {
+        $this->pdo->beginTransaction();
         try {
             
-            $stmt = $pdo->prepare("
+            $stmt = $this->pdo->prepare("
                 INSERT INTO accounts
-                    (id, user_id, name, type)
-                    VALUES (?,?,?,?)
+                    (id, user_id, shop_code, name, type, sort_order, is_deleted)
+                    VALUES (?,?,?,?,?,?,?)
             ");
 
             $stmt->execute([
                 null,
-                $dto->acctAltTbl[$key]['user_id'] ?? "" ,
-                $dto->acctAltTbl[$key]['name'] ?? "",
-                $dto->acctAltTbl[$key]['type'] ?? ""
+                $this->dto->acctAltTbl[$key]['user_id'] ?? "" ,
+                $this->dto->acctAltTbl[$key]['shop_code'] ?? "",
+                $this->dto->acctAltTbl[$key]['name'] ?? "",
+                $this->dto->acctAltTbl[$key]['type'] ?? "",
+                $this->dto->acctAltTbl[$key]['sort_order'] ?? "",
+                $this->dto->acctAltTbl[$key]['is_deleted'] ?? "0"
             ]);
-            $pdo->commit();
+            $this->pdo->commit();
 
         } catch (Exception $e) {
-            $pdo->rollBack();
+            $this->pdo->rollBack();
             throw $e;
         }
 
     }
 
-    public function acctEdit(accountsDto $dto , $key) {
-        $pdo = getPDO();
-        echo "<br>repo-edit name=".$dto->acctAltTbl[$key]['name'].   " type=".$dto->acctAltTbl[$key]['type']. 
-              "id=".$dto->acctAltTbl[$key]['id']. "user_id=".$dto->acctAltTbl[$key]['user_id']. "<br>";
-        $pdo->beginTransaction();
+    public function acctEdit($key) {
+        $this->pdo->beginTransaction();
         try {
             
-            $stmt = $pdo->prepare("
+            $stmt = $this->pdo->prepare("
                 UPDATE accounts
-                    SET name = ?, type = ?, is_deleted = ?
+                    SET name = ?, type = ?, sort_order = ?, is_deleted = ?
                     WHERE id = ? AND user_id = ? 
             ");
 
             $stmt->execute([
-                $dto->acctAltTbl[$key]['name'] ?? "",
-                $dto->acctAltTbl[$key]['type'] ?? "",
-                $dto->acctAltTbl[$key]['is_deleted'] ?? 0,
-                $dto->acctAltTbl[$key]['id'] ?? "",
-                $dto->acctAltTbl[$key]['user_id'] ?? "" 
+                $this->dto->acctAltTbl[$key]['name'] ?? "",
+                $this->dto->acctAltTbl[$key]['type'] ?? "",
+                $this->dto->acctAltTbl[$key]['sort_order'] ?? "",
+                $this->dto->acctAltTbl[$key]['is_deleted'] ?? 0,
+                $this->dto->acctAltTbl[$key]['id'] ?? "",
+                $this->dto->acctAltTbl[$key]['user_id'] ?? "" 
             ]);
-            $pdo->commit();
+            $this->pdo->commit();
 
         } catch (Exception $e) {
-            $pdo->rollBack();
+            $this->pdo->rollBack();
             throw $e;
         }
 
     }
 
-    public function acctDlt(accountsDto $dto , $key) {
-        $pdo = getPDO();
-        $pdo->beginTransaction();
+    public function acctDlt($key) {
+        $this->pdo->beginTransaction();
         try {
             
-            $stmt = $pdo->prepare("
-                UPDATE accounts
-                    SET is_deleted = ?
+            $stmt = $this->pdo->prepare("
+                DELETE FROM accounts
                     WHERE id = ? AND user_id = ?
             ");
 
             $stmt->execute([
-                1,
-                $dto->acctAltTbl[$key]['id'] ?? "",
-                $dto->acctAltTbl[$key]['user_id'] ?? ""
+                $this->dto->acctAltTbl[$key]['id'] ?? "",
+                $this->dto->acctAltTbl[$key]['user_id'] ?? ""
             ]);
-            $pdo->commit();
+            $this->pdo->commit();
 
         } catch (Exception $e) {
-            $pdo->rollBack();
+            $this->pdo->rollBack();
             throw $e;
         }
 

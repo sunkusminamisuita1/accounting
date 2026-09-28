@@ -75,6 +75,12 @@ class voucherDto
 //        $this->amount       = [];
     }
 
+    function dbg() {
+        echo "<br><br><br>";
+        $trace = debug_backtrace();
+        print_r($trace[1] ?? null);
+    }
+
     public function list()
     {
         $this->dtoDetails   = $this->initDetails??[]; //初期値の明細行をDtoにセット
@@ -87,11 +93,51 @@ class voucherDto
 
         $this->summary      = $_POST['listVcrSummary'] ?? $_SESSION['vcrSearchCond']['summary'] ?? '';  //search.phpのlistVcrSummary
         $this->listVcrNum   = $_POST['listVcrNum'] ?? $_SESSION['vcrSearchCond']['listVcrNum'] ?? '';   //search.phpのlistVcrNum
-        if(empty($_POST['lstVcrSearchStartDate']) && empty($_POST['lstVcrSearchEndDate']) ) {
-            $this->vcrListDatePeriod   = $_SESSION['vcrSearchCond']['vcrListDatePeriod'] ?? ['検索開始日付' => '' , '検索終了日付' => '']; //search.phpの検索日付期間
-        }else{
-            $this->vcrListDatePeriod   =   [ '検索開始日付' => $_POST['lstVcrSearchStartDate'] ?? '' , '検索終了日付' => $_POST['lstVcrSearchEndDate'] ?? '' ];
+
+
+        // ① POSTを取得
+        $postStartDate = $_POST['lstVcrSearchStartDate'] ?? '';
+        $postEndDate   = $_POST['lstVcrSearchEndDate'] ?? '';
+
+        // ② POSTがあればPOST、なければSESSION
+        if ($postStartDate !== '' || $postEndDate !== '') {
+            $this->vcrListDatePeriod = [
+                '検索開始日付' => $postStartDate,
+                '検索終了日付' => $postEndDate
+            ];
+        } else {
+            $this->vcrListDatePeriod = $_SESSION['vcrSearchCond']['vcrListDatePeriod']
+                ?? [
+                    '検索開始日付' => '',
+                    '検索終了日付' => ''
+                ];
         }
+        $_SESSION['vcrSearchCond']['vcrListDatePeriod'] = '';
+        // ③ 未入力ならデフォルト値
+        if ($this->vcrListDatePeriod['検索開始日付'] === '') {
+            $this->vcrListDatePeriod['検索開始日付']
+                = date('Y-m-d', strtotime('-100 year'));
+        }
+
+        if ($this->vcrListDatePeriod['検索終了日付'] === '') {
+            $this->vcrListDatePeriod['検索終了日付']
+                = date('Y-m-d');
+        }
+        //$this->dbg();      
+        // if(empty($_POST['lstVcrSearchStartDate']) && empty($_POST['lstVcrSearchEndDate']) ) {
+        //     $this->vcrListDatePeriod   = $_SESSION['vcrSearchCond']['vcrListDatePeriod'] ?? ['検索開始日付' => '' , '検索終了日付' => '']; //search.phpの検索日付期間
+        // }else{
+        //     $this->vcrListDatePeriod   =   [ '検索開始日付' => $_POST['lstVcrSearchStartDate'] ?? '' , '検索終了日付' => $_POST['lstVcrSearchEndDate'] ?? '' ];
+        // }
+
+
+        // if(empty($this->vcrListDatePeriod[ '検索開始日付'])) {
+        //     $this->vcrListDatePeriod[ '検索開始日付'] = date('Y-m-d', strtotime('-100 year')); //検索開始日付の初期値を100年前にセット
+        // }
+        // if(empty($this->vcrListDatePeriod[ '検索終了日付'])) {
+        //     $this->vcrListDatePeriod[ '検索終了日付'] = date('Y-m-d'); //検索終了日付の初期値を本日にセット
+        // }
+
 
         $_SESSION['vcrSearchCond'] = ['date'                => $this->date ,
                                       'summary'             => $this->summary,

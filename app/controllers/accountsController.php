@@ -1,83 +1,91 @@
 <?php
-
+//デバッグ出力　function debug_log(string $message, mixed $data = null, bool $debugMode = true): void {
 require_once ROOT_PATH . '/app/services/accountsService.php';
 require_once ROOT_PATH . '/app/dto/accountsDto.php';
 require_once ROOT_PATH . '/lib/helpers.php';
 
 class accountsController {
-    Public        $ctrSvc;
-    public        $ctrDto;
+    Public        $service;
+    public        $dto;
     public        $ctrerrMsgPopUp;
+    private       $pdo;
 
-    public function __construct()
+    public function __construct($pdo)
     {
-        $this->ctrDto   =   new accountsDto();
-        $this->ctrSvc   =   new accountsService($this->ctrDto);
-        $this->ctrerrMsgPopUp = new errMsgPopUp($this->ctrDto);
+        $this->pdo          =   $pdo;
+        $this->dto          =   new accountsDto();
+        $this->service      =   new accountsService($this->dto,$this->pdo);
+        $this->ctrerrMsgPopUp = new errMsgPopUp($this->dto);
     }
 
     public function index()
     {
-        if( ! $this->ctrDto->accounts){
-            $this->ctrSvc->getAccounts($this->ctrDto);
+        if( ! $this->dto->accounts){
+            $this->service->getAccounts();
         }
 
         $message = '';
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             requireCsrf();
-            $this->ctrDto->postDt = $_POST;
+            $this->dto->postDt = $_POST;
             $viewEditKey = $_POST['viewEditKey'] ?? null;
             switch($_POST['AcctPfm']){
 
                 case '追加':
-                    $this->restoreEditingData($this->ctrDto);
-                    $this->ctrSvc->accountsAdd($this->ctrDto);
-                    $this->prepareNextRequest($this->ctrDto);
+                    $this->dto->acctAltTbl = $this->restoreEditingData();
+                    $_SESSION['acctAltTbl'] = $this->service->accountsAdd();
                     break;
 
-                case '削除':  //削除ボタンは、削除フラグのon offを切り替え,acctAltTblのis_deleted,errmsg,edittypeを更新
-                    $this->restoreEditingData($this->ctrDto);
-                    $this->ctrSvc->accountsEdit($this->ctrDto,$viewEditKey);
-                    $this->prepareNextRequest($this->ctrDto);
+                case '削除':  //削除ボタンは、削除フラグのon の行をaccountsテーブルから削除する。
+                    $this->dto->acctAltTbl = $this->restoreEditingData();
+                    $err = $this->service->accountsDlt();
+                    if ($err) {
+                        echo "<script>alert('削除できません。仕訳帳に使用されている勘定科目は削除できません。');</script>";
+                        break;
+                    }
+                    unset($_SESSION['acctAltTbl']);
+                    $this->service->getAccounts();
+                    $_SESSION['acctAltTbl'] = $this->dto->acctAltTbl;
                     break;
 
                 case '修正実行':  //acctAltTblの内容をDBに反映する。                  
-                    $this->restoreEditingData($this->ctrDto);
-                    $this->ctrSvc->repoDataMake($this->ctrDto);
-                    //echo "<br><pre>" . var_dump($this->ctrDto->accounts) . "</pre><br><br>";
-                    //echo "<br><pre>" . var_dump($this->ctrDto->acctAltTbl) . "</pre><br><br>";
-                    //exit;
-                    //break;
-                    $this->ctrSvc->accountsAlt($this->ctrDto,$viewEditKey);
-                    $this->prepareNextRequest($this->ctrDto);
+                    $this->dto->acctAltTbl = $this->restoreEditingData();
+                    $err = $this->service->accountsDlt();
+                    if ($err) {
+                        echo "<script>alert('削除できません。仕訳帳に使用されている勘定科目は削除できません。');</script>";
+                        break;
+                    }
+                    $gomi   =   $this->service->repoDataMake();
+                    unset($_SESSION['acctAltTbl']);
+                    //$this->service->getAccounts();
+                    $_SESSION['acctAltTbl'] = $this->dto->acctAltTbl;
                     break;
 
                 case 'キャンセル':
-                    $this->ctrSvc->accountsCancel($this->ctrDto);
+                    $this->service->accountsCancel();
                     break;
-
 
             }
             
         }
 
-            $tokenKey = generateCsrfToken();
-            $accounts   =   $this->ctrDto->acctAltTbl;
+        $tokenKey = generateCsrfToken();
+        unset($accounts);
+        $accounts   =   $this->dto->acctAltTbl;
         require ROOT_PATH.'/views/accountsView.php';
     }
 
-    private function restoreEditingData(accountsDto $dto){    //すでに修正データがある場合、編集データにコピー
-
-        if($_SESSION['accounts'] ?? ""){    
-            $dto->acctAltTbl = $_SESSION['accounts'];
-            unset($_SESSION['accounts']);
-        }  
+    private function restoreEditingData(){    //すでに修正データがある場合、編集データにコピー
+        $acctAltTbl = $this->dto->acctAltTbl;
+        if(isset($_SESSION['acctAltTbl'] )){ 
+            $acctAltTbl = $_SESSION['acctAltTbl'];
+            unset($_SESSION['acctAltTbl']);
+        }
+        return $acctAltTbl;
 
     }
 
-    private function prepareNextRequest(accountsDto $dto){    //次セッション、renderデータ準備
-        //$dto->acctAltTbl = array_values($dto->acctAltTbl); 
-        $_SESSION['accounts']   = $dto->acctAltTbl;
+    private function prepareNextRequest(){    //次セッション、renderデータ準備
  
     }
 
