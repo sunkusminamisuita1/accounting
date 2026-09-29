@@ -17,18 +17,6 @@ class accountsValidator
         $this->pdo          =   $pdo;
     }
 
-    /**
-     * デバッグログ出力用メソッド
-     */
-    // private function log(string $message, mixed $data = null): void {
-    //     if ($this->debugMode) {
-    //         echo "[DEBUG] " . $message . "\n";
-    //         if ($data !== null) {
-    //             print_r($data);
-    //         }
-    //     }
-    // }
-
     public function accountsVali(): int
     {
         // パスカルケース（大文字始まり）だったローカル変数を、PHPで一般的なキャメルケース（小文字始まり）に統一
@@ -49,10 +37,7 @@ class accountsValidator
             // 2. 削除済み状態の反映
             if (!empty($row['is_deleted'])) {
                 $this->dto->acctAltTbl[$key]['errmsg'] = "このデータは削除済みです。";
-                //echo "<br>2.1 {$errFlg}";
-                //$this->dto->acctAltTbl[$key]['editType'] = "削除";
             }
-            //echo "<br>1";
             // 3. name 必須・文字数チェック
             $trimmedName = trim(mb_convert_kana($row['name'] ?? '', "s", "UTF-8"));
             if ($trimmedName === '') {
@@ -65,9 +50,6 @@ class accountsValidator
                 $errFlg++;
                 continue;
             }
-
-
-
 
             // 3. sort_order 必須・文字数チェック
             $trimmedSortOrder = trim($row['sort_order'] ?? '');
@@ -90,18 +72,6 @@ class accountsValidator
                 continue;
             }
 
-
-            // if ( (mb_strlen($trimmedSortOrder, 'UTF-8') > 0) && (mb_strlen($trimmedSortOrder, 'UTF-8') < 4)  ){
-            //     $this->dto->acctAltTbl[$key]['errmsg'] = "ソート順は1~4桁の数字で入力してください。";
-            //     $errFlg++;
-            //     continue;
-            // }
-
-            // if (!filter_var($trimmedSortOrder, FILTER_VALIDATE_INT)) {
-            //     $this->dto->acctAltTbl[$key]['errmsg'] = "ソート順は整数で入力してください。";
-            //     $errFlg++;
-            //     continue;
-            // }
             $trimmedSortOrder = (int)$trimmedSortOrder;
 
             if ($trimmedSortOrder > 9999 || $trimmedSortOrder < 0) {
@@ -109,9 +79,6 @@ class accountsValidator
                 $errFlg++;
                 continue;
             }
-
-
-
 
             // 4. 削除フラグが立っているデータの書き換えチェック
             $isDeleted = $this->dto->postDt['acctUpdDt'][$key]['del'] ?? '0';
@@ -134,7 +101,6 @@ class accountsValidator
                 }
             }
 
-
             // 4.5 勘定科目テーブル行削除の場合、仕訳帳に使用されているか確認し、使用されている場合はエラー処理
             if ($isDeleted) {
 
@@ -144,18 +110,12 @@ class accountsValidator
                             ( $journalRow['user_id'] == $this->dto->id )          &&
                             ( $journalRow['account_id'] == $row['id'] );
                 });
-                //var_dump($filteredJournalDetails); // デバッグ用: 仕訳帳の詳細を出力
-
 
                 if (!empty($filteredJournalDetails)) {
                     $this->dto->acctAltTbl[$key]['errmsg'] = "この勘定科目は仕訳帳に使用されているため、削除できません。";
                     $errFlg++;
                 }
             }
-            //echo "<br>" . $this->dto->acctAltTbl[$key]['errmsg'];
-
-
-
 
             // 5. 送信データ内での重複チェック
             if (!$isDeleted) {
@@ -169,16 +129,47 @@ class accountsValidator
                 if (count($sameRows) >= 2) {
                     $this->dto->acctAltTbl[$key]['errmsg'] = "このデータはすでに登録（重複）されています。";
                     $errFlg++;
-                }
+                    }
             }
+
+
+                // $accountCodeMinMax = array_filter($this->dto->accountsTypeTbl, function($searchRow) use ($row) {
+                //     if (($searchRow['type'] ?? '') === $row['type']) {
+                //         return true;
+                //     }
+                //     return false;
+                // });
+                // if( ((int)$row['sort_order'] <  (int)$accountCodeMinMax['min_code'])      ||
+                //     ((int)$row['sort_order'] >  (int)$accountCodeMinMax['max_code']) ) {
+                //     $this->dto->acctAltTbl[$key]['errmsg'] = 
+                //         "表示順序は{$accountCodeMinMax['min_code']}から{$accountCodeMinMax['max_code']}の間で指定してください。";
+                //     $errFlg++;
+                // }
+                // var_dump($accountCodeMinMax);exit;
+
+                //表示順序範囲チェック
+                foreach ($this->dto->accountsTypeTbl as $searchRow) {
+                    if (($searchRow['type'] ?? '') === $row['type']) {
+                        $accountCodeMinMax = $searchRow;
+                        break;
+                    }
+                }
+                if( ((int)$row['sort_order'] <  (int)$accountCodeMinMax['min_code'])      ||
+                    ((int)$row['sort_order'] >  (int)$accountCodeMinMax['max_code']) ) {
+                    $this->dto->acctAltTbl[$key]['errmsg'] = 
+                        "表示順序は{$accountCodeMinMax['min_code']}から{$accountCodeMinMax['max_code']}の間で指定してください。";
+                    $errFlg++;
+                }
+
+
+
+
         }
 
         if ($errFlg > 0) {
             $this->dto->errData[0] = "登録エラーが存在します。エラーを修正してください。";
         }
-
         debug_log("バリデーション終了。エラー数: " . $errFlg);
-
         return $errFlg;
     }
 }

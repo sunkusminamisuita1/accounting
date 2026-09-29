@@ -21,8 +21,8 @@ class accountsService{
         
         $this->repo =   new accountsRepository($this->dto, $this->pdo);
         $this->vali =   new accountsValidator($this->dto, $this->pdo, $this->repo, false);
-
-        //$this->orgAcctAltTbl = [];
+        $this->dto->accountsTypeTbl = $this->repo->getAccountsType();
+        //var_dump($this->dto->accountsTypeTbl);exit;
     }
 
     public function getAccounts(){

@@ -59,6 +59,22 @@ class accountsRepository
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function getAccountsType()  {
+
+        try{
+            $stmt = $this->pdo->query("
+                SELECT id, document, type, min_code, max_code
+                FROM accounts_type
+            ");
+
+        } catch(Exception $e) {
+            $message = $e->getMessage();
+            echo $message;
+            throw $e;
+        }
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 
     public function getJournalDtails($shopCode, $userId){
         if ($shopCode === null || $shopCode === '') {

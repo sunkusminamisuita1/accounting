@@ -20,6 +20,7 @@ class accountsDto{
     public array $editedRow = [];
     public array $postDt = [];
     public string $shopCode;
+    public array $accountsTypeTbl = [];
 
 
     public function __construct()    {
