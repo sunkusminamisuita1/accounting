@@ -156,7 +156,20 @@ class voucherController{
     }
     private function render($renderType) {
         $vcrListResult  = $this->dto->vcrListResult ?? [];
-        $accounts       = $this->dto->accounts ?? [];
+        //$accounts       = $this->dto->accounts ?? [];
+
+        //echo "<pre>";
+        //var_dump($this->dto->accounts);
+        //echo "</pre>";
+        $accounts = array_filter($this->dto->accounts, function($row)  {
+            if ($row['is_deleted'] !== 1) {
+                return true;
+            }
+            return false;
+        });
+
+
+
         $tokenKey       = $this->tokenKey;
         if($renderType === 'create'){
             $details = $this->dto->dtoDetails;

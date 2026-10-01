@@ -39,22 +39,22 @@ class accountsController {
                 case '削除':  //削除ボタンは、削除フラグのon の行をaccountsテーブルから削除する。
                     $this->dto->acctAltTbl = $this->restoreEditingData();
                     $err = $this->service->accountsDlt();
-                    if ($err) {
-                        echo "<script>alert('削除できません。仕訳帳に使用されている勘定科目は削除できません。');</script>";
-                        break;
-                    }
-                    unset($_SESSION['acctAltTbl']);
+                    // if ($err) {
+                    //     echo "<script>alert('削除できません。仕訳帳に使用されている勘定科目は削除できません。');</script>";
+                    //     break;
+                    // }
+                    //unset($_SESSION['acctAltTbl']);
                     $this->service->getAccounts();
                     $_SESSION['acctAltTbl'] = $this->dto->acctAltTbl;
                     break;
 
                 case '修正実行':  //acctAltTblの内容をDBに反映する。                  
                     $this->dto->acctAltTbl = $this->restoreEditingData();
-                    $err = $this->service->accountsDlt();
-                    if ($err) {
-                        echo "<script>alert('削除できません。仕訳帳に使用されている勘定科目は削除できません。');</script>";
-                        break;
-                    }
+                    //$err = $this->service->accountsDlt();
+                    //if ($err) {
+                    //    echo "<script>alert('削除できません。仕訳帳に使用されている勘定科目は削除できません。');</script>";
+                    //    break;
+                    //}
                     $gomi   =   $this->service->repoDataMake();
                     unset($_SESSION['acctAltTbl']);
                     //$this->service->getAccounts();

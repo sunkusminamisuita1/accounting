@@ -111,7 +111,7 @@ class voucherRepository{
     public function getAccounts()  {
         try{
             $stmt = $this->pdo->query("
-                SELECT id, name, type
+                SELECT *
                 FROM accounts
                 ORDER BY id
             ");

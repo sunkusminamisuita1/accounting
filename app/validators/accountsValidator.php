@@ -92,7 +92,7 @@ class accountsValidator
                     if ((int)$orgRow['id'] === $currentId) {
                         if ((string)$orgRow['name']         !== $currentName        || 
                             (string)$orgRow['type']         !== $currentType        || 
-                            (string)$orgRow['sort_order']   !== $currentSortOrder) {
+                            (int)$orgRow['sort_order']   !== (int)$currentSortOrder) {
                             $this->dto->acctAltTbl[$key]['errmsg'] = "削除済みの勘定科目、種別は修正できません。";
                             $errFlg++;
                             break;
@@ -112,6 +112,7 @@ class accountsValidator
                 });
 
                 if (!empty($filteredJournalDetails)) {
+                    echo "<script>alert('削除できません。仕訳帳に使用されている勘定科目は削除できません。');</script>";
                     $this->dto->acctAltTbl[$key]['errmsg'] = "この勘定科目は仕訳帳に使用されているため、削除できません。";
                     $errFlg++;
                 }
