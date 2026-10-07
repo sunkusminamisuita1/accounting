@@ -41,13 +41,13 @@ class homeService{
 				'収益'     => 4, '費用'     => 5,
 		];
 		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-		// --- 1. 入力値の受け取り  ---
+															// --- 1. 入力値の受け取り  ---
 			$data				=	$this->startEnd();
 			$this->from			=	$data['cur']['from']??"";
 			$this->to			=	$data['cur']['to']??"";
 			$this->zenki_from	=	$data['prev']['from']??"";
 			$this->zenki_to		=	$data['prev']['to']??"";
-		//対象データ読込  試算表
+															//対象データ読込  試算表
 			$x = ACCOUNT_START;
 			$trial_cur		= 	$this->repo->getTrial($this->from,$this->to);
 			$trial_cur_bs	= 	$this->repo->getTrial(ACCOUNT_START, $this->to);
@@ -59,17 +59,17 @@ class homeService{
 				$trial_prev_bs	= [];
 			}
 
-		//対象データ読み込み　経費一覧
+															//対象データ読み込み　経費一覧
 			$this->dto->keihiItiran = $this->repo->getKeihiItiran($this->from,$this->to);
 			//var_dump($this->dto->keihiItiran);
-		//科目コード一覧(全件)
+															//科目コード一覧(全件)
 			$account_codes = array_merge(
 				array_keys($trial_cur),
 				array_keys($trial_prev),
 				array_keys($trial_cur_bs),
 				array_keys($trial_prev_bs)
 			);
-		//----------集計処理-----------
+															//----------集計処理-----------
 			switch($this->reportType){
 				case getujiSisanhyou:
 				case nenjiSisanhyou:
@@ -81,7 +81,7 @@ class homeService{
 						'debit'		=> 0,
 						'credit'		=> 0
 					];
-		//月次・年次・期間 試算表集計
+															//月次・年次・期間 試算表集計
 					$rows = $this->buildLogicalRows($trial_cur);
 					//var_dump($rows);exit;
 					foreach ($rows as $id => $row) {
@@ -98,10 +98,10 @@ class homeService{
 					}
 					$this->result[] = $total;
 					break;
-		//累積試算表集計      in_array($type, PL_TYPE, true)
+															//累積試算表集計      in_array($type, PL_TYPE, true)
 				case ruisekiSisanhyou:
 					$logical_rows = $this->buildLogicalRows($trial_cur_bs);
-		// 集計箱
+															// 集計箱
 					$totals = [
 						'資産'   => 0,
 						'負債'   => 0,
@@ -110,15 +110,15 @@ class homeService{
 						'費用'   => 0,
 					];
 					$this->result = [];
-		// 科目行の構築
+															// 科目行の構築
 					foreach ($logical_rows as $id => $row) {
 						$type    = $row['type'];
 						$balance = $row['balance'];
-		// タイプ別合計
+															// タイプ別合計
 						if (isset($totals[$type])) {
 							$totals[$type] += $balance;
 						}
-		// BS科目だけ表示対象
+															// BS科目だけ表示対象
 						if (in_array($type, ['資産','負債','純資産'], true)) {
 							$this->result[] = [
 								'row_type' => 'account',
@@ -133,7 +133,7 @@ class homeService{
 					$prev_capital = getPeriodProfit($prev_rows);
 					$cur_rows     = $this->buildLogicalRows($trial_cur_bs);
 					$cur_capital  = getPeriodProfit($cur_rows);
-		// 表示行
+															// 表示行
 					$this->result[] = [
 						'row_type' => 'account',
 						'label'    => '',
@@ -149,7 +149,7 @@ class homeService{
 						'balance'  => $cur_capital
 					];
 					$totals['純資産'] += ($prev_capital + $cur_capital);
-		// 小計行
+															// 小計行
 					foreach (['資産','負債','純資産'] as $type) {
 						$this->result[] = [
 							'row_type' => 'subtotal',
@@ -159,7 +159,7 @@ class homeService{
 							'balance'  => $totals[$type]
 						];
 					}
-		// 検算
+															// 検算
 					$this->result[] = [
 						'row_type' => 'subtotal',
 						'label'    => '検算（資産−負債−純資産）',
@@ -168,23 +168,23 @@ class homeService{
 						'balance'  => $totals['資産'] - ($totals['負債'] + $totals['純資産'])
 					];
 					usort($this->result, function ($a, $b) use ($displayOrder) {
-		// 小計は必ず後ろ
+															// 小計は必ず後ろ
 						if ($a['row_type'] === 'subtotal' && $b['row_type'] !== 'subtotal')
 									return 1;
 						if ($a['row_type'] !== 'subtotal' && $b['row_type'] === 'subtotal')
 									return -1;
-		// 科目同士：type順
+															// 科目同士：type順
 						$orderA = $displayOrder[$a['type']] ?? 99;
 						$orderB = $displayOrder[$b['type']] ?? 99;
 						if ($orderA !== $orderB) {
 							return $orderA <=> $orderB;
 						}
-		// 同じタイプ内は名前順
+															// 同じタイプ内は名前順
 						return strcmp($a['name'], $b['name']);
 					});
 					break;
 				case zenkiHikaku:
-		//前期比較集計処理   使用データ　ーー＞　$trial_cur_bs $trial_prev_bs	
+															//前期比較集計処理   使用データ　ーー＞　$trial_cur_bs $trial_prev_bs	
 					$bs_compare = [];
 					$ini = [
 							'name'    => null,
@@ -213,6 +213,7 @@ class homeService{
 					break;
 			}
 		}
+		return $data?:[];
 	}
 
 	function startEnd() {
@@ -254,6 +255,9 @@ class homeService{
 			$to   = $_POST['to'];
 			$result['cur'] = ['from'=>$from, 'to'=>$to];
 		}
+		$result['reportType'] = $this->dto->reportType ?? '' ;
+		// echo "<pre>";
+		// var_dump($result);
 		return $result;
 	}
 	//html用表示出力用データ作成

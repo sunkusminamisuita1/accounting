@@ -39,6 +39,21 @@ foreach ($all_routes as $key => $label) {
 /*    .procSlct, .procSlct td { border: none !important; } */
     .procSlct { border-collapse: collapse; width: auto; } /* 幅は中身に合わせるのが一般的 */
     .procSlct button { cursor: pointer; padding: 5px 15px; }
+
+    .container {
+    text-align: left; /* または text-align: start; */
+    }
+
+        /* 1. テーブルセルを左寄せにし、必要ならセルの左側に余白（マージン/パディング）をつける */
+    .custom-td {
+        text-align: left;
+        /* padding-left: 20px; ← セル自体の内側左余白を変えたい場合はここに記述 */
+    }
+
+    /* 2. ボタンの左マージン（余白）を設定する */
+    .custom-btn {
+        margin-left: 15px; /* ここでお好みのマージンに変更してください（例: 10px, 2em など） */
+    }
 </style>
 
 <?php
@@ -64,8 +79,10 @@ $_SESSION['current_route'] = $requestRoute;
 
             <div class="shop-selector-container" style="display: inline-block; text-align: left;">
                 <!-- <p>ようこそ <?= htmlspecialchars($_SESSION['user']['userName'] ?? 'ゲスト') ?></p> -->
-                <label for="active_shop">ようこそ <?= htmlspecialchars($_SESSION['user']['username'] ?? 'ゲスト') ?>
+                <label for="active_shop">ようこそ <br><?= htmlspecialchars($_SESSION['user']['username'] ?? 'ゲスト') ?>
+                    <br><br>
                 　　現在の操作店舗：</label>
+                    <br>
                 <!-- フォームを配置し、methodをpostにする -->
                 <form action="index.php?route=shop.switch" method="POST" id="shop_selector_form" style="display: inline;">
 
@@ -90,25 +107,41 @@ $_SESSION['current_route'] = $requestRoute;
         </td>
 
     </tr>
+    <tr>
+        <td  class="custom-td">
+            <br>メインメニュー<br>
+        </td>
+    </tr>
 
     <tr>
         <?php foreach  ($display_buttons as $key => $label): ?>
-            <td>
-                <a href="http://test5.local/index.php?route=<?= h($key) ?>">
-                    <button type="button"><?= h($label) ?>
-                    </button>
-                </a>
-            </td>
+
+            <tr>
+                <td class="custom-td">
+                    <a href="http://test5.local/index.php?route=<?= h($key) ?>">
+                        <button  type="button" class="custom-btn" >
+                            <?= h($label) ?>
+                        </button>
+                    </a>
+                </td>
+            </tr>
+
         <?php endforeach; ?>
-            <td>
-                <a href="http://test5.local/index.php?route=<?= h($RtnRoute) ?>">
-                    <button type="button"><?= h('戻る') ?>
-                    </button>
-                </a>
-            </td>
+            <tr>
+                <td  class="custom-td">
+                    <br>帳票メニュー<br>
+                </td>
+            </tr>
+                <td class="custom-td">
+                    <a href="http://test5.local/index.php?route=<?= h($RtnRoute) ?>">
+                        <button type="button" class="custom-btn">
+                            <?= h('戻る') ?>
+                        </button>
+                    </a>
+                </td>
     </tr>
 </table>
-<br><br>
+    <br><br>
 <table class="procSlct">
     <tr>
         <td colspan="<?= count($display_buttons) + 1; ?>" style="text-align: center; padding-top: 15px;">

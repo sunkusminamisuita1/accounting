@@ -45,6 +45,11 @@ require_once ROOT_PATH . '/app/dto/constants.php';
                         font-family: 'Courier New', Courier, monospace; /* 数字の桁が綺麗に揃うフォント（お好みで） */
                     }
 
+                    .report-radio-group {
+                        display: block;
+                        margin-bottom: 5px; /* ラジオボタン同士の縦の隙間を調整 */
+                    }
+
                 </style>
             </head>
                 <body>
@@ -55,10 +60,48 @@ require_once ROOT_PATH . '/app/dto/constants.php';
                         </script>
                     <?php unset($_SESSION['flash_message']); endif; ?>
 
-                    <h1>ホーム画面</h1>
-                        <!-- <p>ようこそ <?= htmlspecialchars($_SESSION['user']['userName'] ?? 'ゲスト') ?></p> -->
+
+<table>
+    <tr>
+        <td>
+                    <h1>コンビニ会計　ホーム画面</h1>
+        </td>
+        <td>
+                    <h3>現在の操作店舗：</h3>
+                    <form action="index.php?route=shop.switch" method="POST" id="shop_selector_form" style="display: inline;">
+
+                        <select name="active_shop" id="active_shop" onchange="document.getElementById('shop_selector_form').submit();">
+
+                            <?php foreach ($_SESSION['userShops'] as $shop): ?>
+
+                                <option value="<?php echo $shop['shop_code']; ?>" 
+                                    <?php echo ($shop['shop_code'] == $_SESSION['currentShopCode']) ? 'selected' : ''; ?>>
+                                    <?php echo htmlspecialchars($shop['shop_name'], ENT_QUOTES, 'UTF-8'); ?>
+                                </option>
+
+                            <?php endforeach; ?>
+
+                            <option value="   all" <?php echo ($_SESSION['currentShopCode'] === '   all') ? 'selected' : ''; ?>>
+                                【全店合算（連結決算）】
+                            </option>
+                        </select>
+                    </form>
+                        
+        </td>
+        <td>
+                        <label for="active_shop"><h3>ようこそ <?= htmlspecialchars($_SESSION['user']['username'] ?? 'ゲスト')."さん" ?></h3>
+                        <!-- <p>ようこそ1 <?= htmlspecialchars($_SESSION['user']['userName'] ?? 'ゲスト1') ?></p> -->
                         <div class="two-col" style="display:flex; gap:1rem; align-items:flex-start;">
-                            <div class="left-col" style="flex:1;">
+                            <div class="left-col" style="flex:1;">                   
+        </td>
+    </tr>
+</table>
+
+
+
+
+
+
 
                         <?php
                             //echo "qqqqqqq : {$_GET['route']}";
@@ -93,22 +136,40 @@ require_once ROOT_PATH . '/app/dto/constants.php';
                     <h2>試算表表示：<?= $this->dto->reportType ?></h2>
                     <form action="index.php?route=home" method="post">試算表<br>
 
-                        <input type="hidden" name="csrfTokenKey" value="<?= h($tokenKey) ?>">
+                        <label class="report-radio-group">
+                            <input type="hidden" name="csrfTokenKey" value="<?= h($tokenKey) ?>">
+                        </label>
 
-                        <input type="radio" name="reportType"
-                            value="<?= getujiSisanhyou ?>" <?= $currentReport === getujiSisanhyou ? 'checked' : '' ?>>月次試算表出力
+                        <label class="report-radio-group">
+                            <input type="radio" name="reportType"
+                                value="<?= getujiSisanhyou ?>" <?= $currentReport === getujiSisanhyou ? 'checked' : '' ?>
+                                onchange="this.form.submit()">月次試算表出力
+                        </label>
 
-                        <input type="radio" name="reportType"
-                            value="<?= nenjiSisanhyou ?>" <?= $currentReport === nenjiSisanhyou ? 'checked' : '' ?>>年次試算表出力
+                        <label class="report-radio-group">
+                            <input type="radio" name="reportType"
+                                value="<?= nenjiSisanhyou ?>" <?= $currentReport === nenjiSisanhyou ? 'checked' : '' ?>
+                                onchange="this.form.submit()" >年次試算表出力
+                        </label>
 
-                        <input type="radio" name="reportType"
-                            value="<?= ruisekiSisanhyou ?>" <?= $currentReport === ruisekiSisanhyou ? 'checked' : '' ?>>累積試算表出力
+                        <label class="report-radio-group">
+                            <input type="radio" name="reportType"
+                                value="<?= ruisekiSisanhyou ?>" <?= $currentReport === ruisekiSisanhyou ? 'checked' : '' ?>
+                                onchange="this.form.submit()">累積試算表出力
+                        </label>
 
-                        <input type="radio" name="reportType"
-                            value="<?= zenkiHikaku ?>" <?= $currentReport === zenkiHikaku ? 'checked' : '' ?>>前期比較出力
+                        <label class="report-radio-group">
+                            <input type="radio" name="reportType"
+                                value="<?= zenkiHikaku ?>" <?= $currentReport === zenkiHikaku ? 'checked' : '' ?>
+                                onchange="this.form.submit()">前期比較出力
+                        </label>
 
-                        <input type="radio" name="reportType"
-                            value="<?= kikanSisanhyou ?>" <?= $currentReport === kikanSisanhyou ? 'checked' : '' ?>>期間入力試算表出力
+                        <label class="report-radio-group">
+                            <input type="radio" name="reportType"
+                                value="<?= kikanSisanhyou ?>" <?= $currentReport === kikanSisanhyou ? 'checked' : '' ?>
+                                onchange="this.form.submit()">期間入力試算表出力
+                        </label>
+
                         <br>
                         <button type="submit">切替</button><br><br>
 

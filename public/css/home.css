@@ -1,0 +1,268 @@
+    /*<style>*/
+        /* =========================
+           基本設定
+           ========================= */
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 20px;
+            font-family: sans-serif;
+        }
+
+
+        /* =========================
+           ページ上部
+           ========================= */
+
+        /*.page-header {
+            width: 60%;
+            margin: 0 auto;
+        }*/
+
+        .page-header {
+            width: 60%;
+            margin: 0 auto;
+            border-collapse: collapse;
+        }
+
+        .page-header td {
+            border: none;
+            padding: 8px;
+        }
+
+        .page-header .shop-area {
+            text-align: center;
+            vertical-align: middle;
+        }
+
+
+        /* 操作ボタン */
+
+/*        .procSlct {
+            border-collapse: separate;
+            border-spacing: 15px 0;
+            margin: 10px auto;
+        }
+
+        .procSlct td {
+            border: none;
+            padding: 0;
+            text-align: center;
+        }
+
+        .procSlct button {
+            width: 130px;
+            padding: 6px 10px;
+            cursor: pointer;
+        }
+*/
+
+        .page-title {
+            font-size: 20px;
+            white-space: nowrap;
+            vertical-align: middle;
+        }
+
+        .fontSize{
+            font-size: 20px;
+        }
+        
+        .shop-area {
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .shop-area select {
+            padding: 4px 8px;
+        }
+
+
+        /* =========================
+           メニューボタン
+           ========================= */
+
+/*        .procSlct {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .procSlct td {
+            border: none;
+            padding: 5px;
+            text-align: center;
+        }
+
+        .procSlct button {
+            cursor: pointer;
+            padding: 5px 15px;
+        }
+*/
+        .procSlct {
+            width: 60%;
+            border-collapse: separate;
+            border-spacing: 15px 0;
+            margin: 10px auto;
+            background: #f2e0c6;
+        }
+
+        .procSlct td {
+            border: none;
+            padding: 0;
+            text-align: center;
+        }
+
+        .procSlct button {
+            width: 130px;
+            padding: 6px 10px;
+            cursor: pointer;
+        }
+        /* =========================
+           帳票メニュー
+           ========================= */
+
+        .report-menu-title {
+            text-align: center;
+            padding: 15px 0;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+
+        /* =========================
+           エラーメッセージ
+           ========================= */
+
+        #validation-messages {
+            min-height: 3.6em;
+            margin-bottom: 1em;
+        }
+
+        #validation-list {
+            color: red;
+            margin: 0;
+            padding-left: 1.2em;
+        }
+
+
+        /* =========================
+           帳票本体
+           ========================= */
+
+        .report-area {
+            width: 100%;
+        }
+
+        .report-layout {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .report-menu {
+            flex: 0 0 300px;
+        }
+
+        .report-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .report-content h3 {
+            margin: 0 0 1rem;
+            padding-bottom: 0.6rem;
+            border-bottom: 2px solid #55796b;
+            color: #29483d;
+        }
+
+        .report-content form {
+            margin-bottom: 1.25rem;
+            padding: 1rem;
+            background: #f3f6f3;
+            border-left: 4px solid #55796b;
+        }
+
+        .report-content input:not([type="hidden"]) {
+            margin: 0.35rem;
+            padding: 0.4rem;
+            border: 1px solid #aebbb3;
+            border-radius: 3px;
+        }
+
+        .report-content input[type="number"] {
+            width: 7rem;
+        }
+
+        .report-content button {
+            padding: 0.5rem 1rem;
+            border: 0;
+            border-radius: 3px;
+            background: #315f50;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .report-result-layout {
+            display: grid;
+            grid-template-columns: minmax(0, 2fr) minmax(220px, 1fr);
+            gap: 1rem;
+            align-items: start;
+        }
+
+        .report-main {
+            min-width: 0;
+        }
+
+        .report-main table,
+        .expense-panel table {
+            width: 100%;
+            margin: 0.75rem 0 1.25rem;
+            border-collapse: collapse;
+            background: #fff;
+        }
+
+        .report-main th,
+        .report-main td,
+        .expense-panel th,
+        .expense-panel td {
+            padding: 0.55rem 0.65rem;
+            border: 1px solid #d2dbd5;
+        }
+
+        .report-main th,
+        .expense-panel th {
+            background: #e8efea;
+            color: #29483d;
+            text-align: center;
+        }
+
+        .report-main td:not(:first-child),
+        .expense-panel .col-amount {
+            text-align: right;
+            white-space: nowrap;
+        }
+
+        .expense-panel-inner {
+            padding: 1rem;
+            border: 1px solid #d2dbd5;
+            background: #f8faf8;
+        }
+
+        @media (max-width: 900px) {
+            .report-layout {
+                flex-direction: column;
+            }
+
+            .report-menu {
+                flex-basis: auto;
+                width: 100%;
+            }
+
+            .report-result-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+/*    </style>*/

@@ -1,119 +1,9 @@
-<?php 
-require_once ROOT_PATH . '/app/dto/constants.php';
-?>
-<!DOCTYPE html>
-    <html lang="ja">
-            <head>
-                <meta charset="UTF-8">
-                    <title>試算表テスト</title>
-                <style>
-                    table { border-collapse: collapse; width: 100%; }
-                    th { border: 1px solid #ccc; padding: 8px; text-align: right;
-                        background: #f4f4f4; text-align: center; }
-                    th { background: #f4f4f4; text-align: center; }
-                    td { border: 1px solid #ccc; padding: 8px; text-align: right; }
-                    .text-left { text-align: left; }
+        <h3>試算表表示：<?= $this->dto->reportType ?></h3>
+            <form action="index.php?route=home" method="post">
 
-                    /* テーブル全体のデザイン */
-                    .tb-style {
-                        width: 100%;
-                        border-collapse: collapse;
-                        margin-top: 10px;
-                    }
-
-                    /* th行：センター、太字 */
-                    .tb-style th {
-                        text-align: center;
-                        font-weight: bold;
-                        padding:8px;
-                        border-bottom: 2px solid #ccc; /* 見出しの下に線を引いて見やすくしています */
-                    } 
-                    /* td共通の余白 */
-                    .tb-style td {
-                        padding: 6px 8px;
-                        border-bottom: 1px solid #eee; /* 行ごとの区切り線 */
-                    }
-
-                    /* 科目名：センター */
-                    .tb-style .col-name {
-                        text-align: center;
-                    }
-
-                    /* 金額：右詰め */
-                    .tb-style .col-amount {
-                        text-align: right;
-                        font-family: 'Courier New', Courier, monospace; /* 数字の桁が綺麗に揃うフォント（お好みで） */
-                    }
-
-                </style>
-            </head>
-                <body>
-
-                    <?php if (!empty($_SESSION['flash_message'])): ?>
-                        <script>
-                            alert(<?= json_encode($_SESSION['flash_message']) ?>);
-                        </script>
-                    <?php unset($_SESSION['flash_message']); endif; ?>
-
-                    <h1>ホーム画面</h1>
-                        <!-- <p>ようこそ <?= htmlspecialchars($_SESSION['user']['userName'] ?? 'ゲスト') ?></p> -->
-                        <div class="two-col" style="display:flex; gap:1rem; align-items:flex-start;">
-                            <div class="left-col" style="flex:1;">
-
-                        <?php
-                            //echo "qqqqqqq : {$_GET['route']}";
-                            require_once ROOT_PATH.'/views/procSlct.php'; 
-
-                        $validationItems = [];
-                        foreach ($this->dto->errData ?? [] as $field => $msg) {
-                            // OwnUrlキーは http:// or https:// で始まるので除外
-                            if (is_string($field) && (strpos($field, 'http://') === 0 || strpos($field, 'https://') === 0)) {
-                                continue;
-                            }
-                            // 重複メッセージは除去（fieldごとに表示）
-                            if (!in_array($msg, $validationItems, true)) {
-                                $validationItems[$field] = $msg;
-                            }
-                        }
-                        ?>
-                        <div id="validation-messages" style="min-height:3.6em; margin-bottom:1em;">
-                            <?php if (!empty($validationItems)): ?>
-                                <ul id="validation-list" style="color: red; margin:0; padding-left:1.2em;">
-                                    <?php foreach ($validationItems as $field => $m): ?>
-                                        <li data-field="<?= h($field) ?>" style="cursor:pointer; text-decoration:underline;"><?= h($m) ?></li>
-                                    <?php endforeach; ?>
-                                </ul>
-                            <?php else: ?>
-                                <!-- プレースホルダ: 空でも高さを確保 -->
-                            <?php endif; ?>
-                        </div>
-                        <?php
-                        ?>
-
-                    <h2>試算表表示：<?= $this->dto->reportType ?></h2>
-                    <form action="index.php?route=home" method="post">試算表<br>
-
-                        <input type="hidden" name="csrfTokenKey" value="<?= h($tokenKey) ?>">
-
-                        <input type="radio" name="reportType"
-                            value="<?= getujiSisanhyou ?>" <?= $currentReport === getujiSisanhyou ? 'checked' : '' ?>>月次試算表出力
-
-                        <input type="radio" name="reportType"
-                            value="<?= nenjiSisanhyou ?>" <?= $currentReport === nenjiSisanhyou ? 'checked' : '' ?>>年次試算表出力
-
-                        <input type="radio" name="reportType"
-                            value="<?= ruisekiSisanhyou ?>" <?= $currentReport === ruisekiSisanhyou ? 'checked' : '' ?>>累積試算表出力
-
-                        <input type="radio" name="reportType"
-                            value="<?= zenkiHikaku ?>" <?= $currentReport === zenkiHikaku ? 'checked' : '' ?>>前期比較出力
-
-                        <input type="radio" name="reportType"
-                            value="<?= kikanSisanhyou ?>" <?= $currentReport === kikanSisanhyou ? 'checked' : '' ?>>期間入力試算表出力
-                        <br>
-                        <button type="submit">切替</button><br><br>
-
-                        <input type="hidden" name="csrfTokenKey" value="<?= h($tokenKey) ?>">
+                <input type="hidden" name="csrfTokenKey" value="<?= h($tokenKey) ?>">
 <?php
+//echo "現在のルート2: " . h($requestRoute) . "<br>";
 
                 if ($this->dto->reportType) {
 
@@ -152,11 +42,41 @@ require_once ROOT_PATH . '/app/dto/constants.php';
                     };
                 }
 ?>
-			            <br>
-			            <button name="KeisanJikkou" type="submit" value="Exec"> 計算実行</button>
-		            </form>
+			            
+			        　<button name="KeisanJikkou" type="submit" value="Exec">試算表表示</button>
+		    </form>
+
+        <div class="report-result-layout">
+            <div class="report-main">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <?php
-    if (in_array($this->dto->reportType, [getujiSisanhyou, nenjiSisanhyou, kikanSisanhyou])){
+    if (in_array($this->dto->reportType, 
+            [getujiSisanhyou, nenjiSisanhyou, kikanSisanhyou, ruisekiSisanhyou, zenkiHikaku])) {
 ?>
         <p>抽出期間： <?= h($this->dto->from) ?> 〜 <?= h($this->dto->to ) ?></p>
         <table>
@@ -300,10 +220,9 @@ document.addEventListener('DOMContentLoaded', function(){
 	        </tbody>
         </table>
 
-</div>
-        <div class="right-col" style="flex:1;">
-            <div style="border:1px dashed #ccc; padding:1rem;">
-                右側表示エリア
+            </div>
+        <div class="expense-panel">
+            <div class="expense-panel-inner">
                    
                 <!-- テーブルにCSSクラス「tb-style」を適用 -->
                 <table class="tb-style">
@@ -333,4 +252,3 @@ document.addEventListener('DOMContentLoaded', function(){
             </div>
         </div>
 </div>
-</html>
