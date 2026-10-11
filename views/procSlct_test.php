@@ -88,16 +88,16 @@ $_SESSION['current_route'] = $requestRoute;
 
                     <select name="active_shop" id="active_shop" onchange="document.getElementById('shop_selector_form').submit();">
 
-                        <?php foreach ($_SESSION['userShops'] as $shop): ?>
+                        <?php foreach (($_SESSION['userShops']??[]) as $shop): ?>
 
-                            <option value="<?php echo $shop['shop_code']; ?>" 
+                            <option value="<?php echo ($shop['shop_code'] ?? ''); ?>" 
                                 <?php echo ($shop['shop_code'] == $_SESSION['currentShopCode']) ? 'selected' : ''; ?>>
                                 <?php echo htmlspecialchars($shop['shop_name'], ENT_QUOTES, 'UTF-8'); ?>
                             </option>
 
                         <?php endforeach; ?>
 
-                        <option value="   all" <?php echo ($_SESSION['currentShopCode'] === '   all') ? 'selected' : ''; ?>>
+                        <option value="   all" <?php echo (($_SESSION['currentShopCode']??'') === '   all') ? 'selected' : ''; ?>>
                             【全店合算（連結決算）】
                         </option>
                     </select>

@@ -13,16 +13,19 @@ $routes =   [
                         'method' => 'login',
                         'auth' => false
                 ],
-
                 'register' => [
                         'controller' => authController::class,
                         'method' => 'register',
                         'auth' => false
                 ],
-
                 'home' => [
                         'controller' => homeController::class,
                         'method' => 'index',
+                        'auth' => true
+                ],
+                'home.report' => [
+                        'controller' => homeController::class,
+                        'method' => 'report',
                         'auth' => true
                 ],
                 //仕分け伝票一覧
@@ -43,7 +46,6 @@ $routes =   [
                         'method' => 'update',
                         'auth' => true
                 ],
-
                 //仕分け伝票修正検索
                 'voucher.list' => [
                         'controller' => voucherController::class,
@@ -61,6 +63,11 @@ $routes =   [
                         'method' => 'create',
                         'auth' => true
                 ],
+                // 'voucherCreate' => [
+                //         'controller' => homeController::class,
+                //         'method' => 'voucherCreate',
+                //         'auth' => true
+                // ],
                 //勘定科目　追加
                 'accounts.edit' => [
                        'controller' => accountsController::class,
@@ -98,7 +105,8 @@ $routeInfo = $routes[$route];
 if ($routeInfo['auth']) {
     requireLogin();
 }
+
 $controllerName = $routeInfo['controller'];
 $method = $routeInfo['method'];
 $controller = new $controllerName($pdo);
-$controller->$method();
+$controller->$method($controllerName,$method);

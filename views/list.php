@@ -44,10 +44,8 @@
 
     <!-- ##############     エラーメッセージ表示    ################ -->
     <?=  $this->errMsgPopUp->Show($this->dto);  ?>
-    <br><hr>
-    <h3>単独検索(伝票No，取引日付，取引金額，摘要欄あいまい検索)は、<br>
+    単独検索(伝票No，取引日付，取引金額，摘要欄あいまい検索)は
     １つ以上の検索条件を入力して検索ボタンを押してください。
-    </h3>
     <form method="POST" action="index.php?route=voucher.list">
         <input type="hidden" name="csrfTokenKey" value="<?= h($tokenKey) ?>">
         <table class="UpdTbl">
@@ -101,7 +99,7 @@
         <br>
         <button name="simpleSearch" type="submit" value="<?= h('simpleSearch') ?>">検索</button>
     </form>
-    <hr>
+
 
 
 

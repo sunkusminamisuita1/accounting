@@ -26,7 +26,7 @@ class authController{
         
 
     }
-    public function login()
+    public function login($controllerName,$method)
     {
         $message = '';
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -61,10 +61,11 @@ class authController{
         }else{
             $tokenKey = generateCsrfToken();
         }
-        require ROOT_PATH.'/views/login.php';
+        //require ROOT_PATH.'/views/login.php';
+        require ROOT_PATH . '/views/homeView.php';
     }
 
-    public function register()
+    public function register($controllerName, $method)
     {
         $message = '';
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {

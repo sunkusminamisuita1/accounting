@@ -21,14 +21,15 @@ $RtnRoute = ltrim(strchr($RtnRoute,'route='), 'route='); //'='
 //使用方法　http://test5.local/index.php?route=<?= h($RtnRoute) 
 
 $all_routes = [
-    'home'           => 'ホーム',
-    'voucher.create' => '仕分処理',
-    'voucher.list'   => '仕分伝票修正',
-    'accounts.edit'  => '勘定科目追加',
-    'shop.edit'      => '店舗情報編集',
-    'reportMenu'     => '帳票メニュー',
-    $RtnRoute . ' '  => '戻る', //呼び出し元に戻るボタンを追加
-    'logout'         => 'ログアウト'
+    'home'                  => 'ホーム',
+    'voucher.create'        => '仕分処理',
+    'voucher.list'          => '仕分伝票修正',
+    'accounts.edit'         => '勘定科目追加',
+    'shop.edit'             => '店舗情報編集',
+    'home.report'           => '帳票メニュー',
+    $RtnRoute . ' '         => '戻る', //呼び出し元に戻るボタンを追加
+    'login'                 => 'ログイン',
+    'logout'                => 'ログアウト'
 ];
 
 $route = $_GET['route'] ?? '';
@@ -89,7 +90,7 @@ $_SESSION['current_route'] = $requestRoute;
 
                         <?php endforeach; ?>
 
-                        <option value="   all" <?php echo ($_SESSION['currentShopCode'] === '   all') ? 'selected' : ''; ?>>
+                        <option value="   all" <?php echo (($_SESSION['currentShopCode']??'') === '   all') ? 'selected' : ''; ?>>
                             【全店合算（連結決算）】
                         </option>
                     </select>
@@ -114,17 +115,12 @@ $_SESSION['current_route'] = $requestRoute;
 </table>
 <br><br>
 
-<!--<table class="report-menu-title">
-    <tr>
+<!--
         <td colspan="<?= count($display_buttons) + 1; ?>" style="text-align: center; padding-top: 15px;">
-            <p>帳票メニュー1</p>
-        </td>
-    </tr>
-</table>
 -->
                         <?php
                         $validationItems = [];
-                        foreach ($this->dto->errData ?? [] as $field => $msg) {
+                        foreach (($this->dto->errData ?? []) as $field => $msg) {
                             // OwnUrlキーは http:// or https:// で始まるので除外
                             if (is_string($field) && (strpos($field, 'http://') === 0 || strpos($field, 'https://') === 0)) {
                                 continue;
@@ -146,34 +142,58 @@ $_SESSION['current_route'] = $requestRoute;
                                 <!-- プレースホルダ: 空でも高さを確保 -->
                             <?php endif; ?>
                         </div>
-
-
-
-<?php if ($viewType === "sisanhyou"): ?>
-    <div class="report-layout">
+<!-- <?php echo "method: " . ($method ?? 'null'); ?> -->
+<?php if (($viewType??'') === "sisanhyou" && ($method??'') === 'report'): ?>
+    <div class="report-layout">              <!-- 試算表メニュー -->
         <div class="report-menu">
             <?php require_once ROOT_PATH . '/views/subView/reportSubMenu.php'; ?>
         </div>
-        <div class="report-content">
+        <div class="report-content">         <!-- 試算表内容 -->
             <?php require_once ROOT_PATH . '/views/subView/sisanhyou.php'; ?>
         </div>
     </div>
 <?php endif; ?>
 
-<?php
-            // if($viewType === "sisanhyou"){
-            //     //echo "現在のルート１: " . h($requestRoute) . "<br>";
+<?php if (($controllerName??'') === "voucherController" && ($method??'') === 'create'): ?>
+    <div class="report-layout">              <!-- 仕分け伝票作成 -->
+        <div class="report-content">         <!-- 仕分け伝票作成内容 -->
+            <?php require_once ROOT_PATH . '/views/subView/voucherCreate.php'; ?>
+        </div>
+    </div>
+<?php endif; ?>
 
-            //     require_once ROOT_PATH.'/views/subView/reportSubMenu.php'; 
-            // }
-?>
+<?php if (($controllerName??'') === "voucherController" && ($method??'') === 'list'): ?>
+    <div class="report-layout">              <!-- 仕分け伝票修正 -->
+        <div class="report-content">         <!-- 仕分け伝票修正内容 -->
+            <?php require_once ROOT_PATH . '/views/subView/list.php'; ?>
+        </div>
+    </div>
+<?php endif; ?>
 
- <?php
-            // if($viewType === "sisanhyou"){
-            //     require_once ROOT_PATH.'/views/subView/sisanhyou.php'; 
-            // }
+<?php if (($controllerName??'') === "authController" && ($method??'') === 'login'): ?>
+    <div class="report-layout">              <!-- ログイン -->
+        <div class="report-content">
+            <?php require_once ROOT_PATH . '/views/login.php'; ?>
+        </div>
+    </div>
+<?php endif; ?>
 
-?>
+<?php if (($controllerName??'') === "shopController" && ($method??'') === 'edit'): ?>
+    <div class="report-layout">              <!-- 店舗情報 作成、修正、削除 -->
+        <div class="report-content">
+            <?php require_once ROOT_PATH . '/views/subView/shopsView.php'; ?>
+        </div>
+    </div>
+<?php endif; ?>
+
+
+
+
+
+
+
+
+<!--require ROOT_PATH . '/views/homeView.php';-->
 
 </table>
 </html>

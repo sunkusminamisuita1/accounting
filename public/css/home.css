@@ -12,6 +12,21 @@
             font-family: sans-serif;
         }
 
+        mFontSize{
+            font-size: 16px;
+            color: #29483d;
+        }
+
+        mbFontSize{
+            font-size: 16px;
+            font-weight: bold;
+            color: #29483d;
+        }
+        lbFontSize{
+            font-size: 18px;
+            font-weight: bold;
+            color: #29483d;
+        }
 
         /* =========================
            ページ上部
@@ -174,7 +189,7 @@
         .report-content h3 {
             margin: 0 0 1rem;
             padding-bottom: 0.6rem;
-            border-bottom: 2px solid #55796b;
+            /* border-bottom: 2px solid #55796b; */
             color: #29483d;
         }
 

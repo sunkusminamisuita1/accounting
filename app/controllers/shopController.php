@@ -27,7 +27,7 @@ class shopController{
         $this->newShopRegisterBkup = [];        
     }
 
-    public function switch() //procslct.phpから呼ばれる
+    public function switch($controllerName, $method) //procslct.phpから呼ばれる
 	{
 		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             echo "<pre>";
@@ -65,7 +65,7 @@ class shopController{
 	}
 
 	//shopデータ登録、更新、削除
-    public function edit()
+    public function edit($controllerName, $method)
     {
         $this->dto->user = $_SESSION['user'] ?? '';
 
@@ -100,10 +100,10 @@ class shopController{
             $this->prepareNextRequest();
             
         }
-        $this->render();
+        $this->render($controllerName, $method);
     }
 //
-    private function render(){
+    private function render($controllerName, $method){
 
         //CSRFトークンを生成してセッションに保存
         $tokenKey = generateCsrfToken();
@@ -133,7 +133,9 @@ class shopController{
             $newErrMsg      =   $this->dto->newErrMsg ?? '';
 
         }
-        require ROOT_PATH.'/views/shopsView.php';
+        //require ROOT_PATH.'/views/shopsView.php';
+        require ROOT_PATH . '/views/homeView.php';
+
         $this->dto->shopAltTbl = [];
         $_SESSION['shopAltTbl'] = $ShopList;
     }

@@ -1,5 +1,5 @@
     
-            <form action="index.php?route=home" method="post">試算表メニュー<br><br>
+            <form action="index.php?route=home.report" method="post">試算表メニュー<br><br>
 
                 <input type="hidden" name="csrfTokenKey" value="<?= h($tokenKey) ?>">
 

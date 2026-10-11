@@ -1125,3 +1125,7 @@
 [DEBUG] [accountsValidator.php:173] [accountsValidator->accountsVali] メッセージ: バリデーション終了。エラー数: 0
 [DEBUG] [accountsValidator.php:25] [accountsValidator->accountsVali] メッセージ: バリデーション開始。対象データ数: 2
 [DEBUG] [accountsValidator.php:173] [accountsValidator->accountsVali] メッセージ: バリデーション終了。エラー数: 0
+[DEBUG] [shopsValidator.php:102] [shopsValidator->commonVali] メッセージ: バリデーション開始。対象データ数: 4
+[DEBUG] [shopsValidator.php:233] [shopsValidator->commonVali] メッセージ: バリデーション終了。エラー数: 0
+[DEBUG] [shopsValidator.php:102] [shopsValidator->commonVali] メッセージ: バリデーション開始。対象データ数: 4
+[DEBUG] [shopsValidator.php:233] [shopsValidator->commonVali] メッセージ: バリデーション終了。エラー数: 0

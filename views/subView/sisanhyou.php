@@ -1,5 +1,5 @@
         <h3>試算表表示：<?= $this->dto->reportType ?></h3>
-            <form action="index.php?route=home" method="post">
+            <form action="index.php?route=home.report" method="post">
 
                 <input type="hidden" name="csrfTokenKey" value="<?= h($tokenKey) ?>">
 <?php

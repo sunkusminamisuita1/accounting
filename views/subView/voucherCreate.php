@@ -1,0 +1,73 @@
+<h1>仕訳入力</h1>
+<!-- ##############     エラーメッセージ表示    ################ -->
+<?php if (!empty($this->dto->errData)): ?>
+    <ul style="color: red;">
+        <?php foreach ($this->dto->errData as $mod => $err): ?>
+            <li><?= h($mod) . ": " . h($err) ?></li>
+        <?php endforeach; ?>
+    </ul>
+<?php endif; ?>
+
+
+
+<?php if (!empty($_SESSION['flash_message'])): ?>
+    <script>
+      alert(<?= json_encode($_SESSION['flash_message']) ?>);
+    </script>
+<?php unset($_SESSION['flash_message']); endif; ?>
+
+
+
+<br>
+<form method="POST" action="index.php?route=voucher.create">   
+    日付 <input type="date" name="voucher_date" value="<?= h($_POST['voucher_date'] ?? '') ?>"><br>
+    摘要 <input type="text" name="summary" value="<?= h($_POST['summary'] ?? '') ?>"><br>
+    <hr>
+    <input type="hidden" name="csrfTokenKey" value="<?= h($tokenKey) ?>">
+    <table border="1">
+        <tr>
+            <th>科目</th>
+            <th>金額</th>
+            <th>明細適用</th>
+            <th>区分</th>
+            <th>操作</th>
+        </tr>
+        <?php foreach ($details as $i => $row): ?>
+        <tr>
+            <td>
+                <select name="details[<?= $i ?>][account_id]" required >
+                    <option value="">選択してください</option>
+                    <?php foreach($accounts as $a): ?>
+                        <option value="<?= h($a['id']) ?>" <?= (isset($row['account_id']) && $row['account_id'] == $a['id']) ? 'selected' : '' ?>>
+                            <?= h($a['name']) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </td>
+
+            <td>
+                <input type="number" name="details[<?= $i ?>][amount]" value="<?= h($details[$i]['amount'] ?? '') ?>" required>
+            </td>
+
+            <td>
+                <input type="text" name="details[<?= $i ?>][jd_summary]" value="<?= h($details[$i]['jd_summary'] ?? '') ?>" required>
+            </td>
+
+            <td>
+                <select name="details[<?= $i ?>][side]" required>
+                    <option value="debit" <?= h($details[$i]['side'] ?? '') == 'debit' ? 'selected' : '' ?>>借方</option>
+                    <option value="credit" <?= h($details[$i]['side'] ?? '') == 'credit' ? 'selected' : '' ?>>貸方</option>
+                </select>
+            </td>
+            <td> 
+                <button name="add_row" type="submit" value="<?= $i ?>">行追加</button> 
+            </td>
+             <td> 
+                <button name="delete_row" type="submit" value="<?= $i ?>" formnovalidate>行削除</button> 
+            </td>
+        </tr>
+        <?php endforeach; ?>
+
+    </table>
+    <button name="save" type="submit" value="on" >保存</button>
+</form>

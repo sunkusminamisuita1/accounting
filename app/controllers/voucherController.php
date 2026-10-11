@@ -26,7 +26,7 @@ class voucherController{
         $this->errMsgPopUp      = new errMsgPopUp();
         $this->dto->accounts    = $this->service->getAccounts();
     }
-    public function create(): void    {
+    public function create($controllerName,$method): void    {
         //file_put_contents('/var/www/html/test6/public/debug.log', "メソッド通ったよ！\n", FILE_APPEND);
         $this->dto->vcrCreData();                           //dtoにPOSTされた明細行を渡す
         $details = $this->dto->dtoDetails;                  //dtoから明細行を取得
@@ -35,19 +35,16 @@ class voucherController{
             requireCsrf();
             $this->dto->post = $_POST;
             $this->dto->session = $_SESSION;
-            // $this->dto->vcrCreData();                           //dtoにPOSTされた明細行を渡す
-            // $details = $this->dto->dtoDetails;                  //dtoから明細行を取得
-            // $accounts = $this->dto->accounts;
             $this->service->vcrCreate();
             // POST を処理した後は再描画用に新しいトークンを発行する
             $this->tokenKey  = generateCsrfToken();
         }else{
             $this->tokenKey  = generateCsrfToken();          
         }
-        $this->render('create');
+        $this->render($controllerName, $method);
     }
     
-    public function store(): void {
+    public function store($controllerName,$method): void {
         requirePost();
         $data = $_POST;
         
@@ -73,14 +70,14 @@ class voucherController{
         exit;
     }
     // 一覧
-    public function index() {
+    public function index($controllerName, $method) {
         $userId = getLoginUserId();
         $vouchers = $this->service->list($userId);
         require ROOT_PATH.'/views/index2.php';
     }
 
     // 修正、削除データ検索
-    public function list() {
+    public function list($controllerName, $method) {
         $this->dto->list(); //dtoのListメソッドで検索条件をセット
         $this->dto->dtoDetails = $_SESSION['dtoDetail'] ?? $this->dto->initDetails; //エラーからの復帰時、入力データを復元するためにPOSTされた明細行をセッションからDtoにセットする。
         if ($_SERVER['REQUEST_METHOD'] === 'POST'){
@@ -95,13 +92,7 @@ class voucherController{
             if (isset($_POST['vcrUpdateNo'])) {         //修正対象データ　編集用データ作成
                 $this->service->vcrUpdNo();
             }
-            //前回の行追加、行削除の処理は、修正対象データの編集用データ作成の後に行う必要があり、
-            //行追加、行削除の処理は、編集用データを基に行う必要があるためです。
-            //もし、行追加、行削除の処理を先に行ってしまうと、
-            //編集用データがまだ作成されていない状態で行追加、行削除の処理が行われてしまい、正しく処理できなくなってしまいます。
-            //if( isset($_POST['vcrAddDebit'])  || isset($_POST['vcrAddCredit'])  || isset($_POST['vcrDetailLineDel'])) {
-            //    $this->service->vcrSearchedDataRemake($this->dto , $this->repo, $this->validator);
-            //}
+
             if( isset($_POST['vcrAddDebit'])) {         //行追加ボタン（借方）を押したときの処理
                 $this->service->vcrAddDebit();
             }
@@ -114,12 +105,7 @@ class voucherController{
             if( isset($_POST['vcrDelete'])) {           //1仕分け伝票削除
                 $Success = $this->service->vcrDelete();
                 if ($Success) {
-                    //file_put_contents('/var/www/html/test6/public/debug.log', "Success2 = {$Success}！\n", FILE_APPEND);
-                    // 3. ユーザーへの完了通知メッセージだけをセッションに仕込む
                     $_SESSION['flash_message'] = "伝票を正常に削除しました。";        
-                    // 4. そのまま一覧画面（または新規作成画面）へ一発リダイレクト！
-                    //header('location: index.php?route=voucher.list'); //リダイレクトしてPOSTデータの再送信を防止
-                    //exit;
                 }
             }
             if( isset($_POST['vcrUpdate'])) {           //1仕分け伝票データ　DB更新
@@ -131,19 +117,19 @@ class voucherController{
         }else{
             $this->tokenKey  = generateCsrfToken();
         }
-        $this->render('list');
+        $this->render($controllerName, $method);
 
     }
 
     // 編集画面
-    public function edit(){
+    public function edit($controllerName, $method){
         $id = (int)($_GET['id'] ?? 0);
         $voucher = $this->service->find($id);
         require ROOT_PATH.'/views/edit.php';
     }
 
     // 更新
-    public function update() {
+    public function update($controllerName, $method) {
         requirePost();
         $id = (int)$_POST['id'];
         $data = [
@@ -154,13 +140,10 @@ class voucherController{
         header('location: index.php?route=voucher.index');
         exit;
     }
-    private function render($renderType) {
+    private function render($controllerName, $method) {
+        $viewType = $method; //create or list
+        $renderType = $method; //create or list
         $vcrListResult  = $this->dto->vcrListResult ?? [];
-        //$accounts       = $this->dto->accounts ?? [];
-
-        //echo "<pre>";
-        //var_dump($this->dto->accounts);
-        //echo "</pre>";
         $accounts = array_filter($this->dto->accounts, function($row)  {
             if ($row['is_deleted'] !== 1) {
                 return true;
@@ -168,16 +151,17 @@ class voucherController{
             return false;
         });
 
-
-
         $tokenKey       = $this->tokenKey;
         if($renderType === 'create'){
             $details = $this->dto->dtoDetails;
-            require ROOT_PATH . '/views/create.php';
+            //require ROOT_PATH . '/views/create.php';
+            require ROOT_PATH . '/views/homeView.php';
             return 1;
         }
         if($renderType === 'list'){
-            require ROOT_PATH.'/views/list.php';
+            //require ROOT_PATH.'/views/list.php';
+            require ROOT_PATH . '/views/homeView.php';
+
             return 1;
         }
     }

@@ -23,7 +23,11 @@ class homeController{
         $this->service = new homeService($this->dto, $this->pdo );
     }
 
-    public function index() {
+    public function report($controllerName, $method) {
+        $this->index($controllerName,$method);
+    }
+
+    public function index($controllerName, $method) {
 
 //        $this->dto = new homeDto([]);
         $messege = "";
@@ -44,7 +48,7 @@ class homeController{
             $err = $this->validator->commonVali();
             if ($err > 0) {
                 // バリデーションエラーがある場合は集計処理を行わず、レンダリングして終了
-                $this->render();
+                $this->render($controllerName, $method);
                 return;
             }
 
@@ -56,9 +60,9 @@ class homeController{
             $this->dto->zenki_from = $this->service->zenki_from;
             $this->dto->zenki_to   = $this->service->zenki_to;
         }
-        $this->render();
+        $this->render($controllerName, $method);
     }
-    function render() {
+    function render($controllerName, $method) {
         $tokenKey = generateCsrfToken();
         $today = new dateTime();
   
