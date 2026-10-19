@@ -35,12 +35,6 @@ foreach ($all_routes as $key => $label) {
 }
 ?>
 
-<style>
-/*    .procSlct, .procSlct td { border: none !important; } */
-    .procSlct { border-collapse: collapse; width: auto; } /* 幅は中身に合わせるのが一般的 */
-    .procSlct button { cursor: pointer; padding: 5px 15px; }
-</style>
-
 <?php
 // 1. プロトコル（http:// または https://）の判定
 $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https://" : "http://";
@@ -57,7 +51,9 @@ $_SESSION['current_route'] = $requestRoute;
 
 ?>
 
-<table class="procSlct">
+<!-- <table class="procSlct"> -->
+<table class="report-content">
+
 
     <tr>
         <td colspan="<?= count($display_buttons) + 1; ?>" style="text-align: center; padding-bottom: 15px;">

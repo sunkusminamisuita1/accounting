@@ -32,7 +32,8 @@ $all_routes = [
     'logout'                => 'ログアウト'
 ];
 
-$route = $_GET['route'] ?? '';
+$route = $_GET['route'] ?? 'logout'; // デフォルトのルートを設定
+$route = $route ?? 'logout'; // デフォルトのルートを設定
 // 2. ガード節（エラーなら先に終わらせる）
 if (empty($route) || ($route !== 'home' && !isset($all_routes[$route]))) {
     dispErrorMsg("ルート「{$route}」は正しくありません。");
@@ -65,55 +66,33 @@ $_SESSION['current_route'] = $requestRoute;
 
 ?>
 
-<table class="page-header">
-    <tr>
-        <td class="fontSize">
-            コンビニ会計(複数 店舗 事業 対応)
-        </td>
-        <td colspan="<?= count($display_buttons) + 1; ?>" style="text-align: center; ">
+<header class="home-header">
+    <h1 class="home-title">コンビニ会計 <span>複数店舗・事業対応</span></h1>
+    <div class="shop-selector-container">
+        <p class="shop-greeting">ようこそ <?= htmlspecialchars($_SESSION['user']['username'] ?? 'ゲスト') ?></p>
+        <form action="index.php?route=shop.switch" method="POST" id="shop_selector_form" class="shop-selector-form">
+            <label for="active_shop">現在の操作店舗</label>
+            <select name="active_shop" id="active_shop"
+                onchange="document.getElementById('shop_selector_form').submit();">
+                <?php foreach ($_SESSION['userShops'] as $shop): ?>
+                    <option value="<?php echo $shop['shop_code']; ?>"
+                        <?php echo ($shop['shop_code'] == $_SESSION['currentShopCode']) ? 'selected' : ''; ?>>
+                        <?php echo htmlspecialchars($shop['shop_name'], ENT_QUOTES, 'UTF-8'); ?>
+                    </option>
+                <?php endforeach; ?>
+                <option value="   all" <?php echo (($_SESSION['currentShopCode']??'') === '   all') ? 'selected' : ''; ?>>
+                    【全店合算（連結決算）】
+                </option>
+            </select>
+        </form>
+    </div>
+</header>
 
-            <div class="shop-selector-container" style="display: inline-block; text-align: left;">
-                <label for="active_shop">ようこそ 
-                    <?= htmlspecialchars($_SESSION['user']['username'] ?? 'ゲスト') ?>
-                　　現在の操作店舗：</label>
-                <form action="index.php?route=shop.switch" method="POST" id="shop_selector_form" style="display: inline;">
-
-                    <select name="active_shop" id="active_shop" 
-                        onchange="document.getElementById('shop_selector_form').submit();">
-
-                        <?php foreach ($_SESSION['userShops'] as $shop): ?>
-
-                            <option value="<?php echo $shop['shop_code']; ?>" 
-                                <?php echo ($shop['shop_code'] == $_SESSION['currentShopCode']) ? 'selected' : ''; ?>>
-                                <?php echo htmlspecialchars($shop['shop_name'], ENT_QUOTES, 'UTF-8'); ?>
-                            </option>
-
-                        <?php endforeach; ?>
-
-                        <option value="   all" <?php echo (($_SESSION['currentShopCode']??'') === '   all') ? 'selected' : ''; ?>>
-                            【全店合算（連結決算）】
-                        </option>
-                    </select>
-                </form>
-            </div>
-
-        </td>
-    </tr>
-</table >
-
-<table class="procSlct">
-    <tr>
-        <?php foreach  ($display_buttons as $key => $label): ?>
-            <td>
-                <a href="http://test5.local/index.php?route=<?= h($key) ?>">
-                    <button type="button"><?= h($label) ?>
-                    </button>
-                </a>
-            </td>
-        <?php endforeach; ?>
-    </tr>
-</table>
-<br><br>
+<nav class="home-nav" aria-label="メインメニュー">
+    <?php foreach ($display_buttons as $key => $label): ?>
+        <a href="http://test5.local/index.php?route=<?= h($key) ?>"><?= h($label) ?></a>
+    <?php endforeach; ?>
+</nav>
 
 <!--
         <td colspan="<?= count($display_buttons) + 1; ?>" style="text-align: center; padding-top: 15px;">
@@ -182,6 +161,14 @@ $_SESSION['current_route'] = $requestRoute;
     <div class="report-layout">              <!-- 店舗情報 作成、修正、削除 -->
         <div class="report-content">
             <?php require_once ROOT_PATH . '/views/subView/shopsView.php'; ?>
+        </div>
+    </div>
+<?php endif; ?>
+
+<?php if (($controllerName??'') === "accountsController" && ($method??'') === 'index'): ?>
+    <div class="report-layout">              <!-- 店舗情報 作成、修正、削除 -->
+        <div class="report-content">
+            <?php require_once ROOT_PATH . '/views/subView/accountsView.php'; ?>
         </div>
     </div>
 <?php endif; ?>

@@ -1,56 +1,8 @@
-<?php
-//デバッグ出力　function debug_log(string $message, mixed $data = null, bool $debugMode = true): void {
-?>
-<style>
-    .txtBoxLineDel{
-    /*テキストボックス枠線なし*/outline: none;
-    border: none;
-    background: #e7edf8;
-}
-    .procSlct, .procSlct td { border: none !important; }
-    .UpdTbl { border-collapse: collapse; width: 100%; table-layout: fixed; border: 1px solid #000000; } /* 幅は中身に合わせるのが一般的 */
-    .procSlct button { cursor: pointer; padding: 5px 15px; }
-    th,td {  padding: 0.6em; border: 1px solid #000000; }
-
-    .button-container {
-        display: flex;
-        justify-content: space-between; /* 左右に均等配置する */
-        width: 100%; /* 必要に応じて幅を指定 */
-    }
-</style>
-<!-- ##############     エラーメッセージ表示    ################ -->
-    <?php if (!empty($this->dto->errData)): ?>
-        <ul style="color: red;">
-            <?php foreach ($this->dto->errData as $mod => $err): ?>
-                <li><?= h($mod) . ": " . h($err) ?></li>
-            <?php endforeach; ?>
-        </ul>
-    <?php endif; ?>
-
-<!-- #############     エラーメッセージ POPUP    ############### -->
-
 <h1>勘定科目ー定義　編集・削除</h1>
-
-<?php if (!empty($_SESSION['flash_message'])): ?>
-    <script>
-      alert(<?= json_encode($_SESSION['flash_message']) ?>);
-    </script>
-<?php unset($_SESSION['flash_message']); endif; ?>
 
     <?php
         require_once ROOT_PATH . '/views/procSlct.php';
     ?>
-    <?php if (!empty($this->dto->errData)): ?>
-        <ul style="color: red;">
-            <?php foreach ($this->dto->errData as $mod => $err): ?>
-                <li><?= h($mod) . ": " . h($err) ?></li>
-            <?php endforeach; ?>
-        </ul>
-    <?php endif; ?>
-
-    <!-- ##############     エラーメッセージ表示    ################ -->
-    <?=  $this->ctrerrMsgPopUp->Show($this->dto);  ?>
- 
     <form method="POST" action="index.php?route=accounts.edit">
 
         <table class="UpdTbl" >

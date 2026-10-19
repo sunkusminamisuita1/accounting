@@ -172,8 +172,8 @@ class accountsRepository
             ");
 
             $stmt->execute([
-                $this->dto->acctAltTbl[$key]['id'] ?? "",
-                $this->dto->acctAltTbl[$key]['user_id'] ?? ""
+                $this->dto->postDt['acctUpdDt'][$key]['id'] ?? "",
+                $this->dto->postDt['acctUpdDt'][$key]['user_id'] ?? ""
             ]);
             $this->pdo->commit();
 

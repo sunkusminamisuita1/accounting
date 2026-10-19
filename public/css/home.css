@@ -1,8 +1,6 @@
-    /*<style>*/
         /* =========================
            基本設定
            ========================= */
-
         * {
             box-sizing: border-box;
         }
@@ -10,6 +8,8 @@
         body {
             margin: 20px;
             font-family: sans-serif;
+            color: #263a32;
+            background: #f5f7f4;
         }
 
         mFontSize{
@@ -27,20 +27,74 @@
             font-weight: bold;
             color: #29483d;
         }
-
         /* =========================
            ページ上部
            ========================= */
-
-        /*.page-header {
-            width: 60%;
-            margin: 0 auto;
-        }*/
-
         .page-header {
             width: 60%;
             margin: 0 auto;
             border-collapse: collapse;
+        }
+
+        .home-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+            max-width: 1200px;
+            margin: 0 auto 20px;
+            padding: 18px 22px;
+            border-bottom: 3px solid #55796b;
+            background: #fff;
+        }
+
+        .home-title {
+            margin: 0;
+            color: #29483d;
+            font-size: 24px;
+            line-height: 1.35;
+        }
+
+        .home-title span {
+            display: block;
+            margin-top: 3px;
+            color: #687a70;
+            font-size: 14px;
+            font-weight: normal;
+        }
+
+        .shop-selector-container {
+            min-width: 240px;
+        }
+
+        .shop-greeting {
+            margin: 0 0 6px;
+            color: #52655b;
+            font-size: 14px;
+        }
+
+        .shop-selector-form {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .shop-selector-form label {
+            color: #29483d;
+            font-size: 14px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .shop-selector-form select {
+            max-width: 100%;
+            min-height: 38px;
+            padding: 6px 32px 6px 10px;
+            border: 1px solid #aebbb3;
+            border-radius: 4px;
+            background: #fff;
+            color: #263a32;
+            font: inherit;
         }
 
         .page-header td {
@@ -52,29 +106,21 @@
             text-align: center;
             vertical-align: middle;
         }
+        .txtBoxLineDel{
+        /*テキストボックス枠線なし*/outline: none;
+        border: none;
+        background: #e7edf8;
+        }
+        .UpdTbl { border-collapse: collapse; width: 100%; table-layout: fixed; border: 1px solid #000000; } /* 幅は中身に合わせるのが一般的 */
+        .procSlct button { cursor: pointer; padding: 5px 15px; }
+        th,td {  padding: 0.6em; border: 1px solid #000000; }
 
-
+        .button-container {
+            display: flex;
+            justify-content: space-between; /* 左右に均等配置する */
+            width: 100%; /* 必要に応じて幅を指定 */
+        }
         /* 操作ボタン */
-
-/*        .procSlct {
-            border-collapse: separate;
-            border-spacing: 15px 0;
-            margin: 10px auto;
-        }
-
-        .procSlct td {
-            border: none;
-            padding: 0;
-            text-align: center;
-        }
-
-        .procSlct button {
-            width: 130px;
-            padding: 6px 10px;
-            cursor: pointer;
-        }
-*/
-
         .page-title {
             font-size: 20px;
             white-space: nowrap;
@@ -93,64 +139,73 @@
         .shop-area select {
             padding: 4px 8px;
         }
-
-
         /* =========================
            メニューボタン
            ========================= */
-
-/*        .procSlct {
-            border-collapse: collapse;
-            width: 100%;
-            margin-top: 10px;
-        }
-
-        .procSlct td {
-            border: none;
-            padding: 5px;
-            text-align: center;
-        }
-
-        .procSlct button {
-            cursor: pointer;
-            padding: 5px 15px;
-        }
-*/
-        .procSlct {
+         .procSlct {
             width: 60%;
             border-collapse: separate;
             border-spacing: 15px 0;
             margin: 10px auto;
             background: #f2e0c6;
         }
-
         .procSlct td {
             border: none;
             padding: 0;
             text-align: center;
         }
-
         .procSlct button {
             width: 130px;
             padding: 6px 10px;
             cursor: pointer;
         }
+
+        .home-nav {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            max-width: 1200px;
+            margin: 0 auto 28px;
+            padding: 14px;
+            border: 1px solid #d8e1db;
+            border-radius: 5px;
+            background: #eaf0eb;
+        }
+
+        .home-nav a {
+            display: inline-flex;
+            min-height: 40px;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 16px;
+            border: 1px solid #315f50;
+            border-radius: 4px;
+            background: #315f50;
+            color: #fff;
+            font-size: 14px;
+            font-weight: bold;
+            text-decoration: none;
+            transition: background-color 150ms ease, border-color 150ms ease;
+        }
+
+        .home-nav a:hover,
+        .home-nav a:focus-visible {
+            border-color: #29483d;
+            background: #29483d;
+        }
         /* =========================
            帳票メニュー
            ========================= */
-
         .report-menu-title {
             text-align: center;
             padding: 15px 0;
             font-size: 18px;
             font-weight: bold;
         }
-
-
         /* =========================
            エラーメッセージ
            ========================= */
-
         #validation-messages {
             min-height: 3.6em;
             margin-bottom: 1em;
@@ -161,56 +216,45 @@
             margin: 0;
             padding-left: 1.2em;
         }
-
-
         /* =========================
            帳票本体
            ========================= */
-
         .report-area {
             width: 100%;
         }
-
         .report-layout {
             display: flex;
             align-items: flex-start;
             gap: 1rem;
         }
-
         .report-menu {
             flex: 0 0 300px;
         }
-
         .report-content {
             flex: 1;
             min-width: 0;
         }
-
         .report-content h3 {
             margin: 0 0 1rem;
             padding-bottom: 0.6rem;
             /* border-bottom: 2px solid #55796b; */
             color: #29483d;
         }
-
         .report-content form {
             margin-bottom: 1.25rem;
             padding: 1rem;
             background: #f3f6f3;
             border-left: 4px solid #55796b;
         }
-
         .report-content input:not([type="hidden"]) {
             margin: 0.35rem;
             padding: 0.4rem;
             border: 1px solid #aebbb3;
             border-radius: 3px;
         }
-
         .report-content input[type="number"] {
             width: 7rem;
         }
-
         .report-content button {
             padding: 0.5rem 1rem;
             border: 0;
@@ -219,18 +263,15 @@
             color: #fff;
             cursor: pointer;
         }
-
         .report-result-layout {
             display: grid;
             grid-template-columns: minmax(0, 2fr) minmax(220px, 1fr);
             gap: 1rem;
             align-items: start;
         }
-
         .report-main {
             min-width: 0;
         }
-
         .report-main table,
         .expense-panel table {
             width: 100%;
@@ -238,7 +279,6 @@
             border-collapse: collapse;
             background: #fff;
         }
-
         .report-main th,
         .report-main td,
         .expense-panel th,
@@ -246,27 +286,37 @@
             padding: 0.55rem 0.65rem;
             border: 1px solid #d2dbd5;
         }
-
         .report-main th,
         .expense-panel th {
             background: #e8efea;
             color: #29483d;
             text-align: center;
         }
-
         .report-main td:not(:first-child),
         .expense-panel .col-amount {
             text-align: right;
             white-space: nowrap;
         }
-
         .expense-panel-inner {
             padding: 1rem;
             border: 1px solid #d2dbd5;
             background: #f8faf8;
         }
-
         @media (max-width: 900px) {
+            .home-header {
+                align-items: flex-start;
+                flex-direction: column;
+                gap: 14px;
+            }
+
+            .shop-selector-container {
+                width: 100%;
+            }
+
+            .shop-selector-form select {
+                flex: 1;
+            }
+
             .report-layout {
                 flex-direction: column;
             }
@@ -275,9 +325,7 @@
                 flex-basis: auto;
                 width: 100%;
             }
-
             .report-result-layout {
                 grid-template-columns: 1fr;
             }
         }
-/*    </style>*/

@@ -18,7 +18,7 @@ class accountsController {
         $this->ctrerrMsgPopUp = new errMsgPopUp($this->dto);
     }
 
-    public function index()
+    public function index($controllerName,$method)
     {
         if( ! $this->dto->accounts){
             $this->service->getAccounts();
@@ -39,22 +39,14 @@ class accountsController {
                 case '削除':  //削除ボタンは、削除フラグのon の行をaccountsテーブルから削除する。
                     $this->dto->acctAltTbl = $this->restoreEditingData();
                     $err = $this->service->accountsDlt();
-                    // if ($err) {
-                    //     echo "<script>alert('削除できません。仕訳帳に使用されている勘定科目は削除できません。');</script>";
-                    //     break;
-                    // }
-                    //unset($_SESSION['acctAltTbl']);
-                    $this->service->getAccounts();
+                    if ($err <= 0) {
+                        $this->service->getAccounts();
+                    }
                     $_SESSION['acctAltTbl'] = $this->dto->acctAltTbl;
                     break;
 
                 case '修正実行':  //acctAltTblの内容をDBに反映する。                  
                     $this->dto->acctAltTbl = $this->restoreEditingData();
-                    //$err = $this->service->accountsDlt();
-                    //if ($err) {
-                    //    echo "<script>alert('削除できません。仕訳帳に使用されている勘定科目は削除できません。');</script>";
-                    //    break;
-                    //}
                     $gomi   =   $this->service->repoDataMake();
                     unset($_SESSION['acctAltTbl']);
                     //$this->service->getAccounts();
@@ -72,7 +64,8 @@ class accountsController {
         $tokenKey = generateCsrfToken();
         unset($accounts);
         $accounts   =   $this->dto->acctAltTbl;
-        require ROOT_PATH.'/views/accountsView.php';
+        //require ROOT_PATH.'/views/accountsView.php';//'/views/homeView.php'
+        require ROOT_PATH.'/views/homeView.php';//
     }
 
     private function restoreEditingData(){    //すでに修正データがある場合、編集データにコピー

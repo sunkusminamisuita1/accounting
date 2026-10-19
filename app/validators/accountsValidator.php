@@ -1,5 +1,7 @@
 <?php
 require_once ROOT_PATH . '/lib/helpers.php';
+        // echo "post件数/" . count($this->dto->postDt['acctUpdDt']);
+        // echo "alttbl件数/" . count($this->dto->accounts);exit;
 //デバッグ出力　function debug_log(string $message, mixed $data = null, bool $debugMode = true): void {
 class accountsValidator
 {
@@ -17,15 +19,81 @@ class accountsValidator
         $this->pdo          =   $pdo;
     }
 
+    public function accountsValiDlt() {
+        $errFlg = 0;
+        //削除ボタンが押されたとき行追加していた場合、エラー　削除ボタンは　削除単体で使用する。
+        if( count($this->dto->postDt['acctUpdDt'])   >   count($this->dto->accounts)){
+            $this->dto->acctAltTbl[0]['errmsg'] = "削除ボタンは削除単体で使用してください。";
+            $errFlg++;
+            echo "111";
+            echo "<pre>postDt['acctUpdDt'][]<br>";
+            var_dump($this->dto->postDt['acctUpdDt']);
+            echo "<br>acctAltTbl[]<br>";
+            var_dump($this->dto->acctAltTbl);
+            echo "</pre>";
+            return $errFlg;
+        }
+        $allCount = count($this->dto->postDt['acctUpdDt']);
+        $chkCount = 0;
+        foreach($this->dto->postDt['acctUpdDt'] as $postKey => $postRow){
+            foreach($this->dto->accounts as $acctKey => $acctRow){
+                if( (int)$postRow['id']          === (int)$acctRow['id'] ){
+                    $chkCount++;
+                    if( ( $postRow['name']             === $acctRow['name']           )         &&
+                        ( $postRow['type']             === $acctRow['type']           )         &&
+                        ( (int)$postRow['sort_order']  === (int)$acctRow['sort_order'])   )     {    
+                            $this->dto->acctAltTbl[$acctKey]['errmsg'] = "";                     
+                            echo "222";
+                            break;
+                    }else{
+                            $errFlg++;
+                            echo "333";
+                            $this->dto->acctAltTbl[$acctKey]['errmsg'] = "削除ボタンは削除単体(更新不可)で使用してください。";
+                            break;
+                    }
+                }
+            }
+        }
+        if($chkCount  !== $allCount){
+            $this->dto->acctAltTbl[0]['errmsg'] = "システムエラー　データ件数と元データ件数不一致";
+            $errFlg++;
+            echo "444";
+            return $errFlg;
+        }
+        if($errFlg > 0){echo "555";return $errFlg;}
+        echo "<pre>postDt['acctUpdDt'][]<br>";
+        var_dump($this->dto->postDt['acctUpdDt']);
+        echo "<br>acctAltTbl[]<br>";
+        var_dump($this->dto->accounts);
+        echo "</pre>";
+    }
+
     public function accountsVali(): int
     {
-        // パスカルケース（大文字始まり）だったローカル変数を、PHPで一般的なキャメルケース（小文字始まり）に統一
         $errFlg = 0;
+        //ソートオーダー重複エラー
+        foreach ($this->dto->acctAltTbl as $key => $row) {
+            $this->dto->acctAltTbl[$key]['errmsg'] = "";
+            $sortOrderAltTbl[$row['sort_order']][] = $key;
+        }
+        $duplicateSortOrderGroups = array_filter($sortOrderAltTbl, function($row) {
+            return count($row) > 1;
+        });
+        foreach ($duplicateSortOrderGroups as $sortOrder => $keys) {
+            foreach ($keys as $key) {
+                $this->dto->acctAltTbl[$key]['errmsg'] = 
+                            "表示順序が重複しています。表示順序はユニークである必要があります。";
+                $errFlg++;
+            }
+        }
+
+        // パスカルケース（大文字始まり）だったローカル変数を、PHPで一般的なキャメルケース（小文字始まり）に統一
+
 
         debug_log("バリデーション開始。対象データ数: " . count($this->dto->acctAltTbl));
-
+        $sortOrderCnt = 0;
         foreach ($this->dto->acctAltTbl as $key => $row){
-            $this->dto->acctAltTbl[$key]['errmsg'] = "";
+            //$this->dto->acctAltTbl[$key]['errmsg'] = "";
 
             // 1. 貸借種別チェック
             if (!in_array($row['type'], $this->dto->accountsType, true)) {
@@ -59,7 +127,6 @@ class accountsValidator
                 $errFlg++;
                 continue;
             }
-            //echo "<br>2 {$errFlg}";
             if (!is_numeric($trimmedSortOrder)) {
                 $this->dto->acctAltTbl[$key]['errmsg'] = "ソート順は4桁数字で入力してください。";
                 $errFlg++;
@@ -79,7 +146,6 @@ class accountsValidator
                 $errFlg++;
                 continue;
             }
-
             // 4. 削除フラグが立っているデータの書き換えチェック
             $isDeleted = $this->dto->postDt['acctUpdDt'][$key]['del'] ?? '0';
             if ($isDeleted) {
@@ -87,17 +153,27 @@ class accountsValidator
                 $currentName = (string)$row['name'];
                 $currentSortOrder = (string)$row['sort_order'];
                 $currentType = (string)$row['type'];
-
                 foreach ($this->dto->accounts as $orgRow) {
                     if ((int)$orgRow['id'] === $currentId) {
-                        if ((string)$orgRow['name']         !== $currentName        || 
-                            (string)$orgRow['type']         !== $currentType        || 
-                            (int)$orgRow['sort_order']   !== (int)$currentSortOrder) {
+                        if ( ( (string)$orgRow['name']    !== $currentName            )         || 
+                           ( (string)$orgRow['type']      !== $currentType            )         || 
+                           ( (int)$orgRow['sort_order']   !== (int)$currentSortOrder) )
+                        {
                             $this->dto->acctAltTbl[$key]['errmsg'] = "削除済みの勘定科目、種別は修正できません。";
                             $errFlg++;
-                            break;
+                            return $errFlg;
                         }
                     }
+                    // if ((int)$orgRow['sort_order']   !== (int)$currentSortOrder) {
+                    //     continue;
+                    // }
+                    // $sortOrderCnt ++;
+                    // if($sortOrderCnt >= 2){
+                    //     echo "orgsortkey:{$orgRow['sort_order']}  currentSortKey:{$currentSortOrder}  ";
+                    //     $this->dto->acctAltTbl[$key]['errmsg'] = "表示順序が重複しています。表示順序はユニークである必要があります。";
+                    //     $errFlg++;
+                    //     return $errFlg;                       
+                    // }
                 }
             }
 
@@ -161,16 +237,16 @@ class accountsValidator
                         "表示順序は{$accountCodeMinMax['min_code']}から{$accountCodeMinMax['max_code']}の間で指定してください。";
                     $errFlg++;
                 }
-
-
-
-
         }
+        //echo "<pre>11";var_dump($this->dto->acctAltTbl);echo "</pre>";
 
         if ($errFlg > 0) {
             $this->dto->errData[0] = "登録エラーが存在します。エラーを修正してください。";
         }
         debug_log("バリデーション終了。エラー数: " . $errFlg);
+        //$errFlg = (int)1;
+                
+
         return $errFlg;
     }
 }

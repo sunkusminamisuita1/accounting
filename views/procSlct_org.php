@@ -37,8 +37,8 @@ foreach ($all_routes as $key => $label) {
 
 <style>
 /*    .procSlct, .procSlct td { border: none !important; } */
-    .procSlct { border-collapse: collapse; width: auto; } /* 幅は中身に合わせるのが一般的 */
-    .procSlct button { cursor: pointer; padding: 5px 15px; }
+    /* .procSlct { border-collapse: collapse; width: auto; } /* 幅は中身に合わせるのが一般的 */
+    .procSlct button { cursor: pointer; padding: 5px 15px; } */
 </style>
 
 <?php
