@@ -25,12 +25,12 @@ class accountsValidator
         if( count($this->dto->postDt['acctUpdDt'])   >   count($this->dto->accounts)){
             $this->dto->acctAltTbl[0]['errmsg'] = "削除ボタンは削除単体で使用してください。";
             $errFlg++;
-            echo "111";
-            echo "<pre>postDt['acctUpdDt'][]<br>";
-            var_dump($this->dto->postDt['acctUpdDt']);
-            echo "<br>acctAltTbl[]<br>";
-            var_dump($this->dto->acctAltTbl);
-            echo "</pre>";
+            // echo "111";
+            // echo "<pre>postDt['acctUpdDt'][]<br>";
+            // var_dump($this->dto->postDt['acctUpdDt']);
+            // echo "<br>acctAltTbl[]<br>";
+            // var_dump($this->dto->acctAltTbl);
+            // echo "</pre>";
             return $errFlg;
         }
         $allCount = count($this->dto->postDt['acctUpdDt']);
@@ -43,11 +43,11 @@ class accountsValidator
                         ( $postRow['type']             === $acctRow['type']           )         &&
                         ( (int)$postRow['sort_order']  === (int)$acctRow['sort_order'])   )     {    
                             $this->dto->acctAltTbl[$acctKey]['errmsg'] = "";                     
-                            echo "222";
+                            //echo "222";
                             break;
                     }else{
                             $errFlg++;
-                            echo "333";
+                            //echo "333";
                             $this->dto->acctAltTbl[$acctKey]['errmsg'] = "削除ボタンは削除単体(更新不可)で使用してください。";
                             break;
                     }
@@ -57,15 +57,15 @@ class accountsValidator
         if($chkCount  !== $allCount){
             $this->dto->acctAltTbl[0]['errmsg'] = "システムエラー　データ件数と元データ件数不一致";
             $errFlg++;
-            echo "444";
+            //echo "444";
             return $errFlg;
         }
         if($errFlg > 0){echo "555";return $errFlg;}
-        echo "<pre>postDt['acctUpdDt'][]<br>";
-        var_dump($this->dto->postDt['acctUpdDt']);
-        echo "<br>acctAltTbl[]<br>";
-        var_dump($this->dto->accounts);
-        echo "</pre>";
+        // echo "<pre>postDt['acctUpdDt'][]<br>";
+        // var_dump($this->dto->postDt['acctUpdDt']);
+        // echo "<br>acctAltTbl[]<br>";
+        // var_dump($this->dto->accounts);
+        //echo "</pre>";
     }
 
     public function accountsVali(): int
