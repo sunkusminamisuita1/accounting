@@ -1,4 +1,3 @@
-    
             <form action="index.php?route=home.report" method="post">試算表メニュー<br><br>
 
                 <input type="hidden" name="csrfTokenKey" value="<?= h($tokenKey) ?>">
@@ -22,8 +21,13 @@
                 <input type="radio" name="reportType"
                     value="<?= kikanSisanhyou ?>" <?= $currentReport === kikanSisanhyou ? 'checked' : '' ?>>
                         期間入力試算表出力<br><br>
+
+                <input type="radio" name="reportType"
+                    value="<?= hanbaihiIppankanrihi ?>" <?= $currentReport === hanbaihiIppankanrihi ? 'checked' : '' ?>>
+                        販売費・一般管理費<br><br>
+
                 <button type="submit">切替</button><br><br>
-                <input type="hidden" name="csrfTokenKey" value="<?= h($tokenKey) ?>">
+                <!-- <input type="hidden" name="csrfTokenKey" value="<?= h($tokenKey) ?>"> -->
             </form>
 <!-- ここから下は、reportSubView.phpに移動
 
