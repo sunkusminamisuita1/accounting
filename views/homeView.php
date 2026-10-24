@@ -26,7 +26,8 @@ $all_routes = [
     'voucher.list'          => '仕分伝票修正',
     'accounts.edit'         => '勘定科目追加',
     'shop.edit'             => '店舗情報編集',
-    'home.report'           => '帳票メニュー',
+    'home.report'           => '試算表メニュー',
+    'kessan.report'         => '決算帳票メニュー',
     $RtnRoute . ' '         => '戻る', //呼び出し元に戻るボタンを追加
     'login'                 => 'ログイン',
     'logout'                => 'ログアウト'
@@ -93,10 +94,6 @@ $_SESSION['current_route'] = $requestRoute;
         <a href="http://test5.local/index.php?route=<?= h($key) ?>"><?= h($label) ?></a>
     <?php endforeach; ?>
 </nav>
-
-<!--
-        <td colspan="<?= count($display_buttons) + 1; ?>" style="text-align: center; padding-top: 15px;">
--->
                         <?php
                         $validationItems = [];
                         foreach (($this->dto->errData ?? []) as $field => $msg) {
@@ -121,11 +118,17 @@ $_SESSION['current_route'] = $requestRoute;
                                 <!-- プレースホルダ: 空でも高さを確保 -->
                             <?php endif; ?>
                         </div>
-<!-- <?php echo "method: " . ($method ?? 'null'); ?> -->
-<?php if (($viewType??'') === "sisanhyou" && ($method??'') === 'report'): ?>
+<?php echo "controller: " . ($controllerName ?? 'null'); ?><br>
+<?php echo "method: " . ($method ?? 'null'); ?><br>
+<?php echo "reporttype: " . ( $this->dto->reportType?? 'null'); ?>
+
+<?php if (($controllerName??'') === "homeController" && ($method??'') === 'report'): ?>
     <div class="report-layout">              <!-- 試算表メニュー -->
         <div class="report-menu">
-            <?php require_once ROOT_PATH . '/views/subView/reportSubMenu.php'; ?>
+            <?php require_once ROOT_PATH . '/views/subView/sisanSubMenu.php'; ?>
+        </div>
+        <div class="report-content">         <!-- 試算表条件設定メニュー -->
+            <?php require_once ROOT_PATH . '/views/subView/sisanSub2Menu.php'; ?>
         </div>
         <div class="report-content">         <!-- 試算表内容 -->
             <?php require_once ROOT_PATH . '/views/subView/sisanhyou.php'; ?>
@@ -142,8 +145,8 @@ $_SESSION['current_route'] = $requestRoute;
 <?php endif; ?>
 
 <?php if (($controllerName??'') === "voucherController" && ($method??'') === 'list'): ?>
-    <div class="report-layout">              <!-- 仕分け伝票修正 -->
-        <div class="report-content">         <!-- 仕分け伝票修正内容 -->
+    <div class="accounts-report-layout">              <!-- 仕分け伝票修正 -->
+        <div class="accounts-report-content">         <!-- 仕分け伝票修正内容 -->
             <?php require_once ROOT_PATH . '/views/subView/list.php'; ?>
         </div>
     </div>
@@ -158,16 +161,16 @@ $_SESSION['current_route'] = $requestRoute;
 <?php endif; ?>
 
 <?php if (($controllerName??'') === "shopController" && ($method??'') === 'edit'): ?>
-    <div class="report-layout">              <!-- 店舗情報 作成、修正、削除 -->
-        <div class="report-content">
+    <div class="accounts-report-layout">              <!-- 店舗情報 作成、修正、削除 -->
+        <div class="accounts-report-content">
             <?php require_once ROOT_PATH . '/views/subView/shopsView.php'; ?>
         </div>
     </div>
 <?php endif; ?>
 
 <?php if (($controllerName??'') === "accountsController" && ($method??'') === 'index'): ?>
-    <div class="report-layout">              <!-- 店舗情報 作成、修正、削除 -->
-        <div class="report-content">
+    <div class="accounts-report-layout">              <!-- 店舗情報 作成、修正、削除 -->
+        <div class="accounts-report-content">
             <?php require_once ROOT_PATH . '/views/subView/accountsView.php'; ?>
         </div>
     </div>
@@ -180,7 +183,30 @@ $_SESSION['current_route'] = $requestRoute;
 
 
 
-<!--require ROOT_PATH . '/views/homeView.php';-->
+
+<?php if (($controllerName??'') === "kessanController" && ($method??'') === 'report'): ?>
+    <div class="report-layout">              <!-- 決算書Subメニュー -->
+        <div class="report-menu">
+            <?php require_once ROOT_PATH . '/views/subView/kessanSubMenu.php'; ?>
+        </div>
+        <div class="report-content">         <!-- 決算書SUBメニュー2 -->
+            <?php require_once ROOT_PATH . '/views/subView/kessanSub2Menu.php'; ?>
+        </div>
+        <div class="report-content">         <!-- 決算書内容 -->
+            <?php require_once ROOT_PATH . '/views/subView/kessanSyo.php'; ?>
+        </div>
+    </div>
+<?php endif; ?>
+
+
+
+
+
+
+
+
+
+
 
 </table>
 </html>

@@ -63,11 +63,11 @@ $routes =   [
                         'method' => 'create',
                         'auth' => true
                 ],
-                // 'voucherCreate' => [
-                //         'controller' => homeController::class,
-                //         'method' => 'voucherCreate',
-                //         'auth' => true
-                // ],
+                 'kessan.report' => [
+                        'controller' => kessanController::class,
+                        'method' => 'report',
+                        'auth' => true
+                ],
                 //勘定科目　追加
                 'accounts.edit' => [
                        'controller' => accountsController::class,

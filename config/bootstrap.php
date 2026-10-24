@@ -14,4 +14,5 @@ require_once ROOT_PATH . '/app/controllers/homeController.php';
 require_once ROOT_PATH . '/app/controllers/accountsController.php';
 require_once ROOT_PATH . '/app/controllers/voucherController.php';
 require_once ROOT_PATH . '/app/controllers/shopController.php';
+require_once ROOT_PATH . '/app/controllers/kessanController.php';
 ?>

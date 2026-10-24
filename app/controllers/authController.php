@@ -87,7 +87,7 @@ class authController{
             }
         }
         $tokenKey = generateCsrfToken();
-        require ROOT_PATH.'/views/register.php';
+        require ROOT_PATH.'/views/subView/register.php';
     }
 }
 ?>

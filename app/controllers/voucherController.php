@@ -125,7 +125,7 @@ class voucherController{
     public function edit($controllerName, $method){
         $id = (int)($_GET['id'] ?? 0);
         $voucher = $this->service->find($id);
-        require ROOT_PATH.'/views/edit.php';
+        require ROOT_PATH.'/views/subView/edit.php';
     }
 
     // 更新
