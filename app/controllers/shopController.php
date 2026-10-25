@@ -30,8 +30,8 @@ class shopController{
     public function switch($controllerName, $method) //procslct.phpから呼ばれる
 	{
 		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            echo "<pre>";
-		    var_dump($_SESSION['sisanStartEnd']??[]);
+            //echo "<pre>";
+		    //var_dump($_SESSION['sisanStartEnd']??[]);
 			$targetShopId = $_POST['active_shop'] ?? '';
 			// 所有している店舗リストの中に、選択されたIDが存在するか安全チェック
 			$validShop = false;

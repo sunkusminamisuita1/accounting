@@ -106,10 +106,8 @@ function YYYgetTrial($pdo, $from, $to, $dto ){
 		$stmt = $pdo->prepare($sql);
 		$stmt->execute([':from' => $from, ':to' => $to, ':userId' => $userId, ':shopCode' => $shopCode]);
 		$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-		//echo "<br>入力ショップコード: " . var_dump($shopCode) . "<br>";
 	$trial = [];
 	foreach ($rows as $row) {
-		echo "<br>journal_vouchers: " . var_dump($row) . "<br>";exit;
 
 		$id = $row['account_id'];
 		if (!isset($trial[$id])) {
@@ -175,5 +173,22 @@ function getPeriodProfit(array $logicalRows): int{
 		}
 	}
 	return $profit;
+}
+
+function dbg($hairetuMei,$hairetu){
+	 $trace = debug_backtrace();
+
+    // 呼び出し元のファイル名
+    $fileName = $trace[0]['file'] ?? '';
+
+    // 呼び出し元の関数名
+    $functionName = $trace[0]['function'] ?? '';
+
+    echo "<br>呼び出し元ファイル名: " . $fileName . "<br>";
+    echo "呼び出し元関数名: " . $functionName;
+
+	echo "<br>" . $hairetuMei . "<br><pre>";
+	var_dump($hairetu);
+	echo "</pre>";
 }
 ?>

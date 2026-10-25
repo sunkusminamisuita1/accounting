@@ -11,6 +11,7 @@ class kessanDto{
     public array    $post = [];
     //public string   $viewResult;
     public string   $reportType;
+    public string   $reportSubType;
     public string   $from;
     public string   $to;
     public string   $zenki_from;
@@ -24,9 +25,15 @@ class kessanDto{
         $this->prevFrom = $kikan['prev']['from'] ?? 0;
         $this->prevTo = $kikan['prev']['to'] ?? 0;
         $this->activeShop = '   all';
-        $this->reportType = '月次試算表';
+        $this->reportType = '';
+        $this->reportSubType = '月次';
+
         $this->zenki_from = '';
         $this->zenki_to   = '';
+    }
+
+    public function pl() {
+
     }
 }
 ?>

@@ -18,18 +18,23 @@ class kessanValidator
         
     }
 
-    public function commonVali(): int
+    public function kessanItiran(): int
     {
         $errFlg = 0;
+        echo '<br>4444/' . $errFlg;
+
+        //return $errFlg;
         $this->dto->errData = $this->dto->errData ?? [];
 
         $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https://" : "http://";
         $OwnUrl = $protocol . ($_SERVER['REQUEST_URI'] ?? '');
 
-        $reportType = $this->dto->reportType ?? '';
+        $reportType = $this->dto->reportSubType ?? '';
 
         switch ($reportType) {
-            case getujiSisanhyou: // 月次
+            case '月次': // 月次
+                echo "6666";
+                dbg('dtopost',$this->dto->post);
                 $from = $this->dto->post['from'] ?? $this->dto->from ?? '';
                 if (empty($from)) {
                     $msg = '月次試算表: 年月を入力してください。';
@@ -47,7 +52,7 @@ class kessanValidator
                 }
                 break;
 
-            case nenjiSisanhyou: // 年次
+            case '年次': // 年次
                 $nen = $this->dto->post['nenji_nen'] ?? $this->dto->nenji_nen ?? '';
                 if (empty($nen)) {
                     $msg = '年次試算表: 年を入力してください。';
@@ -64,7 +69,7 @@ class kessanValidator
                 }
                 break;
 
-            case ruisekiSisanhyou: // 累積（終了日必須）
+            case '累積': // 累積（終了日必須）
                 $to = $this->dto->post['to'] ?? $this->dto->to ?? '';
                 if (empty($to)) {
                     $msg = '累積試算表: 期日（終了日）を入力してください。';
@@ -81,7 +86,7 @@ class kessanValidator
                 }
                 break;
 
-            case zenkiHikaku: // 前期比較（基準年必須）
+            case '前期比較': // 前期比較（基準年必須）
                 $kijyun = $this->dto->post['kijyun_nen'] ?? '';
                 if (empty($kijyun)) {
                     $msg = '前期比較: 基準年を入力してください。';
@@ -98,7 +103,7 @@ class kessanValidator
                 }
                 break;
 
-            case kikanSisanhyou: // 期間指定
+            case '期間指定': // 期間指定
                 $from = $this->dto->post['from'] ?? $this->dto->from ?? '';
                 $to = $this->dto->post['to'] ?? $this->dto->to ?? '';
                 if (empty($from) || empty($to)) {

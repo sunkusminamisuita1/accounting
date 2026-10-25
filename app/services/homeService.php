@@ -61,7 +61,6 @@ class homeService{
 
 															//対象データ読み込み　経費一覧
 			$this->dto->keihiItiran = $this->repo->getKeihiItiran($this->from,$this->to);
-			//var_dump($this->dto->keihiItiran);
 															//科目コード一覧(全件)
 			$account_codes = array_merge(
 				array_keys($trial_cur),
@@ -83,7 +82,6 @@ class homeService{
 					];
 															//月次・年次・期間 試算表集計
 					$rows = $this->buildLogicalRows($trial_cur);
-					//var_dump($rows);exit;
 					foreach ($rows as $id => $row) {
 						$total['debit']  += $row['debit'];
 						$total['credit'] += $row['credit'];
@@ -256,8 +254,6 @@ class homeService{
 			$result['cur'] = ['from'=>$from, 'to'=>$to];
 		}
 		$result['reportType'] = $this->dto->reportType ?? '' ;
-		// echo "<pre>";
-		// var_dump($result);
 		return $result;
 	}
 	//html用表示出力用データ作成

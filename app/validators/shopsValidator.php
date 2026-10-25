@@ -47,7 +47,7 @@ class shopsValidator
             $errFlg++;
         }
         //echo "<br>shopsvali newRegister shopCode: <pre>" . var_dump($shopCode) . "</pre><br><pre>" . 
-        var_dump($_SESSION['shopAltTbl']) . "</pre><br>";
+        //var_dump($_SESSION['shopAltTbl']) . "</pre><br>";
         foreach ($_SESSION['shopAltTbl'] as $idx=>$row) {
             if ((string)$row['shop_code'] === $shopCode) {
                 $this->dto->newErrMsg = "この店番はすでに登録（重複）されています。";
@@ -68,8 +68,8 @@ class shopsValidator
         }
 
 
-        echo "<br>shopsvali newRegister shopname: <pre>" . var_dump($shopName) . "</pre><br><pre>" . 
-        var_dump($_SESSION['shopAltTbl']) . "</pre><br>";
+        //echo "<br>shopsvali newRegister shopname: <pre>" . var_dump($shopName) . "</pre><br><pre>" . 
+        //var_dump($_SESSION['shopAltTbl']) . "</pre><br>";
         foreach ($_SESSION['shopAltTbl'] as $idx=>$row) {
             if ((string)$row['shop_name'] === $shopName) {
                 $this->dto->newErrMsg = "この店名はすでに登録（重複）されています。";

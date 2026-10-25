@@ -63,7 +63,6 @@ class homeRepository{
 
 			
 			$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-			//echo "<br>入力ショップコード: " . var_dump($shopCode) . "<br>";
 		$trial = [];
 		foreach ($rows as $row) {
 
@@ -134,7 +133,6 @@ class homeRepository{
 
 			
 			$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-			//echo "<br>入力ショップコード: " . var_dump($shopCode) . "<br>";
 		$trial = [];
 		foreach ($rows as $row) {
 

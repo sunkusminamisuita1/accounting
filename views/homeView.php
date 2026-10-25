@@ -118,9 +118,7 @@ $_SESSION['current_route'] = $requestRoute;
                                 <!-- プレースホルダ: 空でも高さを確保 -->
                             <?php endif; ?>
                         </div>
-<?php echo "controller: " . ($controllerName ?? 'null'); ?><br>
-<?php echo "method: " . ($method ?? 'null'); ?><br>
-<?php echo "reporttype: " . ( $this->dto->reportType?? 'null'); ?>
+
 
 <?php if (($controllerName??'') === "homeController" && ($method??'') === 'report'): ?>
     <div class="report-layout">              <!-- 試算表メニュー -->

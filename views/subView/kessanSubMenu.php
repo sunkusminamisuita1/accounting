@@ -1,4 +1,4 @@
-<form action="index.php?route=kessan.report" method="post">試算表メニュー<br><br>
+<form action="index.php?route=kessan.report" method="post">決算メニュー<br><br>
 
     <input type="hidden" name="csrfTokenKey" value="<?= h($tokenKey) ?>">
 
