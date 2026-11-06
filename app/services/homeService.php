@@ -42,7 +42,7 @@ class homeService{
 		];
 		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 															// --- 1. 入力値の受け取り  ---
-			$data				=	$this->startEnd();
+			$data				=	startEnd($this->dto->reportType);
 			$this->from			=	$data['cur']['from']??"";
 			$this->to			=	$data['cur']['to']??"";
 			$this->zenki_from	=	$data['prev']['from']??"";
@@ -100,6 +100,7 @@ class homeService{
 				case ruisekiSisanhyou:
 					$logical_rows = $this->buildLogicalRows($trial_cur_bs);
 															// 集計箱
+					//dbg('ruisekiSisanhyou logical_rows', $logical_rows);
 					$totals = [
 						'資産'   => 0,
 						'負債'   => 0,
@@ -116,6 +117,7 @@ class homeService{
 						if (isset($totals[$type])) {
 							$totals[$type] += $balance;
 						}
+						//dbg("ruisekiSisanhyou totals", $totals);
 															// BS科目だけ表示対象
 						if (in_array($type, ['資産','負債','純資産'], true)) {
 							$this->result[] = [
@@ -125,7 +127,8 @@ class homeService{
 								'type'     => $type,
 								'balance'  => $balance
 							];
-						}	
+						}
+						//dbg("ruisekiSisanhyou result", $this->result);	
 					}
 					$prev_rows    = $this->buildLogicalRows($trial_prev_bs);
 					$prev_capital = getPeriodProfit($prev_rows);
@@ -214,48 +217,6 @@ class homeService{
 		return $data?:[];
 	}
 
-	function startEnd() {
-		$from = ""; $to =""; $zenki_from=""; $zenki_to=""; $result="";
-		$result =	[	
-					'cur'   => ['from'=>null,'to'=>null],
-					'prev'  => ['from'=>null,'to'=>null]	
-				];
-	// --- 1. 年次試算表 $from, $to を再計算 ---
-		if ($this->dto->reportType === nenjiSisanhyou && isset($_POST['nenji_nen'])) {
-			$from = $_POST['nenji_nen'] . '-01-01';
-			$to   = $_POST['nenji_nen'] . '-12-31';
-			$result['cur'] = ['from'=>$from, 'to'=>$to];
-		}
-	// --- 2. 月次試算表 $from, $to を再計算 ---
-		if ($this->dto->reportType === getujiSisanhyou && isset($_POST['from'])) {
-			$from = substr($_POST['from'],0,7) . '-01';
-			$to   = date('Y-m-t', strtotime($from));
-			$result['cur'] = ['from'=>$from, 'to'=>$to];
-		}
-	// --- 3. 累積試算表 $from, $to を再計算 ---ACCOUNT_START
-		if ($this->dto->reportType === ruisekiSisanhyou && isset($_POST['to'])) {
-			$from = ACCOUNT_START;
-			$to   = $_POST['to'];
-			$result['cur'] = ['from'=>$from, 'to'=>$to];
-		}
-	// --- 4. 前期比較試算表 $from, $to を再計算 ---
-		if ($this->dto->reportType === zenkiHikaku && isset($_POST['kijyun_nen'])) {
-			$from = $_POST['kijyun_nen'] . '-01-01';
-			$to   = $_POST['kijyun_nen'] . '-12-31';
-			$prev_from = ($_POST['kijyun_nen'] - 1 ) . '-01-01';
-			$prev_to   = ($_POST['kijyun_nen'] - 1 ) . '-12-31';
-			$result['cur']  = ['from'=>$from, 'to'=>$to];
-			$result['prev'] = ['from'=>$prev_from, 'to'=>$prev_to];
-		}
-	// --- 5. 期間入力 $from, $to を再計算 ---
-		if ($this->dto->reportType === kikanSisanhyou && isset($_POST['to'])) {
-			$from = $_POST['from'];
-			$to   = $_POST['to'];
-			$result['cur'] = ['from'=>$from, 'to'=>$to];
-		}
-		$result['reportType'] = $this->dto->reportType ?? '' ;
-		return $result;
-	}
 	//html用表示出力用データ作成
 	function buildLogicalRows(array $trial): array
 	{

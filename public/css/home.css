@@ -309,15 +309,20 @@
             border: 1px solid #d2dbd5;
         }
         .report-main th,
-        .expense-panel th {
-            background: #e8efea;
+        .expense-panel th,
+        .expense-panel .total-row td {
+            background-color: #e8efea;
             color: #29483d;
             text-align: center;
+            font-weight: bold;
         }
         .report-main td:not(:first-child),
         .expense-panel .col-amount {
             text-align: right;
             white-space: nowrap;
+        }
+        .expense-panel .total-row .col-amount {
+            text-align: right;
         }
         .expense-panel-inner {
             padding: 1rem;

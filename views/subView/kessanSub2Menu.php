@@ -64,7 +64,7 @@
                         基準年：<input type="number" name="kijyun_nen" style="width: 120px;" min='1900' max='2100'
                         value="<?= h($this->dto->post['kijyun_nen'] ?? "") ?>"  placeholder="例: 2025">
                         
-<?php                   $this->dto->from = isset($_POST['kijyun_nen'])?$_POST['kijyun_nen'] . '0101':"";
+<?php                   //$this->dto->zenki_from = isset($_POST['kijyun_nen'])?$_POST['kijyun_nen'] . '-01-01':"";
                     };
                     if($this->dto->reportSubType  === '期間'){
 ?>

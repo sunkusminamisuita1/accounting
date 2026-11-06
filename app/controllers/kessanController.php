@@ -20,68 +20,52 @@ class kessanController{
         $this->pdo      = $pdo;
         $this->dto      = new kessanDto([]);
         //$this->validator = new plValidator($this->dto, false);
-        //$this->service = new kessanService($this->dto, $this->pdo );
+        $this->service = new kessanService($this->dto, $this->pdo );
     }
 
     public function report($controllerName, $method) {
         $this->dto->reportType     = $_POST['reportType'] ?? $_SESSION['reportType'] ?? '経費一覧';
         $this->dto->reportSubType  = $_POST['reportSubType'] ?? $_SESSION['reportSubType'] ?? '月次';
-        $_SESSION['reportType']    = $this->dto->reportType;
-        $_SESSION['reportSubType'] = $this->dto->reportSubType;
-
+        $_SESSION['reportType']    = $this->dto->reportType ?? '';
+        $_SESSION['reportSubType'] = $this->dto->reportSubType ?? '';
+        echo "reportType: " . $this->dto->reportType . "<br>";
+        echo "reportSubType: " . $this->dto->reportSubType . "<br>";
+        $reportType = $this->dto->reportType;
+        $reportSubType = $this->dto->reportSubType;
 		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
             $this->dto->session   = $_SESSION;
             $this->dto->post      = $_POST;
             $_SESSION['post']     = $_POST;
             requireCsrf();
             requireLogin();
-            //dbg('DTOreporttype/', $this->dto->reportType);
-            echo "5555reporttype/" . $_SESSION['reportType'] . '<br>' .$_SESSION['reportSubType'];
+            //dbg('kessanController//report', $this->dto->session);
             if(
-                ( ($_SESSION['reportType']??'')            ===   '経費一覧')     &&
-                ( ($_SESSION['reportSubType']??'')         !==   ''        )  
+                ( ($this->dto->session['reportType']??'')            ===   '経費一覧')     &&
+                ( ($this->dto->session['reportSubType']??'')         !==   ''        )  
               )
             {
-                echo "2222";
                 $this->validator = new kessanValidator($this->dto, false);
                 $err = $this->validator->kessanItiran();
-                echo '<br>3333/' . $err;
-                if ($err > 0) {
-                $this->render($controllerName, $method);
-                return;
+                if ($err) {
+                    $this->render($controllerName, $method);
+                    return $err;
                 }
-                $dto1   =  $this->dto->pl();
-                //hprint("dto1",$dto1);
+                
+                $getujiKeihiItiran = $this->service->keihiItiran();
+                $err = $this->validator->noDataChk($getujiKeihiItiran);
+                 if ($err) {
+                    $this->render($controllerName, $method);
+                    return $err;
+                }               
+
+                $this->render($controllerName, $method);
+            exit;
             }
+
             if($this->dto->post['reportType']??'' === 'pl'){
                 echo "損益計算書";
             }
-            //exit;  
             
-            
-
-
-
-
-
-
-            
-            //require_once ROOT_PATH . '/app/validators/kessanValidator.php';
-            // $err = $this->validator->commonVali();
-            // if ($err > 0) {
-            //     // バリデーションエラーがある場合は集計処理を行わず、レンダリングして終了
-            //     $this->render($controllerName, $method);
-            //     return;
-            // }
-
-            //$_SESSION['kessanStartEnd'] = $this->service->kessanService();
-            // $this->dto->viewResult = $this->service->result;
-            // $this->dto->reportType = $this->service->reportType;
-            // $this->dto->from       = $this->service->from;
-            // $this->dto->to         = $this->service->to;
-            // $this->dto->zenki_from = $this->service->zenki_from;
-            // $this->dto->zenki_to   = $this->service->zenki_to;
         }
         $this->render($controllerName, $method);
     }

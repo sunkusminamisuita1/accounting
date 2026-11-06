@@ -5,7 +5,7 @@
 
         <?php
             if (in_array($this->dto->reportType, 
-                    [getujiSisanhyou, nenjiSisanhyou, kikanSisanhyou, ruisekiSisanhyou, zenkiHikaku])) {
+                    [getujiSisanhyou, nenjiSisanhyou, kikanSisanhyou], true)) {
         ?>
                 <p>抽出期間： <?= h($this->dto->from) ?> 〜 <?= h($this->dto->to ) ?></p>
                 <table>

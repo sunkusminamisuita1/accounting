@@ -18,6 +18,7 @@ class kessanDto{
     public string   $zenki_to;
     public string   $nenji_nen;
     public array    $keihiItiran = [];
+    public array    $keihiZenkiItiran = [];
 
     public function __construct($kikan) {
         $this->from = $kikan['cur']['from'] ?? 0;
@@ -27,9 +28,20 @@ class kessanDto{
         $this->activeShop = '   all';
         $this->reportType = '';
         $this->reportSubType = '月次';
-
-        $this->zenki_from = '';
-        $this->zenki_to   = '';
+        $this->zenki_from = 0;
+        $this->zenki_to   = 0;
+        // $this->$keihiItiran[0] = 
+		// 		[
+		// 			'zenkiKeihiKamoku' => '',
+		// 			'zenkiKeihiTotal' => 0,
+        //             'keihiKamoku' => '',
+        //             'keihiTotal' => 0
+		// 		];
+        // $this->keihiItiran[] = [
+        //                         'jvId' => 0, 'jdId' => 0, 'jvDate' => '', 'keihiKamoku' => '', 'aiteKamoku' => '',
+        //                         'kingaku' => 0, 'jdSummary' => '', 'total' => 0, 'aiteTotal' => 0, 'sagaku' => 0
+        //                        ];
+        //$this->keihiItiran = [];
     }
 
     public function pl() {

@@ -174,14 +174,6 @@ $_SESSION['current_route'] = $requestRoute;
     </div>
 <?php endif; ?>
 
-
-
-
-
-
-
-
-
 <?php if (($controllerName??'') === "kessanController" && ($method??'') === 'report'): ?>
     <div class="report-layout">              <!-- 決算書Subメニュー -->
         <div class="report-menu">
@@ -195,16 +187,6 @@ $_SESSION['current_route'] = $requestRoute;
         </div>
     </div>
 <?php endif; ?>
-
-
-
-
-
-
-
-
-
-
 
 </table>
 </html>

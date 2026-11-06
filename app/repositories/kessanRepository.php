@@ -1,7 +1,7 @@
 <?php
 //デバッグ出力　function debug_log(string $message, mixed $data = null, bool $debugMode = true): void {
 require_once ROOT_PATH . '/lib/helpers.php';
-require_once ROOT_PATH . '/app/repositories/kessanRepository.php';
+//require_once ROOT_PATH . '/app/repositories/kessanRepository.php';
 
 class kessanRepository{
 	private $dto;
@@ -10,6 +10,37 @@ class kessanRepository{
     public function __construct($dto, $pdo) {
 		$this->dto	= $dto;	
 		$this->pdo	= $pdo;
+	}
+
+	function getGetujiKeihiData(){
+
+		$sql = "SELECT jv.id AS jvId, jv.voucher_date, jv.summary,
+		               jd.jd_summary, jd.side, jd.amount,
+					   ac.id, ac.sort_order, ac.type, ac.name,
+					   SUM(jd.amount) AS total
+					FROM   journal_vouchers jv
+					JOIN   journal_details  jd     ON jv.id      =   jd.voucher_id
+					JOIN   accounts ac             ON ac.id      =   jd.account_id
+						
+						WHERE    jv.user_id      =  :userId    AND
+								 jv.voucher_date >= :fromDate  AND
+								 jv.voucher_date <= :toDate ";
+
+		if($this->dto->session['currentShopCode']  !==  '   all'){
+			$sql     .= "AND jv.shop_code = " . $this->dto->session['currentShopCode'] . ' ';
+		}
+
+		$sql     .= "GROUP BY ac.id, jd.side ";
+		//$sql     .= "ORDER BY jv.voucher_date ASC , ac.sort_order ASC "  ;
+						
+		$userId   = $this->dto->session['user']['id'];
+		$fromDate = $this->dto->from;
+		$toDate   = $this->dto->to;
+		$stmt = $this->pdo->prepare($sql);
+		$stmt->execute( [ ':userId' => $userId, ':fromDate' => $fromDate, ':toDate' => $toDate] );
+		$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+		//dbg('kessanrepo//getGetujiKeihiData', $rows);
+		return $rows;
 	}
 
 	function getTrial( $from, $to ){
@@ -63,6 +94,7 @@ class kessanRepository{
 
 			
 			$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+			//dbg('kessanrepo//getTrial', $rows);
 			//echo "<br>入力ショップコード: " . var_dump($shopCode) . "<br>";
 		$trial = [];
 		foreach ($rows as $row) {
@@ -134,6 +166,7 @@ class kessanRepository{
 
 			
 			$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+			//dbg('kessanrepo//getKeihiItiran', $rows);
 			//echo "<br>入力ショップコード: " . var_dump($shopCode) . "<br>";
 		$trial = [];
 		foreach ($rows as $row) {

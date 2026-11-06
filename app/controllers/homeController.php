@@ -53,6 +53,7 @@ class homeController{
             }
 
             $_SESSION['sisanStartEnd'] = $this->service->homeService();
+            //dbg('sisanStartEnd', $_SESSION['sisanStartEnd']);
             $this->dto->viewResult = $this->service->result;
             $this->dto->reportType = $this->service->reportType;
             $this->dto->from       = $this->service->from;

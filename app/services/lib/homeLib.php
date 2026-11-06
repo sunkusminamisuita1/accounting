@@ -1,43 +1,56 @@
 <?php
-function startEnd($sisan_syurui) {
-	$from = ""; $to =""; $zenki_from=""; $zenki_to=""; $result="";
+function startEnd($sisan_syurui, $reportType = null) {
+	$from = ""; $to =""; $result="";
 	$result =	[	
 				'cur'   => ['from'=>null,'to'=>null],
 				'prev'  => ['from'=>null,'to'=>null]	
 			];
 // --- 1. 年次試算表 $from, $to を再計算 ---
-	if ($sisan_syurui === nenjiSisanhyou && isset($_POST['nenji_nen'])) {
-		$from = $_POST['nenji_nen'] . '-01-01';
-		$to   = $_POST['nenji_nen'] . '-12-31';
+	if (($sisan_syurui === nenjiSisanhyou || $sisan_syurui === '年次') && isset($_POST['nenji_nen'])) {
+		$FiscalPeriod = getFiscalPeriod($_POST['nenji_nen'], 
+										$_SESSION['user']['fiscal_month'], $_SESSION['user']['fiscal_day']);
+		$from = $FiscalPeriod['fromDate'];
+		$to   = $FiscalPeriod['toDate'];
+		// $from = $_POST['nenji_nen'] . '-01-01';
+		// $to   = $_POST['nenji_nen'] . '-12-31';
 		$result['cur'] = ['from'=>$from, 'to'=>$to];
 	}
 // --- 2. 月次試算表 $from, $to を再計算 ---
-	if ($sisan_syurui === getujiSisanhyou && isset($_POST['from'])) {
+	if (($sisan_syurui === getujiSisanhyou || $sisan_syurui === '月次') && isset($_POST['from'])) {
 		$from = substr($_POST['from'],0,7) . '-01';
 		$to   = date('Y-m-t', strtotime($from));
 		$result['cur'] = ['from'=>$from, 'to'=>$to];
 	}
 // --- 3. 累積試算表 $from, $to を再計算 ---ACCOUNT_START
-	if ($sisan_syurui === ruisekiSisanhyou && isset($_POST['to'])) {
+	if (($sisan_syurui === ruisekiSisanhyou || $sisan_syurui === '累積') && isset($_POST['to'])) {
 		$from = ACCOUNT_START;
 		$to   = $_POST['to'];
 		$result['cur'] = ['from'=>$from, 'to'=>$to];
 	}
 // --- 4. 前期比較試算表 $from, $to を再計算 ---
-	if ($sisan_syurui === zenkiHikaku && isset($_POST['kijyun_nen'])) {
-		$from = $_POST['kijyun_nen'] . '-01-01';
-		$to   = $_POST['kijyun_nen'] . '-12-31';
-		$prev_from = ($_POST['kijyun_nen'] - 1 ) . '-01-01';
-		$prev_to   = ($_POST['kijyun_nen'] - 1 ) . '-12-31';
+	if (($sisan_syurui === zenkiHikaku || $sisan_syurui === '前期比較') && isset($_POST['kijyun_nen'])) {
+		$FiscalPeriod = getFiscalPeriod($_POST['kijyun_nen'], 
+										$_SESSION['user']['fiscal_month'], $_SESSION['user']['fiscal_day']);
+		$from = $FiscalPeriod['fromDate'];
+		$to   = $FiscalPeriod['toDate'];
+		// $from = $_POST['kijyun_nen'] . '-01-01';
+		// $to   = $_POST['kijyun_nen'] . '-12-31';
+		$FiscalPeriod = getFiscalPeriod($_POST['kijyun_nen'] - 1, 
+										$_SESSION['user']['fiscal_month'], $_SESSION['user']['fiscal_day']);
+		$prev_from = $FiscalPeriod['fromDate'];
+		$prev_to   = $FiscalPeriod['toDate'];
+		// $prev_from = ($_POST['kijyun_nen'] - 1 ) . '-01-01';
+		// $prev_to   = ($_POST['kijyun_nen'] - 1 ) . '-12-31';
 		$result['cur']  = ['from'=>$from, 'to'=>$to];
 		$result['prev'] = ['from'=>$prev_from, 'to'=>$prev_to];
 	}
 // --- 5. 期間入力 $from, $to を再計算 ---
-	if ($sisan_syurui === kikanSisanhyou && isset($_POST['to'])) {
+	if (($sisan_syurui === kikanSisanhyou || $sisan_syurui === '期間') && isset($_POST['from'], $_POST['to'])) {
 		$from = $_POST['from'];
 		$to   = $_POST['to'];
 		$result['cur'] = ['from'=>$from, 'to'=>$to];
 	}
+	$result['reportType'] = $reportType ?? $sisan_syurui;
 	return $result;
 }
 //html用表示出力用データ作成
@@ -69,99 +82,7 @@ function applyAccountingRule($row){
 		default:return 0;
 	};
 }
-//DB読込集計
-function YYYgetTrial($pdo, $from, $to, $dto ){
-	//echo "aaaaaaaaaaaaaa";exit;
-	//$pdo = getPDO();
-    //$pdoDto = new pdoDto($pdo);
-    //$pdo = $pdoDto->instncPdo;
 
-	//呼び出し元の情報を取得
-	//$trace = debug_backtrace();
-    //echo "<br>////////////////////////////////////////////////////////////////<br>";
-	//print_r($trace[1]); // 呼び出し元フレーム
-    //echo "<br>////////////////////////////////////////////////////////////////<br>";
-	if(!$from || !$to){
-		return [];
-	};
-	$sql = 
-		"SELECT	
-			a.id		as account_id,
-			a.name	as name,
-			a.type	as type,
-			jd.side,
-			SUM(jd.amount) AS total
-		FROM journal_details jd
-		JOIN journal_vouchers jv	ON jd.voucher_id = jv.id
-		JOIN accounts a 			ON jd.account_id = a.id
-		WHERE jv.voucher_date BETWEEN :from AND :to
-			AND jv.user_id = :userId
-			AND jv.shop_code = :shopCode
-		GROUP BY a.id, a.name, a.type, jd.side
-		ORDER BY a.id
-		";
-		//$userId = $_SESSION['user']['user_id'];
-		$userId = $_SESSION['user']['id'];
-		$shopCode = $dto->activeShop ?? '   all';
-		$stmt = $pdo->prepare($sql);
-		$stmt->execute([':from' => $from, ':to' => $to, ':userId' => $userId, ':shopCode' => $shopCode]);
-		$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-	$trial = [];
-	foreach ($rows as $row) {
-
-		$id = $row['account_id'];
-		if (!isset($trial[$id])) {
-			$trial[$id] = ['name'	=> $row['name'],
-						'type'	=> $row['type'],
-						'debit'	=> 0,
-						'credit'	=> 0
-			];
-		}
-		$trial[$id][$row['side']] += $row['total'];
-	}
-	return $trial;
-}
-
-
-//下記は古い仕様
-function XXgetTrial($pdo,$from,$to){
-	if(!$from || !$to){
-		return [];
-	};
-	$sql = 
-		"SELECT	
-			a.id		as account_id,
-			a.name	as name,
-			a.type	as type,
-			jd.side,
-			SUM(jd.amount) AS total
-		FROM journal_details jd
-		JOIN journal_vouchers jv	ON jd.voucher_id = jv.id
-		JOIN accounts a 			ON jd.account_id = a.id
-		WHERE jv.voucher_date BETWEEN :from AND :to
-			AND jv.user_id = :userId
-		GROUP BY a.id, a.name, a.type, jd.side
-		ORDER BY a.id
-		";
-//		$userId = $_SESSION['user']['user_id'];
-		$userId = $_SESSION['user']['id'];
-		$stmt = $pdo->prepare($sql);
-		$stmt->execute([':from' => $from, ':to' => $to, ':userId' => $userId]);
-		$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-	$trial = [];
-	foreach ($rows as $row) {
-		$id = $row['account_id'];
-		if (!isset($trial[$id])) {
-			$trial[$id] = ['name'	=> $row['name'],
-						'type'	=> $row['type'],
-						'debit'	=> 0,
-						'credit'	=> 0
-			];
-		}
-		$trial[$id][$row['side']] += $row['total'];
-	}
-	return $trial;
-}
 function getPeriodProfit(array $logicalRows): int{
 	$profit = 0;
 	foreach ($logicalRows as $row) {
@@ -191,4 +112,55 @@ function dbg($hairetuMei,$hairetu){
 	var_dump($hairetu);
 	echo "</pre>";
 }
+
+/**
+ * 決算期間を取得する
+ *
+ * @param int $year       決算終了年
+ * @param int $fiscalMonth 決算月
+ * @param int $fiscalDay   決算日
+ * @return array
+ */
+function getFiscalPeriod($year, $fiscalMonth, $fiscalDay)
+{
+    if (
+        !checkdate($fiscalMonth, $fiscalDay, $year)
+    ) {
+        throw new InvalidArgumentException('決算日が不正です。');
+    }
+
+    // 決算終了日
+    $endDate = new DateTimeImmutable(
+        sprintf('%04d-%02d-%02d', $year, $fiscalMonth, $fiscalDay)
+    );
+
+    // 前年度の決算日を求める
+    $prevYear = $year - 1;
+
+    // 前年度の同じ月の末日を取得
+    $prevMonth = new DateTimeImmutable(
+        sprintf('%04d-%02d-01', $prevYear, $fiscalMonth)
+    );
+
+    // うるう年などで前年度に同じ日が存在しない場合は月末に調整
+    $prevDay = min(
+        $fiscalDay,
+        (int)$prevMonth->format('t')
+    );
+
+    $prevEndDate = $prevMonth->setDate(
+        $prevYear,
+        $fiscalMonth,
+        $prevDay
+    );
+
+    // 前年度の決算日の翌日が当年度の開始日
+    $startDate = $prevEndDate->modify('+1 day');
+
+    return [
+        'fromDate' => $startDate->format('Y-m-d'),
+        'toDate'   => $endDate->format('Y-m-d')
+    ];
+}
+
 ?>
